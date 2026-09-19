@@ -1,0 +1,39 @@
+{
+  "updated": "2026-09-19",
+  "projects": {
+    "research": {
+      "name": "零一空间研究",
+      "stage": "六十四卦统一现行命题门复核",
+      "progress": {
+        "passed": 53,
+        "total": 64
+      },
+      "latest": "乾、坤《文言》与现行命题已补；旧L4全库重检后识别G005—G015格式债务",
+      "open": [
+        "G005—G015迁移到现行命题门",
+        "O13历史独立研究分层去重",
+        "三博士共享底层数据准入门"
+      ]
+    },
+    "movement": {
+      "name": "动起来",
+      "stage": "STATE RECOVERY",
+      "progress": null,
+      "latest": "目录已标准化；原始视频、案例、协议、三博士资料已分区",
+      "open": [
+        "恢复CURRENT_STABLE",
+        "建立动作可视化流程",
+        "建立三博士共同输入与独立判断层"
+      ]
+    },
+    "food": {
+      "name": "食色性也",
+      "stage": "基础骨架已建立",
+      "progress": null,
+      "latest": "Drive标准目录已建立",
+      "open": [
+        "尚未进入正式状态恢复"
+      ]
+    }
+  }
+}
