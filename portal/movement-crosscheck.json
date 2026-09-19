@@ -1,0 +1,10 @@
+{
+  "updated":"2026-09-19",
+  "protocol":"REP_ACCEPTANCE_GATE V0.1",
+  "cases":[
+    {"id":"CASE_0002","action":"地面转换 / burpee-like（暂定）","c":{"state":"FIRST_PASS","result":"UNKNOWN","findings":["主要动作区存在规则周期","进出地面的转换可能制造假周期"]},"q":{"state":"TASK_READY","result":null},"d":{"state":"TASK_READY","result":null},"open":["有效动作起点","转换动作排除","最终次数"]},
+    {"id":"CASE_0003","action":"俯卧撑","c":{"state":"FIRST_PASS","result":"UNKNOWN","findings":["低机位正面一次动作会产生多个运动峰","侧面60fps更利于区分顶部/底部"]},"q":{"state":"TASK_READY","result":null},"d":{"state":"TASK_READY","result":null},"open":["关键点轨迹替代整体运动峰","最终次数"]},
+    {"id":"CASE_0004","action":"深蹲","c":{"state":"FIRST_PASS","result":"UNKNOWN","findings":["长前导段污染整段峰值统计","必须先识别动作区间"]},"q":{"state":"TASK_READY","result":null},"d":{"state":"TASK_READY","result":null},"open":["动作区间自动识别","最终次数"]}
+  ],
+  "rules":{"no_majority_vote":true,"missing_result_is_not_completion":true,"v02_authorized":false}
+}
