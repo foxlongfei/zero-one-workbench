@@ -1,1 +1,39 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>动起来｜工作看板</title><link rel="stylesheet" href="assets/style.css"><body><div class="bar"><b>动起来｜工作看板</b><span>CURRENT_STABLE V0.1｜2026-09-19</span><button onclick="history.back()">返回</button></div><main class="wrap"><h1 class="hero">现在已经知道：哪些东西站稳了，哪些还没有。</h1><p class="muted">稳定的是资料结构和第一版判定规则；不稳定的是最终次数、双机位精确同步和Q/D盲测结果。</p><section class="grid"><article class="card"><h2>🟢 已站稳</h2><p><b>8个原始视频</b>已经进入只读证据层：CASE_0001双机位 + TESTSET-01六段视频。</p><p><b>REP_ACCEPTANCE_GATE V0.1</b>继续冻结。一个动作周期候选，不自动等于一次有效动作。</p></article><article class="card"><h2>🟡 已经看到了什么</h2><p><b>CASE_0002：</b>能看到较规则周期，但进出地面的过渡动作可能被误算。</p><p><b>CASE_0003：</b>低机位正面画面会在一次俯卧撑里产生多个运动峰值，所以“一个峰=一次”已经被否定。</p><p><b>CASE_0004：</b>视频前面有较长非动作段，必须先找到真正动作区间再计数。</p></article><article class="card"><h2>🔴 还不能说</h2><p>TESTSET-01最终次数仍是 <b>UNKNOWN</b>。</p><p>音频同步目前只是候选，不是 VERIFIED_SYNC。</p><p>Q博士、D博士的盲测任务包存在，但当前正式结果层没有找到两人的结果文件。</p></article></section><section class="card"><h2>今天四个任务</h2><div class="flow"><span>✓ 状态恢复审计</span><span>✓ 建立CURRENT_STABLE V0.1</span><span>✓ 外部动作库接入规范</span><span>✓ 看板改成真实项目状态</span></div></section><section class="card"><h2>三博士下一步怎么合作</h2><div class="flow"><span>同一批RAW/代理视频</span><span>→ Q独立观察</span><span>→ D独立找漏洞</span><span>→ C对齐时间点和证据</span><span>→ 一致 / 冲突 / OPEN</span></div><p>这里不采用多数表决。发生分歧时回到具体时间点、画面和证据。</p></section><details><summary><b>为什么现在还不数“到底做了几次”？</b></summary><p>因为项目已经发现三个典型陷阱：进出动作区间会制造假周期；一个真实动作可能产生多个运动峰；长视频的走动和准备动作会污染计数。先解决“什么才算一次”的准入门，再输出次数，结果才有意义。</p></details><details><summary><b>外部动作库今天带来了什么？</b></summary><p>hasaneyldrm/exercises-dataset 被登记为高价值参考：动作名称、器械、身体部位、多语言步骤和JSON Schema值得借鉴；但它不是动作质量真值库，GIF也不能直接当“标准动作”。</p></details><details><summary><b>技术层</b></summary><p>证据等级：L0候选 → L1单视角支持 → L2双视角支持 → L3双视角多指标支持 → L4审计确认。V0.2目前未获授权。</p></details></main></body></html>
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>动起来｜研究现场</title><link rel="stylesheet" href="assets/style.css"><style>
+.case{border-left:5px solid #777}.timeline{display:flex;align-items:center;gap:4px;margin:12px 0}.timeline i{height:12px;border-radius:8px;background:#ddd;display:block}.timeline .action{background:#777}.timeline .risk{background:#aaa}.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.doc{border:1px solid #ddd;border-radius:12px;padding:12px;background:#fafafa}.empty{border-style:dashed}.state{font-size:13px;padding:4px 8px;border-radius:12px;background:#eee;display:inline-block}.big{font-size:26px;font-weight:700}.question{background:#fffbe9}.legend{font-size:12px;color:#666}@media(max-width:700px){.docs{grid-template-columns:1fr}}
+</style><body>
+<div class="bar"><b>动起来｜研究现场</b><span>CURRENT_STABLE V0.1</span><button onclick="location.href='index.html'">总看板</button></div>
+<main class="wrap">
+<h1 class="hero">先看“发生了什么”，再看博士怎么判断。</h1>
+<p class="muted">这是第一版研究现场表达。现在没有伪造Q/D结果：有结果就显示，没有就明确空着。以后视频分析会把时间轴上的色块换成可点击关键帧和骨架轨迹。</p>
+
+<section class="grid">
+<article class="card"><span class="state">证据</span><div class="big">8 段 RAW</div><p>CASE_0001 双机位 + TESTSET-01 六段。原始视频只读，不拿分析产物覆盖原证据。</p></article>
+<article class="card"><span class="state">规则</span><div class="big">Gate V0.1 冻结</div><p>看到一个运动周期，不自动算作一次有效动作。</p></article>
+<article class="card"><span class="state">当前缺口</span><div class="big">Q / D 结果待补</div><p>任务包存在；正式结果层目前没有找到两份独立首轮结果。</p></article>
+</section>
+
+<h2>三个测试案例，现在会这样表现</h2>
+<section class="grid">
+<article class="card case"><h3>CASE_0002｜地面转换类动作</h3><p><b>我们看到：</b>主要动作区有较规则的周期。</p><div class="timeline"><i style="width:16%"></i><i class="risk" style="width:10%"></i><i class="action" style="width:48%"></i><i class="risk" style="width:10%"></i><i style="width:16%"></i></div><p class="legend">准备　⚠进入地面　■主要动作　⚠退出地面　结束</p><p><b>为什么暂不直接计数：</b>进出地面的过渡动作也会制造很大的运动信号，容易多算。</p><p class="question"><b>你可以问：</b>“进入地面”和第一次真正动作到底怎么分？</p></article>
+
+<article class="card case"><h3>CASE_0003｜俯卧撑</h3><p><b>我们看到：</b>侧面60fps更容易分清顶部/底部；低机位正面一次动作会出现多个运动峰。</p><div class="timeline"><i class="action" style="width:18%"></i><i class="risk" style="width:8%"></i><i class="risk" style="width:8%"></i><i class="action" style="width:18%"></i><i class="risk" style="width:8%"></i><i class="risk" style="width:8%"></i><i class="action" style="width:18%"></i></div><p class="legend">示意：一次真实动作 ≠ 一个运动峰；灰色小段表示同一动作内部可能出现额外峰值</p><p><b>已经推翻：</b>“一个运动峰 = 一次动作”。</p><p class="question"><b>你可以问：</b>能不能直接用肩、髋的轨迹而不是整个人的运动量？</p></article>
+
+<article class="card case"><h3>CASE_0004｜深蹲</h3><p><b>我们看到：</b>长视频前段有大量非动作内容，真正深蹲出现在后面的动作区间。</p><div class="timeline"><i style="width:38%"></i><i class="risk" style="width:8%"></i><i class="action" style="width:46%"></i><i style="width:8%"></i></div><p class="legend">走动/准备　⚠定位　■有效动作区　结束</p><p><b>为什么重要：</b>如果整段视频直接找峰，走路、调整位置都会被算进去。</p><p class="question"><b>你可以问：</b>AI怎样自动找到“真正开始做动作”的那一刻？</p></article>
+</section>
+
+<section class="card"><h2>三博士交叉认证｜你会看到三栏，而不是一份混合答案</h2>
+<div class="docs">
+<div class="doc empty"><h3>Q博士｜独立观察</h3><p><b>状态：</b>任务包已存在，正式结果待补。</p><p>未来这里显示：动作区间、候选次数、看不清的位置、视角优缺点。</p></div>
+<div class="doc empty"><h3>D博士｜反例攻击</h3><p><b>状态：</b>任务包已存在，正式结果待补。</p><p>未来这里显示：哪里可能误算、漏算、重复算；哪条规则可能过拟合。</p></div>
+<div class="doc"><h3>C博士｜首轮观察</h3><p><b>已完成：</b>三组配对工作确认；同步仍为候选；最终次数保持 UNKNOWN。</p><p>关键发现：先找动作区间；不能用单峰计数；不同机位价值不同。</p></div>
+</div>
+<p style="margin-top:14px"><b>交叉后输出：</b> ✓ 三方一致　｜　⚠ 有冲突　｜　? OPEN　｜　🔎 点开看具体时间点/关键帧/证据。</p>
+</section>
+
+<section class="card"><h2>以后真正的视频页面会长成这个流程</h2>
+<div class="flow"><span>① 原视频</span><span>→ ② 关键帧</span><span>→ ③ 骨架/关节点</span><span>→ ④ 轨迹</span><span>→ ⑤ 异常时间点</span><span>→ ⑥ Q/D/C三栏</span><span>→ ⑦ 当前结论 + OPEN</span></div>
+<p>第一层只看图和一句话；第二层看为什么；第三层才展开帧号、角度、坐标、算法和版本。</p>
+</section>
+
+<details><summary><b>技术证据等级（不想看可以不打开）</b></summary><p>L0 候选 → L1 单视角支持 → L2 双视角支持 → L3 双视角多指标支持 → L4 审计确认。次数是下游结果，不是看到周期就直接加1。</p></details>
+</main></body></html>
