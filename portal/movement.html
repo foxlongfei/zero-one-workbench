@@ -3,7 +3,7 @@
 </style><body>
 <div class="bar"><b>动起来｜研究现场</b><span>CURRENT_STABLE V0.1</span><button onclick="location.href='index.html'">总看板</button></div>
 <main class="wrap">
-<h1 class="hero">先看“发生了什么”，再看博士怎么判断。</h1>
+<h1 class="hero">先看“发生了什么”，再看博士怎么判断。</h1><p><b>一个页面原则：</b>研究现场、三博士意见和证据以后都在这里展开，不再要求你来回跳页面。</p>
 <p class="muted">这是第一版研究现场表达。现在没有伪造Q/D结果：有结果就显示，没有就明确空着。以后视频分析会把时间轴上的色块换成可点击关键帧和骨架轨迹。</p>
 
 <section class="grid">
@@ -12,7 +12,7 @@
 <article class="card"><span class="state">当前缺口</span><div class="big">Q / D 结果待补</div><p>任务包存在；正式结果层目前没有找到两份独立首轮结果。</p></article>
 </section>
 
-<h2>三个测试案例，现在会这样表现</h2>
+<h2>三个测试案例，现在会这样表现</h2><section class="card"><h3>图片层正在接入</h3><p>下一步每个CASE顶部先放真实关键帧：准备位 / 动作中段 / 转换或风险位置。然后在图片上叠加肩、髋、膝等关节点和轨迹。文字退到图片下面解释，而不是反过来。</p><div class="flow"><span>真实关键帧</span><span>→ 关节点</span><span>→ 轨迹</span><span>→ 异常标记</span><span>→ 三博士解释</span></div></section>
 <section class="grid">
 <article class="card case"><h3>CASE_0002｜地面转换类动作</h3><p><b>我们看到：</b>主要动作区有较规则的周期。</p><div class="timeline"><i style="width:16%"></i><i class="risk" style="width:10%"></i><i class="action" style="width:48%"></i><i class="risk" style="width:10%"></i><i style="width:16%"></i></div><p class="legend">准备　⚠进入地面　■主要动作　⚠退出地面　结束</p><p><b>为什么暂不直接计数：</b>进出地面的过渡动作也会制造很大的运动信号，容易多算。</p><p class="question"><b>你可以问：</b>“进入地面”和第一次真正动作到底怎么分？</p></article>
 
@@ -21,7 +21,7 @@
 <article class="card case"><h3>CASE_0004｜深蹲</h3><p><b>我们看到：</b>长视频前段有大量非动作内容，真正深蹲出现在后面的动作区间。</p><div class="timeline"><i style="width:38%"></i><i class="risk" style="width:8%"></i><i class="action" style="width:46%"></i><i style="width:8%"></i></div><p class="legend">走动/准备　⚠定位　■有效动作区　结束</p><p><b>为什么重要：</b>如果整段视频直接找峰，走路、调整位置都会被算进去。</p><p class="question"><b>你可以问：</b>AI怎样自动找到“真正开始做动作”的那一刻？</p></article>
 </section>
 
-<section class="card"><h2>三博士交叉认证｜你会看到三栏，而不是一份混合答案</h2><p><a href="crosscheck.html"><b>→ 打开独立的三博士交叉认证看板</b></a></p>
+<section class="card"><h2>三博士交叉认证｜你会看到三栏，而不是一份混合答案</h2><details open><summary><b>展开三博士交叉认证</b></summary><p>下面三栏直接嵌在本页；独立页面保留为技术备用入口，不再作为主要使用方式。</p></details>
 <div class="docs">
 <div class="doc empty"><h3>Q博士｜独立观察</h3><p><b>状态：</b>任务包已存在，正式结果待补。</p><p>未来这里显示：动作区间、候选次数、看不清的位置、视角优缺点。</p></div>
 <div class="doc empty"><h3>D博士｜反例攻击</h3><p><b>状态：</b>任务包已存在，正式结果待补。</p><p>未来这里显示：哪里可能误算、漏算、重复算；哪条规则可能过拟合。</p></div>
