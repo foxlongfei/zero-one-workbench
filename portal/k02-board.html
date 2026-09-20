@@ -9,12 +9,12 @@
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Noto Sans SC",sans-serif}
     header{padding:42px 24px;background:#1e332a;color:white}header div,main{max-width:1080px;margin:auto}h1{margin:0 0 8px;font-size:clamp(28px,4vw,48px)}h2{margin:0 0 14px;font-size:22px}p{margin:8px 0}.stamp{opacity:.8}
     main{padding:28px 20px 60px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}.metric{font-size:34px;font-weight:750;color:var(--green)}.tag{display:inline-block;margin:3px 4px 3px 0;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--green);font-size:13px}.warn{color:#7a4c12;background:#fff2d9}.bar{height:10px;background:#ddd5c5;border-radius:9px;overflow:hidden}.bar i{display:block;width:25%;height:100%;background:var(--green)}
-    table{width:100%;border-collapse:collapse}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px 8px}th{color:#566058;font-size:13px}a{color:var(--green);font-weight:650}.ok{color:var(--green);font-weight:700}.next{border-left:5px solid var(--gold)}footer{max-width:1080px;margin:auto;padding:0 20px 40px;color:#6b706a;font-size:13px}
+    table{width:100%;border-collapse:collapse}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px 8px}th{color:#566058;font-size:13px}a{color:var(--green);font-weight:650}.ok{color:var(--green);font-weight:700}.next{border-left:5px solid var(--gold)}footer{max-width:1080px;margin:auto;padding:0 20px 40px;color:#6b706a;font-size:13px}.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.tools a,.tools button,.task-panel button{display:inline-block;border:1px solid rgba(255,255,255,.45);border-radius:18px;padding:7px 12px;background:transparent;color:inherit;font:inherit;text-decoration:none;cursor:pointer}.task-panel[hidden]{display:none}.task-panel{margin-top:0}
   </style>
 </head>
 <body>
-<header><div><h1>零一空间研究｜K02协作看板</h1><p>看清任务怎样提出、分工、形成、被质疑和验收。</p><p class="stamp">最后同步：2026-09-21 06:20（北京时间）｜今日四任务置顶</p></div></header>
-<main><section class="card next"><h2>今日四任务｜2026-09-21</h2><table><thead><tr><th>ID</th><th>席位</th><th>状态</th><th>交付与完成门</th></tr></thead><tbody><tr><td>Z01</td><td>C／运行</td><td class="ok">进行中</td><td>64/64最终HTML、总验收报告、恢复包迁入Drive；全量快照与SHA</td></tr><tr><td>Z02</td><td>Q</td><td>待执行</td><td>两史至少5个高风险来源节点复核</td></tr><tr><td>Z03</td><td>D</td><td>待执行</td><td>TOP5案例、平行史料双计与反例压力测试</td></tr><tr><td>Z04</td><td>C</td><td>待执行</td><td>不投票联合验收；路线裁决；Drive/GitHub发布</td></tr></tbody></table><p><a href="https://drive.google.com/file/d/1msF5KFfzvI9FUYhAP1QLUPs6mLhyEcA0/view">Drive今日任务原件</a> · <a href="hexagrams-64.html">64卦64/64验收摘要</a></p></section>
+<header><div><h1>零一空间研究｜K02协作看板</h1><p>看清任务怎样提出、分工、形成、被质疑和验收。</p><p class="stamp">最后同步：2026-09-21 06:20（北京时间）</p><nav class="tools"><a href="index.html">← 返回总看板</a><button type="button" id="openTasks" aria-expanded="false">打开今日四任务</button></nav></div></header>
+<main><section class="card next task-panel" id="taskPanel" hidden><h2>今日四任务｜2026-09-21</h2><table><thead><tr><th>ID</th><th>席位</th><th>状态</th><th>交付与完成门</th></tr></thead><tbody><tr><td>Z01</td><td>C／运行</td><td class="ok">已完成</td><td>64/64最终HTML、总验收报告、恢复包迁入Drive；全量快照与SHA</td></tr><tr><td>Z02</td><td>Q</td><td>待执行</td><td>两史至少5个高风险来源节点复核</td></tr><tr><td>Z03</td><td>D</td><td>待执行</td><td>TOP5案例、平行史料双计与反例压力测试</td></tr><tr><td>Z04</td><td>C</td><td>待执行</td><td>不投票联合验收；路线裁决；Drive/GitHub发布</td></tr></tbody></table><p><a href="https://drive.google.com/file/d/1msF5KFfzvI9FUYhAP1QLUPs6mLhyEcA0/view">Drive今日任务原件</a> · <a href="hexagrams-64.html">64卦64/64验收摘要</a></p><p><button type="button" id="closeTasks">收起任务</button></p></section>
   <section class="grid">
     <article class="card"><h2>阶段进度</h2><div class="metric">1 / 4</div><div class="bar"><i></i></div><p>K02-01已完成；K02-02进行中。</p></article>
     <article class="card"><h2>当前任务</h2><p><b>K02-02B-C</b></p><p>《汉书》《后汉书》Q04/D04联合验收与跨史比较。</p></article>
@@ -37,4 +37,16 @@
   </tbody></table></section>
 </main>
 <footer>原则：Drive是权威备份；GitHub是可见看板；ChatGPT文件库只作第二副本，不能替代Drive。</footer>
-</body></html>
+<script>
+const openTasks=document.getElementById('openTasks');
+const taskPanel=document.getElementById('taskPanel');
+const closeTasks=document.getElementById('closeTasks');
+function showTasks(open){
+  taskPanel.hidden=!open;
+  openTasks.setAttribute('aria-expanded',String(open));
+  openTasks.textContent=open?'收起今日四任务':'打开今日四任务';
+  if(open) taskPanel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+openTasks.onclick=()=>showTasks(taskPanel.hidden);
+closeTasks.onclick=()=>showTasks(false);
+</script></body></html>
