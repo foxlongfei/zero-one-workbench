@@ -13,6 +13,10 @@
       "progress": {"passed": 1, "total": 4},
       "active_task": "K02-02B-C｜《汉书》《后汉书》Q04/D04联合验收与跨史比较",
       "latest": "Q04完成18张概念卡；D04完成22例；完整快照与SHA-256已写入Drive",
+      "snapshot": {
+        "drive_file_id": "1dWbMpNRW0zliqtAyb1fnBJ9UyhqqWZL6",
+        "sha256": "158b67f6e1a9384ff190029813a216263a976a42244050dfa986bf1f241d754d"
+      },
       "next": ["C席联合验收", "跨史比较", "Schema压力测试", "下一批正史路线"]
     },
     "movement": {"name":"动起来","stage":"STATE RECOVERY","progress":null},
