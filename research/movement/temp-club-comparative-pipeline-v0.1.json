@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "task_id": "TEMP-CLUB",
+  "status": "COMPARATIVE_PIPELINE_V0.1_COMPLETE_PENDING_CROSS_CERTIFICATION",
+  "input_gate": "TEMP-YOUTH-FIELD-TABLE-V0.2",
+  "scope": "community_club_youth_entry_and_progression",
+  "not_in_scope": ["national_team_selection", "medical_clearance", "individual_training_prescription"],
+  "source_systems": [
+    {
+      "id": "FFBAD_EFB",
+      "url": "https://www.ffbad.org/viedesclubs-labels-ecoles-francaises-de-badminton",
+      "layer": "club_quality_and_delivery",
+      "observed_fields": ["age_band", "practice_level", "qualified_educator", "first_competitions", "club_label"]
+    },
+    {
+      "id": "FFBAD_DJ",
+      "url": "https://media.ffbad.org/MjQ-NTE0/dispositif-jeunes",
+      "layer": "youth_learning_and_competition_pathway",
+      "observed_fields": ["age_category", "morphotype", "motivation", "practice_level_passbad", "age_adapted_competition"]
+    },
+    {
+      "id": "DBV_BUNDESKADER_2023",
+      "url": "https://www.badminton.de/fileadmin/documents/dbav_bundeskaderkonzept_ab_2023_stand_09._november_2022_final.pdf",
+      "layer": "elite_squad_selection",
+      "observed_fields": ["age", "performance", "development", "technique", "tactics", "physical", "psychology", "potential", "competition_results", "training_conditions"],
+      "transfer_limit": "context_only_not_direct_community_placement_rule"
+    }
+  ],
+  "separation_axes": [
+    "age_band",
+    "practice_level",
+    "readiness",
+    "qualified_educator",
+    "competition_tier",
+    "development_potential",
+    "training_context"
+  ],
+  "prohibited_collapses": [
+    "age_only_placement",
+    "club_label_as_individual_ability",
+    "elite_squad_criteria_as_community_entry_rule",
+    "same_skill_as_same_safeguarding_need"
+  ],
+  "counterexamples": [
+    {
+      "id": "TC-01",
+      "statement": "Two players in the same age category may have different PassBad practice levels.",
+      "invalid_inference": "same_age_implies_same_practice_placement",
+      "expected_gate": "REJECT"
+    },
+    {
+      "id": "TC-02",
+      "statement": "Two players with similar practice level may belong to different age categories.",
+      "invalid_inference": "same_skill_erases_age_specific_delivery_and_competition_constraints",
+      "expected_gate": "REJECT"
+    },
+    {
+      "id": "TC-03",
+      "statement": "An EFB label describes club delivery quality and does not itself measure one athlete's ability.",
+      "invalid_inference": "club_label_equals_athlete_ability",
+      "expected_gate": "REJECT"
+    },
+    {
+      "id": "TC-04",
+      "statement": "DBV Bundeskader criteria govern elite squad selection, not ordinary community-club entry.",
+      "invalid_inference": "elite_selection_rule_directly_transfers_to_community_placement",
+      "expected_gate": "REJECT"
+    }
+  ],
+  "placement_contract": {
+    "required": ["age_band", "practice_level", "readiness", "qualified_educator", "pathway_tier"],
+    "optional_context": ["motivation", "morphotype", "training_conditions", "development_potential"],
+    "forbidden_as_sole_basis": ["age_band", "club_label", "competition_result", "elite_squad_status"]
+  },
+  "acceptance": {
+    "evidence_traceable": true,
+    "counterexamples_executable": true,
+    "mainline_completion_change": false,
+    "pending": ["C_cross_certification", "scope_boundary_review"]
+  },
+  "next_checkpoint": "TEMP-CLUB: independent C cross-certifies the four boundary counterexamples, then maps one additional club-level federation source without importing elite-selection semantics."
+}
