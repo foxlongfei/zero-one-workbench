@@ -1,0 +1,66 @@
+{
+  "artifact_id": "K02-03-HXL-01-QD-CROSS-REVIEW-CONTRACT-V0.1",
+  "task_id": "K02-03-HXL-01",
+  "created_at": "2026-09-28T04:43:00+08:00",
+  "status": "PREPARED_NOT_RUN",
+  "purpose": "Validate two independently frozen NLC returns before C sees their substantive content; this contract contains no page number, transcription, page side, or expected answer.",
+  "inputs": {
+    "q_return_path": "research/zero-one/k02-03-hxl-nlc-q-return-v0.1.json",
+    "d_return_path": "research/zero-one/k02-03-hxl-nlc-d-return-v0.1.json",
+    "source_sha256": "e90deb0d7cb8828f4a252a5a4b846197c4c728b97a858ce56e5672a365f1bb40"
+  },
+  "required_return_fields": [
+    "reviewer_role",
+    "source_sha256_verified",
+    "located_pdf_page",
+    "leaf_side",
+    "column_span",
+    "transcription",
+    "uncertain_characters",
+    "revocation_chain_present",
+    "judicial_continuation_present",
+    "confidence",
+    "independence_declaration",
+    "freeze.frozen_at",
+    "freeze.output_sha256"
+  ],
+  "blindness_guards": {
+    "roles_must_be_distinct": true,
+    "both_outputs_must_be_frozen_before_cross_review": true,
+    "forbidden_pre_freeze_fields": [
+      "c_page",
+      "c_expected_answer",
+      "expected_transcription",
+      "c_anchor",
+      "c_acceptance"
+    ],
+    "c_must_not_repair_a_return": true
+  },
+  "comparison": {
+    "exact_fields": [
+      "source_sha256_verified",
+      "located_pdf_page",
+      "leaf_side",
+      "column_span",
+      "revocation_chain_present",
+      "judicial_continuation_present"
+    ],
+    "transcription_rule": "Compare NFKC text after removing spacing and common punctuation; preserve both originals verbatim.",
+    "uncertain_characters_rule": "Any non-empty uncertainty remains explicit and cannot be silently normalized away.",
+    "conflict_rule": "Any location, chain, or normalized-transcription disagreement produces HOLD_CONFLICT; C records the discrepancy but does not overwrite either return."
+  },
+  "decision_states": [
+    "READY_FOR_CROSS_REVIEW",
+    "HOLD_INVALID_RETURN",
+    "HOLD_CONFLICT"
+  ],
+  "acceptance": {
+    "q_independent_return": false,
+    "d_independent_return": false,
+    "cross_review": false,
+    "mainline_before": "0/5",
+    "mainline_after": "0/5",
+    "counting_decision": "NO_COUNT_CHANGE"
+  },
+  "next_checkpoint": "Run the validator only after distinct Q and D return bytes exist and are frozen; then create a separate C cross-review receipt."
+}

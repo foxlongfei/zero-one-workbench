@@ -1,0 +1,59 @@
+{
+  "artifact_id": "TESTSET-01-M03-CLEAN-CONTEXT-GATE-CASES-V0.1",
+  "cases": [
+    {
+      "id": "M03-G01-READY",
+      "manifest_ref": "FROZEN_MANIFEST_EXACT",
+      "context_classes": ["system_runtime","d_blind_package"],
+      "worker_role": "D",
+      "never_received_q_or_c_outputs": true,
+      "preexisting_d_result": false,
+      "expected": "READY_FOR_M03_D"
+    },
+    {
+      "id": "M03-G02-Q-OUTPUT-SEEN",
+      "manifest_ref": "FROZEN_MANIFEST_EXACT",
+      "context_classes": ["system_runtime","d_blind_package","q_output"],
+      "worker_role": "D",
+      "never_received_q_or_c_outputs": false,
+      "preexisting_d_result": false,
+      "expected": "BLOCKED_CONTEXT_CONTAMINATION"
+    },
+    {
+      "id": "M03-G03-C-AUDIT-SEEN",
+      "manifest_ref": "FROZEN_MANIFEST_EXACT",
+      "context_classes": ["system_runtime","d_blind_package","c_audit"],
+      "worker_role": "D",
+      "never_received_q_or_c_outputs": false,
+      "preexisting_d_result": false,
+      "expected": "BLOCKED_CONTEXT_CONTAMINATION"
+    },
+    {
+      "id": "M03-G04-PROXY-HASH-MISMATCH",
+      "manifest_ref": "FROZEN_MANIFEST_ONE_HASH_MUTATED",
+      "context_classes": ["system_runtime","d_blind_package"],
+      "worker_role": "D",
+      "never_received_q_or_c_outputs": true,
+      "preexisting_d_result": false,
+      "expected": "BLOCKED_INPUT_MISMATCH"
+    },
+    {
+      "id": "M03-G05-EXTRA-HISTORICAL-REVIEW",
+      "manifest_ref": "FROZEN_MANIFEST_PLUS_HISTORICAL_REVIEW",
+      "context_classes": ["system_runtime","d_blind_package","historical_cross_review"],
+      "worker_role": "D",
+      "never_received_q_or_c_outputs": true,
+      "preexisting_d_result": false,
+      "expected": "BLOCKED_CONTEXT_CONTAMINATION"
+    },
+    {
+      "id": "M03-G06-PREEXISTING-RESULT",
+      "manifest_ref": "FROZEN_MANIFEST_EXACT",
+      "context_classes": ["system_runtime","d_blind_package"],
+      "worker_role": "D",
+      "never_received_q_or_c_outputs": true,
+      "preexisting_d_result": true,
+      "expected": "BLOCKED_CONTEXT_CONTAMINATION"
+    }
+  ]
+}

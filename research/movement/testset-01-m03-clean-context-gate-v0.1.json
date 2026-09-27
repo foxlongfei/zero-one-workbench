@@ -1,0 +1,33 @@
+{
+  "artifact_id": "TESTSET-01-M03-CLEAN-CONTEXT-GATE-V0.1",
+  "task_id": "M03",
+  "created_at": "2026-09-28T04:43:00+08:00",
+  "status": "GATE_DEFINED_NOT_EXECUTED",
+  "purpose": "Prevent a D blind review from starting in any context that has received Q/C outputs, candidate counts, pairings, or historical cross-review conclusions.",
+  "allowed_context_classes": ["system_runtime", "d_blind_package"],
+  "forbidden_context_classes": ["q_output", "c_audit", "project_status_summary_with_q_results", "historical_cross_review", "user_rep_counts"],
+  "frozen_manifest": {
+    "TESTSET-01_D_PROTOCOL_SNAPSHOT_V0.1.md": "0dc2a612cabf509c7c793a583f7f00ad84ef760c4ee43511a44dd7d4097ae5fc",
+    "TESTSET-01_D_BLIND_TASK_V0.1.md": "c5e6e85378176858e27ad3909678db3d6ba6f9cca27ea31ece2527318f78c58d",
+    "RAW-T01-01_PROXY_5FPS.mp4": "04653c0260af8243ae0b486ac3f0e123d9ed4542d0b7eb9b671d774222d58a31",
+    "RAW-T01-02_PROXY_5FPS.mp4": "31070fc830ce1262b51275fb24d55f9a08a0ef92420a07fa21247dfb422f7e3a",
+    "RAW-T01-03_PROXY_5FPS.mp4": "a3a74f58e243394e4bfeb7381b59762a529b2d6405560b46ea3e3462301a3c7b",
+    "RAW-T01-04_PROXY_5FPS.mp4": "a9686c5825f6644b779ec89bf46c83f6e5e978f5eeea2118e393174de0e86d60",
+    "RAW-T01-05_PROXY_5FPS.mp4": "73a545ad17b89592376eb98ec794edd3ad06e88aea630b4d9e02a5cf7f8c7c99",
+    "RAW-T01-06_PROXY_5FPS.mp4": "5cd455cc147c36403ec84f4cac504139c5056eb48b676f18034cad6ae0661b53"
+  },
+  "required_attestation": {
+    "worker_role": "D",
+    "never_received_q_or_c_outputs": true,
+    "preexisting_d_result": false,
+    "input_object_count": 8
+  },
+  "decisions": ["READY_FOR_M03_D", "BLOCKED_CONTEXT_CONTAMINATION", "BLOCKED_INPUT_MISMATCH"],
+  "acceptance": {
+    "m03_completed": false,
+    "strict_before": "2/4",
+    "strict_after": "2/4",
+    "counting_decision": "NO_COUNT_CHANGE"
+  },
+  "next_checkpoint": "A fresh isolated D worker must submit a manifest and attestation that evaluates READY_FOR_M03_D before opening any proxy."
+}
