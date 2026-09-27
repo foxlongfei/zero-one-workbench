@@ -1,0 +1,74 @@
+{
+  "artifact_id": "TEMP-E01-TEMP-M01-95T1J1-4-GLYPH-POSITION-MAP-V0.1",
+  "project": "零一空间研究",
+  "project_line": ["TEMP-E01", "TEMP-M01"],
+  "z04_current_status": "COMPLETED_4_OF_4",
+  "subject": "95T1J1:4 bone inscription",
+  "source": {
+    "url": "https://www.sohu.com/a/167765274_713036",
+    "type": "secondary_article_render",
+    "evidence_class": "SECONDARY_RENDER_VISUAL_WITNESS",
+    "retrieved_at": "2026-09-27T06:37:55Z",
+    "raw_image_bytes_acquired": false
+  },
+  "method": {
+    "scope": "Map relative zones and keep reported transcriptions separate from visual topology observations.",
+    "limitations": [
+      "Rendered article images are low resolution and raw image bytes were not acquired.",
+      "This artifact does not assert exact glyph identity from the render.",
+      "The source's '九≠' and Song Zhenhao's '九七七' remain an unresolved reading conflict."
+    ]
+  },
+  "zones": [
+    {
+      "zone_id": "FRONT_UPPER_MAIN",
+      "surface": "front",
+      "relative_position": "upper-to-middle portion inside the right-side outline in the published line drawing",
+      "orientation": "vertical",
+      "reported_slot_count": 6,
+      "reported_transcription": "一一六六一五",
+      "visual_topology_observation": "one vertical main group above FRONT_LOWER_MAIN",
+      "exact_glyph_identity_verified": false
+    },
+    {
+      "zone_id": "FRONT_LOWER_MAIN",
+      "surface": "front",
+      "relative_position": "below FRONT_UPPER_MAIN in the published line drawing",
+      "orientation": "vertical",
+      "reported_slot_count": 6,
+      "reported_transcription": "六八八八六六",
+      "visual_topology_observation": "a second vertical main group separated from the upper group",
+      "exact_glyph_identity_verified": false
+    },
+    {
+      "zone_id": "FRONT_UPPER_OUTER",
+      "surface": "front",
+      "relative_position": "outside the upper main group near the outer edge",
+      "orientation": "vertical_or_compact_cluster",
+      "reported_transcription": "九≠",
+      "alternative_reported_reading": {
+        "reader": "宋镇豪",
+        "reading": "九七七"
+      },
+      "conflict_status": "UNRESOLVED",
+      "visual_topology_observation": "a small auxiliary group distinct from the two six-slot main groups",
+      "exact_glyph_identity_verified": false
+    },
+    {
+      "zone_id": "REVERSE_TRACES",
+      "surface": "reverse",
+      "relative_position": "reverse surface",
+      "reported_transcription": null,
+      "visual_topology_observation": "secondary narrative reports drill/chisel traces but provides no text transcription",
+      "exact_glyph_identity_verified": false
+    }
+  ],
+  "audit_status": "SECONDARY_POSITION_MAP_COMPLETE_PRIMARY_BYTES_PENDING",
+  "acceptance": {
+    "structured_zones_present": true,
+    "reported_text_and_visual_observation_separated": true,
+    "reading_conflict_preserved": true,
+    "primary_image_bytes_verified": false
+  },
+  "next_checkpoint": "Acquire the original image bytes or an authoritative plate and cross-certify the zone map without reopening Z04."
+}
