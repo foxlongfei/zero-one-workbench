@@ -1,41 +1,41 @@
 # 双项目当前状态
 
-更新时间：2026-09-27 11:37（UTC+08:00）
+更新时间：2026-09-27 12:34（UTC+08:00）
 
 > Drive 为权威研究记录；本页是公开状态镜像。完成度只按实际验收物计算，不以时间戳或同步动作计数。
 
 ## 零一空间研究
 
 - 当前主线：Z04 — **3/4，in_progress**
-- 当前执行：TEMP-E01 / TEMP-M01；`95T1J1:4` 图像字节取得与角色解析
-- 并行分工：C=IMAGE_ASSET_AUDIT V0.2；Q=IA-05证据边界；D=GitHub/Drive写回读回
-- 最近真实成果：新增两条可复核的受阻路由记录、IA-05 与 `blocked_routes`
-- 新证据：两条CDN精确URL经直接打开仍不可访问；Drive按原发掘报告精确题名检索未取得报告文件
-- 约束：这些结果只能证明当前路由受阻，不能证明图片不存在，不能提升证据等级，也不能解析 `LINE_DRAWING / RUBBING`
-- 验收状态：`SECONDARY_IMAGE_WITNESS_LOCATED_BYTES_PENDING`；不是 `AUDIT_PASS`
+- 当前执行：TEMP-E01 / TEMP-M01；`IMAGE_BYTE_EVIDENCE V0.1`
+- 并行分工：C=字节证据验证器；Q=IB-T01—04；D=浏览器阻断复核与读回
+- 最近真实成果：新增 IB-01—04 与四项可执行测试，实际 **4/4 PASS**
+- 规则：有效图像证据必须具有正字节长度、SHA-256、JPEG/PNG类型、成功解码和有效宽高；没有视觉检查或明确图号时不得解析图像角色
+- 反例：`ACCESS_BLOCKED` 不得改写为 `ASSET_ABSENT`；缺哈希且仅靠网页顺序强配角色必须失败
+- 获取尝试：浏览器直接打开首条CDN资源返回 `ERR_BLOCKED_BY_CLIENT`；只记录为受阻路由
+- 验收状态：`4/4 TEST_PASS`；仍为 `SECONDARY_IMAGE_WITNESS_LOCATED_BYTES_PENDING`，不是 `AUDIT_PASS`
 - 当前阻塞：图片字节和《华夏考古》1997(2)第34–35页仍未取得
-- 下一步：使用获授权的字节下载路径或取得原报告页，先记录字节长度、SHA-256、媒体类型和尺寸，再执行视觉角色判定
-- 成果：[图像见证审计 V0.2](../research/zero-one/95T1J1-4-image-witness-v0.1.json)
-- 提交：[06fe1070](https://github.com/foxlongfei/zero-one-workbench/commit/06fe10703a7dadd5e74407e81f6b57c4ea9a75f4)；blob `c17afc7e5ce804f2e0274b29534ea1ebeb542935`
+- 下一步：取得任一资产后填写字节长度、哈希、媒体类型、解码状态、尺寸和角色证据，再运行验证器
+- 成果：[字节证据验证器](../research/zero-one/image-byte-evidence-validator-v0.1.mjs) · [测试夹具](../research/zero-one/image-byte-evidence-cases-v0.1.json)
+- 提交：validator [fcb5996e](https://github.com/foxlongfei/zero-one-workbench/commit/fcb5996ebc58dbed50f40a7b426be23c03bc9193)；cases [88c5abaa](https://github.com/foxlongfei/zero-one-workbench/commit/88c5abaaee258bf2d246634fc6148795bd8e56dd)
 
 ## 动起来
 
 - 当前主线：M01→M02/M03→M04 — **0/4，in_progress**
-- 当前执行：M01冻结输入 manifest
-- 并行分工：C=九对象原始字节哈希；Q=字段与总字节复算；D=GitHub/Drive读回验收
-- 最近真实成果：生成 `TESTSET-01_FROZEN_INPUT_MANIFEST_V0.1`
-- 冻结输入：Gate协议、Q任务、D任务和六个5FPS代理共9个对象
-- 完整性：Drive ID、文件名、MIME、大小、修改时间和SHA-256均 **9/9**
-- 总字节：**2,020,166**
-- 验收状态：`INPUT_MANIFEST_HASH_COMPLETE`；仅消除“内容哈希manifest缺失”，不计M01完成
-- 当前阻塞：5个ZIP内部核验及 clean blind review
-- 下一步：逐包建立ZIP成员文件名/大小/哈希清单，与冻结manifest交叉核验，再执行clean blind review
-- 成果：[冻结输入清单](../research/movement/testset-01-frozen-input-manifest-v0.1.json)
-- 提交：[b7b231b6](https://github.com/foxlongfei/zero-one-workbench/commit/b7b231b6d0972ebafe44fa84b30dbf8eb8e87594)
+- 当前执行：M01 ZIP内部核验完成，准备进入M02/Q clean blind
+- 并行分工：C=5 ZIP与112成员哈希；Q=D盲包冻结一致性复算；D=历史交叉评审盲性门审计
+- 最近真实成果：5个Drive ZIP全部通过压缩完整性测试，成员文件名、大小和SHA-256达到 **112/112**
+- 冻结一致性：D盲包的六个代理、D任务和Gate达到 **8/8 PASS**；协议文件别名通过相同大小与SHA-256消除名称假冲突
+- 历史评审结论：CQD包自述 `NON-BLIND METHOD-DEVELOPMENT TESTSET` 与 `CROSS-REVIEWED_NOT_CONCLUDED`；无独立Q/D交卷、未绑定冻结输入内容哈希，只能归档为 `HISTORICAL_CROSS_REVIEW_ONLY`
+- 验收状态：`ZIP_INTERNAL_AUDIT_COMPLETE`；M01仍为 partial，不计完成
+- 当前阻塞：clean blind Q review、clean blind D review、C认证和正式RESULTS
+- 下一步：以冻结9对象manifest启动M02/Q并独立落盘，不向Q输入C/D结论；随后独立执行M03/D
+- 成果：[ZIP内部审计清单](../research/movement/testset-01-zip-internal-audit-v0.1.json)
+- 最终提交：[cffe246d](https://github.com/foxlongfei/zero-one-workbench/commit/cffe246d6ffb3de6d96e3e09959dc0510226ee76)；blob `75d66e0ece9c19d934dbd59383881b4f4f5a2b8b`
 
 ## 验收
 
-本周期两个项目均有真实结构化数据或证据变化；Drive三份权威记录和GitHub成果文件均已写入，主线完成度未虚增。
+本周期两个项目均有真实代码、测试、文件哈希或冲突处理；Drive三份权威记录和GitHub成果文件已写入，主线完成度未虚增。
 
 - [Drive双项目动态执行看板](https://docs.google.com/document/d/16xSk77EHM3D_v2gdEenKs5q8ZXHF7gpWkc_r9a6dn8I/edit)
 - [公开动作库](./exercise-library.html)
