@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "BODY3D-UPPER-LIMB-OBJ-BYTE-MANIFEST-V0.1",
+  "task_line": "M01→M02/M03→M04",
+  "created_at": "2026-09-27T22:47:00+08:00",
+  "status": "OFFICIAL_OBJ_BYTES_EXTRACTED_INTEGRATION_DISPLAY_OPEN",
+  "source": {
+    "project": "BodyParts3D",
+    "archive_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/isa_BP3D_4.0_obj_99.zip",
+    "archive_content_length": 142903898,
+    "archive_last_modified": "2013-05-22",
+    "archive_etag": "8848a5a-4dd48ec9df000",
+    "mapping_files": ["isa_parts_list_e.txt", "isa_element_parts.txt"],
+    "license": "CC BY 4.0",
+    "extraction_method": "ZIP central-directory inspection plus HTTP Range extraction of the five mapped OBJ members"
+  },
+  "objects": [
+    {"label":"right biceps brachii, long head","fma_id":"FMA37686","bp_id":"BP5566","element_id":"FJ1478","path":"FJ1478.obj","bytes":105386,"sha256":"2442d2b5ac30c5da42e72eeff83d143df51c7617001cbc6552096a504f29bc07","vertices":1053,"faces":1426},
+    {"label":"right biceps brachii, short head","fma_id":"FMA37684","bp_id":"BP5558","element_id":"FJ1512","path":"FJ1512.obj","bytes":161507,"sha256":"2173b7cce29f11036907b80e068e9bd6c16f22359d6e7994af9684454b99b4d5","vertices":1739,"faces":1856},
+    {"label":"right radius","fma_id":"FMA23464","bp_id":"BP8464","element_id":"FJ3349","path":"FJ3349.obj","bytes":42701,"sha256":"0f824e639b13ea02959734a0d9bd8d7ca67d0b51f531a138d769e1d3b22e0c98","vertices":388,"faces":672},
+    {"label":"right humerus","fma_id":"FMA23130","bp_id":"BP9206","element_id":"FJ3368","path":"FJ3368.obj","bytes":256564,"sha256":"85f5445a11ecb029b027db0b9b34933982836d442b19ff531d1ca35a3bc3a237","vertices":2233,"faces":3784},
+    {"label":"right ulna","fma_id":"FMA23467","bp_id":"BP8233","element_id":"FJ3391","path":"FJ3391.obj","bytes":54174,"sha256":"0aad73148e036c980ab24dfa675fcc1f109e5c60d82c12f3696420cf93cb4a98","vertices":500,"faces":834}
+  ],
+  "totals": {"object_count":5,"bytes":620332,"vertices":5913,"faces":8572},
+  "gates": {
+    "SOURCE_VERIFIED": true,
+    "LICENSE_VERIFIED": true,
+    "BYTE_EXTRACTION_VERIFIED": true,
+    "INTEGRATION_VERIFIED": false,
+    "DISPLAY_VERIFIED": false
+  },
+  "task_state": {
+    "M01": "COMPLETE",
+    "M02": "PENDING_C",
+    "M03": "BLOCKED_CLEAN_CONTEXT",
+    "M04": "BLOCKED_BY_M02_M03",
+    "共同人体坐标系": "QUEUED",
+    "TEMP-YOUTH": "QUEUED",
+    "TEMP-CLUB": "QUEUED",
+    "TESTSET": "QUEUED"
+  },
+  "next_action": "Place the verified OBJ members under controlled project assets, bind the FJ identifiers to the viewer scene, and capture integration plus display evidence before changing M02/M03/M04 acceptance."
+}
