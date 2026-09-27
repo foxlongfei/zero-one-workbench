@@ -1,0 +1,78 @@
+[
+  {
+    "id": "MF-T01_PHONE_VIDEO_ONLY",
+    "input": {
+      "sources": {
+        "video": {"available": true, "camera_count": 1, "calibrated": false, "frame_rate_known": true, "body_visible": true, "out_of_plane": true},
+        "external_force": {"available": false}, "ultrasound": {"available": false}, "emg": {"available": false}, "musculoskeletal_model": {"available": false}, "anthropometry": {"available": false}
+      },
+      "requested_numeric_outputs": ["bar_reaction_force", "net_joint_moment", "individual_muscle_force", "energy_balance"]
+    },
+    "expected": {
+      "results": {"phase_timing":"MEASURED","joint_angle":"QUALITATIVE_ONLY","bar_reaction_force":"UNAVAILABLE","net_joint_moment":"UNAVAILABLE","individual_muscle_force":"UNAVAILABLE","fascicle_velocity":"UNAVAILABLE","tendon_strain":"UNAVAILABLE","energy_balance":"UNAVAILABLE"},
+      "violations": ["MF-01"]
+    }
+  },
+  {
+    "id": "MF-T02_CALIBRATED_FORCE_MODEL",
+    "input": {
+      "sources": {
+        "video": {"available": true, "camera_count": 2, "calibrated": true, "frame_rate_known": true, "body_visible": true, "out_of_plane": false},
+        "external_force": {"available": true, "synchronized": true}, "ultrasound": {"available": false}, "emg": {"available": false}, "musculoskeletal_model": {"available": true, "optimization": true}, "anthropometry": {"available": true}
+      },
+      "model_provenance": "declared-model-v1",
+      "requested_numeric_outputs": ["bar_reaction_force", "net_joint_moment", "individual_muscle_force"]
+    },
+    "expected": {
+      "results": {"phase_timing":"MEASURED","joint_angle":"MODEL_DERIVED","bar_reaction_force":"MEASURED","net_joint_moment":"MODEL_DERIVED","individual_muscle_force":"MODEL_DERIVED","fascicle_velocity":"UNAVAILABLE","tendon_strain":"UNAVAILABLE","energy_balance":"UNAVAILABLE"},
+      "violations": []
+    }
+  },
+  {
+    "id": "MF-T03_EMG_ONLY_FORCE_ATTEMPT",
+    "input": {
+      "sources": {"video":{"available":false},"external_force":{"available":false},"ultrasound":{"available":false},"emg":{"available":true},"musculoskeletal_model":{"available":false},"anthropometry":{"available":false}},
+      "requested_numeric_outputs": ["individual_muscle_force"]
+    },
+    "expected": {
+      "results": {"phase_timing":"UNAVAILABLE","joint_angle":"UNAVAILABLE","bar_reaction_force":"UNAVAILABLE","net_joint_moment":"UNAVAILABLE","individual_muscle_force":"UNAVAILABLE","fascicle_velocity":"UNAVAILABLE","tendon_strain":"UNAVAILABLE","energy_balance":"UNAVAILABLE"},
+      "violations": ["MF-03"]
+    }
+  },
+  {
+    "id": "MF-T04_UNSYNCED_ULTRASOUND_ENERGY",
+    "input": {
+      "sources": {"video":{"available":true,"camera_count":2,"calibrated":true,"frame_rate_known":true,"body_visible":true,"out_of_plane":false},"external_force":{"available":true,"synchronized":true},"ultrasound":{"available":true,"synchronized":false},"emg":{"available":false},"musculoskeletal_model":{"available":true},"anthropometry":{"available":true}},
+      "sign_convention": "shortening_positive",
+      "requested_numeric_outputs": ["energy_balance"]
+    },
+    "expected": {
+      "results": {"phase_timing":"MEASURED","joint_angle":"MODEL_DERIVED","bar_reaction_force":"MEASURED","net_joint_moment":"MODEL_DERIVED","individual_muscle_force":"UNAVAILABLE","fascicle_velocity":"UNAVAILABLE","tendon_strain":"UNAVAILABLE","energy_balance":"UNAVAILABLE"},
+      "violations": ["MF-05"]
+    }
+  },
+  {
+    "id": "MF-T05_SYNCHRONIZED_FULL_STACK",
+    "input": {
+      "sources": {"video":{"available":true,"camera_count":2,"calibrated":true,"frame_rate_known":true,"body_visible":true,"out_of_plane":false},"external_force":{"available":true,"synchronized":true},"ultrasound":{"available":true,"synchronized":true},"emg":{"available":true},"musculoskeletal_model":{"available":true},"anthropometry":{"available":true}},
+      "sign_convention": "shortening_positive",
+      "model_provenance": "declared-model-v1",
+      "requested_numeric_outputs": ["energy_balance"]
+    },
+    "expected": {
+      "results": {"phase_timing":"MEASURED","joint_angle":"MODEL_DERIVED","bar_reaction_force":"MEASURED","net_joint_moment":"MODEL_DERIVED","individual_muscle_force":"MODEL_DERIVED","fascicle_velocity":"MEASURED","tendon_strain":"MODEL_DERIVED","energy_balance":"MODEL_DERIVED"},
+      "violations": []
+    }
+  },
+  {
+    "id": "MF-T06_OUT_OF_PLANE_EXACT_ANGLE",
+    "input": {
+      "sources": {"video":{"available":true,"camera_count":1,"calibrated":false,"frame_rate_known":true,"body_visible":true,"out_of_plane":true},"external_force":{"available":false},"ultrasound":{"available":false},"emg":{"available":false},"musculoskeletal_model":{"available":false},"anthropometry":{"available":false}},
+      "requested_numeric_outputs": ["joint_angle"]
+    },
+    "expected": {
+      "results": {"phase_timing":"MEASURED","joint_angle":"QUALITATIVE_ONLY","bar_reaction_force":"UNAVAILABLE","net_joint_moment":"UNAVAILABLE","individual_muscle_force":"UNAVAILABLE","fascicle_velocity":"UNAVAILABLE","tendon_strain":"UNAVAILABLE","energy_balance":"UNAVAILABLE"},
+      "violations": ["MF-02"]
+    }
+  }
+]
