@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "K02-03-HXL-01-NDL-QD-BLIND-PACKAGE-V0.1",
+  "task_id": "K02-03-HXL-01",
+  "package_role": "BLIND_REVIEW_INPUT",
+  "created_at": "2026-09-27T23:50:00+08:00",
+  "independence_rule": "Reviewers receive this package only. Do not disclose or open C's page-anchor result, expected transcription, expected page side, or expected column position before both returns are frozen.",
+  "input": {
+    "repository": "National Diet Library Digital Collections",
+    "record_id": "774615",
+    "bibliographic_title": "漢書評林. 第75-80巻",
+    "canvas": 18,
+    "image_url": "https://dl.ndl.go.jp/api/iiif/774615/R00000018/full/2000,/0/default.jpg",
+    "image_sha256": "512d7876483e1da78756234839d8f1cde6e5dd441cfa8991ee1c11cde76c1556",
+    "image_bytes": 1408306,
+    "review_locator": "Find the passage that explains the origin of a calendrical/scriptural claim later associated with the Xia Heliang case. Do not use an external transcription."
+  },
+  "q_assignment": {
+    "role": "Q",
+    "must_return": [
+      "verbatim_traditional_transcription",
+      "page_side",
+      "column_numbers_in_reading_order",
+      "preceding_anchor_8_or_more_characters",
+      "following_anchor_8_or_more_characters",
+      "uncertain_characters_with_alternatives",
+      "confidence_0_to_1"
+    ],
+    "acceptance": "Return must be derived from the supplied image and frozen before comparison with C or D."
+  },
+  "d_assignment": {
+    "role": "D",
+    "must_return": [
+      "independent_verbatim_transcription",
+      "page_side",
+      "column_numbers_in_reading_order",
+      "attribution_scope",
+      "false_positive_or_column_shift_risks",
+      "disagreement_list",
+      "confidence_0_to_1"
+    ],
+    "acceptance": "Attack page-side, column-order, name-attribution, and character-shape errors without seeing Q or C output."
+  },
+  "freeze": {
+    "q_output_path": "research/zero-one/k02-03-hxl-ndl-q-return-v0.1.json",
+    "d_output_path": "research/zero-one/k02-03-hxl-ndl-d-return-v0.1.json",
+    "required_before_cross_review": true,
+    "cross_review_status": "NOT_STARTED"
+  },
+  "forbidden_fields": [
+    "expected_text",
+    "expected_page_side",
+    "expected_column_numbers",
+    "c_transcription",
+    "c_answer"
+  ],
+  "acceptance_state": {
+    "package_complete": true,
+    "q_complete": false,
+    "d_complete": false,
+    "cross_review_complete": false,
+    "nlc_gate_complete": false,
+    "strict_completed": 0,
+    "strict_total": 5
+  },
+  "next_action": "Run Q and D in independent clean contexts, freeze both JSON returns, then compare them with C and continue to the NLC 382411 volume-11 anchor."
+}
