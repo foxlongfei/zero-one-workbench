@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "task_id": "K02-03-HXL-01",
+  "role": "C_STABLE_WITNESS_DISCOVERY_NON_BLIND",
+  "status": "STABLE_IMAGE_WITNESSES_LOCATED_PAGE_ANCHORS_PENDING",
+  "mainline_count_before": "0/5",
+  "mainline_count_after": "0/5",
+  "counting_decision": "NO_COUNT_CHANGE",
+  "witnesses": [
+    {
+      "id": "SW-HS75-NDL-774615",
+      "target": "漢書卷七十五／眭兩夏侯京翼李傳第四十五",
+      "record_title": "漢書評林 第75-80巻",
+      "holder": "National Diet Library, Japan",
+      "persistent_id": "info:ndljp/pid/774615",
+      "doi": "10.11501/774615",
+      "catalog_url": "https://ndlsearch.ndl.go.jp/books/R100000039-I774615",
+      "iiif_manifest": "https://dl.ndl.go.jp/api/iiif/774615/manifest.json",
+      "edition_year": 1885,
+      "access": "INTERNET_PUBLIC",
+      "format": "image/jp2",
+      "rights": "pdm",
+      "page_locator": "PENDING",
+      "required_anchor": "甘忠可—夏賀良—改元易號—其言亡驗／卒無嘉應—下吏"
+    },
+    {
+      "id": "SW-HS11-NLC-382411",
+      "target": "漢書卷十一／哀帝紀第十一",
+      "record_title": "漢書 一百卷 第2冊",
+      "holder": "National Library of China",
+      "source_identifier": "NLC892-412004000321-382411",
+      "catalog_url": "https://commons.wikimedia.org/wiki/File:NLC892-412004000321-382411_%E6%BC%A2%E6%9B%B8_%E4%B8%80%E7%99%BE%E5%8D%B7_%E7%AC%AC2%E5%86%8A.pdf",
+      "edition": "元大德九年[1305]、明成化至正德遞修本",
+      "coverage": ["第六", "第七", "第八", "第九", "第十", "第十一", "第十二"],
+      "pages": 112,
+      "file_size_mb": 41.01,
+      "access": "PUBLIC_SCAN_METADATA_CONFIRMED_ORIGINAL_TOO_LARGE_FOR_CURRENT_FETCH",
+      "rights": "public_domain_scan",
+      "page_locator": "PENDING",
+      "required_anchor": "六月改元易號／增益漏刻—八月卒亡嘉應—蠲除—下有司"
+    }
+  ],
+  "textual_control": {
+    "source": "顏師古注／現代校勘呈現頁",
+    "urls": [
+      "https://skqs.dazhishi.com/show_qpywaawoyv.html",
+      "https://skqs.dazhishi.com/show_ondxrrjbdg.html"
+    ],
+    "observations": [
+      "卷十一校勘明示（時）〔待〕詔，景祐、殿、局本皆作待。",
+      "卷十一注释将漏刻制度来源追溯至甘忠可，支持不得把詐造静默转嫁给夏賀良的归责边界。",
+      "卷七十五保留其言亡驗与卒無嘉應两层失败措辞。"
+    ],
+    "authority_boundary": "用于定位和提出校勘问题，不替代影印页逐字核对。"
+  },
+  "acceptance_gate": {
+    "required_next_role": "INDEPENDENT_QD",
+    "required_actions": [
+      "locate_exact_scan_pages_for_HS75_and_HS11",
+      "capture_page_ids_or_canvas_ids",
+      "transcribe_required_anchors_from_images",
+      "compare_待詔_variant_and_failure_wording",
+      "review_attribution_scope_without_using_C_conclusion"
+    ],
+    "prohibited_until_pass": ["count_as_1_of_5", "advance_to_少翁"]
+  },
+  "next_checkpoint": "K02-03-HXL-01: independently locate exact pages/canvases in SW-HS75-NDL-774615 and SW-HS11-NLC-382411, then replay the anchor comparison before any count change."
+}
