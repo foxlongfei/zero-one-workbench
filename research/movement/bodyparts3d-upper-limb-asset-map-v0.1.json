@@ -1,0 +1,36 @@
+{
+  "artifact_id": "BODYParts3D-UPPER-LIMB-ASSET-MAP-V0.1",
+  "project": "动起来",
+  "task_id": "M01→M02/M03→M04",
+  "scope": "肱二头肌→肘→前臂标准样板的右侧真实开放资产候选",
+  "source": {
+    "name": "BodyParts3D Release 4.0",
+    "archive_page": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/download.html",
+    "mapping_file": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/isa_parts_list_e.txt",
+    "mesh_archive": "isa_BP3D_4.0_obj_99.zip",
+    "archive_size_mib": 136,
+    "source_snapshot_date": "2025-02-27"
+  },
+  "license": {
+    "spdx": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "required_attribution": "BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International",
+    "verified": true
+  },
+  "targets": [
+    {"role":"HUMERUS_RIGHT","fma_id":"FMA23130","representation_id":"BP9206","source_name":"Right humerus"},
+    {"role":"RADIUS_RIGHT","fma_id":"FMA23464","representation_id":"BP8464","source_name":"Right radius"},
+    {"role":"ULNA_RIGHT","fma_id":"FMA23467","representation_id":"BP8233","source_name":"Right ulna"},
+    {"role":"BICEPS_SHORT_HEAD_RIGHT","fma_id":"FMA37684","representation_id":"BP5558","source_name":"Short head of right biceps brachii"},
+    {"role":"BICEPS_LONG_HEAD_RIGHT","fma_id":"FMA37686","representation_id":"BP5566","source_name":"Long head of right biceps brachii"}
+  ],
+  "modeling_rule": "肱二头肌必须由长头与短头两个原子网格组成；不得虚构单一整体肱二头肌网格。",
+  "gates": {
+    "SOURCE_VERIFIED": true,
+    "LICENSE_VERIFIED": true,
+    "INTEGRATION_VERIFIED": false,
+    "DISPLAY_VERIFIED": false
+  },
+  "acceptance_status": "SOURCE_AND_LICENSE_VERIFIED_INTEGRATION_DISPLAY_OPEN",
+  "next_checkpoint": "从官方136 MiB OBJ归档提取BP9206、BP8464、BP8233、BP5558、BP5566，记录每个OBJ的字节数与SHA-256，再接入既有V0.5三维样板并做公开读回。"
+}
