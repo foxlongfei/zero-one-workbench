@@ -1,0 +1,66 @@
+[
+  {
+    "id": "IB-T01_BLOCKED_ROUTE_IS_NOT_ABSENCE",
+    "input": {
+      "byte_status": "ACCESS_BLOCKED",
+      "asset_presence": "UNKNOWN",
+      "resolved_role": "UNKNOWN"
+    },
+    "expected": {
+      "accepted": true,
+      "audit_status": "BYTES_PENDING",
+      "violations": []
+    }
+  },
+  {
+    "id": "IB-T02_BLOCKED_ROUTE_FALSE_ABSENCE",
+    "input": {
+      "byte_status": "ACCESS_BLOCKED",
+      "asset_presence": "ABSENT",
+      "resolved_role": "UNKNOWN"
+    },
+    "expected": {
+      "accepted": false,
+      "audit_status": "BYTES_PENDING",
+      "violations": ["IB-04"]
+    }
+  },
+  {
+    "id": "IB-T03_VALID_BYTES_WITH_VISUAL_ROLE",
+    "input": {
+      "byte_status": "ACQUIRED",
+      "byte_length": 12000,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "content_type": "image/jpeg",
+      "decode_status": "PASS",
+      "width_px": 1200,
+      "height_px": 800,
+      "resolved_role": "RUBBING",
+      "role_evidence": "VISUAL_INSPECTION"
+    },
+    "expected": {
+      "accepted": true,
+      "audit_status": "BYTE_EVIDENCE_ACCEPTED",
+      "violations": []
+    }
+  },
+  {
+    "id": "IB-T04_MISSING_HASH_AND_FORCED_ROLE",
+    "input": {
+      "byte_status": "ACQUIRED",
+      "byte_length": 12000,
+      "sha256": null,
+      "content_type": "image/jpeg",
+      "decode_status": "PASS",
+      "width_px": 1200,
+      "height_px": 800,
+      "resolved_role": "LINE_DRAWING",
+      "role_evidence": "PAGE_ORDER_GUESS"
+    },
+    "expected": {
+      "accepted": false,
+      "audit_status": "BYTE_EVIDENCE_REJECTED",
+      "violations": ["IB-01", "IB-03"]
+    }
+  }
+]
