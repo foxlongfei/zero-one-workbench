@@ -1,0 +1,125 @@
+{
+  "artifact_id": "TESTSET-01-M02-Q-CLEAN-BLIND-V0.1",
+  "created_at": "2026-09-27T05:36:34Z",
+  "reviewer_role": "Q",
+  "validation_level": "BLIND_VALIDATION",
+  "blindness_declaration": {
+    "inputs_read": [
+      "TESTSET-01_PROTOCOL_SNAPSHOT_V0.1.md",
+      "TESTSET-01_Q_BLIND_TASK_V0.1.md",
+      "RAW-T01-01..06_PROXY_5FPS.mp4"
+    ],
+    "inputs_not_read": [
+      "D task",
+      "C first-pass output",
+      "D first-pass output",
+      "historical cross-review conclusions",
+      "user rep counts"
+    ],
+    "status": "Q_FIRST_PASS_SUBMITTED"
+  },
+  "frozen_input_sha256": {
+    "gate": "0dc2a612cabf509c7c793a583f7f00ad84ef760c4ee43511a44dd7d4097ae5fc",
+    "q_task": "e4529bf3c43ee3e179fd0233d7c59a66e6e8c235effac2b7299c2a9026ec73ba",
+    "RAW-T01-01": "04653c0260af8243ae0b486ac3f0e123d9ed4542d0b7eb9b671d774222d58a31",
+    "RAW-T01-02": "31070fc830ce1262b51275fb24d55f9a08a0ef92420a07fa21247dfb422f7e3a",
+    "RAW-T01-03": "a3a74f58e243394e4bfeb7381b59762a529b2d6405560b46ea3e3462301a3c7b",
+    "RAW-T01-04": "a9686c5825f6644b779ec89bf46c83f6e5e978f5eeea2118e393174de0e86d60",
+    "RAW-T01-05": "73a545ad17b89592376eb98ec794edd3ad06e88aea630b4d9e02a5cf7f8c7c99",
+    "RAW-T01-06": "5cd455cc147c36403ec84f4cac504139c5056eb48b676f18034cad6ae0661b53"
+  },
+  "observation_method": {
+    "source_rate_fps": 5,
+    "overview_sampling": "24 uniformly spaced frames per proxy",
+    "dense_sampling": "2 fps inside candidate action intervals",
+    "automated_cross_check": "foreground vertical-centroid extrema; used only to flag candidate reversals, never as sole acceptance evidence",
+    "proxy_limit": "Fine boundary completeness, true depth and 30-vs-60 fps effects are NOT_ESTABLISHED without originals."
+  },
+  "Q_PAIRING": [
+    {
+      "pair": ["RAW-T01-01", "RAW-T01-04"],
+      "basis": "same action family (burpee-like floor transition), same camouflage trousers/white shoes and same outdoor court; landscape low-side versus portrait low-front views",
+      "confidence": "HIGH"
+    },
+    {
+      "pair": ["RAW-T01-02", "RAW-T01-05"],
+      "basis": "same action family (push-up) and same outdoor court; viewpoints and clothing differ, so this is an action-family pairing rather than a proven same-event synchronized pair",
+      "confidence": "MEDIUM",
+      "uncertainty": "No synchronization marker or original audio/timecode is available."
+    },
+    {
+      "pair": ["RAW-T01-03", "RAW-T01-06"],
+      "basis": "same red top/light shorts/green shoes, squat family, same court; landscape side versus portrait low-front views",
+      "confidence": "HIGH"
+    }
+  ],
+  "recordings": [
+    {
+      "id": "RAW-T01-01",
+      "Q_ACTION_INTERVALS": [{"start_s": 16.8, "end_s": 33.4, "label": "burpee-like cycles"}],
+      "Q_CYCLE_CANDIDATES": {"result": 5, "evidence_level": "L1", "count_basis": "five coherent stand/crouch/plank-or-floor/return structures"},
+      "Q_COMPLETE_OR_PARTIAL_EVENTS": {"complete_candidates": 5, "partial_or_edge": [{"interval_s": [16.8, 18.0], "status": "UNCERTAIN_START_BOUNDARY"}]},
+      "Q_VIEW_STRENGTHS": ["side view exposes floor transition and return to standing"],
+      "Q_VIEW_FAILURES": ["torso partly cropped at standing top", "fine elbow/chest depth not resolvable at 160x90/5fps"],
+      "Q_CONFIDENCE": "MEDIUM_HIGH"
+    },
+    {
+      "id": "RAW-T01-02",
+      "Q_ACTION_INTERVALS": [{"start_s": 14.6, "end_s": 55.8, "label": "push-up sequence"}],
+      "Q_CYCLE_CANDIDATES": {"result": {"min": 34, "max": 36}, "evidence_level": "L1", "count_basis": "34 clear vertical reversal cycles; 30.6-33.2s contains up to two additional cycles whose extrema are merged by proxy sampling"},
+      "Q_COMPLETE_OR_PARTIAL_EVENTS": {"complete_candidates": 34, "uncertain_candidates": 2, "edge_status": "final top visible before end"},
+      "Q_VIEW_STRENGTHS": ["side view exposes repeated top/bottom reversals"],
+      "Q_VIEW_FAILURES": ["rapid cadence near 5fps aliasing limit", "depth/completeness cannot be certified"],
+      "Q_CONFIDENCE": "MEDIUM"
+    },
+    {
+      "id": "RAW-T01-03",
+      "Q_ACTION_INTERVALS": [{"start_s": 77.0, "end_s": 139.0, "label": "squat sequence", "interruption": "brief stance/reset around 124-128s"}],
+      "Q_CYCLE_CANDIDATES": {"result": {"min": 29, "max": 31}, "evidence_level": "L1", "count_basis": "dense side-view sampling shows repeated stand-bottom-stand structures; brief reset and long proxy span make two boundary cycles uncertain"},
+      "Q_COMPLETE_OR_PARTIAL_EVENTS": {"complete_candidates": 29, "uncertain_candidates": 2, "edge_status": "late cycle approaches clip end"},
+      "Q_VIEW_STRENGTHS": ["side view supports coarse hip/knee vertical reversal"],
+      "Q_VIEW_FAILURES": ["passersby/camera handling before action interval", "true depth and joint-angle quality not established"],
+      "Q_CONFIDENCE": "MEDIUM"
+    },
+    {
+      "id": "RAW-T01-04",
+      "Q_ACTION_INTERVALS": [{"start_s": 7.0, "end_s": 22.4, "label": "burpee-like cycles"}],
+      "Q_CYCLE_CANDIDATES": {"result": 5, "evidence_level": "L1", "count_basis": "five coherent floor-and-return structures"},
+      "Q_COMPLETE_OR_PARTIAL_EVENTS": {"complete_candidates": 5, "partial_or_edge": []},
+      "Q_VIEW_STRENGTHS": ["front-low view exposes hand placement, floor phase and foot return"],
+      "Q_VIEW_FAILURES": ["standing torso/head cropped", "floor depth/completeness partly foreshortened"],
+      "Q_CONFIDENCE": "HIGH"
+    },
+    {
+      "id": "RAW-T01-05",
+      "Q_ACTION_INTERVALS": [{"start_s": 5.8, "end_s": 49.2, "label": "push-up sequence"}],
+      "Q_CYCLE_CANDIDATES": {"result": 37, "evidence_level": "L1", "count_basis": "37 visible top/bottom reversal cycles before feet return"},
+      "Q_COMPLETE_OR_PARTIAL_EVENTS": {"complete_candidates": 37, "partial_or_edge": [{"interval_s": [48.2, 49.2], "status": "LAST_CYCLE_THEN_TRANSITION"}]},
+      "Q_VIEW_STRENGTHS": ["front-low view makes cadence and elbow reversal visible"],
+      "Q_VIEW_FAILURES": ["foreshortening blocks true chest depth", "5fps cannot certify exact frame-boundary lockout"],
+      "Q_CONFIDENCE": "MEDIUM_HIGH"
+    },
+    {
+      "id": "RAW-T01-06",
+      "Q_ACTION_INTERVALS": [{"start_s": 84.8, "end_s": 137.8, "label": "squat sequence"}],
+      "Q_CYCLE_CANDIDATES": {"result": 30, "evidence_level": "L1", "count_basis": "30 repeated bottom reversals in the red-shirt sequence"},
+      "Q_COMPLETE_OR_PARTIAL_EVENTS": {"complete_candidates": 29, "uncertain_candidates": 1, "edge_status": "final ascent meets clip end"},
+      "Q_VIEW_STRENGTHS": ["front-low view exposes repeated stance-bottom-stance pattern"],
+      "Q_VIEW_FAILURES": ["head/arms intermittently crop at top", "final cycle boundary truncated", "depth and movement quality not established"],
+      "Q_CONFIDENCE": "MEDIUM_HIGH"
+    }
+  ],
+  "Q_30VS60_OBSERVATIONS": "NOT_ESTABLISHED: every reviewed artifact is a 5fps proxy; original 30fps/60fps files were not used.",
+  "Q_UNCERTAINTIES": [
+    "Pair 02/05 is an action-family pairing, not proven synchronization.",
+    "All completeness labels remain candidate-level because original temporal resolution is absent.",
+    "No true-depth or movement-quality conclusion is permitted."
+  ],
+  "Q_FAILURE_POINTS": [
+    "Proxy cadence aliases rapid push-up endpoints.",
+    "Portrait low-front views foreshorten depth.",
+    "Some standing tops are cropped and long clips include camera handling/passersby."
+  ],
+  "submission_status": "M02_Q_FIRST_PASS_COMPLETE_PENDING_C_ACCEPTANCE",
+  "next_handoff": "C may verify protocol conformance and frozen hashes. D must receive only its own blind package before any Q content."
+}
