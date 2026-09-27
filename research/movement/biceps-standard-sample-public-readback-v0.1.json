@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1",
+  "task_id": "COMMON-HUMAN-COORDINATE-SAMPLE-BICEPS",
+  "role": "PUBLIC_DEPLOYMENT_READBACK",
+  "status": "PUBLIC_READBACK_PASS",
+  "target_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "source_commit": "2032411b5bd5a54a878b7348798ce312d460ffbd",
+  "observed": {
+    "page_title": "动起来当前执行",
+    "sample_heading": "肱二头肌 → 肘 → 前臂｜完整标准样板",
+    "embedded_not_redirected": true,
+    "sections_present": [
+      "点结构，看关系",
+      "解剖事实",
+      "肌肉 → 运动",
+      "动作样例｜站姿弯举",
+      "来源与开放底层"
+    ],
+    "source_links_present": ["NCBI", "OpenStax", "OpenSim Arm26"]
+  },
+  "interaction_tests": [
+    {
+      "id": "PUBLIC-BTN-BICEPS",
+      "button": "肱二头肌",
+      "result": "PASS",
+      "observed_text": "两头近端来自肩胛骨，远端连接桡骨粗隆/前臂筋膜；跨肩和肘，参与屈肘与前臂旋后。"
+    },
+    {
+      "id": "PUBLIC-BTN-ELBOW",
+      "button": "肘关节",
+      "result": "PASS",
+      "observed_text": "屈曲不是肱二头肌独占；肱肌、肱桡肌共同参与，伸肘主要由肱三头肌/肘肌完成。"
+    },
+    {
+      "id": "PUBLIC-BTN-RADIUS",
+      "button": "桡骨",
+      "result": "PASS",
+      "observed_text": "肱二头肌远端止于桡骨粗隆；旋前/旋后时桡骨相对尺骨发生旋转。"
+    },
+    {
+      "id": "PUBLIC-BTN-ULNA",
+      "button": "尺骨",
+      "result": "PASS",
+      "observed_text": "肱肌止于尺骨近端区域，肱三头肌止于鹰嘴；它帮助区分屈肘动作和肱二头肌专属作用。"
+    }
+  ],
+  "summary": {"tests": 4, "passed": 4, "failed": 0},
+  "closure": {
+    "closed_blocker": "PUBLIC_PAGES_CONTENT_READBACK_MISSING",
+    "repository_layer": "PASS",
+    "public_page_layer": "PASS",
+    "mainline_completion_change": false,
+    "three_dimensional_asset_stage": "NOT_STARTED"
+  },
+  "next_checkpoint": "Preserve the accepted public V0.1 display while mapping real open asset IDs for biceps, humerus, radius and ulna; do not relabel the teaching diagram as a real 3D asset."
+}
