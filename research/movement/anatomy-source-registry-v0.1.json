@@ -1,0 +1,33 @@
+{
+  "schema":"zero-one-anatomy-source-registry/v0.1",
+  "updated":"2026-09-27T21:39:00+08:00",
+  "policy":"reuse-before-rebuild; source+license+integration+display gates",
+  "primary_anatomy":{
+    "name":"Human Atlas / BodyParts3D 4.0 browser package",
+    "upstream_repo":"https://github.com/ashemag/human-atlas",
+    "application_license":"MIT",
+    "anatomy_dataset":"BodyParts3D 4.0",
+    "anatomy_license":"CC BY 4.0",
+    "attribution":"BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International.",
+    "source_geometry":"isa_BP3D_4.0_obj_99.zip",
+    "individual_meshes":2234,
+    "named_fma_concepts":3432,
+    "anatomical_systems":15,
+    "browser_geometry_triangles":2288268,
+    "browser_geometry_compressed_mb_approx":33,
+    "reference":"adult male",
+    "limitations":["not every human structure or variation","educational, not diagnostic/surgical"],
+    "adaptations":["mm/Z-up to m/Y-up","stage translation","meshoptimizer simplification 0.2% relative error per structure","normal quantization","binary chunk packing","curated display systems/colors"],
+    "identity_preserved":true,
+    "license_gate":"VERIFIED_FROM_UPSTREAM_LICENSE_AND_ATTRIBUTION"
+  },
+  "joint_motion_layer":{
+    "principle":"anatomical joint geometry and kinematic behavior are separate evidence layers",
+    "geometry_source":"BodyParts3D/Human Atlas where available",
+    "motion_source":"project movement model + verified biomechanics sources; OpenSim candidate computational layer",
+    "do_not_infer":["range of motion from mesh shape alone","joint axis from name alone","muscle moment arm from visual animation alone"]
+  },
+  "display_layers":["whole_body","skeleton","muscle","joint/anatomical-region","other anatomical systems"],
+  "current_learning_focus":"upper_limb",
+  "integration_status":"FULL_LIBRARY_REGISTERED_AS_PRIMARY_UPSTREAM; LOCAL_ASSET_IMPORT_OPEN"
+}
