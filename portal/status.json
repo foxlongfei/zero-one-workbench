@@ -1,25 +1,39 @@
 {
-  "updated": "2026-09-20 22:36 Asia/Shanghai",
-  "storage_policy": {
-    "drive": "authoritative backup and snapshots",
-    "github_pages": "visible project board",
-    "work_mode": "coordination workspace only",
-    "three_doctors": "Q and D independent research; C alignment and acceptance"
-  },
+  "updated": "2026-09-27 CURRENT",
+  "policy": "Drive authoritative -> Drive readback -> GitHub CURRENT sync -> GitHub readback",
   "projects": {
     "research": {
       "name": "零一空间研究",
-      "stage": "K02｜传统知识接合与应用机制研究",
-      "progress": {"passed": 1, "total": 4},
-      "active_task": "K02-02B-C｜《汉书》《后汉书》Q04/D04联合验收与跨史比较",
-      "latest": "Q04完成18张概念卡；D04完成22例；完整快照与SHA-256已写入Drive",
-      "snapshot": {
-        "drive_file_id": "1dWbMpNRW0zliqtAyb1fnBJ9UyhqqWZL6",
-        "sha256": "158b67f6e1a9384ff190029813a216263a976a42244050dfa986bf1f241d754d"
+      "mainline": {
+        "status": "COMPLETED",
+        "passed": 4,
+        "total": 4
       },
-      "next": ["C席联合验收", "跨史比较", "Schema压力测试", "下一批正史路线"]
+      "active_sublines": [
+        "TEMP-E01",
+        "TEMP-M01"
+      ],
+      "current": "95T1J1:4 original-image/report-page evidence gate",
+      "next": "obtain original asset bytes/report pages; hash and object-image audit"
     },
-    "movement": {"name":"动起来","stage":"STATE RECOVERY","progress":null},
-    "food": {"name":"食色性也","stage":"基础骨架已建立","progress":null}
+    "movement": {
+      "name": "动起来",
+      "mainline": {
+        "status": "IN_PROGRESS",
+        "passed": 0,
+        "total": 4
+      },
+      "M01": "9/9 SHA-256; 5/5 ZIP; 112/112 members audited",
+      "M02": "Q clean-blind first pass submitted; pending C acceptance",
+      "M03": "D independent clean-blind pending",
+      "M04": "blocked pending dual-submission acceptance",
+      "coordinate_system": "ACTIVE; biceps-elbow-forearm complete sample not yet field-calibrated",
+      "youth": "RESTART_NOW",
+      "community_grading": "RESTART_NOW"
+    },
+    "food": {
+      "name": "食色性也",
+      "status": "PAUSED"
+    }
   }
 }
