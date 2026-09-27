@@ -1,0 +1,66 @@
+{
+  "artifact_id": "TESTSET-01-M02-Q-CLEAN-BLIND-V0.2",
+  "task_id": "M02",
+  "created_at": "2026-09-28T03:48:00+08:00",
+  "reviewer_role": "Q",
+  "validation_level": "BLIND_VALIDATION_L1_SCHEMA_REPAIR",
+  "repair_lineage": {
+    "source_artifact": "research/movement/testset-01-m02-q-clean-blind-v0.1.json",
+    "source_commit": "2cfea35da52ce1075ca03de4adfdc49961675698",
+    "c_audit_artifact": "research/movement/testset-01-m02-q-c-acceptance-audit-v0.1.json",
+    "c_audit_commit": "05171f3c92c7989bfc5e243d328ef990c4985f6c",
+    "repair_scope": "SCHEMA_ONLY",
+    "observation_or_count_changed": false
+  },
+  "frozen_input_sha256": {
+    "gate": "0dc2a612cabf509c7c793a583f7f00ad84ef760c4ee43511a44dd7d4097ae5fc",
+    "q_task": "e4529bf3c43ee3e179fd0233d7c59a66e6e8c235effac2b7299c2a9026ec73ba",
+    "RAW-T01-01": "04653c0260af8243ae0b486ac3f0e123d9ed4542d0b7eb9b671d774222d58a31",
+    "RAW-T01-02": "31070fc830ce1262b51275fb24d55f9a08a0ef92420a07fa21247dfb422f7e3a",
+    "RAW-T01-03": "a3a74f58e243394e4bfeb7381b59762a529b2d6405560b46ea3e3462301a3c7b",
+    "RAW-T01-04": "a9686c5825f6644b779ec89bf46c83f6e5e978f5eeea2118e393174de0e86d60",
+    "RAW-T01-05": "73a545ad17b89592376eb98ec794edd3ad06e88aea630b4d9e02a5cf7f8c7c99",
+    "RAW-T01-06": "5cd455cc147c36403ec84f4cac504139c5056eb48b676f18034cad6ae0661b53"
+  },
+  "allowed_protocol_classes": ["COMPLETE_REP", "PARTIAL_REP", "ADJUSTMENT", "TRANSITION", "NOISE", "UNKNOWN"],
+  "pairings": [
+    {"pair": ["RAW-T01-01", "RAW-T01-04"], "confidence": "HIGH", "preserved_from_v0_1": true},
+    {"pair": ["RAW-T01-02", "RAW-T01-05"], "confidence": "MEDIUM", "synchronization": "NOT_ESTABLISHED", "preserved_from_v0_1": true},
+    {"pair": ["RAW-T01-03", "RAW-T01-06"], "confidence": "HIGH", "preserved_from_v0_1": true}
+  ],
+  "recordings": [
+    {
+      "id": "RAW-T01-01", "interval_s": [16.8, 33.4], "candidate_result": 5, "complete_candidates": 5, "confidence": "MEDIUM_HIGH",
+      "evidence_taxonomy": {"OBSERVED": ["coherent stand/crouch/floor/return structures"], "COUNTED": ["five L1 cycle candidates"], "INTERPRETED": ["burpee-like action family"], "NOT_VISIBLE": ["fine elbow/chest depth at 160x90/5fps"], "UNCERTAIN": ["start boundary 16.8-18.0s"]},
+      "classification_summary": {"cycle_detected": true, "rep_classification": "UNKNOWN", "rep_result": 5, "candidate_only": true, "evidence_level": "L1"}
+    },
+    {
+      "id": "RAW-T01-02", "interval_s": [14.6, 55.8], "candidate_result": {"min": 34, "max": 36}, "complete_candidates": 34, "uncertain_candidates": 2, "confidence": "MEDIUM",
+      "evidence_taxonomy": {"OBSERVED": ["repeated top/bottom reversals"], "COUNTED": ["34 clear candidates; up to two merged by proxy sampling"], "INTERPRETED": ["push-up action family"], "NOT_VISIBLE": ["certifiable depth/completeness"], "UNCERTAIN": ["30.6-33.2s extrema aliasing"]},
+      "classification_summary": {"cycle_detected": true, "rep_classification": "UNKNOWN", "rep_result": {"min": 34, "max": 36}, "candidate_only": true, "evidence_level": "L1"}
+    },
+    {
+      "id": "RAW-T01-03", "interval_s": [77.0, 139.0], "candidate_result": {"min": 29, "max": 31}, "complete_candidates": 29, "uncertain_candidates": 2, "confidence": "MEDIUM",
+      "evidence_taxonomy": {"OBSERVED": ["repeated stand-bottom-stand structures"], "COUNTED": ["29 clear candidates and two uncertain boundaries"], "INTERPRETED": ["squat action family"], "NOT_VISIBLE": ["true depth and joint-angle quality"], "UNCERTAIN": ["brief reset 124-128s; late boundary"]},
+      "classification_summary": {"cycle_detected": true, "rep_classification": "UNKNOWN", "rep_result": {"min": 29, "max": 31}, "candidate_only": true, "evidence_level": "L1"}
+    },
+    {
+      "id": "RAW-T01-04", "interval_s": [7.0, 22.4], "candidate_result": 5, "complete_candidates": 5, "confidence": "HIGH",
+      "evidence_taxonomy": {"OBSERVED": ["five floor-and-return structures"], "COUNTED": ["five L1 cycle candidates"], "INTERPRETED": ["burpee-like action family"], "NOT_VISIBLE": ["standing top and true floor depth"], "UNCERTAIN": []},
+      "classification_summary": {"cycle_detected": true, "rep_classification": "UNKNOWN", "rep_result": 5, "candidate_only": true, "evidence_level": "L1"}
+    },
+    {
+      "id": "RAW-T01-05", "interval_s": [5.8, 49.2], "candidate_result": 37, "complete_candidates": 37, "confidence": "MEDIUM_HIGH",
+      "evidence_taxonomy": {"OBSERVED": ["37 visible top/bottom reversal cycles before feet return"], "COUNTED": ["37 L1 cycle candidates"], "INTERPRETED": ["push-up action family"], "NOT_VISIBLE": ["true chest depth and exact frame-boundary lockout"], "UNCERTAIN": ["last cycle then transition 48.2-49.2s"]},
+      "classification_summary": {"cycle_detected": true, "rep_classification": "UNKNOWN", "rep_result": 37, "candidate_only": true, "evidence_level": "L1"}
+    },
+    {
+      "id": "RAW-T01-06", "interval_s": [84.8, 137.8], "candidate_result": 30, "complete_candidates": 29, "uncertain_candidates": 1, "confidence": "MEDIUM_HIGH",
+      "evidence_taxonomy": {"OBSERVED": ["30 repeated bottom reversals"], "COUNTED": ["29 clear candidates and one uncertain final candidate"], "INTERPRETED": ["squat action family"], "NOT_VISIBLE": ["depth and movement quality"], "UNCERTAIN": ["final ascent meets clip end"]},
+      "classification_summary": {"cycle_detected": true, "rep_classification": "UNKNOWN", "rep_result": 30, "candidate_only": true, "evidence_level": "L1"}
+    }
+  ],
+  "thirty_vs_sixty_observation": "NOT_ESTABLISHED: every reviewed artifact is a 5fps proxy.",
+  "boundaries": {"true_depth": "NOT_ESTABLISHED", "movement_quality": "NOT_ESTABLISHED", "rep_completeness": "NOT_ESTABLISHED", "d_independence": "PROTECTED"},
+  "submission_status": "M02_Q_SCHEMA_REPAIR_COMPLETE_PENDING_C_RECHECK"
+}

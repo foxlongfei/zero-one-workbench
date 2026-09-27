@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "K02-03-HXL-01-NLC-QD-BLIND-PACKAGE-V0.1",
+  "task_id": "K02-03-HXL-01",
+  "created_at": "2026-09-28T03:48:00+08:00",
+  "status": "READY_FOR_INDEPENDENT_QD",
+  "blindness_contract": {
+    "purpose": "Independent location and transcription replay against the complete public scan.",
+    "not_disclosed": [
+      "C page number",
+      "C transcription",
+      "page side or column position",
+      "C acceptance result"
+    ],
+    "independence_rule": "Q and D work separately and must not see each other's return before both files are frozen."
+  },
+  "source": {
+    "title": "NLC892-412004000321-382411 漢書 一百卷 第2冊.pdf",
+    "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NLC892-412004000321-382411_%E6%BC%A2%E6%9B%B8_%E4%B8%80%E7%99%BE%E5%8D%B7_%E7%AC%AC2%E5%86%8A.pdf",
+    "mime_type": "application/pdf",
+    "byte_size": 43003180,
+    "sha256": "e90deb0d7cb8828f4a252a5a4b846197c4c728b97a858ce56e5672a365f1bb40"
+  },
+  "review_task": {
+    "scope": "Locate the received-text passage that narrates the 建平二年改元易號/漏刻 measure, its later revocation, the stated absence of an auspicious response, and the following disposition of 夏賀良等.",
+    "required_method": [
+      "Record the PDF page independently located from the full file.",
+      "Transcribe the relevant received text without consulting C output.",
+      "Record leaf side and vertical-column span in reading order.",
+      "Flag uncertain or illegible characters explicitly; do not silently normalize.",
+      "Separate scan observation from historical interpretation."
+    ]
+  },
+  "return_schema": {
+    "required_fields": [
+      "reviewer_role",
+      "source_sha256_verified",
+      "located_pdf_page",
+      "leaf_side",
+      "column_span",
+      "transcription",
+      "uncertain_characters",
+      "revocation_chain_present",
+      "judicial_continuation_present",
+      "confidence",
+      "independence_declaration"
+    ],
+    "q_return_path": "research/zero-one/k02-03-hxl-nlc-q-return-v0.1.json",
+    "d_return_path": "research/zero-one/k02-03-hxl-nlc-d-return-v0.1.json"
+  },
+  "acceptance": {
+    "q_independent_return": false,
+    "d_independent_return": false,
+    "cross_review": false,
+    "mainline_before": "0/5",
+    "mainline_after": "0/5",
+    "counting_decision": "NO_COUNT_CHANGE"
+  }
+}

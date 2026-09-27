@@ -1,0 +1,39 @@
+{
+  "artifact_id": "TESTSET-01-M02-Q-C-RECHECK-V0.2",
+  "task_id": "M02",
+  "created_at": "2026-09-28T03:49:00+08:00",
+  "reviewer_role": "C",
+  "inputs": {
+    "q_repaired_artifact": "research/movement/testset-01-m02-q-clean-blind-v0.2.json",
+    "prior_c_audit_commit": "05171f3c92c7989bfc5e243d328ef990c4985f6c",
+    "repair_type": "SCHEMA_ONLY"
+  },
+  "recheck": {
+    "frozen_hashes_match": "8/8",
+    "recording_coverage": "6/6",
+    "pairing_coverage": "3/3",
+    "taxonomy_coverage": "6/6",
+    "allowed_class_mapping_coverage": "6/6",
+    "observation_or_count_changed": false,
+    "all_rep_classifications": "UNKNOWN",
+    "evidence_level": "L1",
+    "candidate_only": true,
+    "thirty_vs_sixty": "NOT_ESTABLISHED",
+    "true_depth": "NOT_ESTABLISHED",
+    "movement_quality": "NOT_ESTABLISHED"
+  },
+  "decision": {
+    "status": "M02_ACCEPTED_L1_CANDIDATE_ONLY",
+    "m02_acceptance": true,
+    "acceptance_scope": "Protocol-complete blind Q observation with explicit evidence taxonomy and allowed-class mapping. This does not certify complete reps, movement quality, true depth, or 30-vs-60 effects.",
+    "strict_before": "1/4",
+    "strict_after": "2/4",
+    "counting_decision": "COUNT_M02_PROCEDURAL_ACCEPTANCE_ONLY"
+  },
+  "dependency_state": {
+    "M03": "BLOCKED_CLEAN_CONTEXT",
+    "M04": "BLOCKED_BY_M03",
+    "D_independence": "PROTECTED"
+  },
+  "next_checkpoint": "Run M03 only in an independently clean D context; do not expose Q/C artifacts to D. Continue M04 only after M03 closes."
+}
