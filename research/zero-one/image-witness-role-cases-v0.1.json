@@ -1,0 +1,48 @@
+[
+  {
+    "id": "IA-T01_SHARED_CAPTION_UNSEEN_BYTES",
+    "input": {
+      "assets": [
+        {"asset_id":"asset-1","claimed_role":null,"role_evidence":"SHARED_CAPTION_ONLY"},
+        {"asset_id":"asset-2","claimed_role":null,"role_evidence":"SHARED_CAPTION_ONLY"}
+      ]
+    },
+    "expected": {
+      "assets": [
+        {"asset_id":"asset-1","resolved_role":"UNKNOWN","status":"UNRESOLVED"},
+        {"asset_id":"asset-2","resolved_role":"UNKNOWN","status":"UNRESOLVED"}
+      ],
+      "violations": []
+    }
+  },
+  {
+    "id": "IA-T02_EXPLICIT_FIGURE_LABEL",
+    "input": {
+      "assets": [
+        {"asset_id":"asset-1","claimed_role":"LINE_DRAWING","role_evidence":"EXPLICIT_FIGURE_LABEL"}
+      ]
+    },
+    "expected": {
+      "assets": [
+        {"asset_id":"asset-1","resolved_role":"LINE_DRAWING","status":"SUPPORTED"}
+      ],
+      "violations": []
+    }
+  },
+  {
+    "id": "IA-T03_FORCED_ORDER_MAPPING",
+    "input": {
+      "assets": [
+        {"asset_id":"asset-1","claimed_role":"LINE_DRAWING","role_evidence":"PAGE_ORDER_GUESS"},
+        {"asset_id":"asset-2","claimed_role":"RUBBING","role_evidence":"PAGE_ORDER_GUESS"}
+      ]
+    },
+    "expected": {
+      "assets": [
+        {"asset_id":"asset-1","resolved_role":"UNKNOWN","status":"UNRESOLVED"},
+        {"asset_id":"asset-2","resolved_role":"UNKNOWN","status":"UNRESOLVED"}
+      ],
+      "violations": ["IA-04","IA-04"]
+    }
+  }
+]
