@@ -1,0 +1,38 @@
+{
+  "artifact_id": "K02-03-HXL-NDL-CANVAS-BOUNDARY-V0.1",
+  "project": "零一空间研究",
+  "task_id": "K02-03-HXL-01",
+  "role": "C_PAGE_LOCATOR_NON_BLIND",
+  "source": {
+    "provider": "国立国会図書館デジタルコレクション",
+    "bib_id": "774615",
+    "label": "漢書評林. 第75-80巻",
+    "manifest": "https://dl.ndl.go.jp/api/iiif/774615/manifest.json",
+    "manifest_sha256": "16ab0323f395c75d38b99445ef8397df52ae66bca15f9518bf919fcb70813841",
+    "canvas_count": 74
+  },
+  "volume_boundary": {
+    "volume": "漢書卷七十五",
+    "first_canvas": 2,
+    "last_canvas": 13,
+    "next_volume_first_canvas": 14,
+    "evidence": [
+      "canvas 2卷首题为漢書卷七十五",
+      "canvas 13卷尾题为漢書卷七十五",
+      "canvas 14卷首转入漢書卷七十六"
+    ]
+  },
+  "target_passage": {
+    "anchor": "甘忠可—夏賀良—天官歷/包元太平經",
+    "exact_canvas_verified": false,
+    "candidate_set": [12, 13],
+    "reason": "卷界已由IIIF图像确认；候选末叶含李尋传相关段落，但本轮未完成可复核逐字对读，禁止把候选页写成精确锚点。"
+  },
+  "acceptance": {
+    "mainline_count": "0/5",
+    "status": "NDL_VOLUME_CANVAS_BOUNDARY_VERIFIED_EXACT_PASSAGE_PENDING",
+    "independent_qd_required": true,
+    "nlc_382411_page_anchor_pending": true
+  },
+  "next_checkpoint": "下载canvas 12与13完整无截断图像，按竖排栏位逐字定位甘忠可—夏賀良段；再由未接触本结论的Q/D独立复核，并定位NLC 382411卷十一页锚。"
+}
