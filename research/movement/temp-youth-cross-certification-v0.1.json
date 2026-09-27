@@ -1,0 +1,45 @@
+{
+  "artifact_id": "TEMP-YOUTH-CROSS-CERTIFICATION-V0.1",
+  "project": "动起来",
+  "task_id": "TEMP-YOUTH",
+  "role": "C",
+  "as_of": "2026-09-27",
+  "input": "temp-youth-field-table-v0.1.json",
+  "output": "temp-youth-field-table-v0.2.json",
+  "verdict": "PASS_WITH_SEMANTIC_BOUNDARY_REPAIR",
+  "checks": [
+    {
+      "check_id": "TY-C-01",
+      "field": "5-17 / average 60 min MVPA / mostly aerobic / 3 days vigorous and muscle-bone",
+      "verdict": "PASS",
+      "source_ids": ["WHO-2020-GUIDELINE", "WHO-EUROPE-PA"]
+    },
+    {
+      "check_id": "TY-C-02",
+      "field": "qualified supervision, technique priority, individualized progression",
+      "verdict": "PASS",
+      "source_ids": ["NSCA-YRT-2009"]
+    },
+    {
+      "check_id": "TY-C-03",
+      "field": "chronological age alone must not determine placement",
+      "verdict": "PASS_AS_DERIVED_RULE_NOT_DIRECT_QUOTE",
+      "reason": "NSCA provides no single minimum age and requires readiness/ability conditions; WHO supplies a population band, not a skill tier."
+    },
+    {
+      "check_id": "TY-C-04",
+      "field": "V0.1 WHO source pointer",
+      "verdict": "REPAIRED",
+      "reason": "The general WHO fact sheet was not the strongest direct pointer for every numeric recommendation; V0.2 now cites the 2020 guideline and the WHO Europe recommendation summary."
+    }
+  ],
+  "test_readback": {
+    "command": "node research/movement/temp-youth-gate-validator-v0.1.mjs research/movement/temp-youth-gate-cases-v0.1.json",
+    "total": 4,
+    "valid": 1,
+    "invalid": 3,
+    "expectation_mismatches": 0
+  },
+  "mainline_effect": "NONE",
+  "return_point": "M03 remains BLOCKED_CLEAN_CONTEXT; M04 remains blocked by M03 and C acceptance of the separate Q/D mainline submissions."
+}
