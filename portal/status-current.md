@@ -1,42 +1,42 @@
 # 双项目当前状态
 
-更新时间：2026-09-27 22:50（UTC+08:00）
+更新时间：2026-09-27 23:55（UTC+08:00）
 
-> Drive 为权威研究记录；本页是公开 CURRENT 镜像。发布任务、刷新时间或同步动作不计研究完成。
+> Drive 为权威研究记录；本页是公开 CURRENT 镜像。发布、刷新时间或单纯同步不计研究完成。
 
 ## 零一空间研究
 
 - 已关闭主线：Z01—Z04 — **4/4 COMPLETED**
 - 当前主线：**K02-03｜术数/方技案例的可验证性与失效机制｜ACTIVE｜严格0/5**
-- 当前执行：沿用 **K02-03-HXL-01**。C 在 NDL 774615 画布 18 左页直接定位“初成帝時齊人甘忠可託造天官歷包元太平經十二卷”；没有新建替代任务 ID。
-- 纠错：旧 v0.1 所记“卷七十五 canvas 2—13”被画布直接证伪。画布 14—19 仍属卷七十五；画布 20 右页结束卷七十五、左页开始卷七十六。v0.2 明确保留并取代旧边界结论。
-- 分工：C=非盲页锚与卷界纠错已完成；Q/D=必须使用画布 18 独立逐字复核页侧与栏位；NLC 382411 卷十一页锚仍待定位。本轮 C 结果不得替代独立验收。
-- 最近真实成果：2026-09-27 22:47；新增 NDL 精确页锚、画布 18 图像 SHA-256 与卷界纠错，验证器 **12/12** 通过。
-- 成果：[NDL页锚v0.2](../research/zero-one/k02-03-hxl-ndl-page-anchor-v0.2.json) · [页锚验证器](../research/zero-one/k02-03-hxl-ndl-page-anchor-validator-v0.2.mjs) · [NDL记录](https://dl.ndl.go.jp/pid/774615)
-- 提交：[页锚 a015c44c](https://github.com/foxlongfei/zero-one-workbench/commit/a015c44c6f7b5bde71a97d2d8b7662c88b022134) · [验证器 3dcd2a33](https://github.com/foxlongfei/zero-one-workbench/commit/3dcd2a335ccdb062e197e05b784720e3e503c5c8)
-- 并行辅线：TEMP-E01/TEMP-M01 保持 ACTIVE；不得把页锚纠错计入辅线完成。
-- 验收状态：**C_NON_BLIND_ANCHOR_FOUND；Q=false；D=false；NLC=false；严格仍0/5**。
-- 当前阻塞：缺 Q/D 独立盲复核与 NLC 页锚，不是缺 C 候选。
-- 下一步：把画布 18 封装为不暴露 C 结论的 Q/D 包，独立回传逐字、页侧、栏位；随后定位 NLC 卷十一页锚，全部通过后才计 1/5。
+- 当前执行：沿用 **K02-03-HXL-01**。C 已完成 NDL 774615 画布18非盲锚点；本轮按原断点生成独立 Q/D 盲审输入包，没有新建替代任务ID。
+- 盲性边界：包内只提供稳定影像、哈希、定位任务、回传字段和冻结路径；不包含 C 的预期逐字、页侧、栏位或答案字段。Q、D 必须各自在干净上下文冻结交卷后才能交叉。
+- 最近真实成果：2026-09-27 23:50；新增 Q/D 盲包及验证器，**12/12 PASS**，其中包含目标句不泄露、禁止答案字段、先冻结后交叉等门。
+- 成果：[Q/D盲包](../research/zero-one/k02-03-hxl-ndl-qd-blind-package-v0.1.json) · [盲包验证器](../research/zero-one/k02-03-hxl-ndl-qd-blind-package-validator-v0.1.mjs) · [C页锚v0.2](../research/zero-one/k02-03-hxl-ndl-page-anchor-v0.2.json)
+- 提交：[盲包 0d485855](https://github.com/foxlongfei/zero-one-workbench/commit/0d485855e31adc6cab8d39152a20c14881d21b72) · [验证器 fc4a518f](https://github.com/foxlongfei/zero-one-workbench/commit/fc4a518f1ab89fcd2da5072240f9a100a7579b80)
+- 并行辅线：TEMP-E01/TEMP-M01 保持 ACTIVE；本轮盲包属于 K02-03-HXL-01 主线验收准备，不替代辅线。
+- 验收状态：**BLIND_PACKAGE_COMPLETE；Q=false；D=false；CROSS_REVIEW=false；NLC=false；严格仍0/5**。
+- 当前阻塞：需要两个未接触 C 结果的独立上下文执行 Q、D；NLC 382411 卷十一页锚仍待定位。
+- 下一步：独立执行并冻结 k02-03-hxl-ndl-q-return-v0.1.json 与 k02-03-hxl-ndl-d-return-v0.1.json，再做 C/Q/D 交叉；随后完成 NLC 页锚，全部通过后才计1/5。
 
 ## 动起来
 
 - 当前主线：**M01→M02/M03→M04｜严格完成1/4**
 - 任务状态：M01=COMPLETED；M02=PAUSED_PENDING_C_ACCEPTANCE；M03=BLOCKED_CLEAN_CONTEXT；M04=BLOCKED_BY_M02_M03。
-- 当前执行：从 BodyParts3D 官方 142,903,898 字节归档按 FMA→BP→FJ 映射提取 5 个真实 OBJ：右肱骨、右桡骨、右尺骨、右肱二头肌长头和短头。
-- 分工：C=官方源、CC BY 4.0、映射与字节提取；Q=既有 M02 交卷继续封存；D=不在受污染上下文伪造 M03 盲审；集成/显示读回=尚未执行。
-- 最近真实成果：2026-09-27 22:47；获得 **5 个 OBJ / 620,332 字节 / 5,913 顶点 / 8,572 面**，逐件记录 SHA-256；清单验证器 **12/12** 通过。
-- 成果：[OBJ字节清单](../research/movement/bodyparts3d-upper-limb-obj-byte-manifest-v0.1.json) · [字节清单验证器](../research/movement/bodyparts3d-upper-limb-obj-byte-manifest-validator-v0.1.mjs) · [既有资产映射](../research/movement/bodyparts3d-upper-limb-asset-map-v0.1.json)
-- 提交：[字节清单 51877409](https://github.com/foxlongfei/zero-one-workbench/commit/51877409467fdb5e105d942d8315377519cb041b) · [验证器 31cffbe3](https://github.com/foxlongfei/zero-one-workbench/commit/31cffbe35f755cbf33d507a07120d7ad8b22699f)
-- 在线样板：[动起来项目页 V0.6](https://foxlongfei.github.io/zero-one-workbench/portal/movement.html)；当前页仍是教学几何体，不得标为 BodyParts3D 真实资产接入完成。
-- 并行队列：共同人体坐标系、TEMP-YOUTH、TEMP-CLUB、TESTSET 沿既有队列排队；TEMP-CLUB 仍待独立 C 交叉认证四反例。
-- 验收状态：**SOURCE_VERIFIED=true；LICENSE_VERIFIED=true；BYTE_EXTRACTION_VERIFIED=true；INTEGRATION_VERIFIED=false；DISPLAY_VERIFIED=false**。
-- 当前阻塞：M03 缺未接触 Q 摘要的干净 D；真实 OBJ 尚未进入受控前端资产、未绑定场景、未公开读回。
-- 下一步：把 5 个 FJ OBJ 置入受控项目资产并绑定 V0.6 场景，取得集成和显示证据后再改变 M02/M03/M04 验收；M03 干净上下文门禁不变。
+- 当前执行：5件 BodyParts3D 真实OBJ已写入 portal/assets/bodyparts3d/，V0.7 页面新增真实资产查看器及由同一批OBJ生成的双视角静态降级图。
+- 分工：C=来源、许可、FMA→BP→FJ映射、字节与集成验收；Q=既有M02交卷封存；D=不在受污染上下文伪造M03；公开读回=已验证静态真实资产显示。
+- 最近真实成果：2026-09-27 23:51；公开页可见右肱骨、桡骨、尺骨及肱二头肌长/短头真实网格双视角图；集成回执验证器 **12/12 PASS**。
+- 受控资产：[V0.7公开页](https://foxlongfei.github.io/zero-one-workbench/portal/movement.html) · [集成读回](../research/movement/bodyparts3d-upper-limb-integration-readback-v0.1.json) · [验证器](../research/movement/bodyparts3d-upper-limb-integration-readback-validator-v0.1.mjs) · [OBJ字节清单](../research/movement/bodyparts3d-upper-limb-obj-byte-manifest-v0.1.json)
+- 提交：[页面集成 4154998f](https://github.com/foxlongfei/zero-one-workbench/commit/4154998f8ed6c75d5d0cbbdd8aa0681606cf4ebd) · [静态降级图 ec5bd687](https://github.com/foxlongfei/zero-one-workbench/commit/ec5bd687cec8190bc5f99042029f5695340ac65e) · [最终页面 cb445d47](https://github.com/foxlongfei/zero-one-workbench/commit/cb445d471138d36fd9472c0f3978eadeffc0d3d4) · [读回 3ed0679b](https://github.com/foxlongfei/zero-one-workbench/commit/3ed0679b734e473c84f2bf832b87404cdad75642)
+- 公开读回：云端浏览器实际显示 V0.7、5件资产标签和真实OBJ双视角图。该浏览器返回 Error creating WebGL context，因此静态显示验收通过，动态旋转仍未在本环境验收。
+- 并行队列：共同人体坐标系继续承接真实资产；TEMP-YOUTH、TEMP-CLUB、TESTSET 沿既有队列；M03干净上下文门禁不变。
+- 验收状态：**SOURCE=true；LICENSE=true；BYTE=true；INTEGRATION=true；DISPLAY=true（STATIC_FALLBACK）；INTERACTIVE_WEBGL=false**。
+- 当前阻塞：M03缺未接触Q摘要的独立D；WebGL动态5/5加载仍需图形环境读回；静态mesh不得冒充关节运动、肌肉形变或OpenSim计算。
+- 下一步：在支持WebGL的环境验证动态5/5加载、旋转与点选；随后把受控对象绑定共同坐标和运动模型，同时保持静态解剖与运动学分层。
 
 ## 精确断点
 
-- 零一：K02-03-HXL-01 停在“NDL 774615 画布 18 C 锚点已找到、画布 20 完成 75→76 卷过渡纠错”；下一动作是 Q/D 独立复核及 NLC 页锚，完成前严格 0/5。
-- 动起来：官方 OBJ 5 件已提取并校验，停在“真实字节已得、尚未集成/显示”；下一动作是受控资产落位、V0.6 场景绑定和公开读回，严格仍 1/4。
+- 零一：盲包已完成并通过12/12；停在“Q/D尚未独立执行、NLC页锚尚未完成”，沿 K02-03-HXL-01 续做，严格0/5。
+- 动起来：5个OBJ已落入受控资产，公开静态显示通过；停在“WebGL动态读回与共同坐标/运动模型绑定”，严格1/4。
 - [Drive双项目动态执行看板](https://docs.google.com/document/d/16xSk77EHM3D_v2gdEenKs5q8ZXHF7gpWkc_r9a6dn8I/edit)
 - [公开动作库](./exercise-library.html)
+
