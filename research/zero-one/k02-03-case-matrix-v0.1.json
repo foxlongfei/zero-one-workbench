@@ -1,0 +1,135 @@
+{
+  "artifact_id": "K02-03_CASE_MATRIX_V0.1",
+  "project": "零一空间研究",
+  "task_id": "K02-03",
+  "task_title": "术数/方技案例的可验证性与失效机制",
+  "mainline_status": "ACTIVE_0_OF_5",
+  "as_of": "2026-09-27",
+  "scope": {
+    "fixed_subjects": ["夏賀良", "少翁", "欒大", "尹敏", "任文公"],
+    "dimensions": [
+      "explicit_failure",
+      "fraud_or_fabrication_accusation",
+      "follow_up_verification",
+      "textual_editability",
+      "operational_warning"
+    ]
+  },
+  "identity_disambiguation": {
+    "input_label": "賀良",
+    "canonical_candidate": "夏賀良",
+    "status": "RESOLVED_FOR_THIS_MATRIX",
+    "basis": [
+      "《漢書》卷七十五称“重平夏賀良”，并把他列为甘忠可的传授对象。",
+      "《漢書》卷十一称“待詔夏賀良等”。",
+      "《資治通鑑》卷三十四亦作“夏賀良”。"
+    ],
+    "excluded_homonyms": [
+      "戴良（《後漢書》卷八十三人物）",
+      "王良等仅同名含“良”者"
+    ],
+    "normalization_rule": "后续显示可简称“賀良”，但证据键与检索键固定使用“夏賀良”。"
+  },
+  "cases": [
+    {
+      "case_id": "K02-03-HXL-01",
+      "subject": "夏賀良",
+      "status": "EVIDENCE_MATRIX_COMPLETE_PENDING_INDEPENDENT_REVIEW",
+      "historical_frame": {
+        "period": "西漢哀帝建平二年",
+        "approximate_year_bce": 5,
+        "role": "待詔；甘忠可学说传承者之一",
+        "policy_action": "推动改元易号、增益漏刻，并主张调整丞相御史与辅政人选"
+      },
+      "primary_witnesses": [
+        {
+          "source_id": "HANSHU-75",
+          "title": "《漢書》卷七十五〈眭兩夏侯京翼李傳〉",
+          "url": "https://zh.wikisource.org/zh-hant/%E6%BC%A2%E6%9B%B8/%E5%8D%B7075",
+          "source_layer": "EARLY_DYNASTIC_HISTORY",
+          "supports": [
+            "夏賀良身份及传承链",
+            "改元易号与政策主张",
+            "“其言亡驗”后的下吏与司法定性"
+          ]
+        },
+        {
+          "source_id": "HANSHU-11",
+          "title": "《漢書》卷十一〈哀帝紀〉",
+          "url": "https://zh.wikisource.org/wiki/%E6%BC%A2%E6%9B%B8/%E5%8D%B7011",
+          "source_layer": "EARLY_DYNASTIC_HISTORY_ANNALS",
+          "supports": [
+            "建平二年六月采纳措施",
+            "八月“卒無嘉應”并撤销六月制书"
+          ]
+        }
+      ],
+      "later_witnesses": [
+        {
+          "source_id": "ZIZHITONGJIAN-34",
+          "title": "《資治通鑑》卷三十四",
+          "url": "https://ctext.org/wiki.pl?chapter=78920&if=en",
+          "source_layer": "LATER_CHRONICLE",
+          "use": "时间顺序复核；不得替代《漢書》原始叙事层"
+        }
+      ],
+      "dimensions": {
+        "explicit_failure": {
+          "status": "CONFIRMED_AS_REPORTED_BY_SOURCE",
+          "evidence": [
+            {"source_id": "HANSHU-75", "anchor": "上以其言亡驗"},
+            {"source_id": "HANSHU-11", "anchor": "冀為百姓獲福，卒無嘉應"}
+          ],
+          "boundary": "确认的是皇帝诏书及史书叙事明确记为无验/无嘉应，不扩张为对所有相关思想的普遍证伪。"
+        },
+        "fraud_or_fabrication_accusation": {
+          "status": "CONFIRMED_TEXTUAL_ACCUSATION_NOT_MODERN_FACT_FINDING",
+          "evidence": [
+            {"source_id": "HANSHU-75", "anchor": "甘忠可詐造《天官曆》《包元太平經》"},
+            {"source_id": "HANSHU-75", "anchor": "當賀良等執左道，亂朝政，傾覆國家，誣罔主上，不道"}
+          ],
+          "boundary": "“詐造”“誣罔”是《漢書》的叙事/司法定性；矩阵不把它改写成未经区分的现代事实判决。"
+        },
+        "follow_up_verification": {
+          "status": "CONFIRMED_SHORT_INTERVAL_FOLLOW_UP",
+          "evidence": [
+            {"source_id": "HANSHU-11", "anchor": "六月采纳改元易号、增益漏刻"},
+            {"source_id": "HANSHU-11", "anchor": "八月因无嘉应撤销六月甲子制书"}
+          ],
+          "boundary": "存在约两个月的政策—结果—撤销链，但史文未提供预注册指标或连续观测数据。"
+        },
+        "textual_editability": {
+          "status": "OPEN_NOT_ESTABLISHED",
+          "evidence": [],
+          "boundary": "当前两篇《漢書》记录可互校，后出《通鑑》可复核叙事顺序；尚无具体版本异文、事后改写或夏賀良本人篡改文本的直接证据。不得因存在后出编纂即判“篡改”。"
+        },
+        "operational_warning": {
+          "status": "PARTIALLY_OPERATIONALIZED",
+          "claim_object": "改元易号、增益漏刻可永安国家并获福",
+          "action_time": "建平二年六月",
+          "outcome_window": "至同年八月的史书记载窗口",
+          "reported_outcome": "卒無嘉應；原制书撤销；夏賀良等下吏",
+          "decision_rule": "只有事前列明对象、时间窗、可观察结果和失败条件的主张才可进入预测检验；本案因缺少原始的量化成功标准，标记为PARTIAL而非完整可执行预警。"
+        }
+      },
+      "acceptance": {
+        "identity_disambiguated": true,
+        "at_least_one_locatable_primary_record": true,
+        "all_five_dimensions_addressed": true,
+        "claims_bound_to_source_layer": true,
+        "independent_review_complete": false,
+        "counts_toward_5_of_5": false
+      },
+      "next_checkpoint": "由Q/D独立核对《漢書》卷十一、卷七十五的文本位置和“亡驗/無嘉應”范围；通过后才把夏賀良计为1/5。"
+    },
+    {"case_id": "K02-03-SW-01", "subject": "少翁", "status": "NOT_STARTED"},
+    {"case_id": "K02-03-LD-01", "subject": "欒大", "status": "NOT_STARTED"},
+    {"case_id": "K02-03-YM-01", "subject": "尹敏", "status": "NOT_STARTED"},
+    {"case_id": "K02-03-RWG-01", "subject": "任文公", "status": "NOT_STARTED"}
+  ],
+  "mainline_count_after_artifact": {
+    "completed_cases": 0,
+    "total_cases": 5,
+    "reason": "夏賀良条目已有实物，但独立复核尚未完成。"
+  }
+}
