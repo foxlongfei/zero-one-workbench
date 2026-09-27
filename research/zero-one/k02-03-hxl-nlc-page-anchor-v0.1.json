@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "K02-03-HXL-01-NLC-PAGE-ANCHOR-V0.1",
+  "task_id": "K02-03-HXL-01",
+  "role": "C_NON_BLIND_SOURCE_ANCHOR",
+  "created_at": "2026-09-28T00:49:00+08:00",
+  "status": "NLC_PAGE_ANCHOR_FOUND_PENDING_INDEPENDENT_QD",
+  "source": {
+    "holder": "National Library of China",
+    "commons_file": "NLC892-412004000321-382411 漢書 一百卷 第2冊.pdf",
+    "commons_url": "https://commons.wikimedia.org/wiki/File:NLC892-412004000321-382411_%E6%BC%A2%E6%9B%B8_%E4%B8%80%E7%99%BE%E5%8D%B7_%E7%AC%AC2%E5%86%8A.pdf",
+    "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NLC892-412004000321-382411_%E6%BC%A2%E6%9B%B8_%E4%B8%80%E7%99%BE%E5%8D%B7_%E7%AC%AC2%E5%86%8A.pdf",
+    "edition": "元大德九年[1305]、明成化至正德遞修本",
+    "page_count": 112,
+    "byte_size": 43003180,
+    "mime_type": "application/pdf",
+    "sha256": "e90deb0d7cb8828f4a252a5a4b846197c4c728b97a858ce56e5672a365f1bb40",
+    "rights": "Public Domain Mark 1.0 / public-domain mechanical scan",
+    "source_metadata_observed": {
+      "commons_last_revision": "2026-08-30T00:08:00Z",
+      "volume_coverage": ["第六", "第七", "第八", "第九", "第十", "第十一", "第十二"]
+    }
+  },
+  "anchor": {
+    "pdf_page": 101,
+    "printed_work": "漢書卷十一／哀帝紀第十一",
+    "page_render": {
+      "dpi": 300,
+      "width_px": 4117,
+      "height_px": 3139,
+      "format": "PNG",
+      "sha256": "be9e9d2d014e33d99e77ef379fc4f4febd32737afc0f1621ddb85fc0d7aa9dc3"
+    },
+    "right_leaf": {
+      "crop_sha256": "2a22fcb09af9f895cfd94611dfe42adbd23b11c9d71a51dcd653204a15766de2",
+      "reading_order": "vertical columns, right to left",
+      "anchor_transcription": "以建平二年為太初元將元年號曰陳聖劉太平皇帝漏刻以百二十為度。七月以渭城西北原上永陵亭部為初陵，勿徙郡國民，使得自安。八月詔曰：待詔夏賀良等建言改元易號，增益漏刻，可以永安國家。朕過聽賀良等言，冀為海內獲福，卒無嘉應，皆違經背古，不合時宜。六月甲子制書非赦令也，皆蠲除之。"
+    },
+    "left_leaf": {
+      "crop_sha256": "8e3905c07f5d12a9e639680ed41419a1332b9acb6e2358601b2fc0e65347b7ef",
+      "reading_order": "vertical columns, right to left",
+      "continuation_transcription": "賀良等反道惑眾，下有司，皆伏辜。"
+    },
+    "location_summary": "The June renaming and clock decree, the August revocation, 卒無嘉應, 皆蠲除之, and the 夏賀良 judicial disposition all occur on PDF page 101, spanning the right leaf into the first column of the left leaf."
+  },
+  "comparison_notes": [
+    "The scan visibly reads 待詔夏賀良等, preserving 待 rather than silently normalizing the title.",
+    "The failure wording on this page is 卒無嘉應; this is distinct from the 卷七十五 wording 其言亡驗.",
+    "The August edict explicitly describes the earlier June decree as 非赦令 and orders 皆蠲除之.",
+    "The judicial phrase 夏賀良等反道惑眾，下有司，皆伏辜 is recorded as the received text's historical/legal characterization, not restated as a modern factual judgment."
+  ],
+  "acceptance": {
+    "c_page_anchor": true,
+    "ndl_c_page_anchor": true,
+    "nlc_c_page_anchor": true,
+    "q_independent_return": false,
+    "d_independent_return": false,
+    "cross_review": false,
+    "mainline_before": "0/5",
+    "mainline_after": "0/5",
+    "counting_decision": "NO_COUNT_CHANGE"
+  },
+  "next_checkpoint": "Freeze independent Q and D returns for the NDL canvas 18 blind package and independently replay NLC PDF page 101 before C/Q/D cross-review."
+}
