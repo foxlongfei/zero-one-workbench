@@ -1,34 +1,62 @@
 {
-  "updated": "2026-09-27 CURRENT",
+  "updated": "2026-09-27 14:50 UTC+08:00",
   "policy": "Drive authoritative -> Drive readback -> GitHub CURRENT sync -> GitHub readback",
   "projects": {
     "research": {
       "name": "零一空间研究",
-      "mainline": {
+      "closed_mainline": {
+        "id": "Z01-Z04",
         "status": "COMPLETED",
         "passed": 4,
         "total": 4
       },
+      "current_mainline": {
+        "id": "K02-03",
+        "title": "术数/方技案例的可验证性与失效机制",
+        "status": "ACTIVE",
+        "passed": 0,
+        "total": 5,
+        "published_at": "2026-09-27 14:48 UTC+08:00",
+        "cases": [
+          "贺良",
+          "少翁",
+          "栾大",
+          "尹敏",
+          "任文公"
+        ],
+        "next": "贺良原典定位与五维试填"
+      },
       "active_sublines": [
         "TEMP-E01",
         "TEMP-M01"
-      ],
-      "current": "95T1J1:4 original-image/report-page evidence gate",
-      "next": "obtain original asset bytes/report pages; hash and object-image audit"
+      ]
     },
     "movement": {
       "name": "动起来",
       "mainline": {
         "status": "IN_PROGRESS",
-        "passed": 0,
+        "passed": 1,
         "total": 4
       },
-      "M01": "9/9 SHA-256; 5/5 ZIP; 112/112 members audited",
-      "M02": "Q clean-blind first pass submitted; pending C acceptance",
-      "M03": "D independent clean-blind pending",
-      "M04": "blocked pending dual-submission acceptance",
-      "coordinate_system": "ACTIVE; biceps-elbow-forearm complete sample not yet field-calibrated",
-      "youth": "RESTART_NOW",
+      "M01": {
+        "status": "COMPLETED",
+        "evidence": "9/9 SHA-256; 5/5 ZIP; 112/112 members audited"
+      },
+      "M02": {
+        "status": "PAUSED_PENDING_C_ACCEPTANCE",
+        "last_substantive_action": "2026-09-27 13:36 UTC+08:00",
+        "evidence": "Q clean-blind first pass submitted"
+      },
+      "M03": {
+        "status": "BLOCKED_CLEAN_CONTEXT",
+        "reason": "current context has seen Q summary"
+      },
+      "M04": {
+        "status": "BLOCKED_BY_M03_AND_C_ACCEPTANCE",
+        "results": "not formed"
+      },
+      "coordinate_system": "ACTIVE; complete biceps-elbow-forearm sample not field-calibrated",
+      "youth": "ACTIVE_V0.1_ARTIFACT_EXISTS",
       "community_grading": "RESTART_NOW"
     },
     "food": {
