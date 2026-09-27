@@ -1,0 +1,76 @@
+{
+  "artifact_id": "TEMP-YOUTH-FIELD-TABLE-V0.1",
+  "project": "动起来",
+  "task_id": "TEMP-YOUTH",
+  "status": "FIELD_TABLE_V0.1_COMPLETE_PENDING_CROSS_CERTIFICATION",
+  "mainline_effect": "NONE",
+  "mainline_context": {
+    "M01": "COMPLETED",
+    "M02_Q": "SUBMITTED_PENDING_C",
+    "M03_D": "BLOCKED_THIS_RUN_CONTEXT_CONTAMINATED_BY_Q_SUMMARY",
+    "M04": "BLOCKED_BY_M02_M03"
+  },
+  "as_of": "2026-09-27",
+  "scope": {
+    "population_reporting_band": "children and adolescents aged 5-17 years",
+    "use": "health baseline plus gates for developmentally appropriate resistance-training placement",
+    "not_medical_clearance": true
+  },
+  "health_baseline": {
+    "moderate_to_vigorous_activity": "average at least 60 minutes per day across the week",
+    "aerobic_emphasis": "most activity should be aerobic",
+    "vigorous_and_muscle_bone_strengthening": "at least 3 days per week",
+    "sedentary_note": "limit sedentary time"
+  },
+  "resistance_training_prerequisites": {
+    "qualified_supervision": true,
+    "developmentally_appropriate_instruction": true,
+    "technique_before_load": true,
+    "progression_by_needs_goals_and_abilities": true,
+    "listen_and_follow_directions_gate": true
+  },
+  "classification_axes": [
+    {"axis": "chronological_age", "role": "guideline reporting band; not a sufficient placement rule"},
+    {"axis": "biological_maturation", "role": "context for growth and readiness"},
+    {"axis": "training_age", "role": "prior exposure and adaptation history"},
+    {"axis": "movement_competence", "role": "technical execution quality"},
+    {"axis": "instruction_readiness", "role": "ability to understand and follow directions"},
+    {"axis": "psychosocial_readiness", "role": "attention, confidence and safe participation"},
+    {"axis": "needs_goals", "role": "program purpose and individual requirements"}
+  ],
+  "placement_rule": {
+    "rule_id": "TY-AGE-NE-ABILITY",
+    "statement": "Chronological age defines the reporting band but must not, by itself, determine exercise placement, load, progression, or competition readiness.",
+    "forbidden": "age_only_placement",
+    "required_evidence": ["movement_competence", "instruction_readiness", "training_age", "needs_goals"],
+    "contextual_evidence": ["biological_maturation", "psychosocial_readiness"]
+  },
+  "sources": [
+    {
+      "id": "WHO-5-17",
+      "publisher": "World Health Organization",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+      "supports": ["60-minute weekly-average baseline", "aerobic emphasis", "vigorous and muscle/bone strengthening frequency", "sedentary-time limit"]
+    },
+    {
+      "id": "NSCA-YSRT-2009",
+      "publisher": "National Strength and Conditioning Association",
+      "url": "https://www.nsca.com/globalassets/about/position-statements/youth-resistance-training-2009.pdf",
+      "supports": ["qualified supervision", "age-appropriate instruction", "technique and safety", "needs/goals/abilities-based progression"]
+    },
+    {
+      "id": "NSCA-SHAPE-K12",
+      "publisher": "National Strength and Conditioning Association and SHAPE America",
+      "url": "https://www.nsca.com/about-us/position-statements/youth-resistance-training/",
+      "supports": ["developmentally appropriate practice", "qualified educators", "safety and inclusivity over short-term performance"]
+    }
+  ],
+  "acceptance": {
+    "who_baseline_structured": true,
+    "age_ability_separation_explicit": true,
+    "supervision_and_progression_gates_present": true,
+    "validator_and_cases_required": true,
+    "cross_certification_complete": false
+  },
+  "next_checkpoint": "Independent C/Q cross-certification of source-to-field mappings, then reuse the gates in TEMP-CLUB without merging age bands with ability tiers."
+}
