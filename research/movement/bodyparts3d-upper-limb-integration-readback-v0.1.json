@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "BODY3D-UPPER-LIMB-INTEGRATION-READBACK-V0.1",
+  "task_line": "M01→M02/M03→M04",
+  "created_at": "2026-09-27T23:51:00+08:00",
+  "page": {
+    "version": "V0.7",
+    "repository_path": "portal/movement.html",
+    "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+    "final_page_commit": "cb445d471138d36fd9472c0f3978eadeffc0d3d4",
+    "integration_commit": "4154998f8ed6c75d5d0cbbdd8aa0681606cf4ebd"
+  },
+  "controlled_assets": [
+    {"element_id":"FJ1478","label":"right biceps brachii, long head","path":"portal/assets/bodyparts3d/FJ1478.obj","bytes":105386,"sha256":"2442d2b5ac30c5da42e72eeff83d143df51c7617001cbc6552096a504f29bc07","commit":"bc1602fbbed47c0d63c7910f6be6d9e885d38ded"},
+    {"element_id":"FJ1512","label":"right biceps brachii, short head","path":"portal/assets/bodyparts3d/FJ1512.obj","bytes":161507,"sha256":"2173b7cce29f11036907b80e068e9bd6c16f22359d6e7994af9684454b99b4d5","commit":"b98202bf22d5150f80e4afc40f4f70c126f6f8dd"},
+    {"element_id":"FJ3349","label":"right radius","path":"portal/assets/bodyparts3d/FJ3349.obj","bytes":42701,"sha256":"0f824e639b13ea02959734a0d9bd8d7ca67d0b51f531a138d769e1d3b22e0c98","commit":"d0fd7812b1985de4a83747ceb11130bcfbd3f77e"},
+    {"element_id":"FJ3368","label":"right humerus","path":"portal/assets/bodyparts3d/FJ3368.obj","bytes":256564,"sha256":"85f5445a11ecb029b027db0b9b34933982836d442b19ff531d1ca35a3bc3a237","commit":"e72db4690b1a4e8b4efe1e5cbb9bf6a6991df2ce"},
+    {"element_id":"FJ3391","label":"right ulna","path":"portal/assets/bodyparts3d/FJ3391.obj","bytes":54174,"sha256":"0aad73148e036c980ab24dfa675fcc1f109e5c60d82c12f3696420cf93cb4a98","commit":"92ad3ca1fb3aa75e576e689d64790fc210cc8fc7"}
+  ],
+  "static_fallback": {
+    "path": "portal/assets/bodyparts3d/right-upper-limb-preview-v0.1.png",
+    "sha256": "b38069a39ae45a21d2d57c21e17d5955c2463ef050c90ca36a717a4f71f1d76e",
+    "dimensions": [1680, 840],
+    "commit": "ec5bd687cec8190bc5f99042029f5695340ac65e",
+    "generated_directly_from_verified_objs": true
+  },
+  "public_readback": {
+    "observed_at": "2026-09-27T23:50:00+08:00",
+    "page_version_visible": "V0.7",
+    "five_asset_labels_visible": true,
+    "static_fallback_image_visible": true,
+    "fallback_accessible_name": "BodyParts3D右上肢5件真实OBJ双视角静态预览",
+    "webgl_context_available_in_readback_browser": false,
+    "observed_runtime_message": "Error creating WebGL context.",
+    "interactive_rotation_verified": false
+  },
+  "gates": {
+    "SOURCE_VERIFIED": true,
+    "LICENSE_VERIFIED": true,
+    "BYTE_EXTRACTION_VERIFIED": true,
+    "INTEGRATION_VERIFIED": true,
+    "DISPLAY_VERIFIED": true,
+    "DISPLAY_MODE": "STATIC_FALLBACK",
+    "INTERACTIVE_WEBGL_VERIFIED": false
+  },
+  "scope_boundary": "DISPLAY_VERIFIED covers the publicly visible static preview generated from the five exact OBJ assets. It does not certify WebGL rotation, joint motion, deformation, force arms, tendon paths, or full-body asset coverage.",
+  "task_state": {
+    "strict_completed": 1,
+    "strict_total": 4,
+    "M01": "COMPLETE",
+    "M02": "PENDING_C",
+    "M03": "BLOCKED_CLEAN_CONTEXT",
+    "M04": "BLOCKED_BY_M02_M03"
+  },
+  "next_action": "Verify the WebGL 5/5 dynamic loader in a graphics-capable browser, then bind controlled anatomical objects to the common coordinate and motion model without treating static meshes as kinematics."
+}
