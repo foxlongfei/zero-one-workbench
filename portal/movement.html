@@ -96,9 +96,13 @@ try {
   })();
 } catch (error) {
   const state = document.getElementById("realAssetState");
+  const mount = document.getElementById("realUpper3d");
+  if (mount) {
+    mount.innerHTML = '<img src="assets/bodyparts3d/right-upper-limb-preview-v0.1.png" alt="BodyParts3D右上肢5件真实OBJ双视角静态预览" style="width:100%;height:100%;object-fit:contain;background:#f4f6f3">';
+  }
   if (state) {
-    state.textContent = "真实OBJ加载失败：" + String(error.message || error);
-    state.dataset.status = "ERROR";
+    state.textContent = "已显示5件真实OBJ的双视角静态预览；当前浏览器WebGL不可用，动态旋转未启用。运行信息：" + String(error.message || error);
+    state.dataset.status = "STATIC_FALLBACK_DISPLAYED";
   }
 }
 </script>
