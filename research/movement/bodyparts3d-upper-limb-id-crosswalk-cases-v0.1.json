@@ -1,0 +1,11 @@
+{
+  "artifact_id":"BODYPARTS3D-UPPER-LIMB-ID-CROSSWALK-CASES-V0.1",
+  "cases":[
+    {"id":"XC-01","input":"BP9206","expected_status":"RESOLVED","expected_mesh_element_id":"FJ3368"},
+    {"id":"XC-02","input":"BP8464","expected_status":"RESOLVED","expected_mesh_element_id":"FJ3349"},
+    {"id":"XC-03","input":"BP8233","expected_status":"RESOLVED","expected_mesh_element_id":"FJ3391"},
+    {"id":"XC-04","input":"BP5558","expected_status":"RESOLVED","expected_mesh_element_id":"FJ1512"},
+    {"id":"XC-05","input":"BP5566","expected_status":"RESOLVED","expected_mesh_element_id":"FJ1478"},
+    {"id":"XC-06","input":"BP0000","expected_status":"UNMAPPED","expected_mesh_element_id":null}
+  ]
+}

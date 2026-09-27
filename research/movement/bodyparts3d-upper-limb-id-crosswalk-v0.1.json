@@ -1,0 +1,21 @@
+{
+  "artifact_id": "BODYPARTS3D-UPPER-LIMB-ID-CROSSWALK-V0.1",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "linked_mainline": "M01→M02/M03→M04",
+  "created_at": "2026-09-28T07:38:00+08:00",
+  "status": "VERIFIED_FROM_EXISTING_OFFICIAL_MANIFEST",
+  "finding": "BP identifiers name BodyParts3D representation/part records; FJ identifiers name concrete OBJ mesh elements. They are linked namespaces, not interchangeable aliases.",
+  "source_artifacts": [
+    "research/movement/bodyparts3d-upper-limb-asset-map-v0.1.json",
+    "research/movement/bodyparts3d-upper-limb-obj-byte-manifest-v0.1.json"
+  ],
+  "mappings": [
+    {"role":"HUMERUS_RIGHT","fma_id":"FMA23130","bp_representation_id":"BP9206","mesh_element_id":"FJ3368","obj_path":"assets/bodyparts3d/FJ3368.obj"},
+    {"role":"RADIUS_RIGHT","fma_id":"FMA23464","bp_representation_id":"BP8464","mesh_element_id":"FJ3349","obj_path":"assets/bodyparts3d/FJ3349.obj"},
+    {"role":"ULNA_RIGHT","fma_id":"FMA23467","bp_representation_id":"BP8233","mesh_element_id":"FJ3391","obj_path":"assets/bodyparts3d/FJ3391.obj"},
+    {"role":"BICEPS_SHORT_HEAD_RIGHT","fma_id":"FMA37684","bp_representation_id":"BP5558","mesh_element_id":"FJ1512","obj_path":"assets/bodyparts3d/FJ1512.obj"},
+    {"role":"BICEPS_LONG_HEAD_RIGHT","fma_id":"FMA37686","bp_representation_id":"BP5566","mesh_element_id":"FJ1478","obj_path":"assets/bodyparts3d/FJ1478.obj"}
+  ],
+  "consumer_rule": "Knowledge and anatomy joins may retain FMA/BP identifiers. Any viewer or byte-level asset consumer must resolve to mesh_element_id and obj_path; it must not request BP*.obj.",
+  "acceptance": {"crosswalk_verified":true,"alias_map_v0_1_mutated":false,"mainline_before":"2/4","mainline_after":"2/4","counting_decision":"NO_MAINLINE_COUNT_CHANGE"}
+}
