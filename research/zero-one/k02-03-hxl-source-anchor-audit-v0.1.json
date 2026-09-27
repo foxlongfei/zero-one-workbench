@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "task_id": "K02-03-HXL-01",
+  "role": "C_SOURCE_ANCHOR_AUDIT_NON_BLIND",
+  "status": "ANCHOR_LOCATIONS_VERIFIED_PENDING_INDEPENDENT_QD",
+  "mainline_count_before": "0/5",
+  "mainline_count_after": "0/5",
+  "counting_decision": "NO_COUNT_CHANGE",
+  "subject_identity": "夏賀良",
+  "sources": [
+    {
+      "id": "HS75",
+      "work": "漢書",
+      "volume": "卷075",
+      "url": "https://zh.wikisource.org/zh-hant/%E6%BC%A2%E6%9B%B8/%E5%8D%B7075",
+      "anchor_lines": [222, 223],
+      "witness_role": "biographical_narrative"
+    },
+    {
+      "id": "HS11",
+      "work": "漢書",
+      "volume": "卷011",
+      "url": "https://zh.wikisource.org/wiki/%E6%BC%A2%E6%9B%B8/%E5%8D%B7011",
+      "anchor_lines": [160, 164],
+      "witness_role": "imperial_annals"
+    }
+  ],
+  "checks": [
+    {
+      "id": "A01_IDENTITY",
+      "result": "PASS",
+      "evidence": ["HS75:222", "HS11:160"],
+      "finding": "Two witnesses name 夏賀良 and connect him to the same proposal sequence."
+    },
+    {
+      "id": "A02_PROPOSAL_AND_ADOPTION",
+      "result": "PASS",
+      "evidence": ["HS75:223", "HS11:160"],
+      "finding": "The proposal and June adoption of era/title/timekeeping changes are independently located."
+    },
+    {
+      "id": "A03_EXPLICIT_FAILURE",
+      "result": "PASS",
+      "evidence": ["HS75:223", "HS11:164"],
+      "finding": "The sources explicitly record lack of the promised response: 其言亡驗 / 卒無嘉應 / 卒亡嘉應."
+    },
+    {
+      "id": "A04_REVERSAL_AND_SANCTION",
+      "result": "PASS",
+      "evidence": ["HS75:223", "HS11:164"],
+      "finding": "The August reversal, referral to officials and punishment are located in both witnesses."
+    },
+    {
+      "id": "A05_PROVENANCE_BOUNDARY",
+      "result": "PASS",
+      "evidence": ["HS75:222", "HS75:223"],
+      "finding": "詐造 is directly predicated of 甘忠可; it must not be silently reassigned to 夏賀良. Later charges against 夏賀良 are preserved as narrative/judicial allegations, not converted into modern fact labels."
+    },
+    {
+      "id": "A06_TEXTUAL_EDITABILITY",
+      "result": "OPEN",
+      "evidence": ["HS75:238", "HS11:217"],
+      "finding": "Both web witnesses are editable transcriptions; independent Q/D review must compare stable edition or image witnesses before acceptance."
+    }
+  ],
+  "variant_notes": [
+    {
+      "forms": ["無", "亡"],
+      "classification": "orthographic_variant_not_contradiction"
+    },
+    {
+      "forms": ["百姓", "海內"],
+      "classification": "annals_biography_wording_difference_not_contradiction"
+    }
+  ],
+  "acceptance_gate": {
+    "required_next_role": "INDEPENDENT_QD",
+    "required_checks": ["stable_edition_or_image_comparison", "anchor_replay", "scope_and_attribution_review"],
+    "prohibited_until_pass": ["count_as_1_of_5", "advance_to_少翁"]
+  },
+  "next_checkpoint": "K02-03-HXL-01: independent Q/D replays HS75 and HS11 anchors without relying on this audit's conclusion; only a passing review may change 0/5 to 1/5."
+}
