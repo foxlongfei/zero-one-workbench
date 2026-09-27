@@ -51485,13 +51485,13 @@ id="g064-p07上九允许庆功却以濡首失是设停止线有孚失是文本�
 </ul>
 </section><section class="article" id="overlaymodel" data-title="叠加关系模型 V0.1">
 <h1>叠加关系模型 V0.1</h1>
-<p>这是学习与研究用的可交互叠加模型。当前先开放结构明确的八方、八卦、五行、天干、地支、二十四节气、六十甲子索引层；星宿、罗盘、纳甲等复杂对应暂列待校准层，不把不同传统强行合并。</p>
+<p>这是学习与研究用的可交互叠加模型。当前把先天八卦与后天八卦拆成独立图层；其余传统层按来源逐步开放。TEMP-MODEL-01长期补全，但不替代研究主线。</p>
 <div id="layerControls" style="display:flex;flex-wrap:wrap;gap:8px;margin:16px 0"></div>
 <div style="display:grid;grid-template-columns:minmax(300px,1fr) minmax(260px,.8fr);gap:18px">
 <div><svg id="overlayWheel" viewBox="0 0 600 600" style="width:100%;max-width:650px;background:#fffdf8;border:1px solid #d7d0c0;border-radius:50%"></svg></div>
 <div><h2 style="margin-top:0">点击说明</h2><div id="overlayInfo" style="padding:14px;background:#f4f0e6;border:1px solid #d7d0c0;min-height:160px">点击圆盘中的文字查看说明。</div><h2>当前叠加</h2><div id="overlayTable"></div></div>
 </div>
-<h2>如何使用</h2><ol><li>用上方按钮开关图层，观察同一方位上不同体系的对应。</li><li>点击圆盘中的任一标签，右侧显示该对象的定义、当前关系和使用边界。</li><li>六十甲子属于时间序列，不硬塞进八方；点击“甲子”图层后在右侧提供索引说明。</li><li>节气以太阳周年黄经序列为本，V0.1用方位环作学习示意，不等同传统罗盘定式。</li><li>星宿、纳甲、罗盘层必须先注明具体传统/版本和来源，校准后再开放。</li></ol>
+<h2>TEMP-MODEL-01｜待建图层总表</h2><p>ACTIVE：方位、后天八卦、五行、天干、地支、节气、甲子基础层。NEXT：先天八卦、十二生肖、时辰。QUEUED：传统历法、二十八宿、四象、河图、洛书、十二辟卦、纳甲、罗盘、传统命理模块。每层开放前必须补来源、时代、映射规则、操作方法、关联文字、争议/流派差异。</p><h2>如何使用</h2><ol><li>用上方按钮开关图层，观察同一方位上不同体系的对应。</li><li>点击圆盘中的任一标签，右侧显示该对象的定义、当前关系和使用边界。</li><li>六十甲子属于时间序列，不硬塞进八方；点击“甲子”图层后在右侧提供索引说明。</li><li>节气以太阳周年黄经序列为本，V0.1用方位环作学习示意，不等同传统罗盘定式。</li><li>星宿、纳甲、罗盘层必须先注明具体传统/版本和来源，校准后再开放。</li></ol>
 <p><strong>边界：</strong>图形中的“叠加”表示可供比较的知识关系，不表示这些体系在历史上同时形成，也不证明术数预测有效。</p>
 </section></div></main></div><script>
 const buttons=[...document.querySelectorAll('[data-target]')];
@@ -51529,16 +51529,16 @@ document.getElementById('next').addEventListener('click',()=>{
 const overlayData={
 dirs:[['北','坎','水','壬癸','子'],['东北','艮','土','','丑寅'],['东','震','木','甲乙','卯'],['东南','巽','木','','辰巳'],['南','离','火','丙丁','午'],['西南','坤','土','','未申'],['西','兑','金','庚辛','酉'],['西北','乾','金','','戌亥']],
 terms:['冬至','小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪'],
-layers:{direction:'方位',trigram:'八卦',wuxing:'五行',stems:'天干',branches:'地支',terms:'节气',jiazi:'甲子'}
+pre:[['北','坤'],['东北','震'],['东','离'],['东南','兑'],['南','乾'],['西南','巽'],['西','坎'],['西北','艮']],layers:{direction:'方位',pretrigram:'先天八卦',trigram:'后天八卦',wuxing:'五行',stems:'天干',branches:'地支',terms:'节气',jiazi:'甲子'}
 };
 const activeLayers=new Set(['direction','trigram']);
 function polar(cx,cy,r,a){const t=(a-90)*Math.PI/180;return [cx+r*Math.cos(t),cy+r*Math.sin(t)]}
-function explain(layer,text){const notes={direction:'八方是本模型的空间骨架。',trigram:'八卦方位此处采用后天八卦常见方位：坎北、艮东北、震东、巽东南、离南、坤西南、兑西、乾西北。',wuxing:'这里显示后天八卦常见五行配属：坎水、艮坤土、震巽木、离火、乾兑金。',stems:'V0.1仅显示四正方常见天干配位（北壬癸、东甲乙、南丙丁、西庚辛）；戊己及更细罗盘分金暂不并入。',branches:'十二地支按方位分布作学习索引；更细角度属于罗盘层，待来源校准。',terms:'二十四节气本质是太阳周年黄经节点；圆环位置用于顺序学习，不等同罗盘方位规则。',jiazi:'六十甲子由十天干与十二地支按阴阳相配形成60项循环，是时间/纪序层，不直接等同八方空间层。'};document.getElementById('overlayInfo').innerHTML='<b>'+text+'</b><p>'+notes[layer]+'</p>'}
+function explain(layer,text){const notes={direction:'八方是本模型的空间骨架。',pretrigram:'先天八卦层采用传统常见方位图：乾南、坤北、离东、坎西、兑东南、震东北、巽西南、艮西北。传统归于伏羲；历史形成另行考证。',trigram:'后天八卦层采用传统常见方位：坎北、艮东北、震东、巽东南、离南、坤西南、兑西、乾西北。传统归于文王；历史形成另行考证。',wuxing:'这里显示后天八卦常见五行配属：坎水、艮坤土、震巽木、离火、乾兑金。',stems:'V0.1仅显示四正方常见天干配位（北壬癸、东甲乙、南丙丁、西庚辛）；戊己及更细罗盘分金暂不并入。',branches:'十二地支按方位分布作学习索引；更细角度属于罗盘层，待来源校准。',terms:'二十四节气本质是太阳周年黄经节点；圆环位置用于顺序学习，不等同罗盘方位规则。',jiazi:'六十甲子由十天干与十二地支按阴阳相配形成60项循环，是时间/纪序层，不直接等同八方空间层。'};document.getElementById('overlayInfo').innerHTML='<b>'+text+'</b><p>'+notes[layer]+'</p>'}
 function renderOverlay(){
  const svg=document.getElementById('overlayWheel');if(!svg)return;svg.innerHTML='';
  const NS='http://www.w3.org/2000/svg';
  [95,150,205,255].forEach(r=>{const q=document.createElementNS(NS,'circle');q.setAttribute('cx',300);q.setAttribute('cy',300);q.setAttribute('r',r);q.setAttribute('fill','none');q.setAttribute('stroke','#d7d0c0');svg.appendChild(q)});
- overlayData.dirs.forEach((d,i)=>{const a=i*45;const items=[['direction',d[0],260],['trigram',d[1],205],['wuxing',d[2],150],['stems',d[3],110],['branches',d[4],75]];items.forEach(([layer,txt,r])=>{if(!activeLayers.has(layer)||!txt)return;const [x,y]=polar(300,300,r,a);const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');t.setAttribute('font-size',layer==='trigram'?24:16);t.style.cursor='pointer';t.textContent=txt;t.addEventListener('click',()=>explain(layer,txt));svg.appendChild(t)})});
+ overlayData.dirs.forEach((d,i)=>{const a=i*45;const pre=overlayData.pre[i][1];const items=[['direction',d[0],260],['pretrigram',pre,230],['trigram',d[1],205],['wuxing',d[2],150],['stems',d[3],110],['branches',d[4],75]];items.forEach(([layer,txt,r])=>{if(!activeLayers.has(layer)||!txt)return;const [x,y]=polar(300,300,r,a);const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');t.setAttribute('font-size',layer==='trigram'?24:16);t.style.cursor='pointer';t.textContent=txt;t.addEventListener('click',()=>explain(layer,txt));svg.appendChild(t)})});
  if(activeLayers.has('terms'))overlayData.terms.forEach((txt,i)=>{const [x,y]=polar(300,300,285,i*15);const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','9');t.style.cursor='pointer';t.textContent=txt;t.addEventListener('click',()=>explain('terms',txt));svg.appendChild(t)});
  const table=document.getElementById('overlayTable');table.innerHTML='<table><tr><th>图层</th><th>状态</th></tr>'+Object.entries(overlayData.layers).map(([k,v])=>'<tr><td>'+v+'</td><td>'+(activeLayers.has(k)?'显示':'隐藏')+'</td></tr>').join('')+'</table>'+(activeLayers.has('jiazi')?'<p><b>六十甲子：</b>甲子、乙丑、丙寅……癸亥。V0.1作为独立序列层，后续增加检索与逐项关系。</p>':'');
 }
