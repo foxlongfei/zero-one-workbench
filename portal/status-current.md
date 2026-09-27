@@ -1,41 +1,40 @@
 # 双项目当前状态
 
-更新时间：2026-09-27 14:38（UTC+08:00）
+更新时间：2026-09-27 15:34（UTC+08:00）
 
-> Drive 为权威研究记录；本页是公开状态镜像。完成度只按实际验收物计算，不以时间戳或同步动作计数。
+> Drive 为权威研究记录；本页是公开 CURRENT 镜像。发布任务、刷新时间或同步动作不计研究完成。
 
 ## 零一空间研究
 
-- 已关闭主线：Z01—Z04 — **4/4 COMPLETED**。
-- 当前应用主线：**K02-03｜术数/方技案例的可验证性与失效机制｜ACTIVE｜0/5个案验收**；发布时间戳 **2026-09-27 14:48 UTC+08:00**。
-- 首轮对象：贺良、少翁、栾大、尹敏、任文公；统一覆盖明确失败、伪造指控、跟踪核验、文本可篡改/编辑空间、可执行预警。任务发布不计研究完成。
-- 当前执行：TEMP-E01 / TEMP-M01 独立辅线；95T1J1:4 字形相对位置图
-- 并行分工：C=来源叙述与区域对齐；Q=渲染图位置拓扑观察；D=证据等级、异读与原始字节边界审计
-- 最近一次后台运行/真实成果变化：2026-09-27 14:38；形成4区结构化位置图，明确区分来源转录与视觉拓扑观察
-- 真实增量：记录 FRONT_UPPER_MAIN、FRONT_LOWER_MAIN、FRONT_UPPER_OUTER、REVERSE_TRACES；保留“一一六六一五”“六八八八六六”及“九≠/九七七”未决异读
-- 验收状态：SECONDARY_POSITION_MAP_COMPLETE_PRIMARY_BYTES_PENDING；该待核项属于独立辅线，不重新打开已关闭的Z04
-- 当前阻塞：文章图片原始字节和《华夏考古》1997(2)第34–35页仍未取得；网页渲染证据不冒充原始字节
-- 下一步：取得原始图版或权威图版后，补 byte_length/SHA-256/解码尺寸并交叉认证区域映射
-- 成果：[95T1J1:4字形位置图](../research/zero-one/95T1J1-4-glyph-position-map-v0.1.json)
-- 提交：[33e3b8ea](https://github.com/foxlongfei/zero-one-workbench/commit/33e3b8eaeebad8893d74882df44e144284fc2826)
+- 已关闭主线：Z01—Z04 — **4/4 COMPLETED**
+- 当前主线：**K02-03｜术数/方技案例的可验证性与失效机制｜ACTIVE｜0/5**
+- 当前执行：首个对象“贺良”身份消歧与五维试填；已规范为《汉书》中的“夏賀良”
+- 分工：C=《汉书》卷十一/卷七十五来源层绑定；Q=待独立核对文本位置与范围；D=失败、诈伪指控、跟踪核验、文本编辑空间和可执行预警边界审计
+- 最近真实成果：2026-09-27 15:34；形成 K02-03_CASE_MATRIX_V0.1，夏賀良条目五维均已处理
+- 关键发现：史书明确记录“其言亡验/卒无嘉应”，并留下六月采纳、八月撤销的短间隔跟踪链；“诈造/诬罔”只作为史书叙事及司法定性，不冒充现代独立事实裁决
+- 验收状态：EVIDENCE_MATRIX_COMPLETE_PENDING_INDEPENDENT_REVIEW；独立复核未完成，因此严格保持0/5
+- 成果：[K02-03首批案例矩阵](../research/zero-one/k02-03-case-matrix-v0.1.json)
+- 提交：[a9899356](https://github.com/foxlongfei/zero-one-workbench/commit/a989935645edbc4816b7f69bc74c874822a1638f)
+- 并行辅线：TEMP-E01/TEMP-M01保持独立ACTIVE，原始图版/字节仍阻塞；TEMP-MODEL-01保持ACTIVE，下一动作是拆分先天/后天八卦图层
+- 下一步：Q/D独立核对夏賀良文本锚点，通过后才计1/5；随后沿用K02-03-ID进入少翁
 
 ## 动起来
 
-- 当前主线：M01→M02/M03→M04 — **严格完成1/4**。M01=COMPLETED；M02=PAUSED_PENDING_C_ACCEPTANCE（最后实质动作2026-09-27 13:36）；M03=BLOCKED_CLEAN_CONTEXT；M04=BLOCKED_BY_M03_AND_C_ACCEPTANCE。
-- 当前执行：M03/D 因本次执行上下文已读到Q摘要而失去干净盲审资格；按既有队列切换至 TEMP-YOUTH
-- 并行分工：Q=既有M02交卷保持封存；D=本周期不伪造盲审；C=TEMP-YOUTH字段与来源映射待独立交叉认证
-- 最近一次后台运行/真实成果变化：2026-09-27 14:38；完成TEMP-YOUTH V0.1字段表、门禁验证器与4个正反例
-- 真实增量：结构化WHO 5–17岁健康基线与NSCA发展适宜训练门禁；明确“年龄分组≠能力分级”，年龄不能单独决定动作、负荷或进阶
-- 测试验收：4/4案例符合预期（有效1、拒绝3、期望偏差0）
-- 当前阻塞：M03需要未接触Q结果的独立执行上下文；C认证及M04正式RESULTS仍缺。首个完整肱二头肌→肘→前臂样本仍≈0，不把Schema计作样本进度
-- 下一步：独立上下文执行M03/D；C交叉认证TEMP-YOUTH来源映射；随后把同一门禁复用于TEMP-CLUB，且不混并年龄段与能力层级
-- 成果：[TEMP-YOUTH字段表](../research/movement/temp-youth-field-table-v0.1.json) · [门禁验证器](../research/movement/temp-youth-gate-validator-v0.1.mjs) · [正反例](../research/movement/temp-youth-gate-cases-v0.1.json)
-- 提交：[字段表 1507efab](https://github.com/foxlongfei/zero-one-workbench/commit/1507efaba2ec32a7b76e99d72532a180440e6eed) · [案例 7612869c](https://github.com/foxlongfei/zero-one-workbench/commit/7612869c2f3fb7244e5cba49ac857eb6c6631842) · [验证器 1b881aa5](https://github.com/foxlongfei/zero-one-workbench/commit/1b881aa5aa384d40639f3fac117f1d6e220c09a1)
+- 当前主线：M01→M02/M03→M04 — **严格完成1/4**
+- 状态：M01=COMPLETED；M02=PAUSED_PENDING_C_ACCEPTANCE；M03=BLOCKED_CLEAN_CONTEXT；M04=BLOCKED_BY_M03_AND_C_ACCEPTANCE
+- 当前执行：主线因当前上下文已接触Q摘要而不能执行M03/D；切换既有TEMP-YOUTH完成C级来源—字段交叉认证
+- 分工：C=WHO/NSCA来源映射认证；Q=既有M02交卷继续封存；D=不在受污染上下文伪造主线盲审
+- 最近真实成果：2026-09-27 15:34；TEMP-YOUTH字段表升级V0.2并新增交叉认证回执
+- 关键修正：将WHO数值门的来源指针升级到2020指南及WHO Europe官方摘要；“年龄分组≠能力分级”明确标为DERIVED_RULE，不冒充WHO或NSCA逐字结论
+- 验收状态：CROSS_CERTIFIED_WITH_DERIVED_RULE_BOUNDARY；验证器复跑4/4符合预期（1有效、3拒绝、0偏差）
+- 成果：[TEMP-YOUTH字段表V0.2](../research/movement/temp-youth-field-table-v0.2.json) · [C交叉认证回执](../research/movement/temp-youth-cross-certification-v0.1.json)
+- 提交：[字段表 8dd01d6c](https://github.com/foxlongfei/zero-one-workbench/commit/8dd01d6cc539bff7b90a424453e3543531a707dc) · [认证 b778f847](https://github.com/foxlongfei/zero-one-workbench/commit/b778f84701d61c57b666190dd32d045692ce5cfa)
+- 边界：本轮辅线成果不计M02—M04完成；首个“肱二头肌→肘→前臂”完整样本仍约为0
+- 下一步：未接触Q摘要的独立上下文执行M03/D；当前上下文沿既有队列把已认证门禁复用于TEMP-CLUB反例
 
-## 本周期验收与断点
+## 精确断点
 
-- 两项目均产生可观察结构化成果并通过本地读回；未用时间戳或同步动作虚增完成度。
-- 精确断点（零一）：原始图片/权威图版到位后再做字节级与字形级交叉认证；Z04保持4/4 CLOSED。
-- 精确断点（动起来）：M03只在未读Q摘要的独立上下文启动；否则继续TEMP-YOUTH→TEMP-CLUB或共同人体坐标系既有辅线。
+- 零一：K02-03-HXL-01 等待独立文本复核；通过后才从0/5变为1/5，不另起ID。
+- 动起来：M03恢复条件仍是干净独立上下文；否则进入TEMP-CLUB或共同人体坐标系的既有可执行项。
 - [Drive双项目动态执行看板](https://docs.google.com/document/d/16xSk77EHM3D_v2gdEenKs5q8ZXHF7gpWkc_r9a6dn8I/edit)
 - [公开动作库](./exercise-library.html)
