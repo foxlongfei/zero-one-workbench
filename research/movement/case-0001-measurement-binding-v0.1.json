@@ -1,0 +1,63 @@
+{
+  "id": "MF-T07_CASE_0001_DRIVE_BINDING",
+  "provenance": {
+    "movement": "PUSH_UP",
+    "case_type": "NON_BLIND_METHOD_DEVELOPMENT",
+    "node_closure_drive_id": "1T8l1rmVtB-g0HN07Hv7xQa9NL6HNhz8w",
+    "feasibility_drive_id": "1MJbdXayeNkQcxqjG6WWXPhUTM0Nj_MPp",
+    "cam_a": {
+      "view": "side",
+      "fps": 60,
+      "resolution": "1280x720"
+    },
+    "cam_b": {
+      "view": "front",
+      "fps": 30,
+      "resolution": "544x960"
+    },
+    "sync_state": "WORKING_SYNC_CANDIDATE",
+    "sync_offset_candidate_s": 35.65,
+    "final_rep_count": "UNKNOWN"
+  },
+  "input": {
+    "sources": {
+      "video": {
+        "available": true,
+        "camera_count": 2,
+        "calibrated": false,
+        "frame_rate_known": true,
+        "body_visible": true,
+        "out_of_plane": false
+      },
+      "external_force": {
+        "available": false
+      },
+      "ultrasound": {
+        "available": false
+      },
+      "emg": {
+        "available": false
+      },
+      "musculoskeletal_model": {
+        "available": false
+      },
+      "anthropometry": {
+        "available": false
+      }
+    },
+    "requested_numeric_outputs": []
+  },
+  "expected": {
+    "results": {
+      "phase_timing": "MEASURED",
+      "joint_angle": "QUALITATIVE_ONLY",
+      "bar_reaction_force": "UNAVAILABLE",
+      "net_joint_moment": "UNAVAILABLE",
+      "individual_muscle_force": "UNAVAILABLE",
+      "fascicle_velocity": "UNAVAILABLE",
+      "tendon_strain": "UNAVAILABLE",
+      "energy_balance": "UNAVAILABLE"
+    },
+    "violations": []
+  }
+}
