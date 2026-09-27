@@ -1,6 +1,6 @@
 # 双项目当前状态
 
-更新时间：2026-09-27 17:00（UTC+08:00）
+更新时间：2026-09-27 17:18（UTC+08:00）
 
 > Drive 为权威研究记录；本页是公开 CURRENT 镜像。发布任务、刷新时间或同步动作不计研究完成。
 
@@ -29,7 +29,7 @@
 - 验收状态：COMPARATIVE_PIPELINE_V0.1_COMPLETE_PENDING_CROSS_CERTIFICATION；验证器4/4符合预期（1接受、3拒绝、0偏差）
 - 成果：[TEMP-CLUB比较管线](../research/movement/temp-club-comparative-pipeline-v0.1.json) · [门禁案例](../research/movement/temp-club-gate-cases-v0.1.json) · [验证器](../research/movement/temp-club-gate-validator-v0.1.mjs)
 - 提交：[管线 5fd93a9a](https://github.com/foxlongfei/zero-one-workbench/commit/5fd93a9ab9994ed9587aa040d91c60a8b13739c1) · [案例 33e4c9ab](https://github.com/foxlongfei/zero-one-workbench/commit/33e4c9abd8b6cfec8f796274f79397a22b39e174) · [验证器 9ecbbab3](https://github.com/foxlongfei/zero-one-workbench/commit/9ecbbab387d94d5c27ed0ce0adcd9f4af3d946d3)
-- 边界：本轮辅线成果不计M02—M04完成；首个“肱二头肌→肘→前臂”完整样本仍约为0
+- 新增标准样板：首个“肱二头肌→肘→前臂”展示 V0.1 已形成并进入用户验收；[直接打开样板](./biceps-standard-sample.html)。状态 STANDARD_DISPLAY_V0.1_READY_FOR_USER_ACCEPTANCE；真实开放3D资产尚未接入，因此不把3D阶段标为完成
 - 新增开放底层采用决策：OpenSim=肌骨/力学核心；OpenCap=动作运动学管线；BodyParts3D上肢子集=首个3D原型；Z-Anatomy暂缓直接嵌入以避免未决ShareAlike许可耦合。成果：[开放基础设施采用矩阵](../research/movement/open-infrastructure-adoption-v0.1.json)，commit 949f7e45
 - 下一步：主线M03仍等待干净独立上下文；样板辅线直接取得并映射肱二头肌、肱骨、桡骨、尺骨真实开放资产，形成浏览器可见上臂—肘—前臂原型，不再从零造底层
 
