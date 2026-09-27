@@ -1,0 +1,63 @@
+{
+  "schema_version": "IMAGE_ASSET_AUDIT_V0.1",
+  "task_ids": [
+    "Z04",
+    "TEMP-E01",
+    "TEMP-M01"
+  ],
+  "object": {
+    "canonical_candidate": "95T1J1:4",
+    "retained_alias": "95TJ1:4",
+    "object_type": "牛肩胛骨残块",
+    "primary_bibliography": "安阳市文物工作队《1995—1996年安阳刘家庄殷代遗址发掘报告》，《华夏考古》1997(2):28–45",
+    "target_pages": "34–35"
+  },
+  "secondary_page": {
+    "title": "周伟：殷墟所见易卦文物",
+    "url": "https://www.sohu.com/a/167765274_713036",
+    "published_date": "2017-08-28",
+    "object_section_lines": "30–36",
+    "object_id_displayed": "95T1J1:4",
+    "caption": "95T1J1：4带字卜骨正、反面线图和拓片"
+  },
+  "assets": [
+    {
+      "ordinal": 1,
+      "url": "https://5b0988e595225.cdn.sohucs.com/images/20170828/4b2104f285504f44befaf82dc88c4bfd.jpeg",
+      "page_link_id": 4,
+      "section_mapping": "between object description and shared caption",
+      "byte_fetch_status": "SEARCH_CONNECTOR_REJECTED_UNSUPPORTED_CONTENT_TYPE",
+      "visual_inspection_status": "NOT_COMPLETED"
+    },
+    {
+      "ordinal": 2,
+      "url": "https://5b0988e595225.cdn.sohucs.com/images/20170828/932ebb4b2d544d87869b75371ead5c23.png",
+      "page_link_id": 5,
+      "section_mapping": "between object description and shared caption",
+      "byte_fetch_status": "SEARCH_CONNECTOR_REJECTED_UNSUPPORTED_CONTENT_TYPE",
+      "visual_inspection_status": "NOT_COMPLETED"
+    }
+  ],
+  "provenance": {
+    "image_witness_layer": "SECONDARY_WEB_REPRODUCTION",
+    "primary_report_image_confirmed": false,
+    "original_plate_number": null,
+    "direct_glyph_adjudication_allowed": false
+  },
+  "gates": [
+    {
+      "id": "IA-01",
+      "rule": "Caption and section co-location may establish a secondary image-witness inventory, but cannot establish glyph identity before image bytes are inspected."
+    },
+    {
+      "id": "IA-02",
+      "rule": "A connector content-type rejection is ACCESS_FAILURE, not evidence that the image is absent."
+    },
+    {
+      "id": "IA-03",
+      "rule": "AUDIT_PASS requires object ID plus direct primary report caption/table and an inspectable photo, drawing, or rubbing."
+    }
+  ],
+  "audit_status": "SECONDARY_IMAGE_WITNESS_LOCATED_BYTES_PENDING",
+  "next_lookup_key": "Retrieve either asset bytes through an authorized image path or the original report pages 34–35; then map each view to photo/line drawing/rubbing and compare the three inscription groups."
+}
