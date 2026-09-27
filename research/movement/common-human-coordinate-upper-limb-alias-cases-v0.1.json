@@ -1,0 +1,17 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-UPPER-LIMB-ALIAS-CASES-V0.1",
+  "cases": [
+    {"id":"AL-01","input":"二头","expected_status":"RESOLVED","expected_target":"MUSCLE_BICEPS_BRACHII","expected_side":"UNSPECIFIED","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-02","input":"肘","expected_status":"RESOLVED","expected_target":"JOINT_ELBOW","expected_side":"UNSPECIFIED","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-03","input":"小臂","expected_status":"RESOLVED","expected_target":"REGION_FOREARM","expected_side":"UNSPECIFIED","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-04","input":"胳膊","expected_status":"ASK_DISAMBIGUATION","expected_target":null,"expected_side":"UNSPECIFIED","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-05","input":"胸肌","expected_status":"DEFER_OUT_OF_SAMPLE","expected_target":null,"expected_side":"UNSPECIFIED","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-06","input":"右二头训练","expected_status":"RESOLVED","expected_target":"MUSCLE_BICEPS_BRACHII","expected_side":"RIGHT","expected_goal":"TRAIN"},
+    {"id":"AL-07","input":"左肱二头肌","expected_status":"RESOLVED_ASSET_PENDING","expected_target":"MUSCLE_BICEPS_BRACHII","expected_side":"LEFT","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-08","input":"二头疼","expected_status":"SAFETY_OR_SYMPTOM","expected_target":null,"expected_side":"UNSPECIFIED","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-09","input":"肘不舒服","expected_status":"SAFETY_OR_SYMPTOM","expected_target":null,"expected_side":"UNSPECIFIED","expected_goal":"UNSPECIFIED"},
+    {"id":"AL-10","input":"前臂拉伸","expected_status":"RESOLVED","expected_target":"REGION_FOREARM","expected_side":"UNSPECIFIED","expected_goal":"STRETCH"},
+    {"id":"AL-11","input":"手臂训练","expected_status":"ASK_DISAMBIGUATION","expected_target":null,"expected_side":"UNSPECIFIED","expected_goal":"TRAIN"},
+    {"id":"AL-12","input":"右小臂放松","expected_status":"RESOLVED","expected_target":"REGION_FOREARM","expected_side":"RIGHT","expected_goal":"RELAX"}
+  ]
+}

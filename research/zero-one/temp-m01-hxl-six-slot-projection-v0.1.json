@@ -1,0 +1,100 @@
+{
+  "artifact_id": "TEMP-M01-HXL-SIX-SLOT-PROJECTION-V0.1",
+  "task_id": "TEMP-M01",
+  "linked_mainline_task": "K02-03-HXL-01",
+  "created_at": "2026-09-28T05:43:00+08:00",
+  "status": "C_NON_BLIND_CASE_PROJECTION_PENDING_INDEPENDENT_ACCEPTANCE",
+  "method_boundary": "This is a case projection into six analytical slots, not proof that the slots describe every traditional method and not an independent Q/D acceptance.",
+  "sources": {
+    "NDL75": {
+      "artifact": "research/zero-one/k02-03-hxl-ndl-page-anchor-v0.2.json",
+      "witness": "NDL 774615 canvas 18",
+      "evidence_role": "DIRECT_SCAN_C_NON_BLIND"
+    },
+    "NLC11": {
+      "artifact": "research/zero-one/k02-03-hxl-nlc-page-anchor-v0.1.json",
+      "witness": "NLC 382411 volume 11 image page",
+      "evidence_role": "DIRECT_SCAN_C_NON_BLIND"
+    },
+    "HS75_WEB": {
+      "artifact": "research/zero-one/k02-03-hxl-source-anchor-audit-v0.1.json",
+      "witness": "漢書卷075 editable transcription",
+      "evidence_role": "WEB_TRANSCRIPTION_C_ANCHOR_PENDING_STABLE_QD"
+    }
+  },
+  "slots": [
+    {
+      "slot": "S1_INPUT_TEXT_OR_CLAIM_OBJECT",
+      "observed_text": "初成帝時齊人甘忠可託造天官歷包元太平經十二卷",
+      "source_refs": ["NDL75"],
+      "classification": "DIRECT_OBSERVATION",
+      "boundary": "詐造/託造 is attributed to 甘忠可 in the received narrative; it must not be reassigned to 夏賀良."
+    },
+    {
+      "slot": "S2_TRANSMISSION_OR_PROPOSAL",
+      "observed_text": "待詔夏賀良等建言改元易號，增益漏刻",
+      "source_refs": ["NLC11"],
+      "classification": "DIRECT_OBSERVATION",
+      "boundary": "This records the proposal as transmitted in the annals; it does not establish the proposal's truth."
+    },
+    {
+      "slot": "S3_ADOPTION_OR_EXECUTION",
+      "observed_text": "六月甲子制書 is referenced by the later revocation; the adopted changes concern era/title and the water-clock scale.",
+      "source_refs": ["NLC11"],
+      "classification": "OBSERVATION_PLUS_SEQUENCE_LINK",
+      "boundary": "The June-to-August order is a received-text sequence, not an independently reconstructed administrative file."
+    },
+    {
+      "slot": "S4_STATED_EXPECTED_EFFECT",
+      "observed_text": "可以永安國家；冀為海內獲福",
+      "source_refs": ["NLC11"],
+      "classification": "DIRECT_OBSERVATION_OF_STATED_EXPECTATION",
+      "boundary": "These are stated expectations in the source, not project-endorsed causal predictions."
+    },
+    {
+      "slot": "S5_RECORDED_RESPONSE_OR_TEST",
+      "observed_text": "卒無嘉應；卷七十五另见其言亡驗",
+      "source_refs": ["NLC11", "HS75_WEB"],
+      "classification": "MIXED_DIRECT_SCAN_AND_WEB_ANCHOR",
+      "boundary": "卒無嘉應 is image-anchored by C; 其言亡驗 remains an editable-web wording until stable independent replay."
+    },
+    {
+      "slot": "S6_REVERSAL_AND_DISPOSITION",
+      "observed_text": "六月甲子制書非赦令也，皆蠲除之；賀良等反道惑眾，下有司，皆伏辜",
+      "source_refs": ["NLC11"],
+      "classification": "DIRECT_OBSERVATION_WITH_JUDICIAL_NARRATIVE_BOUNDARY",
+      "boundary": "Revocation is recorded directly; the judicial phrases are preserved as historical/legal characterizations, not converted into modern factual labels."
+    }
+  ],
+  "cross_slot_findings": [
+    {
+      "id": "F1",
+      "finding": "The received narrative contains a complete proposal→adoption→expected effect→recorded non-response→reversal/disposition chain.",
+      "epistemic_status": "STRUCTURAL_OBSERVATION"
+    },
+    {
+      "id": "F2",
+      "finding": "The chain supports a testable historical-process record, but does not by itself prove modern causality or generalize to all traditional methods.",
+      "epistemic_status": "METHOD_BOUNDARY"
+    },
+    {
+      "id": "F3",
+      "finding": "The two failure wordings are related but must remain separately sourced until independent stable-witness review closes.",
+      "epistemic_status": "OPEN_VARIANT_CONTROL"
+    }
+  ],
+  "blindness_firewall": {
+    "admissible_to_q_or_d_blind_input": false,
+    "reason": "Contains C's non-blind source mapping and must not be supplied to independent Q/D before their returns are frozen."
+  },
+  "acceptance": {
+    "temp_m01_increment": true,
+    "mainline_q": false,
+    "mainline_d": false,
+    "mainline_cross_review": false,
+    "mainline_before": "0/5",
+    "mainline_after": "0/5",
+    "counting_decision": "NO_MAINLINE_COUNT_CHANGE"
+  },
+  "next_checkpoint": "After independent NDL/NLC returns freeze, compare their source sequence to these slots without rewriting either return; retain any wording conflict."
+}

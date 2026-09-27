@@ -1,0 +1,73 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-UPPER-LIMB-ALIAS-MAP-V0.1",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "linked_mainline": "M01→M02/M03→M04",
+  "created_at": "2026-09-28T05:43:00+08:00",
+  "scope": "First executable natural-language mapping for the 肱二头肌→肘→前臂 sample.",
+  "principles": [
+    "Professional and colloquial terms converge on one canonical target only when the term is sufficiently specific.",
+    "Broad words such as 胳膊 and 手臂 require disambiguation and must not silently become 肱二头肌.",
+    "A region or composite target must not be represented as one muscle.",
+    "An unspecified side remains UNSPECIFIED; the current right-side preview is not persisted as user intent.",
+    "Pain, numbness, injury or discomfort language routes to SAFETY_OR_SYMPTOM before exercise selection."
+  ],
+  "canonical_targets": [
+    {
+      "id": "MUSCLE_BICEPS_BRACHII",
+      "kind": "COMPOSITE_MUSCLE",
+      "right_assets": ["BP5558", "BP5566"],
+      "composition": ["short head of right biceps brachii", "long head of right biceps brachii"],
+      "asset_completeness": "COMPLETE_FOR_REGISTERED_RIGHT_BICEPS"
+    },
+    {
+      "id": "JOINT_ELBOW",
+      "kind": "JOINT_REGION",
+      "right_assets": [],
+      "asset_completeness": "NOT_YET_MAPPED"
+    },
+    {
+      "id": "REGION_FOREARM",
+      "kind": "ANATOMICAL_REGION",
+      "right_assets": ["BP8464", "BP8233"],
+      "composition": ["right radius", "right ulna"],
+      "asset_completeness": "PARTIAL_BONY_SUBSET"
+    },
+    {
+      "id": "REGION_UPPER_ARM",
+      "kind": "ANATOMICAL_REGION",
+      "right_assets": ["BP9206", "BP5558", "BP5566"],
+      "composition": ["right humerus", "registered right biceps heads"],
+      "asset_completeness": "PARTIAL_REGISTERED_SUBSET"
+    }
+  ],
+  "aliases": {
+    "肱二头肌": "MUSCLE_BICEPS_BRACHII",
+    "二头肌": "MUSCLE_BICEPS_BRACHII",
+    "二头": "MUSCLE_BICEPS_BRACHII",
+    "肘关节": "JOINT_ELBOW",
+    "胳膊肘": "JOINT_ELBOW",
+    "肘": "JOINT_ELBOW",
+    "前臂": "REGION_FOREARM",
+    "小臂": "REGION_FOREARM",
+    "上臂": "REGION_UPPER_ARM",
+    "大臂": "REGION_UPPER_ARM"
+  },
+  "ambiguous_terms": {
+    "胳膊": ["REGION_UPPER_ARM", "JOINT_ELBOW", "REGION_FOREARM"],
+    "手臂": ["REGION_UPPER_ARM", "JOINT_ELBOW", "REGION_FOREARM"],
+    "练手": ["REGION_UPPER_ARM", "JOINT_ELBOW", "REGION_FOREARM"]
+  },
+  "recognized_out_of_sample": ["胸肌", "胸部", "小腿", "膝", "膝关节"],
+  "side_markers": {"左":"LEFT","右":"RIGHT"},
+  "goal_markers": {"拉伸":"STRETCH","放松":"RELAX","训练":"TRAIN","练":"TRAIN"},
+  "symptom_markers": ["疼", "痛", "麻", "受伤", "不舒服", "无力"],
+  "display_rule": "RIGHT assets may be previewed only when side is RIGHT or as a clearly labeled standard preview; UNSPECIFIED never mutates to RIGHT.",
+  "acceptance": {
+    "data_mapping_increment": true,
+    "page_integration": false,
+    "public_readback": false,
+    "mainline_before": "2/4",
+    "mainline_after": "2/4",
+    "counting_decision": "NO_MAINLINE_COUNT_CHANGE"
+  }
+}
