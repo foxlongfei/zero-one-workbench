@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "TESTSET-01-M02-Q-C-ACCEPTANCE-AUDIT-V0.1",
+  "task_id": "M02",
+  "reviewer_role": "C",
+  "created_at": "2026-09-28T00:53:00+08:00",
+  "input": {
+    "q_submission": "research/movement/testset-01-m02-q-clean-blind-v0.1.json",
+    "q_submission_commit": "2cfea35da52ce1075ca03de4adfdc49961675698",
+    "frozen_manifest": "research/movement/testset-01-frozen-input-manifest-v0.1.json",
+    "protocol_drive_id": "1G9Dazcy9H4YaNAKhE6-puiPuT5Quz1lh",
+    "q_task_drive_id": "1i1aNBXL4kd8cdWLlOXi5ATRslvmXxXk4"
+  },
+  "review_results": {
+    "frozen_hashes": {
+      "checked": 8,
+      "matched": 8,
+      "status": "8/8 PASS",
+      "objects": ["gate", "q_task", "RAW-T01-01", "RAW-T01-02", "RAW-T01-03", "RAW-T01-04", "RAW-T01-05", "RAW-T01-06"]
+    },
+    "required_output_fields": {
+      "required": 10,
+      "present": 10,
+      "status": "10/10 PRESENT",
+      "fields": ["Q_PAIRING", "Q_ACTION_INTERVALS", "Q_CYCLE_CANDIDATES", "Q_COMPLETE_OR_PARTIAL_EVENTS", "Q_VIEW_STRENGTHS", "Q_VIEW_FAILURES", "Q_30VS60_OBSERVATIONS", "Q_CONFIDENCE", "Q_UNCERTAINTIES", "Q_FAILURE_POINTS"]
+    },
+    "recording_coverage": "6/6",
+    "pairing_coverage": "3/3",
+    "protocol_boundaries": {
+      "candidate_not_rep_default_preserved": true,
+      "evidence_level_l1_only": true,
+      "thirty_vs_sixty_not_established": true,
+      "true_depth_not_established": true,
+      "movement_quality_not_inferred": true,
+      "pair_02_05_not_claimed_synchronized": true
+    },
+    "defects": [
+      {
+        "id": "M02-Q-C-DEFECT-01",
+        "severity": "REPAIR_REQUIRED",
+        "requirement": "Separate OBSERVED / COUNTED / INTERPRETED / NOT_VISIBLE / UNCERTAIN.",
+        "finding": "The submission expresses observations and uncertainty in prose and nested fields, but does not provide an explicit per-recording taxonomy separating all five required categories.",
+        "repair": "Add a per-recording evidence_taxonomy object with the five named categories without changing the frozen observations."
+      },
+      {
+        "id": "M02-Q-C-DEFECT-02",
+        "severity": "REPAIR_REQUIRED",
+        "requirement": "Use the frozen protocol classifications when converting cycle candidates into rep status.",
+        "finding": "The submission reports complete_candidates and uncertain_candidates, but does not map each reported result to COMPLETE_REP, PARTIAL_REP, ADJUSTMENT, TRANSITION, NOISE, or UNKNOWN.",
+        "repair": "Add an explicit classification_summary; unresolved 5fps boundaries remain UNKNOWN or candidate-level and must not be upgraded."
+      }
+    ]
+  },
+  "decision": {
+    "status": "C_REVIEW_COMPLETE_REPAIR_REQUIRED",
+    "m02_acceptance": false,
+    "m02_status": "PAUSED_PENDING_Q_SCHEMA_REPAIR_AND_C_RECHECK",
+    "m03_status": "BLOCKED_CLEAN_CONTEXT",
+    "m04_status": "BLOCKED_BY_M02_M03",
+    "strict_before": "1/4",
+    "strict_after": "1/4",
+    "counting_decision": "NO_COUNT_CHANGE",
+    "reason": "Frozen inputs and evidence boundaries pass, but two explicit first-pass output requirements are not machine-distinct enough for strict C acceptance."
+  },
+  "independence_guard": "This C audit may be shown to Q for schema repair. It must not be shown to D before D freezes an independent M03 first pass.",
+  "next_checkpoint": "Q performs schema-only repair under the same M02 ID; C rechecks without altering observations. M03 remains reserved for a clean D context."
+}
