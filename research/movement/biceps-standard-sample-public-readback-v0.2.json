@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.2",
+  "task_id": "COMMON-HUMAN-COORDINATE-SAMPLE-BICEPS",
+  "role": "PUBLIC_DEPLOYMENT_READBACK",
+  "status": "PUBLIC_READBACK_PASS",
+  "target_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "source_commit": "aaa67c0cb4487df54e30bca2e6bdc99d241a3139",
+  "observed": {
+    "version_label": "STANDARD SAMPLE V0.2｜完整样板优先",
+    "sample_heading": "肱二头肌 → 肘 → 前臂",
+    "three_column_information_architecture": true,
+    "central_display_persists_while_side_controls_switch_conditions": true,
+    "movement_plane_and_axis_present": true,
+    "stretch_module_present": true,
+    "equipment_modes_present": [
+      "徒手 / 无设备",
+      "自重",
+      "自由重量 / 哑铃",
+      "弹力带",
+      "拉力器 / 器械"
+    ],
+    "source_links_present": ["NCBI", "OpenStax", "OpenSim Arm26"],
+    "three_dimensional_asset_disclosure": "当前中央图仍为教学示意；真实开放3D结构资产尚未接入。"
+  },
+  "interaction_tests": [
+    {
+      "id": "PUBLIC-V02-PLANE",
+      "control": "运动面 Plane",
+      "result": "PASS",
+      "observed_text": "肘屈主要在矢状面；中央层同时保留矢状面 / sagittal plane。"
+    },
+    {
+      "id": "PUBLIC-V02-BAND",
+      "control": "弹力带",
+      "result": "PASS",
+      "observed_text": "标准联动切换为弹力带弯举，并说明锚点决定阻力方向、带长变化改变张力。"
+    },
+    {
+      "id": "PUBLIC-V02-STRETCH",
+      "control": "拉伸 Stretch",
+      "result": "PASS",
+      "observed_text": "拉伸正式模块显示跨肩+肘关系、常规示范及锐痛/麻木/电击感停止条件。"
+    }
+  ],
+  "acceptance_gates": {
+    "plane_and_axis": "PASS",
+    "stretch_module": "PASS",
+    "five_equipment_modes": "PASS",
+    "fixed_center_side_controls": "PASS",
+    "three_column_responsive_structure": "PASS",
+    "reusable_fixed_template": "PASS"
+  },
+  "summary": {"tests": 3, "passed": 3, "failed": 0, "gates": 6, "gates_passed": 6},
+  "closure": {
+    "closed_blocker": "V0.2_PUBLIC_DEPLOYMENT_READBACK_PENDING",
+    "repository_layer": "PASS",
+    "public_page_layer": "PASS",
+    "mainline_completion_change": false,
+    "three_dimensional_asset_stage": "NOT_STARTED"
+  },
+  "next_checkpoint": "Preserve the accepted V0.2 information architecture while mapping real open asset IDs for biceps, humerus, radius and ulna; do not relabel the teaching diagram as a real 3D asset."
+}
