@@ -1,0 +1,114 @@
+{
+  "schema": "TESTSET-01_FROZEN_INPUT_MANIFEST_V0.1",
+  "generated_at": "2026-09-27T11:37:29+08:00",
+  "project": "动起来",
+  "task_id": "M01",
+  "hash_algorithm": "SHA-256",
+  "hash_basis": "raw Drive file bytes downloaded during this run",
+  "acceptance": {
+    "listed_inputs": "9/9",
+    "byte_size_verified": "9/9",
+    "sha256_verified": "9/9",
+    "status": "INPUT_MANIFEST_HASH_COMPLETE",
+    "does_not_close": [
+      "5 ZIP internal audits",
+      "clean blind review"
+    ]
+  },
+  "aggregate": {
+    "file_count": 9,
+    "total_bytes": 2020166
+  },
+  "files": [
+    {
+      "role": "GATE_PROTOCOL_SNAPSHOT",
+      "drive_id": "1G9Dazcy9H4YaNAKhE6-puiPuT5Quz1lh",
+      "name": "TESTSET-01_PROTOCOL_SNAPSHOT_V0.1.md",
+      "mime_type": "text/markdown",
+      "size_bytes": 2600,
+      "modified_time": "2026-09-13T05:29:13.401Z",
+      "sha256": "0dc2a612cabf509c7c793a583f7f00ad84ef760c4ee43511a44dd7d4097ae5fc",
+      "url": "https://drive.google.com/file/d/1G9Dazcy9H4YaNAKhE6-puiPuT5Quz1lh/view"
+    },
+    {
+      "role": "Q_BLIND_TASK",
+      "drive_id": "1i1aNBXL4kd8cdWLlOXi5ATRslvmXxXk4",
+      "name": "TESTSET-01_Q_BLIND_TASK_V0.1.md",
+      "mime_type": "text/markdown",
+      "size_bytes": 1361,
+      "modified_time": "2026-09-13T05:29:05.398Z",
+      "sha256": "e4529bf3c43ee3e179fd0233d7c59a66e6e8c235effac2b7299c2a9026ec73ba",
+      "url": "https://drive.google.com/file/d/1i1aNBXL4kd8cdWLlOXi5ATRslvmXxXk4/view"
+    },
+    {
+      "role": "D_BLIND_TASK",
+      "drive_id": "1noTa4UDiXJ2EEBQCc7hFmR7rSjrUF1fD",
+      "name": "TESTSET-01_D_BLIND_TASK_V0.1.md",
+      "mime_type": "text/markdown",
+      "size_bytes": 1514,
+      "modified_time": "2026-09-13T05:29:09.995Z",
+      "sha256": "c5e6e85378176858e27ad3909678db3d6ba6f9cca27ea31ece2527318f78c58d",
+      "url": "https://drive.google.com/file/d/1noTa4UDiXJ2EEBQCc7hFmR7rSjrUF1fD/view"
+    },
+    {
+      "role": "PROXY_01",
+      "drive_id": "1uz2JVDAsXshoQmWy6flbiys0l6bvT80n",
+      "name": "RAW-T01-01_PROXY_5FPS.mp4",
+      "mime_type": "video/mp4",
+      "size_bytes": 114359,
+      "modified_time": "2026-09-13T05:29:18.491Z",
+      "sha256": "04653c0260af8243ae0b486ac3f0e123d9ed4542d0b7eb9b671d774222d58a31",
+      "url": "https://drive.google.com/file/d/1uz2JVDAsXshoQmWy6flbiys0l6bvT80n/view"
+    },
+    {
+      "role": "PROXY_02",
+      "drive_id": "1wFDJ4SdCSsCXDXaCfDkxmJqsTBJc2yGI",
+      "name": "RAW-T01-02_PROXY_5FPS.mp4",
+      "mime_type": "video/mp4",
+      "size_bytes": 149180,
+      "modified_time": "2026-09-13T05:29:23.034Z",
+      "sha256": "31070fc830ce1262b51275fb24d55f9a08a0ef92420a07fa21247dfb422f7e3a",
+      "url": "https://drive.google.com/file/d/1wFDJ4SdCSsCXDXaCfDkxmJqsTBJc2yGI/view"
+    },
+    {
+      "role": "PROXY_03",
+      "drive_id": "1GWFAiD_s-Rqa11BLAu1PcUh4VgTK-SES",
+      "name": "RAW-T01-03_PROXY_5FPS.mp4",
+      "mime_type": "video/mp4",
+      "size_bytes": 412617,
+      "modified_time": "2026-09-13T05:29:27.741Z",
+      "sha256": "a3a74f58e243394e4bfeb7381b59762a529b2d6405560b46ea3e3462301a3c7b",
+      "url": "https://drive.google.com/file/d/1GWFAiD_s-Rqa11BLAu1PcUh4VgTK-SES/view"
+    },
+    {
+      "role": "PROXY_04",
+      "drive_id": "1HtKlqg39qWIEafotKkbkFk_jWjC_1VwB",
+      "name": "RAW-T01-04_PROXY_5FPS.mp4",
+      "mime_type": "video/mp4",
+      "size_bytes": 170403,
+      "modified_time": "2026-09-13T05:29:32.255Z",
+      "sha256": "a9686c5825f6644b779ec89bf46c83f6e5e978f5eeea2118e393174de0e86d60",
+      "url": "https://drive.google.com/file/d/1HtKlqg39qWIEafotKkbkFk_jWjC_1VwB/view"
+    },
+    {
+      "role": "PROXY_05",
+      "drive_id": "1cBr3Q5-QiQ09ThphMBKFXq2Za-6oExCO",
+      "name": "RAW-T01-05_PROXY_5FPS.mp4",
+      "mime_type": "video/mp4",
+      "size_bytes": 291035,
+      "modified_time": "2026-09-13T05:29:38.052Z",
+      "sha256": "73a545ad17b89592376eb98ec794edd3ad06e88aea630b4d9e02a5cf7f8c7c99",
+      "url": "https://drive.google.com/file/d/1cBr3Q5-QiQ09ThphMBKFXq2Za-6oExCO/view"
+    },
+    {
+      "role": "PROXY_06",
+      "drive_id": "1E8je2aJCFgtLoN2P9bfAk04BBZHhB8kY",
+      "name": "RAW-T01-06_PROXY_5FPS.mp4",
+      "mime_type": "video/mp4",
+      "size_bytes": 877097,
+      "modified_time": "2026-09-13T05:29:43.305Z",
+      "sha256": "5cd455cc147c36403ec84f4cac504139c5056eb48b676f18034cad6ae0661b53",
+      "url": "https://drive.google.com/file/d/1E8je2aJCFgtLoN2P9bfAk04BBZHhB8kY/view"
+    }
+  ]
+}
