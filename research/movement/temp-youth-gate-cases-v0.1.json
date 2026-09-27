@@ -1,0 +1,62 @@
+{
+  "artifact_id": "TEMP-YOUTH-GATE-CASES-V0.1",
+  "cases": [
+    {
+      "id": "TY-VALID-01",
+      "expected_valid": true,
+      "record": {
+        "age": 13,
+        "who_average_mvpa_minutes_per_day": 60,
+        "vigorous_muscle_bone_days_per_week": 3,
+        "placement_basis": ["movement_competence", "instruction_readiness", "training_age", "needs_goals"],
+        "qualified_supervision": true,
+        "technique_before_load": true,
+        "source_ids": ["WHO-5-17", "NSCA-YSRT-2009"],
+        "as_of": "2026-09-27"
+      }
+    },
+    {
+      "id": "TY-INVALID-AGE-ONLY",
+      "expected_valid": false,
+      "record": {
+        "age": 15,
+        "who_average_mvpa_minutes_per_day": 60,
+        "vigorous_muscle_bone_days_per_week": 3,
+        "placement_basis": ["chronological_age"],
+        "qualified_supervision": true,
+        "technique_before_load": true,
+        "source_ids": ["WHO-5-17", "NSCA-YSRT-2009"],
+        "as_of": "2026-09-27"
+      }
+    },
+    {
+      "id": "TY-INVALID-NO-SUPERVISION",
+      "expected_valid": false,
+      "record": {
+        "age": 12,
+        "who_average_mvpa_minutes_per_day": 60,
+        "vigorous_muscle_bone_days_per_week": 3,
+        "placement_basis": ["movement_competence", "instruction_readiness", "training_age", "needs_goals"],
+        "qualified_supervision": false,
+        "technique_before_load": true,
+        "source_ids": ["WHO-5-17", "NSCA-YSRT-2009"],
+        "as_of": "2026-09-27"
+      }
+    },
+    {
+      "id": "TY-INVALID-WHO-BASELINE",
+      "expected_valid": false,
+      "record": {
+        "age": 10,
+        "who_average_mvpa_minutes_per_day": 45,
+        "vigorous_muscle_bone_days_per_week": 2,
+        "placement_basis": ["movement_competence", "instruction_readiness", "training_age", "needs_goals"],
+        "qualified_supervision": true,
+        "technique_before_load": true,
+        "source_ids": ["WHO-5-17", "NSCA-YSRT-2009"],
+        "as_of": "2026-09-27"
+      }
+    }
+  ],
+  "expected_summary": {"total": 4, "valid": 1, "invalid": 3, "expectation_mismatches": 0}
+}
