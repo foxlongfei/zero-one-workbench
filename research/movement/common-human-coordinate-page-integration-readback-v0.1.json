@@ -1,0 +1,54 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-PAGE-INTEGRATION-READBACK-V0.1",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "linked_mainline": "M01→M02/M03→M04",
+  "observed_at": "2026-09-28T06:46:22+08:00",
+  "canonical_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "cache_busted_readback_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html?rev=bb2a5891240df9aabc09fe74da5a7da28fe1cf4d",
+  "source_commit": "bb2a5891240df9aabc09fe74da5a7da28fe1cf4d",
+  "source_blob": "9146798907adf2effcfbfd2bf67542a40417a750",
+  "page_markers": {
+    "current_date": "2026-09-28",
+    "sample_version": "V0.8",
+    "strict_mainline": "2/4",
+    "resolver_marker": "COMMON-HUMAN-COORDINATE-UPPER-LIMB-V0.1",
+    "webgl_in_observed_browser": false,
+    "static_obj_fallback_visible": true
+  },
+  "interaction_cases": [
+    {
+      "input": "胳膊",
+      "expected": "ASK_DISAMBIGUATION",
+      "observed": "“胳膊”范围较宽，请明确：上臂 / 肘关节 / 前臂；不会默认当成肱二头肌。",
+      "pass": true
+    },
+    {
+      "input": "二头疼",
+      "expected": "SAFETY_OR_SYMPTOM",
+      "observed": "检测到疼痛、麻木、受伤或无力等描述：先进入安全/症状分流，不直接推荐训练动作。",
+      "pass": true
+    },
+    {
+      "input": "左肱二头肌",
+      "expected": "RESOLVED_ASSET_PENDING",
+      "observed": "当前：左侧 肱二头肌｜标准结构 ID：MUSCLE_BICEPS_BRACHII｜左侧真实资产尚未映射",
+      "pass": true
+    },
+    {
+      "input": "右小臂放松",
+      "expected": "RESOLVED_RIGHT_FOREARM_RELAX",
+      "observed": "当前：右侧 前臂｜标准结构 ID：REGION_FOREARM；标题切换为拉伸/放松与前臂（右）。",
+      "pass": true
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "total": 4,
+    "page_integration": true,
+    "public_readback": true,
+    "mainline_before": "2/4",
+    "mainline_after": "2/4",
+    "counting_decision": "NO_MAINLINE_COUNT_CHANGE"
+  },
+  "boundary": "The natural-language input layer is publicly integrated and verified. This does not satisfy M03 clean-context review or M04."
+}
