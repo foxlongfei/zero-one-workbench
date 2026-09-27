@@ -1,0 +1,49 @@
+{
+  "artifact_id": "95T1J1-4-RENDERED-IMAGE-ROLE-AUDIT-V0.1",
+  "created_at": "2026-09-27T05:36:34Z",
+  "source_page": "https://www.sohu.com/a/167765274_713036",
+  "source_title": "周伟：殷墟所见易卦文物",
+  "page_date": "2017-08-28",
+  "target": "95T1J1:4带字卜骨",
+  "render_observation": {
+    "page_loaded": true,
+    "expanded_article": true,
+    "caption_observed": "95T1J1：4带字卜骨正、反面线图和拓片",
+    "article_text_context": "The paragraph identifies two vertical groups of six numerical signs on the obverse and drill/chisel traces on the reverse.",
+    "evidence_class": "SECONDARY_RENDER_VISUAL_WITNESS",
+    "bytes_captured": false,
+    "sha256_available": false
+  },
+  "assets": [
+    {
+      "article_image_index": 4,
+      "alt": "文章配图-4",
+      "url": "https://5b0988e595225.cdn.sohucs.com/images/20170828/4b2104f285504f44befaf82dc88c4bfd.jpeg",
+      "browser_natural_dimensions": {"width": 367, "height": 366},
+      "rendered_dimensions": {"width": 317, "height": 316.125},
+      "visual_role": "LINE_DRAWING",
+      "role_evidence": "VISUAL_INSPECTION",
+      "observed_content": "paired front/back outline drawings; the right-hand outline contains two vertical sign groups and an adjacent short sign group",
+      "role_confidence": "HIGH"
+    },
+    {
+      "article_image_index": 5,
+      "alt": "文章配图-5",
+      "url": "https://5b0988e595225.cdn.sohucs.com/images/20170828/932ebb4b2d544d87869b75371ead5c23.png",
+      "browser_natural_dimensions": {"width": 239, "height": 325},
+      "rendered_dimensions": {"width": 239, "height": 325},
+      "visual_role": "RUBBING",
+      "role_evidence": "VISUAL_INSPECTION",
+      "observed_content": "dark irregular bone silhouette with lighter trace marks; positioned immediately below the line drawing and immediately above the explicit caption",
+      "role_confidence": "HIGH"
+    }
+  ],
+  "conflict_resolution": {
+    "previous_state": "role UNKNOWN because CDN byte routes were inaccessible",
+    "new_state": "LINE_DRAWING/RUBBING roles resolved from the rendered article page",
+    "guardrail": "Rendered-page observation does not prove original byte identity and cannot populate byte_length or SHA-256."
+  },
+  "audit_status": "SECONDARY_RENDER_ROLE_RESOLVED_BYTES_PENDING",
+  "z04_completion_effect": "NO_CHANGE_3_OF_4",
+  "next_checkpoint": "Obtain either asset bytes through an authorized export/download path, record byte length/SHA-256/media type/decode dimensions, then perform exact glyph-position comparison."
+}
