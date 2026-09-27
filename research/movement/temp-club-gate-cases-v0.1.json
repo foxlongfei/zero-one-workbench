@@ -1,0 +1,22 @@
+[
+  {
+    "id": "CLUB-VALID-01",
+    "input": {"age_band": "U13", "practice_level": "PassBad-blue", "readiness": "confirmed", "qualified_educator": true, "pathway_tier": "community"},
+    "expected": "ACCEPT"
+  },
+  {
+    "id": "CLUB-INVALID-AGE-ONLY",
+    "input": {"age_band": "U13", "sole_basis": "age_band", "pathway_tier": "community"},
+    "expected": "REJECT"
+  },
+  {
+    "id": "CLUB-INVALID-LABEL-PROXY",
+    "input": {"age_band": "U13", "club_label": "EFB", "sole_basis": "club_label", "pathway_tier": "community"},
+    "expected": "REJECT"
+  },
+  {
+    "id": "CLUB-INVALID-ELITE-TRANSFER",
+    "input": {"age_band": "U17", "elite_squad_score": 82, "sole_basis": "elite_squad_status", "pathway_tier": "community"},
+    "expected": "REJECT"
+  }
+]
