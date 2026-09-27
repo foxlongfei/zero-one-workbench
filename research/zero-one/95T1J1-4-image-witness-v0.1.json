@@ -1,5 +1,5 @@
 {
-  "schema_version": "IMAGE_ASSET_AUDIT_V0.1",
+  "schema_version": "IMAGE_ASSET_AUDIT_V0.2",
   "task_ids": [
     "Z04",
     "TEMP-E01",
@@ -26,7 +26,7 @@
       "url": "https://5b0988e595225.cdn.sohucs.com/images/20170828/4b2104f285504f44befaf82dc88c4bfd.jpeg",
       "page_link_id": 4,
       "section_mapping": "between object description and shared caption",
-      "byte_fetch_status": "SEARCH_CONNECTOR_REJECTED_UNSUPPORTED_CONTENT_TYPE",
+      "byte_fetch_status": "DIRECT_WEB_OPEN_INACCESSIBLE",
       "visual_inspection_status": "NOT_COMPLETED"
     },
     {
@@ -34,8 +34,42 @@
       "url": "https://5b0988e595225.cdn.sohucs.com/images/20170828/932ebb4b2d544d87869b75371ead5c23.png",
       "page_link_id": 5,
       "section_mapping": "between object description and shared caption",
-      "byte_fetch_status": "SEARCH_CONNECTOR_REJECTED_UNSUPPORTED_CONTENT_TYPE",
+      "byte_fetch_status": "DIRECT_WEB_OPEN_INACCESSIBLE",
       "visual_inspection_status": "NOT_COMPLETED"
+    }
+  ],
+  "retrieval_attempts": [
+    {
+      "checked_at": "2026-09-27T09:35:00+08:00",
+      "route": "SEARCH_CONNECTOR_ASSET_OPEN",
+      "scope": "both CDN asset URLs",
+      "result": "REJECTED_UNSUPPORTED_CONTENT_TYPE",
+      "effect": "ACCESS_FAILURE_ONLY"
+    },
+    {
+      "checked_at": "2026-09-27T10:35:00+08:00",
+      "route": "EXACT_HASH_TITLE_OBJECT_SEARCH",
+      "scope": "both asset path hashes, shared caption, object IDs",
+      "result": "NO_INDEPENDENT_MIRROR",
+      "effect": "NEGATIVE_RETRIEVAL_EVIDENCE"
+    },
+    {
+      "checked_at": "2026-09-27T11:37:29+08:00",
+      "route": "DIRECT_WEB_OPEN",
+      "scope": "both exact CDN asset URLs",
+      "result": "URL_NOT_ACCESSIBLE_VIA_TOOL",
+      "evidence_refs": [
+        "turn21view0",
+        "turn21view1"
+      ],
+      "effect": "ACCESS_FAILURE_ONLY"
+    },
+    {
+      "checked_at": "2026-09-27T11:37:29+08:00",
+      "route": "DRIVE_EXACT_REPORT_TITLE_SEARCH",
+      "scope": "1995 1996 安阳 刘家庄 殷代 遗址 发掘 报告",
+      "result": "NO_PRIMARY_REPORT_FILE; only project records returned",
+      "effect": "NEGATIVE_RETRIEVAL_EVIDENCE"
     }
   ],
   "provenance": {
@@ -51,13 +85,27 @@
     },
     {
       "id": "IA-02",
-      "rule": "A connector content-type rejection is ACCESS_FAILURE, not evidence that the image is absent."
+      "rule": "A connector content-type or direct-open failure is ACCESS_FAILURE, not evidence that the image is absent."
     },
     {
       "id": "IA-03",
       "rule": "AUDIT_PASS requires object ID plus direct primary report caption/table and an inspectable photo, drawing, or rubbing."
+    },
+    {
+      "id": "IA-04",
+      "rule": "When multiple assets share one caption and bytes are unseen, page order cannot assign LINE_DRAWING, RUBBING, front, or reverse roles."
+    },
+    {
+      "id": "IA-05",
+      "rule": "Repeated access failures through different retrieval routes may close a route as blocked, but cannot raise evidence status or resolve asset roles."
     }
   ],
   "audit_status": "SECONDARY_IMAGE_WITNESS_LOCATED_BYTES_PENDING",
-  "next_lookup_key": "Retrieve either asset bytes through an authorized image path or the original report pages 34–35; then map each view to photo/line drawing/rubbing and compare the three inscription groups."
+  "blocked_routes": [
+    "SEARCH_CONNECTOR_ASSET_OPEN",
+    "DIRECT_WEB_OPEN",
+    "EXACT_HASH_TITLE_OBJECT_SEARCH",
+    "DRIVE_EXACT_REPORT_TITLE_SEARCH"
+  ],
+  "next_lookup_key": "Use an authorized byte-capable image downloader or obtain the original report pages 34–35; then record byte length, SHA-256, media type, dimensions, and visual role before glyph adjudication."
 }
