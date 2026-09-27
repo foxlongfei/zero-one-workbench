@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "K02-03-HXL-01-NDL-PAGE-ANCHOR-V0.2",
+  "task_id": "K02-03-HXL-01",
+  "created_at": "2026-09-27T22:47:00+08:00",
+  "status": "C_NON_BLIND_ANCHOR_FOUND_QD_NLC_OPEN",
+  "supersedes": {
+    "artifact": "research/zero-one/k02-03-hxl-ndl-canvas-boundary-v0.1.json",
+    "reason": "The earlier 2-13 volume boundary was falsified by direct inspection: canvas 14 is visibly marked 漢書卷七十五, and volume 75 continues through the right-hand page of canvas 20."
+  },
+  "source": {
+    "repository": "National Diet Library Digital Collections",
+    "record_id": "774615",
+    "title": "漢書評林. 第75-80巻",
+    "record_url": "https://dl.ndl.go.jp/pid/774615",
+    "iiif_manifest": "https://lab.ndl.go.jp/dl/api/iiif/774615/manifest.json"
+  },
+  "volume_boundary": {
+    "volume": 75,
+    "first_volume_canvas": 2,
+    "last_canvas_with_volume_content": 20,
+    "transition_canvas": 20,
+    "transition_detail": "Canvas 20 right-hand page ends 漢書評林卷之七十五; its left-hand page begins 漢書評林卷之七十六."
+  },
+  "target_anchor": {
+    "canvas": 18,
+    "image_url": "https://dl.ndl.go.jp/api/iiif/774615/R00000018/full/2000,/0/default.jpg",
+    "local_capture_sha256": "512d7876483e1da78756234839d8f1cde6e5dd441cfa8991ee1c11cde76c1556",
+    "local_capture_bytes": 1408306,
+    "page_side": "left-hand page",
+    "reading_order_columns_from_right": "near the final third of the page",
+    "visible_text_anchor": "初成帝時齊人甘忠可託造天官歷包元太平經十二卷",
+    "inspection_role": "C_NON_BLIND"
+  },
+  "acceptance": {
+    "strict_completed": 0,
+    "strict_total": 5,
+    "c_anchor_found": true,
+    "q_independent_check": false,
+    "d_independent_check": false,
+    "nlc_gate": false,
+    "counting_rule": "Do not increment strict completion until exact-page anchor and independent Q/D checks plus the NLC gate are all accepted."
+  },
+  "parallel_lines": {
+    "TEMP-E01": "ACTIVE",
+    "TEMP-M01": "ACTIVE"
+  },
+  "next_action": "Issue canvas 18 as a blind Q/D package, require independent transcription and page-side/column confirmation, then run NLC acceptance without exposing this C anchor."
+}
