@@ -1,0 +1,71 @@
+{
+  "artifact_id": "TEMP-YOUTH-FIELD-TABLE-V0.2",
+  "supersedes": "TEMP-YOUTH-FIELD-TABLE-V0.1",
+  "project": "动起来",
+  "task_id": "TEMP-YOUTH",
+  "status": "CROSS_CERTIFIED_WITH_DERIVED_RULE_BOUNDARY",
+  "as_of": "2026-09-27",
+  "mainline_effect": "NONE",
+  "population_reporting_band": "5-17 years",
+  "health_baseline": {
+    "average_mvpa_minutes_per_day_across_week": 60,
+    "mostly_aerobic": true,
+    "vigorous_aerobic_and_muscle_bone_days_per_week_min": 3,
+    "source_ids": ["WHO-2020-GUIDELINE", "WHO-EUROPE-PA"]
+  },
+  "resistance_training_gates": {
+    "no_single_minimum_chronological_age": true,
+    "mental_and_physical_readiness_required": true,
+    "qualified_instruction_and_supervision_required": true,
+    "technique_before_load": true,
+    "progression_by_needs_goals_and_abilities": true,
+    "source_ids": ["NSCA-YRT-2009"]
+  },
+  "classification_axes": [
+    "chronological_age",
+    "biological_maturation",
+    "training_age",
+    "movement_competence",
+    "instruction_readiness",
+    "psychosocial_readiness",
+    "needs_goals"
+  ],
+  "derived_rule": {
+    "rule_id": "TY-AGE-NE-ABILITY",
+    "statement": "Chronological age is a reporting and safeguarding band, but age alone is insufficient for exercise placement, load or progression.",
+    "evidence_type": "DERIVED_RULE",
+    "derivation": "WHO supplies the 5-17 population band; NSCA states no single minimum age and requires mental/physical readiness, supervision, technique and individualized progression.",
+    "not_a_direct_quote": true
+  },
+  "sources": [
+    {
+      "id": "WHO-2020-GUIDELINE",
+      "publisher": "World Health Organization",
+      "title": "WHO guidelines on physical activity and sedentary behaviour",
+      "url": "https://iris.who.int/server/api/core/bitstreams/faa83413-d89e-4be9-bb01-b24671aef7ca/content",
+      "source_class": "PRIMARY_GUIDELINE"
+    },
+    {
+      "id": "WHO-EUROPE-PA",
+      "publisher": "WHO Regional Office for Europe",
+      "title": "Physical activity fact sheet",
+      "url": "https://www.who.int/europe/news-room/fact-sheets/item/physical-activity",
+      "source_class": "OFFICIAL_SUMMARY"
+    },
+    {
+      "id": "NSCA-YRT-2009",
+      "publisher": "National Strength and Conditioning Association",
+      "title": "Youth resistance training: updated position statement paper",
+      "url": "https://www.nsca.com/globalassets/about/position-statements/position_stand_youth_resistance_training---2009.pdf",
+      "source_class": "PRIMARY_POSITION_STATEMENT"
+    }
+  ],
+  "acceptance": {
+    "source_to_field_cross_certification": "PASS",
+    "direct_claims_separated_from_derived_rule": true,
+    "age_only_placement_forbidden": true,
+    "existing_validator_cases": "4_OF_4_EXPECTATIONS_MATCH",
+    "independent_external_replication": false
+  },
+  "next_checkpoint": "Reuse the certified gates in TEMP-CLUB and add club-tier counterexamples without treating chronological age as an ability tier."
+}
