@@ -1,0 +1,62 @@
+{
+  "artifact_id": "MOV-OPEN-INFRA-01",
+  "version": "0.1",
+  "status": "ADOPTION_SCREEN_COMPLETE_PROTOTYPE_NEXT",
+  "purpose": "为肱二头肌—肘—前臂完整样板选择可复用开放底层，停止从零重复造人体基础设施。",
+  "decision": {
+    "biomechanics_core": "OpenSim",
+    "motion_pipeline": "OpenCap",
+    "first_3d_prototype": "BodyParts3D upper-limb subset",
+    "deferred": ["Z-Anatomy direct embedding"]
+  },
+  "resources": [
+    {
+      "name": "OpenSim",
+      "role": ["musculoskeletal model", "joint/muscle mechanics", "simulation"],
+      "license": "Apache-2.0",
+      "adopt": true
+    },
+    {
+      "name": "OpenCap",
+      "role": ["human movement kinematics", "post-processing", "OpenSim-linked kinetics"],
+      "license": "Apache-2.0",
+      "adopt": true
+    },
+    {
+      "name": "BodyParts3D",
+      "role": ["3D anatomy geometry", "per-structure STL", "FMA-indexed anatomy"],
+      "license": "CC BY-SA 2.1 Japan for geometry; MIT for repository software",
+      "adopt": "prototype_subset",
+      "constraint": "share-alike attribution; current dataset is a single male model"
+    },
+    {
+      "name": "Z-Anatomy",
+      "role": ["richer interactive anatomy atlas"],
+      "license": "CC BY-SA 4.0",
+      "adopt": false,
+      "reason": "defer direct embedding until project-wide share-alike implications are deliberately accepted"
+    }
+  ],
+  "first_prototype_scope": [
+    "biceps brachii",
+    "humerus",
+    "radius",
+    "ulna",
+    "elbow flexion/extension relation",
+    "forearm pronation/supination relation"
+  ],
+  "acceptance_gate": [
+    "actual reusable source asset or model is identified",
+    "license/attribution recorded",
+    "anatomical structure IDs mapped",
+    "browser-visible upper-limb prototype exists",
+    "OpenSim relation layer can be connected without inventing anatomy",
+    "training/application layer remains separate from anatomical source layer"
+  ],
+  "sources_checked_2026_09_27": [
+    "https://github.com/opensim-org/opensim-core",
+    "https://github.com/opencap-org/opencap-processing",
+    "https://github.com/Kevin-Mattheus-Moerman/BodyParts3D",
+    "https://github.com/Z-Anatomy/Models-of-human-anatomy"
+  ]
+}
