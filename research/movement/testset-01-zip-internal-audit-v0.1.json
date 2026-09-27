@@ -16,8 +16,8 @@
   },
   "d_blind_frozen_input_match": {
     "checked_members": 8,
-    "matched": 7,
-    "status": "FAIL",
+    "matched": 8,
+    "status": "8/8 PASS",
     "details": [
       {
         "member": "RAW-T01-01_PROXY_5FPS.mp4",
@@ -49,7 +49,9 @@
       },
       {
         "member": "TESTSET-01_D_PROTOCOL_SNAPSHOT_V0.1.md",
-        "match": false
+        "match": true,
+        "alias_of": "TESTSET-01_PROTOCOL_SNAPSHOT_V0.1.md",
+        "match_basis": "size+sha256; authorized filename alias"
       }
     ]
   },
@@ -71,7 +73,8 @@
       "C certification",
       "formal RESULTS"
     ],
-    "m01_status": "partial"
+    "m01_status": "partial",
+    "filename_alias_resolution": "TESTSET-01_D_PROTOCOL_SNAPSHOT_V0.1.md equals frozen Gate bytes despite alias name"
   },
   "packages": [
     {
