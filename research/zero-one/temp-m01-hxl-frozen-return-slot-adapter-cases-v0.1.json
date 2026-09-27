@@ -1,0 +1,13 @@
+{
+  "artifact_id": "TEMP-M01-HXL-FROZEN-RETURN-SLOT-ADAPTER-CASES-V0.1",
+  "cases": [
+    {"id":"SA-01","condition":"two frozen distinct roles and cross-review READY","expected":"ADAPTER_READY"},
+    {"id":"SA-02","condition":"only Q frozen","expected":"HOLD_PRECONDITION"},
+    {"id":"SA-03","condition":"same reviewer role on both returns","expected":"HOLD_PRECONDITION"},
+    {"id":"SA-04","condition":"C expected text appears before freeze","expected":"HOLD_BLINDNESS_BREACH"},
+    {"id":"SA-05","condition":"slot absent from reviewed witness","expected":"NOT_IN_REVIEW_SCOPE"},
+    {"id":"SA-06","condition":"normalized forms agree but verbatim differs","expected":"AGREE_NORMALIZED_WITH_ORIGINALS_PRESERVED"},
+    {"id":"SA-07","condition":"location or transcription differs","expected":"HOLD_CONFLICT"},
+    {"id":"SA-08","condition":"uncertain character is non-empty","expected":"HOLD_UNCERTAINTY"}
+  ]
+}

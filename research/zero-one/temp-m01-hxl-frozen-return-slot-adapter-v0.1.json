@@ -1,0 +1,62 @@
+{
+  "artifact_id": "TEMP-M01-HXL-FROZEN-RETURN-SLOT-ADAPTER-V0.1",
+  "task_id": "TEMP-M01",
+  "linked_mainline_task": "K02-03-HXL-01",
+  "created_at": "2026-09-28T06:46:00+08:00",
+  "status": "PREPARED_NOT_RUN",
+  "purpose": "Map already-frozen independent Q/D return fragments into six analytical slots without exposing C wording or changing either return.",
+  "preconditions": [
+    "Q and D return files both exist.",
+    "reviewer roles are distinct.",
+    "each return has freeze.output_sha256 and freeze.frozen_at.",
+    "the Q/D cross-review validator returns READY_FOR_CROSS_REVIEW before this adapter runs."
+  ],
+  "blindness_boundary": {
+    "contains_c_expected_text": false,
+    "contains_expected_page_or_column": false,
+    "may_run_before_both_returns_freeze": false,
+    "may_rewrite_reviewer_text": false,
+    "c_projection_path": "research/zero-one/temp-m01-hxl-six-slot-projection-v0.1.json",
+    "c_projection_access": "POST_FREEZE_COMPARISON_ONLY"
+  },
+  "slot_contract": [
+    {"slot":"S1_INPUT_TEXT_OR_CLAIM_OBJECT","return_scope":"NDL_RETURN_ONLY","allowed_state":["EVIDENCE_FRAGMENT","NOT_IN_REVIEW_SCOPE"]},
+    {"slot":"S2_TRANSMISSION_OR_PROPOSAL","return_scope":"NLC_RETURN","allowed_state":["EVIDENCE_FRAGMENT","NOT_OBSERVED","UNCERTAIN"]},
+    {"slot":"S3_ADOPTION_OR_EXECUTION","return_scope":"NLC_RETURN","allowed_state":["EVIDENCE_FRAGMENT","NOT_OBSERVED","UNCERTAIN"]},
+    {"slot":"S4_STATED_EXPECTED_EFFECT","return_scope":"NLC_RETURN","allowed_state":["EVIDENCE_FRAGMENT","NOT_OBSERVED","UNCERTAIN"]},
+    {"slot":"S5_RECORDED_RESPONSE_OR_TEST","return_scope":"NLC_RETURN","allowed_state":["EVIDENCE_FRAGMENT","NOT_OBSERVED","UNCERTAIN"]},
+    {"slot":"S6_REVERSAL_AND_DISPOSITION","return_scope":"NLC_RETURN","allowed_state":["EVIDENCE_FRAGMENT","NOT_OBSERVED","UNCERTAIN"]}
+  ],
+  "output_per_reviewer": {
+    "required_fields": [
+      "reviewer_role",
+      "input_output_sha256",
+      "slot",
+      "state",
+      "verbatim_fragment",
+      "source_locator_from_return",
+      "uncertainty_carried_forward"
+    ],
+    "normalization": "NFKC and punctuation-stripped forms may be added only as parallel comparison fields; verbatim_fragment is immutable.",
+    "missing_rule": "Absence is NOT_OBSERVED or NOT_IN_REVIEW_SCOPE, never an invented fragment."
+  },
+  "comparison_states": [
+    "AGREE_EXACT",
+    "AGREE_NORMALIZED",
+    "HOLD_LOCATION_CONFLICT",
+    "HOLD_TEXT_CONFLICT",
+    "HOLD_SCOPE_GAP",
+    "HOLD_UNCERTAINTY"
+  ],
+  "decision_rule": "Only post-freeze comparison may consult the C projection. Any reviewer disagreement, scope gap, or unresolved character remains HOLD and is not repaired by C.",
+  "acceptance": {
+    "adapter_contract_increment": true,
+    "q_independent_return": false,
+    "d_independent_return": false,
+    "cross_review": false,
+    "mainline_before": "0/5",
+    "mainline_after": "0/5",
+    "counting_decision": "NO_MAINLINE_COUNT_CHANGE"
+  },
+  "next_checkpoint": "After Q/D freeze and READY_FOR_CROSS_REVIEW, generate two immutable per-reviewer slot projections, compare them, then compare the preserved differences with the C projection."
+}
