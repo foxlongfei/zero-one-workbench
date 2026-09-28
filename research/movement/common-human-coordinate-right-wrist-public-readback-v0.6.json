@@ -1,0 +1,58 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-RIGHT-WRIST-PUBLIC-READBACK-V0.6",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "verified_at": "2026-09-28T14:42:54+08:00",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "observations": [
+    {
+      "path": "click",
+      "probe": "右手腕 hotspot",
+      "target_id": "JOINT_WRIST_PROXY",
+      "side": "RIGHT",
+      "asset_refs": [
+        [
+          "BP8464",
+          "FJ3349"
+        ],
+        [
+          "BP8233",
+          "FJ3391"
+        ]
+      ],
+      "limitation_visible": true,
+      "result": "PASS"
+    },
+    {
+      "path": "natural_language",
+      "probe": "右手腕训练",
+      "target_id": "JOINT_WRIST_PROXY",
+      "side": "RIGHT",
+      "asset_refs": [
+        [
+          "BP8464",
+          "FJ3349"
+        ],
+        [
+          "BP8233",
+          "FJ3391"
+        ]
+      ],
+      "limitation_visible": true,
+      "result": "PASS"
+    }
+  ],
+  "equivalence": {
+    "same_target_id": true,
+    "same_side": true,
+    "same_asset_refs": true,
+    "same_limitation": true,
+    "score": "8/8 invariant observations PASS"
+  },
+  "accepted": true,
+  "mainline_gate": {
+    "completed": 2,
+    "total": 4,
+    "note": "Product-side acceptance does not alter M01→M04 formal completion."
+  },
+  "browser_note": "WebGL context unavailable in verification browser; static anatomy preview and wrist resolver remained functional. This does not certify dynamic 3D."
+}
