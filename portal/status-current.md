@@ -95,3 +95,14 @@
 - 防坑规则：不升级任何Pro；Provider Adapter / Conversation Schema / export格式保持平台中立；Cloudflare只承担运行、Secret binding、D1 adapter。触发付费墙/不可接受授权/锁定即回退，不重写业务层。
 - 下一实际动作：建立最小 Worker `/api/health` + `/api/chat` 与 D1 schema；先验证 health + DB写读，再配置C博士服务端secret并做真实首轮。
 - 当前边界：Cloudflare部署=false；OWNER auth=false；D1 master DB=false；C/Q/D real call=false；ZERO-CORE V0.1 accepted=false。
+
+
+### ZERO-CORE V0.5｜Cloudflare 部署开始｜2026-09-28
+- 状态已由 PRIMARY_CANDIDATE / 未部署 → **PRIMARY_CANDIDATE / DEPLOYING**。
+- 已落地可部署 Worker 骨架：[wrangler 配置](../server/zero-core/cloudflare/wrangler.jsonc) / [Worker 路由](../server/zero-core/cloudflare/src/index.js) / [D1 schema](../server/zero-core/cloudflare/migrations/0001_init.sql) / [package](../server/zero-core/cloudflare/package.json)。
+- D1 最小表已定义：owners / workspaces / threads / messages / provider_calls；messages 建 thread+time 索引。
+- /api/health 会真实执行 D1 SELECT 1；/api/chat 在 OWNER gate 与真实 Provider 未接通前固定 503 NOT_READY，禁止模拟回答。
+- Cloudflare 官方确认 Wrangler deploy 可自动 provision 未带 resource ID 的 D1 binding；Secrets 后续只以 Worker Secret 注入，不进 GitHub/浏览器/聊天。
+- 当前阻塞：本会话没有 Cloudflare 账户连接器，远端 Worker/D1 尚未创建；需要所有者完成一次 Cloudflare 登录/部署授权。
+- 当前边界：REMOTE_DEPLOY=false；D1_REMOTE_READWRITE=false；OWNER_AUTH=false；C/Q/D_REAL=false。
+- 下一实际动作：Cloudflare 登录 → 从仓库 server/zero-core/cloudflare 部署 → 读回 workers.dev /api/health → D1远端写读 → OWNER gate → C真实首轮。
