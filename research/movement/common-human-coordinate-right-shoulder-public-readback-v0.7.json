@@ -1,0 +1,67 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-RIGHT-SHOULDER-PUBLIC-READBACK-V0.7",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "verified_at": "2026-09-28T15:33:44+08:00",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "observations": [
+    {
+      "path": "click",
+      "probe": "右肩区 hotspot",
+      "target_id": "REGION_SHOULDER_ENTRY_PROXY",
+      "side": "RIGHT",
+      "asset_refs": [
+        [
+          "BP9206",
+          "FJ3368"
+        ],
+        [
+          "BP5558",
+          "FJ1512"
+        ],
+        [
+          "BP5566",
+          "FJ1478"
+        ]
+      ],
+      "limitation_visible": true,
+      "result": "PASS"
+    },
+    {
+      "path": "natural_language",
+      "probe": "右肩训练",
+      "target_id": "REGION_SHOULDER_ENTRY_PROXY",
+      "side": "RIGHT",
+      "asset_refs": [
+        [
+          "BP9206",
+          "FJ3368"
+        ],
+        [
+          "BP5558",
+          "FJ1512"
+        ],
+        [
+          "BP5566",
+          "FJ1478"
+        ]
+      ],
+      "limitation_visible": true,
+      "result": "PASS"
+    }
+  ],
+  "equivalence": {
+    "same_target_id": true,
+    "same_side": true,
+    "same_asset_refs": true,
+    "same_limitation": true,
+    "score": "8/8 invariant observations PASS"
+  },
+  "accepted": true,
+  "boundary": "Right shoulder is a region-entry proxy. Scapula, clavicle, complete joint surfaces, ligaments, and kinematics are absent.",
+  "mainline_gate": {
+    "completed": 2,
+    "total": 4,
+    "note": "Product-side acceptance does not change formal M01→M04 completion."
+  },
+  "browser_note": "WebGL unavailable; resolver, text result, and static anatomy fallback remained functional."
+}
