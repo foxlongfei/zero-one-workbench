@@ -1,0 +1,14 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-ELBOW-COMPOSITE-MAP-V0.3",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "target": "JOINT_ELBOW",
+  "side": "RIGHT",
+  "mapping_type": "ARTICULATING_BONES_PROXY",
+  "asset_refs": [
+    {"role":"HUMERUS_RIGHT","bp_representation_id":"BP9206","mesh_element_id":"FJ3368","obj_path":"assets/bodyparts3d/FJ3368.obj"},
+    {"role":"RADIUS_RIGHT","bp_representation_id":"BP8464","mesh_element_id":"FJ3349","obj_path":"assets/bodyparts3d/FJ3349.obj"},
+    {"role":"ULNA_RIGHT","bp_representation_id":"BP8233","mesh_element_id":"FJ3391","obj_path":"assets/bodyparts3d/FJ3391.obj"}
+  ],
+  "boundary": "The three verified whole-bone meshes provide an articulating-bones proxy only. They are not a dedicated elbow-joint surface, cartilage, ligament, capsule, contact, or kinematics model.",
+  "acceptance": {"right_elbow_proxy_resolvable":true,"complete_joint_asset":false,"left_side_mapped":false,"mainline_before":"2/4","mainline_after":"2/4"}
+}
