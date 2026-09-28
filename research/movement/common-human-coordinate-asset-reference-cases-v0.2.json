@@ -4,7 +4,7 @@
     {"id":"AR-01","input":{"status":"RESOLVED","target":"MUSCLE_BICEPS_BRACHII","side":"RIGHT"},"expected_count":2,"expected_mesh_ids":["FJ1512","FJ1478"]},
     {"id":"AR-02","input":{"status":"RESOLVED","target":"REGION_FOREARM","side":"RIGHT"},"expected_count":2,"expected_mesh_ids":["FJ3349","FJ3391"]},
     {"id":"AR-03","input":{"status":"RESOLVED","target":"REGION_UPPER_ARM","side":"RIGHT"},"expected_count":3,"expected_mesh_ids":["FJ3368","FJ1512","FJ1478"]},
-    {"id":"AR-04","input":{"status":"RESOLVED","target":"JOINT_ELBOW","side":"RIGHT"},"expected_count":0,"expected_mesh_ids":[]},
+    {"id":"AR-04","input":{"status":"RESOLVED","target":"JOINT_ELBOW","side":"RIGHT"},"expected_count":3,"expected_mesh_ids":["FJ3368","FJ3349","FJ3391"]},
     {"id":"AR-05","input":{"status":"RESOLVED_ASSET_PENDING","target":"MUSCLE_BICEPS_BRACHII","side":"LEFT"},"expected_count":0,"expected_mesh_ids":[]},
     {"id":"AR-06","input":{"status":"RESOLVED","target":"MUSCLE_BICEPS_BRACHII","side":"UNSPECIFIED"},"expected_count":0,"expected_mesh_ids":[]}
   ]
