@@ -68,3 +68,10 @@
 - 当前边界：真实认证=false；cloud_database=false；provider_api=false。演示记录只在当前浏览器页面内存中存在，导出由用户主动触发。
 - 架构决定：登录作为平台入口；对话窗作为登录后组件。主库/知识/任务/版本属于零一空间；AI模型通过可替换 Adapter 接入。
 - 下一步：建立服务端最小后端 + 身份/会话数据结构 + secret 管理；先接一个真实 Provider，再验证持久化和导出闭环。
+
+### ZERO-CORE V0.2 可见增量｜2026-09-28 12:58 +08:00
+- 总看板已加入右下角“对话”按钮，点击以 iframe 弹窗打开 ZERO-CORE，不离开项目入口。
+- 工作台增加本机身份记忆与演示消息 localStorage 持久化；刷新后可保留入口身份/演示记录。
+- 当前边界：这不是服务器认证；C博士真实 API 尚未连接。当前 ChatGPT 会话不能直接嵌入网页，后续以 OpenAI API Provider Adapter + ZERO-CORE 自有项目上下文接入。
+- 页面提交：ZERO-CORE V0.2 = 2f883f5c6ff0382ebf5703b4c244a14b90467aeb；总看板弹窗 = 2376d60c4e0003c8e009a786a5874f02e52f286b。
+- 下一门：部署最小服务端；secret/env 保存 API Key；建立 OWNER 身份和 conversation/thread 持久化；接 C博士 Responses/Conversations API，再做网页真实往返读回。
