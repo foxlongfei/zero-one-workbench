@@ -12,6 +12,6 @@
     "边界采用左闭右开；子山跨越360度边界"
   ],
   "output_schema": {"normalized_degrees":"number","mountain":"one of 24 labels","center_degrees":"number","interval":"half-open degree interval"},
-  "source_binding": {"state":"OPEN_EXACT_PASSAGE_REQUIRED","note":"二十四山实践框架已选定；精确时期、版本和原文页码尚未冻结，故不计作完整历史方法。"},
+  "source_binding": {"state":"TEXT_LOCATOR_BOUND_SCAN_PAGE_OPEN","artifact":"research/zero-one/z05-b-24-mountain-source-binding-v0.2.json","note":"《天玉經》电子转录已定位完整顺序；稳定影印载体已登记但尚未定位对应页，故不计作完整历史方法。"},
   "validity_boundary": {"historical_source_verified":false,"deterministic_normalization":true,"fortune_or_effect_claim":false,"complete_kanyu_method":false}
 }
