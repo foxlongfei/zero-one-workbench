@@ -1,0 +1,11 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-CLICK-NL-EQUIVALENCE-PUBLIC-READBACK-V0.4",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "checked_at": "2026-09-28T02:38:18Z",
+  "page": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "click_input": "右肘关节 hotspot",
+  "natural_language_input": "右肘训练",
+  "observed_result": "当前：右侧 肘关节｜标准结构 ID：JOINT_ELBOW｜资产：BP9206→FJ3368，BP8464→FJ3349，BP8233→FJ3391｜三骨关节代理（非完整关节模型）",
+  "same_result_after_both_inputs": true,
+  "acceptance": {"passed": 2, "total": 2, "strict_mainline_before": "2/4", "strict_mainline_after": "2/4"}
+}
