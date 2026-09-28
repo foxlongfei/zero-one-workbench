@@ -85,3 +85,13 @@
 - 可查源码：[Gateway合同](../server/zero-core/README.md)；[Provider adapters](../server/zero-core/providers.mjs)；[真实对话前端](zero-core.html)
 - 当前阻塞：GitHub Pages是静态托管，仓库中的server代码不会自行成为 /api/chat；需要连接可部署的服务端运行环境，并由所有者在服务端配置三家API secrets。任何key不得写入聊天、仓库或浏览器。
 - 下一实际动作：服务端部署→OWNER认证→会话持久化→C真实首轮→Q/D真实首轮→all同框→公开读回。
+
+
+### ZERO-CORE V0.4｜运行底座筛选｜2026-09-28 15:14 +08:00
+- 已按“最小刚需 / 免费可运行 / secrets安全 / 数据可迁移”核验 Cloudflare Workers+D1、Vercel Hobby、Railway Free。
+- 当前候选决定：**Cloudflare Workers + D1 = PRIMARY_CANDIDATE / 未部署**；Vercel Hobby = FALLBACK；Railway Free = FALLBACK_2。
+- 可查决策原物：[运行底座筛选 V0.1](../research/zero-core/runtime-platform-selection-v0.1.md)
+- 关键原因：Workers Free 100,000 requests/day；D1 Free 5GB总存储、单库500MB，并可完整导出SQL；Secrets有独立加密绑定。Railway Free只有$1/月资源额度；Vercel基础能力足够但当前OAuth/Team scope增加了不必要操作复杂度。
+- 防坑规则：不升级任何Pro；Provider Adapter / Conversation Schema / export格式保持平台中立；Cloudflare只承担运行、Secret binding、D1 adapter。触发付费墙/不可接受授权/锁定即回退，不重写业务层。
+- 下一实际动作：建立最小 Worker `/api/health` + `/api/chat` 与 D1 schema；先验证 health + DB写读，再配置C博士服务端secret并做真实首轮。
+- 当前边界：Cloudflare部署=false；OWNER auth=false；D1 master DB=false；C/Q/D real call=false；ZERO-CORE V0.1 accepted=false。
