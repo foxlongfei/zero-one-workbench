@@ -1,0 +1,50 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-RIGHT-WRIST-PROXY-V0.6",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "linked_mainline": "M01→M02/M03→M04",
+  "created_at": "2026-09-28T14:42:54+08:00",
+  "status": "IMPLEMENTED_AWAITING_PUBLIC_READBACK",
+  "entry": {
+    "label": "右手腕",
+    "input_body": "腕关节",
+    "side": "RIGHT",
+    "target_id": "JOINT_WRIST_PROXY",
+    "kind": "JOINT_PROXY",
+    "asset_refs": [
+      [
+        "BP8464",
+        "FJ3349"
+      ],
+      [
+        "BP8233",
+        "FJ3391"
+      ]
+    ],
+    "aliases": [
+      "腕关节",
+      "手腕",
+      "腕"
+    ],
+    "nl_probe": "右手腕训练"
+  },
+  "limitation": "桡骨/尺骨代理，非完整腕关节模型；不推断腕骨、关节面、韧带、力臂或运动学。",
+  "equivalence_contract": [
+    "click and natural-language resolve same target_id",
+    "same RIGHT side",
+    "same BP→FJ asset_refs",
+    "same limitation text"
+  ],
+  "mainline_gate": {
+    "completed": 2,
+    "total": 4,
+    "m03": "BLOCKED_CLEAN_CONTEXT",
+    "m04": "BLOCKED_BY_M03"
+  },
+  "acceptance": [
+    "page exposes a visible right-wrist hotspot",
+    "click readback contains JOINT_WRIST_PROXY + RIGHT + both BP→FJ refs",
+    "natural-language readback for 右手腕训练 matches click readback",
+    "both paths expose the proxy limitation"
+  ],
+  "next_action": "Run deployed-page click and natural-language readback; only then mark accepted."
+}
