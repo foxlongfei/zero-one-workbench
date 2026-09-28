@@ -106,3 +106,25 @@
 - 当前阻塞：本会话没有 Cloudflare 账户连接器，远端 Worker/D1 尚未创建；需要所有者完成一次 Cloudflare 登录/部署授权。
 - 当前边界：REMOTE_DEPLOY=false；D1_REMOTE_READWRITE=false；OWNER_AUTH=false；C/Q/D_REAL=false。
 - 下一实际动作：Cloudflare 登录 → 从仓库 server/zero-core/cloudflare 部署 → 读回 workers.dev /api/health → D1远端写读 → OWNER gate → C真实首轮。
+
+
+## 6｜2026-09-28 当日闭环复盘｜16:21 +08:00
+### MAIN / SUB / TEMP 核对
+- 零一 MAIN：Z05 ACTIVE；当前执行仍 Z05-B / SOURCE_BINDING。SUB：问题路由器 ACTIVE_SUPPORT、SUPPORT_LIBRARY ON_DEMAND。TEMP：Z04、TEMP-M01、TEMP-E01 继续 PAUSED；Z05-A 仅样板候选。
+- 动起来 MAIN：严格 2/4 不变。SUB：COMMON-HUMAN-COORDINATE / HUMAN-3D ACTIVE，今日实际已推进到右肩区代理；独立 HUMAN-3D 队列已同步右腕/右肩现状。TEMP：TEMP-YOUTH、TEMP-CLUB、TESTSET 继续 QUEUED，不冒充执行。
+- ZERO-CORE：公共基础设施 SUB = DEPLOYING。Cloudflare Workers + D1 部署骨架已落库，但远端未部署。
+
+### 今日有效成果
+- ZERO-CORE 运行底座筛选完成；Cloudflare Workers + D1 = PRIMARY_CANDIDATE / DEPLOYING。
+- Worker / D1 最小部署源码已落地；/api/health 为真实 DB 探针；/api/chat 未接真实 Provider 前固定 503，禁止模拟。
+- 零一与动起来已有今日内容增量保持原验收边界，不因基础设施工作虚增完成度。
+
+### 今日无效试错 / 不计成果
+- Vercel Team/OAuth 未形成部署。
+- Cloudflare 官方 MCP 服务存在，但当前 ChatGPT 用户界面没有可用的自定义 Remote MCP 入口，插件目录也未发现可直接安装的 Cloudflare 插件。
+- Zero Trust / OAuth Client / MCP 入口寻找不计项目能力成果；MCP 路线暂停，不再作为部署前置条件。
+
+### 当前真实断点
+- ZERO-CORE：REMOTE_DEPLOY=false；D1_REMOTE_READWRITE=false；OWNER_AUTH=false；C/Q/D_REAL=false。
+- 用户当前无需购买套餐、创建 OAuth Client/API Token 或继续找 MCP。
+- 下一实际动作：直接部署现有 server/zero-core/cloudflare 骨架 → workers.dev /api/health 读回 → D1 远端写读 → OWNER gate → C真实首轮。
