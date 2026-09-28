@@ -1,0 +1,35 @@
+{
+  "artifact_id": "Z05-QUESTION-ROUTER-PUBLIC-READBACK-V0.1",
+  "task_id": "Z05",
+  "tested_at": "2026-09-28T08:35:00+08:00",
+  "source_commit": "2ce5d332465df7a645fa37dd43f78e0689157b94",
+  "page": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html?v=2ce5d332",
+  "checks": [
+    {
+      "id": "PUB-Z05-01",
+      "input": "这块宅地的地形和水系怎么看",
+      "expected_domain": "堪舆/地理环境判断",
+      "observed_required_inputs": [
+        "判断对象",
+        "地点与环境",
+        "方向或测量信息",
+        "平面/地形资料",
+        "拟采用的历史传统"
+      ],
+      "pass": true
+    },
+    {
+      "id": "PUB-Z05-02",
+      "input": "帮我看看这个",
+      "expected_state": "ASK_SCOPE",
+      "observed": "需要补充对象、目的、时间、地点与希望比较的传统",
+      "pass": true
+    }
+  ],
+  "acceptance": {
+    "public_readback_passed": "2/2",
+    "route_is_not_result": true,
+    "end_to_end_method_complete": false,
+    "z05_v0_1_complete": false
+  }
+}
