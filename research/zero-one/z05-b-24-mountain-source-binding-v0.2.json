@@ -1,31 +1,43 @@
 {
-  "artifact_id":"Z05-B-24-MOUNTAIN-SOURCE-BINDING-V0.2",
-  "task_id":"Z05",
-  "method_component":"24_MOUNTAIN_ORDER",
-  "status":"TEXT_LOCATOR_BOUND_SCAN_PAGE_OPEN",
-  "textual_locator":{
-    "title":"天玉經·卷一",
-    "url":"https://ctext.org/wiki.pl?chapter=583616&if=gb",
-    "located_sequence":"壬子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥",
-    "evidence_role":"ELECTRONIC_TRANSCRIPTION_LOCATOR",
-    "limitation":"User-contributed electronic transcription; edition lineage and scan-page correspondence are not yet frozen."
+  "artifact_id": "Z05-B-24-MOUNTAIN-SOURCE-BINDING-V0.2",
+  "task_id": "Z05",
+  "method_component": "24_MOUNTAIN_ORDER",
+  "status": "TEXT_LOCATOR_BOUND_SCAN_OCR_NEGATIVE_PAGE_OPEN",
+  "textual_locator": {
+    "title": "天玉經·卷一",
+    "url": "https://ctext.org/wiki.pl?chapter=583616&if=gb",
+    "located_sequence": "壬子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥",
+    "evidence_role": "ELECTRONIC_TRANSCRIPTION_LOCATOR",
+    "limitation": "User-contributed electronic transcription; edition lineage and scan-page correspondence are not yet frozen."
   },
-  "facsimile_candidate":{
-    "title":"欽定協紀辨方書·卷一",
-    "authors":["允祿","梅瑴成","何國宗"],
-    "corpus":"欽定四庫全書·子部七·術數類",
-    "identifier":"06056502.cn",
-    "url":"https://archive.org/details/06056502.cn",
-    "contributor":"浙江大学图书馆",
-    "pages":237,
-    "evidence_role":"STABLE_FACSIMILE_CANDIDATE_NOT_PASSAGE_BOUND",
-    "passage_page":null
+  "facsimile_candidate": {
+    "title": "欽定協紀辨方書·卷一",
+    "authors": [
+      "允祿",
+      "梅瑴成",
+      "何國宗"
+    ],
+    "corpus": "欽定四庫全書·子部七·術數類",
+    "identifier": "06056502.cn",
+    "url": "https://archive.org/details/06056502.cn",
+    "contributor": "浙江大学图书馆",
+    "pages": 237,
+    "evidence_role": "STABLE_FACSIMILE_CANDIDATE_NOT_PASSAGE_BOUND",
+    "passage_page": null,
+    "ocr_audit": {
+      "artifact": "research/zero-one/z05-b-24-mountain-ia-ocr-audit-v0.3.json",
+      "queries": 8,
+      "matched_queries": 0,
+      "quality": "SEVERELY_CORRUPTED",
+      "interpretation": "NONCONCLUSIVE",
+      "exact_page_status": "OPEN"
+    }
   },
-  "binding_decision":{
-    "order_supported_by_text_locator":true,
-    "equal_15_degree_segmentation_supported_by_locator":false,
-    "north_zero_clockwise_convention_supported_by_locator":false,
-    "historical_source_verified":false,
-    "next_lookup_key":"Search the facsimile/OCR for 二十四山 and the exact 24-name sequence; record scan leaf and column before promotion."
+  "binding_decision": {
+    "order_supported_by_text_locator": true,
+    "equal_15_degree_segmentation_supported_by_locator": false,
+    "north_zero_clockwise_convention_supported_by_locator": false,
+    "historical_source_verified": false,
+    "next_lookup_key": "Use visual PDF/page-image inspection around tables/headings; record archive leaf and column before promotion. Do not infer absence from corrupted OCR."
   }
 }
