@@ -1,0 +1,34 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-DUAL-ID-PUBLIC-READBACK-V0.2",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "tested_at": "2026-09-28T08:35:00+08:00",
+  "source_commit": "2ce5d332465df7a645fa37dd43f78e0689157b94",
+  "page": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html?v=2ce5d332",
+  "checks": [
+    {
+      "id": "PUB-MOVE-01",
+      "input": "右二头训练",
+      "observed_structure_id": "MUSCLE_BICEPS_BRACHII",
+      "observed_asset_refs": [
+        "BP5558→FJ1512",
+        "BP5566→FJ1478"
+      ],
+      "pass": true
+    },
+    {
+      "id": "PUB-MOVE-02",
+      "input": "左肱二头肌",
+      "observed_structure_id": "MUSCLE_BICEPS_BRACHII",
+      "observed_result_asset_refs": [],
+      "observed_boundary": "左侧真实资产尚未映射",
+      "pass": true
+    }
+  ],
+  "environment_note": "WebGL context unavailable in the browser; the page showed its static/2D fallback. This did not block the input-to-structure-to-asset-reference readback.",
+  "acceptance": {
+    "public_readback_passed": "2/2",
+    "mainline_completed": "2/4",
+    "m03": "BLOCKED_CLEAN_CONTEXT",
+    "m04": "BLOCKED_BY_M03"
+  }
+}
