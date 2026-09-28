@@ -1,0 +1,20 @@
+{
+  "artifact_id": "Z05-B-24-MOUNTAIN-IA-OCR-PUBLIC-READBACK-V0.3",
+  "task_id": "Z05",
+  "observed_at": "2026-09-28T13:37:31+08:00",
+  "page": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html?v=7a10f123",
+  "probes": [
+    {
+      "input": "180",
+      "expected_output": "午山（中心 180°）",
+      "observed": true
+    },
+    {
+      "input": "180",
+      "expected_boundary": "8项关键词负检索；OCR严重损坏；负检索不构成原文不存在的证据；影印页待目视定位",
+      "observed": true
+    }
+  ],
+  "result": "2/2 PASS",
+  "historical_source_verified": false
+}
