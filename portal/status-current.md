@@ -75,3 +75,10 @@
 - 当前边界：这不是服务器认证；C博士真实 API 尚未连接。当前 ChatGPT 会话不能直接嵌入网页，后续以 OpenAI API Provider Adapter + ZERO-CORE 自有项目上下文接入。
 - 页面提交：ZERO-CORE V0.2 = 2f883f5c6ff0382ebf5703b4c244a14b90467aeb；总看板弹窗 = 2376d60c4e0003c8e009a786a5874f02e52f286b。
 - 下一门：部署最小服务端；secret/env 保存 API Key；建立 OWNER 身份和 conversation/thread 持久化；接 C博士 Responses/Conversations API，再做网页真实往返读回。
+
+### ZERO-CORE V0.3｜真实对话门
+- 模拟回答已关闭；前端现在只向 /api/chat 请求真实响应，Gateway未部署/未认证/缺secret时明确失败。
+- 已建立服务端Provider Adapter源码：C=OpenAI Responses；Q=Model Studio OpenAI-compatible Responses；D=DeepSeek Responses。支持单问c/q/d和all三方同问的统一合同。
+- 可查源码：[Gateway合同](../server/zero-core/README.md)；[Provider adapters](../server/zero-core/providers.mjs)；[真实对话前端](zero-core.html)
+- 当前阻塞：GitHub Pages是静态托管，仓库中的server代码不会自行成为 /api/chat；需要连接可部署的服务端运行环境，并由所有者在服务端配置三家API secrets。任何key不得写入聊天、仓库或浏览器。
+- 下一实际动作：服务端部署→OWNER认证→会话持久化→C真实首轮→Q/D真实首轮→all同框→公开读回。
