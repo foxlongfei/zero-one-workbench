@@ -1,6 +1,6 @@
 # 双项目 CURRENT｜主线 / 辅线 / 临时任务
 
-最近全面核对：2026-09-28 14:42 +08:00
+最近全面核对：2026-09-28 15:33 +08:00
 本页只记录真实执行状态。工作一发生，看板同轮更新；每项成果必须能点击到页面、文本、数据、代码或证据原物。
 
 ## 1｜零一空间研究
@@ -12,10 +12,10 @@
 - [古代技术实验台](k02-board.html)
 - [二十四山方位归一化合同](../research/zero-one/z05-b-24-mountain-orientation-normalizer-v0.1.json)
 - [来源绑定 V0.2](../research/zero-one/z05-b-24-mountain-source-binding-v0.2.json)
-- 《天玉經》电子转录二十四山次序已与24标签对齐；《欽定協紀辨方書·卷一》影印候选 `06056502.cn` 已完成8项OCR负检索及PDF页面级目视抽样。PDF第80页已定位为《欽定協紀辨方書目錄》起始页；精确目标页/叶/栏仍未冻结
-- [影印OCR审计 V0.3](../research/zero-one/z05-b-24-mountain-ia-ocr-audit-v0.3.json)；[PDF目视定位 V0.4](../research/zero-one/z05-b-24-mountain-pdf-visual-locator-v0.4.json)（抽样页1/20/40/80，验证器7/7）；[公开读回 2/2](../research/zero-one/z05-b-24-mountain-pdf-public-readback-v0.4.json)
+- 《天玉經》电子转录二十四山次序已与24标签对齐；《欽定協紀辨方書·卷一》影印候选 `06056502.cn` 已连续核验PDF 80–90页总目录及97–99页卷一细目。总目录列本原、义例、立成、宜忌、用事、公规、年/月/日表、利用、附录、辨讹；卷一细目未明列二十四山，因此该卷降级为背景候选，精确目标页/叶/栏仍未冻结
+- [PDF连续目录审计 V0.5](../research/zero-one/z05-b-24-mountain-pdf-contiguous-toc-audit-v0.5.json)（80–90页连续核验 + 97–99页卷一细目，验证8/8）
 - 电子转录只作定位器；15°等分、真北0°顺时针是工程归一化，不冒充古文原规则
-- 下一实际动作：从已定位的目录起点连续目视扫描PDF 80–90页，记录目录标题；命中相关标题后追到正文并冻结 archive leaf + 栏位。足以支持运行即停止考据，转 RULE_TABLE / DECISION_NODES 与实际方法运行
+- 下一实际动作：枚举《欽定協紀辨方書》同系列其他卷册影印，优先选择细目含方位/堪舆术语者；命中后冻结 archive leaf + 栏位。足以支持运行即停止考据，转 RULE_TABLE / DECISION_NODES 与实际方法运行
 - 验收：historical_source_verified=false；complete_kanyu_method=false；Z05 V0.1 未完成
 
 ### SUB｜可执行辅线
@@ -41,11 +41,11 @@
 ### SUB｜当前实际执行
 **COMMON-HUMAN-COORDINATE / HUMAN-3D 完整人体样板｜ACTIVE**
 - [公开人体模型](movement.html)
-- 当前可见：右上臂、右前臂、右肘、右腕代理均可点击；“右手腕训练”与点击入口共用解析器，返回同一 `JOINT_WRIST_PROXY`、RIGHT 侧别与桡骨/尺骨 BP→FJ 资产
-- [右腕代理合同 V0.6](../research/movement/common-human-coordinate-right-wrist-proxy-v0.6.json)
-- [公开双入口读回 8/8](../research/movement/common-human-coordinate-right-wrist-public-readback-v0.6.json)
+- 当前可见：右肩区代理、右上臂、右前臂、右肘、右腕代理均可点击；“右肩训练”与点击入口共用解析器，返回同一 `REGION_SHOULDER_ENTRY_PROXY`、RIGHT 侧别及右肱骨/肱二头肌近端 BP→FJ 资产
+- [右肩区代理合同 V0.7](../research/movement/common-human-coordinate-right-shoulder-region-proxy-v0.7.json)
+- [公开双入口读回 8/8](../research/movement/common-human-coordinate-right-shoulder-public-readback-v0.7.json)
 - [HUMAN-3D 01—10 实际状态表](../research/movement/human-3d-execution-queue-01-10.md)
-- 当前断点：扩右肩入口或补左侧真实资产；右腕仍是桡骨/尺骨代理，不得冒充完整腕关节，也不得用右侧资产冒充左侧；M03 仍只在新鲜隔离 D 上下文恢复
+- 当前断点：导入真实右肩胛骨/锁骨资产或补左侧真实资产；右肩区入口不得冒充完整肩关节，也不得用右侧资产冒充左侧；M03 仍只在新鲜隔离 D 上下文恢复
 - 边界：三骨代理不是完整肘关节；教学动态模型不是精确生物力学模型
 
 ### TEMP / QUEUED
@@ -54,15 +54,15 @@
 - TESTSET — QUEUED；M03相关部分等待独立 D
 
 ## 3｜本轮核对发现并修正
-- Z05 从OCR负检索转入PDF目视链，已定位目录起点第80页；抽样页未见目标只限样本，不构成全卷否定，`historical_source_verified=false`。
-- 动起来新增右腕代理热点；点击与“右手腕训练”同构读回8/8，并显式暴露“非完整腕关节模型”；严格主线保持2/4。
+- Z05 完成PDF 80–90页连续目录审计及97–99页卷一细目核验；本卷未明列二十四山，降级为背景候选，不把目录未命中扩大为全书不存在，`historical_source_verified=false`。
+- 动起来新增右肩区代理热点；点击与“右肩训练”同构读回8/8，并显式暴露肩胛骨/锁骨/完整关节面缺口；严格主线保持2/4。
 - HUMAN-3D 旧队列仍写“01 ACTIVE、02—10 PLANNED”，与已有真实OBJ、别名桥、右肘代理、页面交互冲突；已按真实执行状态校正。
 - 总看板此前把“正式主线”和“正在执行的产品辅线”混在一起；现拆开 MAIN / SUB / TEMP。
 - Z05-A / Z05-B 是样板/当前路线，不定义堪舆或整个古代技术系统的能力边界。
 
 ## 4｜下一次必须可见
-- 零一：连续扫描PDF目录80–90页并记录标题；未命中保持 `historical_source_verified=false`。
-- 动起来：扩右肩入口或开始左侧真实资产；每个结构仍须通过点击/输入同构读回。
+- 零一：枚举同系列其他卷册影印，优先锁定含方位/堪舆细目的卷册；未命中保持 `historical_source_verified=false`。
+- 动起来：补真实右肩胛骨/锁骨资产或开始左侧真实资产；每个结构仍须通过点击/输入同构读回。
 
 ## 5｜ZERO-CORE｜公共基础设施 SUB
 - 状态：ACTIVE_SUB；不替代 Z05 或动起来 MAIN。
