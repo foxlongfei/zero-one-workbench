@@ -1,0 +1,15 @@
+{
+  "artifact_id": "Z05-B-24-MOUNTAIN-ORIENTATION-NORMALIZER-CASES-V0.1",
+  "cases": [
+    {"id":"24M-01","degrees":0,"expected":"子"},
+    {"id":"24M-02","degrees":7.499,"expected":"子"},
+    {"id":"24M-03","degrees":7.5,"expected":"癸"},
+    {"id":"24M-04","degrees":90,"expected":"卯"},
+    {"id":"24M-05","degrees":180,"expected":"午"},
+    {"id":"24M-06","degrees":352.5,"expected":"子"},
+    {"id":"24M-07","degrees":359.9,"expected":"子"},
+    {"id":"24M-08","degrees":-15,"expected":"壬"},
+    {"id":"24M-09","degrees":360,"expected":"子"},
+    {"id":"24M-10","degrees":null,"expected":"INVALID_INPUT"}
+  ]
+}
