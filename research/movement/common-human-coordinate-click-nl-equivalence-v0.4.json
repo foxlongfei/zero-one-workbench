@@ -1,0 +1,10 @@
+{
+  "artifact_id":"COMMON-HUMAN-COORDINATE-CLICK-NL-EQUIVALENCE-V0.4",
+  "task_id":"COMMON-HUMAN-COORDINATE",
+  "target":"JOINT_ELBOW",
+  "side":"RIGHT",
+  "click_input":{"control":"right elbow hotspot","data_body":"肘关节","data_side":"RIGHT"},
+  "natural_language_input":"右肘训练",
+  "expected":{"structure_id":"JOINT_ELBOW","asset_refs":["BP9206→FJ3368","BP8464→FJ3349","BP8233→FJ3391"],"boundary":"ARTICULATING_BONES_PROXY"},
+  "acceptance":{"same_structure_id":true,"same_side":true,"same_asset_refs":true,"complete_joint_asset":false,"mainline_before":"2/4","mainline_after":"2/4"}
+}
