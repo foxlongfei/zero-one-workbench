@@ -13,7 +13,7 @@
 - [二十四山方位归一化合同](../research/zero-one/z05-b-24-mountain-orientation-normalizer-v0.1.json)
 - [来源绑定 V0.2](../research/zero-one/z05-b-24-mountain-source-binding-v0.2.json)
 - 《天玉經》电子转录二十四山次序已与24标签对齐；《欽定協紀辨方書·卷一》影印候选 `06056502.cn` 已完成8项OCR负检索及PDF页面级目视抽样。PDF第80页已定位为《欽定協紀辨方書目錄》起始页；精确目标页/叶/栏仍未冻结
-- [影印OCR审计 V0.3](../research/zero-one/z05-b-24-mountain-ia-ocr-audit-v0.3.json)；[PDF目视定位 V0.4](../research/zero-one/z05-b-24-mountain-pdf-visual-locator-v0.4.json)（抽样页1/20/40/80，验证器7/7）
+- [影印OCR审计 V0.3](../research/zero-one/z05-b-24-mountain-ia-ocr-audit-v0.3.json)；[PDF目视定位 V0.4](../research/zero-one/z05-b-24-mountain-pdf-visual-locator-v0.4.json)（抽样页1/20/40/80，验证器7/7）；[公开读回 2/2](../research/zero-one/z05-b-24-mountain-pdf-public-readback-v0.4.json)
 - 电子转录只作定位器；15°等分、真北0°顺时针是工程归一化，不冒充古文原规则
 - 下一实际动作：从已定位的目录起点连续目视扫描PDF 80–90页，记录目录标题；命中相关标题后追到正文并冻结 archive leaf + 栏位。足以支持运行即停止考据，转 RULE_TABLE / DECISION_NODES 与实际方法运行
 - 验收：historical_source_verified=false；complete_kanyu_method=false；Z05 V0.1 未完成
