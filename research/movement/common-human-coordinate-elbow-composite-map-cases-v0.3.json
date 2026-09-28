@@ -1,0 +1,8 @@
+{
+  "artifact_id":"COMMON-HUMAN-COORDINATE-ELBOW-COMPOSITE-MAP-CASES-V0.3",
+  "cases":[
+    {"id":"EC-01","side":"RIGHT","expected_count":3,"expected_mesh_ids":["FJ3368","FJ3349","FJ3391"]},
+    {"id":"EC-02","side":"LEFT","expected_count":0,"expected_mesh_ids":[]},
+    {"id":"EC-03","side":"UNSPECIFIED","expected_count":0,"expected_mesh_ids":[]}
+  ]
+}
