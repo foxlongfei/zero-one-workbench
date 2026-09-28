@@ -160,3 +160,11 @@
 - TEMP-MODEL-01 已补回任务账：与 TEMP-M01 区分；已有可运行原型但 Pages 总入口缺失。
 - 右肩8/8、旧队列纠错等回归历史证据，不再冒充 CURRENT。
 - GitHub Pages 是日常第一检查面；Markdown/JSON/commit 只作第二层证据。
+
+
+## 10｜2026-09-29 05:50 +08:00｜实物推进
+- TEMP-MODEL-01：已从历史 commit 5dd22e08... 找回原型定义并恢复独立可运行页面 portal/overlay-model.html；方位、先天/后天八卦、五行、天干、地支、节气、甲子图层可切换，标签可点击说明。恢复提交 379839f6...；总首页入口 8a753680...；研究页入口 78919200...。
+- BICEPS-DYNAMIC-3D-V0.1：movement.html 已接入第一版真实 BodyParts3D OBJ 动作链：播放/暂停、屈肘滑杆、回到伸展；桡骨/尺骨真实OBJ绕估算肘轴运动，肱二头肌长/短头真实OBJ同步长度/厚度可视形变。提交 1da32ffd...。
+- 科学边界：当前肘轴为网格边界估算，肌肉形变为视觉关系演示，不是校准生物力学、真实力值或EMG。
+- Pages 部署：最终 head 78919200... 的 pages build and deployment 已 SUCCESS（2026-09-29 05:50 +08:00）；此前连续提交的中间 Pages run 被后续提交取消，属于正常合并发布。
+- 公开运行读回：本执行环境对 github.io 页面直接抓取仍不可用，因此不能冒充浏览器公开运行认证完成；当前为 PUBLISHED_BUILD_SUCCESS / PUBLIC_RUNTIME_READBACK_PENDING。用户层完成度只在实际公开页面检查通过后再升级。
