@@ -1,6 +1,6 @@
 # 双项目 CURRENT｜主线 / 辅线 / 临时任务
 
-最近全面核对：2026-09-28 15:33 +08:00
+最近全面核对：2026-09-28 21:23 +08:00
 本页只记录真实执行状态。工作一发生，看板同轮更新；每项成果必须能点击到页面、文本、数据、代码或证据原物。
 
 ## 1｜零一空间研究
@@ -23,11 +23,12 @@
 - **SUPPORT_LIBRARY｜ON_DEMAND** — 基础知识仅由运行方法反向提出缺口，不无边界堆积
 
 ### TEMP / PAUSED SUPPORT｜不抢主线
+- **TEMP-MODEL-01｜叠加关系模型 V0.1｜EXISTING_RUNNABLE_TOOL / WEB_ENTRY_MISSING** — 已有可运行原型，但当前 GitHub Pages 总入口缺失；必须找回原实物并恢复点击直接运行入口。
 - Z04 / K02-03-HXL-01 — PAUSED_RESEARCH_SUPPORT，旧严格验收 0/5
-- TEMP-M01 — PAUSED_SUPPORT
+- TEMP-M01 — PAUSED_SUPPORT（与 TEMP-MODEL-01 不同）
 - TEMP-E01 — PAUSED_SUPPORT
-- Z05-A 生辰八字 — 样板候选，不是当前执行支线，也不定义 Z05 边界
-- 恢复条件：只有 Z05 当前运行步骤明确需要时才唤醒
+- Z05-A 生辰八字 — 样板候选，不是当前执行支线。
+- TEMP-MODEL-01 作为既有研究工具保留可直接调用入口。
 
 ## 2｜动起来
 ### MAIN｜正式验收主线
@@ -39,14 +40,18 @@
 - M03 阻塞不等于整个项目停工；产品辅线成果不得虚增正式主线计数
 
 ### SUB｜当前实际执行
-**COMMON-HUMAN-COORDINATE / HUMAN-3D 完整人体样板｜ACTIVE**
+**COMMON-HUMAN-COORDINATE / HUMAN-3D｜ACTIVE（任务状态，不等于新成果）**
 - [公开人体模型](movement.html)
-- 当前可见：右肩区代理、右上臂、右前臂、右肘、右腕代理均可点击；“右肩训练”与点击入口共用解析器，返回同一 `REGION_SHOULDER_ENTRY_PROXY`、RIGHT 侧别及右肱骨/肱二头肌近端 BP→FJ 资产
-- [右肩区代理合同 V0.7](../research/movement/common-human-coordinate-right-shoulder-region-proxy-v0.7.json)
-- [公开双入口读回 8/8](../research/movement/common-human-coordinate-right-shoulder-public-readback-v0.7.json)
-- [HUMAN-3D 01—10 实际状态表](../research/movement/human-3d-execution-queue-01-10.md)
-- 当前断点：导入真实右肩胛骨/锁骨资产或补左侧真实资产；右肩区入口不得冒充完整肩关节，也不得用右侧资产冒充左侧；M03 仍只在新鲜隔离 D 上下文恢复
-- 边界：三骨代理不是完整肘关节；教学动态模型不是精确生物力学模型
+- **CURRENT NODE：BICEPS-DYNAMIC-3D-V0.1**
+- 任务状态：ACTIVE
+- 代码实现：NOT_YET_VERIFIED
+- Pages 可见新成果：NONE
+- 公开运行认证：NONE
+- 用户层新增完成度：0
+- 当前目标：现有右肱骨、桡骨、尺骨、肱二头肌长/短头 → 同一3D → 伸展→屈肘→肌肉长度/形态变化→离心返回；保留拖动观察/局部定位。
+- 右肘/右腕/右肩代理、5件真实OBJ等属于既有历史能力/开发证据，不再作为当前新增成果展示。
+- [HUMAN-3D 实际状态表](../research/movement/human-3d-execution-queue-01-10.md)
+- 完成门：实物实现 → movement.html 接入 → GitHub Pages发布 → 公开运行读回 → 之后才允许更新成果状态。
 
 ### TEMP / QUEUED
 - TEMP-YOUTH — QUEUED / 保留既有断点
@@ -145,3 +150,13 @@
 - 零一研究继续执行“古人技术与现实运用”：考据够用即停；文本/证据→现实场景→当时怎么用→方法步骤→案例→可运行重建→今天真实输入→检验。
 - 知行合一：改变底层方向的对话，同轮必须产生思想内核更新 + 任务/验收门 + 看板变化。
 - 当前落地任务不另起空项目：Z05继续向实际使用/RULE_TABLE/DECISION_NODES推进；ZERO-CORE继续自有线程/主库/Provider/导出；HUMAN-3D继续BICEPS-DYNAMIC-3D-V0.1网页可见动作。
+
+
+## 9｜成果状态机制纠错｜2026-09-28 21:23 +08:00
+- 已确认系统性错误：此前多次把“文字/任务/commit 已同步”误当成“产品成果已同步”，导致后台管理状态领先于前台真实能力。
+- 新硬门：**实物 → 公开网页 → 公开运行读回 → CURRENT/Drive 成果状态**。顺序不可倒置。
+- ACTIVE 以后只表示当前正在执行，不表示产生新成果；必须同时显示 Pages 可见新成果 与 公开运行认证。
+- BICEPS-DYNAMIC-3D-V0.1 当前如实为：ACTIVE / 代码未验证 / Pages新成果NONE / 公开认证NONE / 用户层新增0。
+- TEMP-MODEL-01 已补回任务账：与 TEMP-M01 区分；已有可运行原型但 Pages 总入口缺失。
+- 右肩8/8、旧队列纠错等回归历史证据，不再冒充 CURRENT。
+- GitHub Pages 是日常第一检查面；Markdown/JSON/commit 只作第二层证据。
