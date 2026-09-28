@@ -128,3 +128,11 @@
 - ZERO-CORE：REMOTE_DEPLOY=false；D1_REMOTE_READWRITE=false；OWNER_AUTH=false；C/Q/D_REAL=false。
 - 用户当前无需购买套餐、创建 OAuth Client/API Token 或继续找 MCP。
 - 下一实际动作：直接部署现有 server/zero-core/cloudflare 骨架 → workers.dev /api/health 读回 → D1 远端写读 → OWNER gate → C真实首轮。
+
+
+## 7｜执行纪律升级：知行合一｜2026-09-28 17:21 +08:00
+- 硬规则：重要结论必须同轮完成“记录 → 转成任务/命令 → 实际执行 → 可见发布 → 看板更新 → 读回/用户检查”；只写原则不算落实。
+- 可见进度：改一小步→立即发布网页→更新时间戳→给可点击入口→用户检查→反馈→下一步。后台OBJ/JSON/验证器/commit未进入可见网页，只算开发证据。
+- 动起来当前可见执行节点已切换为 **BICEPS-DYNAMIC-3D-V0.1 / ACTIVE**：复用现有右肱骨、桡骨、尺骨、肱二头肌长/短头，把静态真实资产与动作驱动合并到同一3D视图。
+- 第一完成门：movement.html 可直接播放“伸展→屈肘→肌肉长度/形态变化→离心返回”，支持观察角度/局部定位；网页发布+读回后才升级用户层进度。
+- 科学边界：无对应生物力学/EMG数据，不把动画形变称为真实发力大小。
