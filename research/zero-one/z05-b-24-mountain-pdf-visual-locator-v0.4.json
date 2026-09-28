@@ -1,0 +1,55 @@
+{
+  "artifact_id": "Z05-B-24-MOUNTAIN-PDF-VISUAL-LOCATOR-V0.4",
+  "task_id": "Z05",
+  "method_component": "24_MOUNTAIN_ORDER",
+  "created_at": "2026-09-28T14:42:54+08:00",
+  "source": {
+    "title": "欽定協紀辨方書·卷一",
+    "archive_identifier": "06056502.cn",
+    "item_url": "https://archive.org/details/06056502.cn",
+    "pdf_url": "https://archive.org/download/06056502.cn/06056502.cn.pdf",
+    "page_count": 237,
+    "page_progression": "rl"
+  },
+  "visual_samples": [
+    {
+      "pdf_page": 1,
+      "observation": "四庫全書·子部 cover visible",
+      "target_sequence_visible": false
+    },
+    {
+      "pdf_page": 20,
+      "observation": "奏進/校理相關前言正文樣頁；未在可見欄位辨認目標序列",
+      "target_sequence_visible": false
+    },
+    {
+      "pdf_page": 40,
+      "observation": "曆法/節氣/晝夜時刻相關正文樣頁；未在可見欄位辨認目標序列",
+      "target_sequence_visible": false
+    },
+    {
+      "pdf_page": 80,
+      "observation": "欽定協紀辨方書目錄起始頁可見；確立目錄段定位點",
+      "target_sequence_visible": false
+    }
+  ],
+  "locator_progress": {
+    "toc_start_pdf_page": 80,
+    "exact_archive_leaf": null,
+    "exact_column": null,
+    "status": "TOC_START_LOCATED_TARGET_ENTRY_OPEN"
+  },
+  "inference_policy": [
+    "Absence on sampled visible pages is not absence from the volume.",
+    "PDF page number is provisional until mapped to archive leaf.",
+    "Do not upgrade historical_source_verified without an exact visible passage and stable page/leaf/column locator."
+  ],
+  "blocker": {
+    "type": "INTERNET_ARCHIVE_TRANSIENT_502",
+    "evidence": "Navigation from the located contents start toward PDF page 82 returned a server 502; one reload did not restore the page.",
+    "effect": "Contiguous contents scan 80–90 remains open; work resumes from page 80 rather than restarting OCR."
+  },
+  "historical_source_verified": false,
+  "status": "PDF_VISUAL_SAMPLE_COMPLETE_TOC_START_LOCATED",
+  "next_action": "Visually scan PDF pages 80–90 contiguously, record contents headings, then follow the most relevant heading to an exact leaf/column passage."
+}
