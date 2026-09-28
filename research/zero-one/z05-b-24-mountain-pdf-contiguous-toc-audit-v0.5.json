@@ -1,0 +1,79 @@
+{
+  "artifact_id": "Z05-B-24-MOUNTAIN-PDF-CONTIGUOUS-TOC-AUDIT-V0.5",
+  "task_id": "Z05",
+  "method_component": "24_MOUNTAIN_ORDER",
+  "created_at": "2026-09-28T15:33:44+08:00",
+  "source": {
+    "title": "欽定協紀辨方書·卷一",
+    "archive_identifier": "06056502.cn",
+    "pdf_url": "https://archive.org/download/06056502.cn/06056502.cn.pdf",
+    "page_count": 237,
+    "page_progression": "rl"
+  },
+  "contiguous_audit": {
+    "pdf_pages": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90
+    ],
+    "complete": true,
+    "headings_observed": [
+      "本原",
+      "義例",
+      "立成",
+      "宜忌",
+      "用事",
+      "公規",
+      "年表",
+      "月表",
+      "日表",
+      "利用",
+      "附錄",
+      "辨訛"
+    ],
+    "target_heading_visible": false,
+    "bounded_inference": "The table-of-contents headings do not explicitly name 二十四山; this does not establish absence from body text or from other volumes."
+  },
+  "volume_one_locator": {
+    "pdf_pages": [
+      97,
+      98,
+      99
+    ],
+    "section": "卷一／本原一目錄",
+    "headings_observed": [
+      "先天八卦方位",
+      "後天八卦次序",
+      "後天八卦方位",
+      "先後天卦配河圖洛書",
+      "十二支",
+      "十二律",
+      "二十八宿星象",
+      "五行",
+      "干支五行",
+      "三合",
+      "六合",
+      "五鼠遁",
+      "五虎遁",
+      "五行化氣",
+      "納音"
+    ],
+    "target_heading_visible": false
+  },
+  "source_decision": {
+    "status": "CANDIDATE_DEPRIORITIZED_FOR_EXACT_24_MOUNTAIN_SEQUENCE",
+    "reason": "The scanned item is specifically 卷一; its detailed 本原一 contents do not explicitly list 二十四山. It remains valid for background concepts but is not yet a direct page-level witness for the required 24-label order."
+  },
+  "historical_source_verified": false,
+  "exact_archive_leaf": null,
+  "exact_column": null,
+  "next_action": "Enumerate sibling scans/volumes of 欽定協紀辨方書 and prioritize a volume whose detailed contents cover direction/堪輿 terminology; retain 天玉經 electronic text only as a locator until an exact facsimile passage is frozen."
+}
