@@ -1,0 +1,15 @@
+{
+  "artifact_id":"Z05-QUESTION-ROUTER-CASES-V0.1",
+  "cases":[
+    {"id":"ZR-01","input":"我想排八字","expected":"ROUTE_BIRTH_TIME"},
+    {"id":"ZR-02","input":"出生时间可以怎么看命盘","expected":"ROUTE_BIRTH_TIME"},
+    {"id":"ZR-03","input":"这块宅地的地形和水系怎么看","expected":"ROUTE_KANYU"},
+    {"id":"ZR-04","input":"房屋坐向","expected":"ROUTE_KANYU"},
+    {"id":"ZR-05","input":"我想起卦问工作","expected":"ROUTE_YI_DIVINATION"},
+    {"id":"ZR-06","input":"搬家选日子","expected":"ROUTE_DATE_SELECTION"},
+    {"id":"ZR-07","input":"古代导引怎么练","expected":"ROUTE_HEALTH_PRACTICE"},
+    {"id":"ZR-08","input":"帮我看看这个","expected":"ASK_SCOPE"},
+    {"id":"ZR-09","input":"墓葬周围道路与水系","expected":"ROUTE_KANYU"},
+    {"id":"ZR-10","input":"黄道吉日是不是一定成功","expected":"ROUTE_DATE_SELECTION"}
+  ]
+}

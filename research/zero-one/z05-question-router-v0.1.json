@@ -1,0 +1,17 @@
+{
+  "artifact_id": "Z05-QUESTION-ROUTER-V0.1",
+  "task_id": "Z05",
+  "created_at": "2026-09-28T08:35:00+08:00",
+  "status": "PUBLIC_ROUTER_CANDIDATE",
+  "purpose": "Route ordinary-language questions to a historical-technology domain and required-input checklist without pretending that a complete method is already runnable.",
+  "routes": [
+    {"id":"ROUTE_BIRTH_TIME","domain":"命理/干支时序","trigger_terms":["八字","生辰","出生时间","命盘"],"candidate_methods":["Z05-A_SAMPLE"],"required_inputs":["出生日期","出生时刻或时辰","出生地点","采用的历法/时制"],"execution_state":"METHOD_SELECTION_OPEN"},
+    {"id":"ROUTE_KANYU","domain":"堪舆/地理环境判断","trigger_terms":["风水","堪舆","坐向","宅地","地形","水系","墓葬"],"candidate_methods":["Z05-B_SAMPLE"],"required_inputs":["判断对象","地点与环境","方向或测量信息","平面/地形资料","拟采用的历史传统"],"execution_state":"METHOD_SELECTION_OPEN"},
+    {"id":"ROUTE_YI_DIVINATION","domain":"易/象数与占筮","trigger_terms":["占卦","起卦","卦象","易经占"],"candidate_methods":[],"required_inputs":["明确问题","起卦方式或所选传统","起卦时间/记录","允许比较的传统范围"],"execution_state":"METHOD_LIBRARY_OPEN"},
+    {"id":"ROUTE_DATE_SELECTION","domain":"择日/历法时序","trigger_terms":["择日","选日子","黄道吉日","什么时候合适"],"candidate_methods":[],"required_inputs":["拟进行事项","地点","可选时间范围","所选历史传统"],"execution_state":"METHOD_LIBRARY_OPEN"},
+    {"id":"ROUTE_HEALTH_PRACTICE","domain":"医养/导引史","trigger_terms":["导引","养生术","古代锻炼","吐纳"],"candidate_methods":[],"required_inputs":["想了解的历史时期或方法","使用场景","现有材料或动作描述"],"execution_state":"HISTORICAL_SCOPE_ONLY"}
+  ],
+  "fallback":{"state":"ASK_SCOPE","message":"尚不能可靠归类；先追问对象、目的、时间、地点与希望比较的传统。"},
+  "safety":{"no_fortune_claim":true,"no_medical_treatment_claim":true,"no_invented_method":true,"route_is_not_result":true},
+  "acceptance":{"public_routing_increment":true,"end_to_end_method_complete":false,"z05_v0_1_complete":false}
+}
