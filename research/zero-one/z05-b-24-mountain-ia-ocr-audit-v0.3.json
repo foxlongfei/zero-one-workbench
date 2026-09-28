@@ -1,0 +1,67 @@
+{
+  "artifact_id": "Z05-B-24-MOUNTAIN-IA-OCR-AUDIT-V0.3",
+  "task_id": "Z05",
+  "method_component": "24_MOUNTAIN_ORDER",
+  "created_at": "2026-09-28T11:34:46+08:00",
+  "source": {
+    "title": "欽定協紀辨方書·卷一",
+    "archive_identifier": "06056502.cn",
+    "contributors": [
+      "浙江大学图书馆"
+    ],
+    "page_count": 237,
+    "page_progression": "rl",
+    "scan_resolution_ppi": 600,
+    "ocr_engine": "tesseract 5.3",
+    "archive_url": "https://archive.org/details/06056502.cn",
+    "full_text_url": "https://archive.org/stream/06056502.cn/06056502.cn_djvu.txt"
+  },
+  "query_matrix": [
+    {
+      "query": "二十四山",
+      "match_count": 0
+    },
+    {
+      "query": "壬子",
+      "match_count": 0
+    },
+    {
+      "query": "癸丑",
+      "match_count": 0
+    },
+    {
+      "query": "乾亥",
+      "match_count": 0
+    },
+    {
+      "query": "二十四",
+      "match_count": 0
+    },
+    {
+      "query": "地支",
+      "match_count": 0
+    },
+    {
+      "query": "四維",
+      "match_count": 0
+    },
+    {
+      "query": "方位",
+      "match_count": 0
+    }
+  ],
+  "ocr_quality": "SEVERELY_CORRUPTED",
+  "inference_policy": "NEGATIVE_OCR_SEARCH_IS_NONCONCLUSIVE",
+  "exact_scan_locator": {
+    "leaf": null,
+    "column": null,
+    "status": "OPEN"
+  },
+  "blocker": {
+    "type": "OCR_SEARCH_TEXT_REDIRECT_UNAVAILABLE",
+    "effect": "No reliable indexed hit-to-scan-page mapping; absence in corrupted OCR cannot establish absence in source."
+  },
+  "historical_source_verified": false,
+  "status": "SCAN_REGISTERED_OCR_NEGATIVE_NONCONCLUSIVE",
+  "next_action": "Visually inspect page images/PDF around likely tables and headings; on hit record archive leaf and column before upgrading historical_source_verified."
+}
