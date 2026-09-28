@@ -1,0 +1,11 @@
+{
+  "artifact_id":"COMMON-HUMAN-COORDINATE-ELBOW-PUBLIC-READBACK-V0.3",
+  "tested_at":"2026-09-28T09:37:56+08:00",
+  "page":"https://foxlongfei.github.io/zero-one-workbench/portal/movement.html?v=490717b2",
+  "source_commit":"490717b202cd434fd8ab130c0084f73079203202",
+  "checks":[
+    {"id":"PUB-ELBOW-01","input":"右肘训练","structure_id":"JOINT_ELBOW","asset_refs":["BP9206→FJ3368","BP8464→FJ3349","BP8233→FJ3391"],"boundary":"三骨关节代理（非完整关节模型）","pass":true},
+    {"id":"PUB-ELBOW-02","input":"左肘","structure_id":"JOINT_ELBOW","asset_refs":[],"boundary":"左侧真实资产尚未映射","pass":true}
+  ],
+  "acceptance":{"public_readback":"2/2","right_elbow_proxy_resolvable":true,"complete_joint_asset":false,"left_side_mapped":false,"mainline":"2/4"}
+}
