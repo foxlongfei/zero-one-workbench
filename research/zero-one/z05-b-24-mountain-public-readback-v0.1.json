@@ -1,0 +1,11 @@
+{
+  "artifact_id":"Z05-B-24-MOUNTAIN-PUBLIC-READBACK-V0.1",
+  "tested_at":"2026-09-28T09:37:56+08:00",
+  "page":"https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html?v=d647843b",
+  "source_commit":"d647843bffcc31f7c99a5c86f28ca5734372d2d7",
+  "checks":[
+    {"id":"PUB-24M-01","input_degrees":180,"observed":"180.0° → 午山（中心 180°）","boundary_visible":true,"pass":true},
+    {"id":"PUB-24M-02","input_degrees":7.5,"observed":"7.5° → 癸山（中心 15°）","half_open_boundary_visible":true,"pass":true}
+  ],
+  "acceptance":{"public_readback":"2/2","deterministic_step_runnable":true,"historical_source_verified":false,"complete_kanyu_method":false,"z05_v0_1_complete":false}
+}
