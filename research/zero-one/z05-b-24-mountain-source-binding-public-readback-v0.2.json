@@ -1,0 +1,13 @@
+{
+  "artifact_id": "Z05-B-24-MOUNTAIN-SOURCE-BINDING-PUBLIC-READBACK-V0.2",
+  "task_id": "Z05",
+  "checked_at": "2026-09-28T02:38:18Z",
+  "page": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "input_degrees": 180,
+  "observed_result": "180.0° → 午山（中心 180°）",
+  "source_boundary_visible": true,
+  "text_locator_visible": "《天玉經》电子转录已绑定二十四山顺序",
+  "facsimile_page_open_visible": "《欽定協紀辨方書》四库影印页仍待定位",
+  "engineering_convention_boundary_visible": true,
+  "acceptance": {"passed": 1, "total": 1, "historical_source_verified": false}
+}
