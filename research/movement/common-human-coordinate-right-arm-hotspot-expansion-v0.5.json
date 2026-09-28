@@ -1,0 +1,59 @@
+{
+  "artifact_id": "COMMON-HUMAN-COORDINATE-RIGHT-ARM-HOTSPOT-EXPANSION-V0.5",
+  "task_id": "COMMON-HUMAN-COORDINATE",
+  "linked_mainline": "M01→M02/M03→M04",
+  "created_at": "2026-09-28T11:34:46+08:00",
+  "status": "IMPLEMENTED_AWAITING_PUBLIC_READBACK",
+  "hotspots": [
+    {
+      "label": "右上臂",
+      "input_body": "上臂",
+      "side": "RIGHT",
+      "target_id": "REGION_UPPER_ARM",
+      "asset_refs": [
+        [
+          "BP9206",
+          "FJ3368"
+        ],
+        [
+          "BP5558",
+          "FJ1512"
+        ],
+        [
+          "BP5566",
+          "FJ1478"
+        ]
+      ],
+      "nl_probe": "右上臂训练"
+    },
+    {
+      "label": "右前臂",
+      "input_body": "前臂",
+      "side": "RIGHT",
+      "target_id": "REGION_FOREARM",
+      "asset_refs": [
+        [
+          "BP8464",
+          "FJ3349"
+        ],
+        [
+          "BP8233",
+          "FJ3391"
+        ]
+      ],
+      "nl_probe": "右小臂放松"
+    }
+  ],
+  "equivalence_contract": [
+    "same target_id",
+    "same RIGHT side",
+    "same BP→FJ asset_refs"
+  ],
+  "mainline_gate": {
+    "completed": 2,
+    "total": 4,
+    "m03": "BLOCKED_CLEAN_CONTEXT",
+    "m04": "BLOCKED_BY_M03"
+  },
+  "next_action": "Run public click/NL pair readback for both hotspots; require 4/4 observations before marking accepted."
+}
