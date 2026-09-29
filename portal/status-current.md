@@ -168,3 +168,14 @@
 - 科学边界：当前肘轴为网格边界估算，肌肉形变为视觉关系演示，不是校准生物力学、真实力值或EMG。
 - Pages 部署：最终 head 78919200... 的 pages build and deployment 已 SUCCESS（2026-09-29 05:50 +08:00）；此前连续提交的中间 Pages run 被后续提交取消，属于正常合并发布。
 - 公开运行读回：本执行环境对 github.io 页面直接抓取仍不可用，因此不能冒充浏览器公开运行认证完成；当前为 PUBLISHED_BUILD_SUCCESS / PUBLIC_RUNTIME_READBACK_PENDING。用户层完成度只在实际公开页面检查通过后再升级。
+
+
+## 11｜ZERO-CORE 真实云端节点 + API 成本看板｜2026-09-29 21:00 +08:00
+- Cloudflare Worker 已真实部署：`https://zero-one-workbench.longfox.workers.dev`；D1 binding `env.DB (zero-core)` 已在部署日志确认。
+- 公网健康读回：`/api/health` 返回 `service=zero-core-api / ok=true / db=true / provider_api=true / auth=OWNER_TOKEN`；因此 REMOTE_DEPLOY、D1_REMOTE_READ、OWNER gate 基础链路均已越过旧断点。
+- C Provider：OWNER_TOKEN 已通过；旧 OpenAI Key 返回 401 后已更换正式 Project API Key；随后真实请求返回 429，定位为 API Billing 余额为 0，而非 Worker/D1/OWNER 故障。
+- 2026-09-29 用户已为 OpenAI API 充值 **USD 10.00**；当前等待充值后的 C Provider 再次真实调用认证。未成功读回前，`C_REAL=false / PENDING_RETEST`。
+- **成本记录硬规则**：ZERO-CORE 从本节点开始固定记录 Provider / model / 调用时间 / input tokens / cached tokens（若有）/ output tokens / 单次估算成本 / 当日累计 / 月累计 / 已知充值额或预算。拿不到 Provider 实际 usage 时不得伪造 token 或余额。
+- **当前 C 计价基准**：`gpt-5.6` alias → GPT-5.6 Sol；标准短上下文官方价（2026-09-29核验）Input USD 4.00/M、Cached input USD 0.40/M、Output USD 20.00/M。>272K 长上下文及 Fast/Regional 等附加计价必须另标，不能混算。
+- **预算基线**：OpenAI API 本轮充值 USD 10.00；这是预算/充值记录，不等于可由 ZERO-CORE 独立读出的实时余额。后续以 Provider usage/billing 读回或实际调用 usage 逐笔核算。
+- 下一完成门：C 真实回复成功 → D1 provider_calls/messages 写入 → usage/cost 记账 → 再接 Q → D → all；任何一项未读回不标完成。
