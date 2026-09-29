@@ -1,6 +1,6 @@
 # 双项目 CURRENT｜主线 / 辅线 / 临时任务
 
-最近全面核对：2026-09-28 21:23 +08:00
+最近全面核对：2026-09-29 21:00 +08:00
 本页只记录真实执行状态。工作一发生，看板同轮更新；每项成果必须能点击到页面、文本、数据、代码或证据原物。
 
 ## 1｜零一空间研究
@@ -186,3 +186,14 @@
 - 状态升级：`C_REAL=true / OWNER_AUTH=true / REMOTE_PROVIDER_ROUNDTRIP=true`。此前 401（旧Key）与 429（余额0）均已越过。
 - OpenAI API 本轮充值基线：USD 10.00。当前这次返回合同尚未暴露 input/output token usage，因此**本次实际 token 与单次成本暂记 UNKNOWN，不伪造估算值**。
 - 下一实际动作：修改 Gateway，使成功调用把 Provider usage（input/cached/output tokens）写入 `provider_calls` 并返回成本字段；完成读回后再接 Q、D。
+
+
+## 12｜2026-09-29 21:00 +08:00｜任务与真实进度总同步
+- **零一空间研究 MAIN**：Z05 古代技术可运行重建继续 ACTIVE；当前可运行增量已越过单纯 SOURCE_BINDING，Z05-B 已公开加入 RULE_TABLE → DECISION_NODES 轨迹。历史精确页栏仍未冻结，`historical_source_verified=false`；不得把方位归一化冒充完整堪舆方法。
+- **零一 SUB/TEMP**：问题路由器保持 ACTIVE_SUPPORT；TEMP-MODEL-01 已恢复 Pages 页面并新增“关系反证实验 V0.1”，开始做旋转穷举/结构重合测试；只证明定义层结构，不证明历史关系、因果或预测有效性。TEMP-M01 与 TEMP-MODEL-01 继续严格区分。
+- **动起来 MAIN**：M01 COMPLETED；M02 ACCEPTED_L1_CANDIDATE_ONLY；M03 BLOCKED_CLEAN_CONTEXT；M04 BLOCKED_BY_M03；严格 2/4 不变。
+- **动起来 SUB**：BICEPS-DYNAMIC-3D 已把教学视口与真实OBJ视口收束为一个真实 BodyParts3D 主视口并集中播放/复位/角度/定位控制；科学边界仍为视觉教学近似，肘轴与肌肉主轴尚待 OBJ/PCA 校准，因此状态保持 EXECUTING / PENDING_ACCEPTANCE，不冒充已验收。
+- **ZERO-CORE SUB**：Cloudflare Worker + D1 已远端运行；`/api/health` 公网读回 `ok=true/db=true`；OWNER_TOKEN 认证通过；C博士 `gpt-5.6-sol` 首次真实往返成功并返回 thread_id。状态：`REMOTE_DEPLOY=true / D1=true / OWNER_AUTH=true / C_REAL=true / Q_REAL=false / D_REAL=false / ALL_REAL=false`。
+- **ZERO-CORE 成本**：OpenAI API 充值基线 USD 10.00；首次成功调用未暴露 usage，token/单次实际成本=UNKNOWN。成本账硬门：Provider/model/input/cached/output/单次成本/日累计/月累计；未知即 UNKNOWN。
+- **下一执行队列**：P0 ZERO-CORE usage/cost→D1→读回；P0 接 Q 真实首轮；P0 接 D 真实首轮；P0 all 三方同问；P1 安全浏览器 OWNER session + Pages 前端真实往返；研究与运动 MAIN/SUB 继续按既有断点推进，不被基础设施工作替代。
+- **本轮发布**：总首页已同步 ZERO-CORE 真实云端/C首轮/成本状态；GitHub 状态与 Drive CURRENT/两个认知同步文档同轮追加，随后执行读回认证。
