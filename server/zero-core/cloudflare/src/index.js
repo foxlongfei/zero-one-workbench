@@ -33,3 +33,4 @@ export default {async fetch(request,env){
  }
  return json({error:"NOT_FOUND"},404,cors)
 }};
+// deployment-sync: 2026-09-29 text-chat-first
