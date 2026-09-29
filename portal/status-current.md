@@ -1,199 +1,66 @@
-# 双项目 CURRENT｜主线 / 辅线 / 临时任务
+# 双项目 CURRENT｜2026-09-29 22:05 +08:00
 
-最近全面核对：2026-09-29 21:00 +08:00
-本页只记录真实执行状态。工作一发生，看板同轮更新；每项成果必须能点击到页面、文本、数据、代码或证据原物。
+> 只保留现在真正需要看的 MAIN / SUB / TEMP。历史细节进入各项目档案，不再堆在 CURRENT。
+> 完成硬门：实物 → 公开网页 → 发布成功 → 公开运行/读回 → CURRENT/Drive 同步。缺一步不算闭环。
 
 ## 1｜零一空间研究
-### MAIN｜正在执行
+**能力方向：堪舆先生** —— 不是新项目，而是项目长期要长成的实际能力：从普通人的现实问题出发，识别方法、索取输入、运行、解释、比较、反证，并明确历史与证据边界。
+
+### MAIN
 **Z05｜古代技术可运行重建｜ACTIVE**
-目标：问题路由 → 候选古代技术/传统 → 必要输入 → 选择方法 → 实际运行 → 轨迹 → 输出 → 来源与边界。
+- 当前节点：**Z05-B 二十四山｜RULE_TABLE / DECISION_NODES → 有历史边界的现实输入运行**
+- 已有可见实物：[古代技术实验台](k02-board.html)
+- 已有能力：普通语言问题路由；二十四山角度归一化；运行轨迹；规则/决策节点。
+- 边界：二十四山归一化 ≠ 完整堪舆；精确历史页栏仍未冻结，`historical_source_verified=false`。
+- 下一动作：停止无边界找书；以现有可支持证据进入一个真实堪舆问题的完整运行链，缺什么再反向补证据。
 
-**当前执行节点：Z05-B / SOURCE_BINDING（二十四山）**
-- [古代技术实验台](k02-board.html)
-- [二十四山方位归一化合同](../research/zero-one/z05-b-24-mountain-orientation-normalizer-v0.1.json)
-- [来源绑定 V0.2](../research/zero-one/z05-b-24-mountain-source-binding-v0.2.json)
-- 《天玉經》电子转录二十四山次序已与24标签对齐；《欽定協紀辨方書·卷一》影印候选 `06056502.cn` 已连续核验PDF 80–90页总目录及97–99页卷一细目。总目录列本原、义例、立成、宜忌、用事、公规、年/月/日表、利用、附录、辨讹；卷一细目未明列二十四山，因此该卷降级为背景候选，精确目标页/叶/栏仍未冻结
-- [PDF连续目录审计 V0.5](../research/zero-one/z05-b-24-mountain-pdf-contiguous-toc-audit-v0.5.json)（80–90页连续核验 + 97–99页卷一细目，验证8/8）
-- 电子转录只作定位器；15°等分、真北0°顺时针是工程归一化，不冒充古文原规则
-- 下一实际动作：枚举《欽定協紀辨方書》同系列其他卷册影印，优先选择细目含方位/堪舆术语者；命中后冻结 archive leaf + 栏位。足以支持运行即停止考据，转 RULE_TABLE / DECISION_NODES 与实际方法运行
-- 验收：historical_source_verified=false；complete_kanyu_method=false；Z05 V0.1 未完成
+### SUB
+- **Z05 问题路由器｜ACTIVE_SUPPORT** — 负责把小白问题路由到候选传统/方法并索取必要输入；[实验台](k02-board.html)。
+- **SUPPORT_LIBRARY｜ON_DEMAND** — 只补当前运行真正缺的基础知识，不独立扩张。
 
-### SUB｜可执行辅线
-- **Z05 问题路由器｜ACTIVE_SUPPORT** — 普通语言问题可路由到命理/干支、堪舆/地理环境、易/占筮、择日/历法、医养/导引等，并列出所需输入；[公开实验台](k02-board.html) / [公开读回](../research/zero-one/z05-question-router-public-readback-v0.1.json)
-- **SUPPORT_LIBRARY｜ON_DEMAND** — 基础知识仅由运行方法反向提出缺口，不无边界堆积
-
-### TEMP / PAUSED SUPPORT｜不抢主线
-- **TEMP-MODEL-01｜叠加关系模型 V0.1｜EXISTING_RUNNABLE_TOOL / WEB_ENTRY_MISSING** — 已有可运行原型，但当前 GitHub Pages 总入口缺失；必须找回原实物并恢复点击直接运行入口。
-- Z04 / K02-03-HXL-01 — PAUSED_RESEARCH_SUPPORT，旧严格验收 0/5
-- TEMP-M01 — PAUSED_SUPPORT（与 TEMP-MODEL-01 不同）
-- TEMP-E01 — PAUSED_SUPPORT
-- Z05-A 生辰八字 — 样板候选，不是当前执行支线。
-- TEMP-MODEL-01 作为既有研究工具保留可直接调用入口。
+### TEMP / PAUSED
+- **TEMP-MODEL-01｜ACTIVE_TEMP_RESEARCH_TOOL** — [叠加关系模型](overlay-model.html)；当前做结构关系穷举与反证，不能把数学重合冒充历史/因果。
+- **Z04 / K02-03-HXL-01｜PAUSED_RESEARCH_SUPPORT**
+- **TEMP-M01｜PAUSED_SUPPORT**（与 TEMP-MODEL-01 不同）
+- **TEMP-E01｜PAUSED_SUPPORT**
+- **Z05-A 生辰八字｜CANDIDATE_SAMPLE**，不是当前执行支线。
 
 ## 2｜动起来
-### MAIN｜正式验收主线
-**M01 → M02 / M03 → M04｜严格 2/4**
-- M01 — COMPLETED
-- M02 — ACCEPTED_L1_CANDIDATE_ONLY
-- M03 — BLOCKED_CLEAN_CONTEXT：需要新鲜隔离 D 上下文
-- M04 — BLOCKED_BY_M03
-- M03 阻塞不等于整个项目停工；产品辅线成果不得虚增正式主线计数
+**能力方向：运动达人** —— 不是新项目，而是项目长期要长成的实际能力：理解人、身体、环境和目标，识别风险，选择/解释/示范动作，形成训练—反馈—调整闭环，并知道能力边界。
 
-### SUB｜当前实际执行
-**COMMON-HUMAN-COORDINATE / HUMAN-3D｜ACTIVE（任务状态，不等于新成果）**
-- [公开人体模型](movement.html)
-- **CURRENT NODE：BICEPS-DYNAMIC-3D-V0.1**
-- 任务状态：ACTIVE
-- 代码实现：NOT_YET_VERIFIED
-- Pages 可见新成果：NONE
-- 公开运行认证：NONE
-- 用户层新增完成度：0
-- 当前目标：现有右肱骨、桡骨、尺骨、肱二头肌长/短头 → 同一3D → 伸展→屈肘→肌肉长度/形态变化→离心返回；保留拖动观察/局部定位。
-- 右肘/右腕/右肩代理、5件真实OBJ等属于既有历史能力/开发证据，不再作为当前新增成果展示。
-- [HUMAN-3D 实际状态表](../research/movement/human-3d-execution-queue-01-10.md)
-- 完成门：实物实现 → movement.html 接入 → GitHub Pages发布 → 公开运行读回 → 之后才允许更新成果状态。
+### MAIN
+**M01 → M02 / M03 → M04｜严格 2/4**
+- M01｜COMPLETED
+- M02｜ACCEPTED_L1_CANDIDATE_ONLY
+- M03｜BLOCKED_CLEAN_CONTEXT
+- M04｜BLOCKED_BY_M03
+- 正式主线当前没有虚增；M03 未解除前保持 2/4。
+
+### SUB
+**COMMON-HUMAN-COORDINATE / HUMAN-3D｜EXECUTING**
+- 当前节点：**BICEPS-DYNAMIC-3D｜PENDING_ACCEPTANCE**
+- 可见实物：[运动模型](movement.html)
+- 已做：真实 BodyParts3D 右肱骨/桡骨/尺骨/肱二头肌长短头进入同一视口，具备屈伸控制与局部定位。
+- 边界：肘轴和肌肉形变仍是教学近似，不是校准生物力学。
+- 下一动作：用 OBJ 坐标/PCA 校验肘轴与肱二头肌主轴 → 修正 → Pages 发布 → 公开运行检查 → 用户验收。
 
 ### TEMP / QUEUED
-- TEMP-YOUTH — QUEUED / 保留既有断点
-- TEMP-CLUB — QUEUED / 保留既有断点
-- TESTSET — QUEUED；M03相关部分等待独立 D
+- TEMP-YOUTH｜QUEUED
+- TEMP-CLUB｜QUEUED
+- TESTSET｜QUEUED；M03相关部分等待独立 D 条件。
 
-## 3｜本轮核对发现并修正
-- Z05 完成PDF 80–90页连续目录审计及97–99页卷一细目核验；本卷未明列二十四山，降级为背景候选，不把目录未命中扩大为全书不存在，`historical_source_verified=false`。
-- 动起来新增右肩区代理热点；点击与“右肩训练”同构读回8/8，并显式暴露肩胛骨/锁骨/完整关节面缺口；严格主线保持2/4。
-- HUMAN-3D 旧队列仍写“01 ACTIVE、02—10 PLANNED”，与已有真实OBJ、别名桥、右肘代理、页面交互冲突；已按真实执行状态校正。
-- 总看板此前把“正式主线”和“正在执行的产品辅线”混在一起；现拆开 MAIN / SUB / TEMP。
-- Z05-A / Z05-B 是样板/当前路线，不定义堪舆或整个古代技术系统的能力边界。
+## 3｜ZERO-CORE｜两个项目共同基础设施 SUB
+**状态：ACTIVE_SUB；不替代两个项目 MAIN。**
+- 可见入口：[ZERO-CORE 对话工作台](zero-core.html)
+- 已真实成立：Cloudflare Worker + D1 + OWNER 会话；C博士真实文字往返已经由用户实际使用确认。
+- 2026-09-29 新增代码：显式退出；聊天界面优化；C/Q/D/三博士会谈入口；浏览器语音输入/回答朗读；博士获得第一层共同项目纪律与最近 D1 线程上下文。
+- **当前发布门：最新界面/认知代码已提交，仍必须以 Pages/Worker 最新部署成功 + 公开页面刷新/实际读回为准。**
+- Q_REAL=false；D_REAL=false；ALL_REAL=false。界面存在不等于真实博士已接通。
+- 认知原则：ZERO-CORE/Drive 保存“项目生命层”；模型是可替换外衣。聊天历史不自动成为核心知识；新经验先成为候选认知，经来源、实践、验证后才能晋升。
+- 下一阶段不是堆功能，而是建立：**CORE稳定内核 → PROJECT当前认知 → THREAD短期上下文 → 候选经验/验证/晋升**。
 
-## 4｜下一次必须可见
-- 零一：枚举同系列其他卷册影印，优先锁定含方位/堪舆细目的卷册；未命中保持 `historical_source_verified=false`。
-- 动起来：补真实右肩胛骨/锁骨资产或开始左侧真实资产；每个结构仍须通过点击/输入同构读回。
-
-## 5｜ZERO-CORE｜公共基础设施 SUB
-- 状态：ACTIVE_SUB；不替代 Z05 或动起来 MAIN。
-- 当前可见实物：[对话工作台 V0.1](zero-core.html)；可切 C/Q/D/三方协作、工作空间、输入演示消息并导出 JSON。
-- 核心规则：[ZERO-CORE 平台核心规则 V0.1](../research/zero-core/zero-core-rules-v0.1.md)
-- 当前边界：真实认证=false；cloud_database=false；provider_api=false。演示记录只在当前浏览器页面内存中存在，导出由用户主动触发。
-- 架构决定：登录作为平台入口；对话窗作为登录后组件。主库/知识/任务/版本属于零一空间；AI模型通过可替换 Adapter 接入。
-- 下一步：建立服务端最小后端 + 身份/会话数据结构 + secret 管理；先接一个真实 Provider，再验证持久化和导出闭环。
-
-### ZERO-CORE V0.2 可见增量｜2026-09-28 12:58 +08:00
-- 总看板已加入右下角“对话”按钮，点击以 iframe 弹窗打开 ZERO-CORE，不离开项目入口。
-- 工作台增加本机身份记忆与演示消息 localStorage 持久化；刷新后可保留入口身份/演示记录。
-- 当前边界：这不是服务器认证；C博士真实 API 尚未连接。当前 ChatGPT 会话不能直接嵌入网页，后续以 OpenAI API Provider Adapter + ZERO-CORE 自有项目上下文接入。
-- 页面提交：ZERO-CORE V0.2 = 2f883f5c6ff0382ebf5703b4c244a14b90467aeb；总看板弹窗 = 2376d60c4e0003c8e009a786a5874f02e52f286b。
-- 下一门：部署最小服务端；secret/env 保存 API Key；建立 OWNER 身份和 conversation/thread 持久化；接 C博士 Responses/Conversations API，再做网页真实往返读回。
-
-### ZERO-CORE V0.3｜真实对话门
-- 模拟回答已关闭；前端现在只向 /api/chat 请求真实响应，Gateway未部署/未认证/缺secret时明确失败。
-- 已建立服务端Provider Adapter源码：C=OpenAI Responses；Q=Model Studio OpenAI-compatible Responses；D=DeepSeek Responses。支持单问c/q/d和all三方同问的统一合同。
-- 可查源码：[Gateway合同](../server/zero-core/README.md)；[Provider adapters](../server/zero-core/providers.mjs)；[真实对话前端](zero-core.html)
-- 当前阻塞：GitHub Pages是静态托管，仓库中的server代码不会自行成为 /api/chat；需要连接可部署的服务端运行环境，并由所有者在服务端配置三家API secrets。任何key不得写入聊天、仓库或浏览器。
-- 下一实际动作：服务端部署→OWNER认证→会话持久化→C真实首轮→Q/D真实首轮→all同框→公开读回。
-
-
-### ZERO-CORE V0.4｜运行底座筛选｜2026-09-28 15:14 +08:00
-- 已按“最小刚需 / 免费可运行 / secrets安全 / 数据可迁移”核验 Cloudflare Workers+D1、Vercel Hobby、Railway Free。
-- 当前候选决定：**Cloudflare Workers + D1 = PRIMARY_CANDIDATE / 未部署**；Vercel Hobby = FALLBACK；Railway Free = FALLBACK_2。
-- 可查决策原物：[运行底座筛选 V0.1](../research/zero-core/runtime-platform-selection-v0.1.md)
-- 关键原因：Workers Free 100,000 requests/day；D1 Free 5GB总存储、单库500MB，并可完整导出SQL；Secrets有独立加密绑定。Railway Free只有$1/月资源额度；Vercel基础能力足够但当前OAuth/Team scope增加了不必要操作复杂度。
-- 防坑规则：不升级任何Pro；Provider Adapter / Conversation Schema / export格式保持平台中立；Cloudflare只承担运行、Secret binding、D1 adapter。触发付费墙/不可接受授权/锁定即回退，不重写业务层。
-- 下一实际动作：建立最小 Worker `/api/health` + `/api/chat` 与 D1 schema；先验证 health + DB写读，再配置C博士服务端secret并做真实首轮。
-- 当前边界：Cloudflare部署=false；OWNER auth=false；D1 master DB=false；C/Q/D real call=false；ZERO-CORE V0.1 accepted=false。
-
-
-### ZERO-CORE V0.5｜Cloudflare 部署开始｜2026-09-28
-- 状态已由 PRIMARY_CANDIDATE / 未部署 → **PRIMARY_CANDIDATE / DEPLOYING**。
-- 已落地可部署 Worker 骨架：[wrangler 配置](../server/zero-core/cloudflare/wrangler.jsonc) / [Worker 路由](../server/zero-core/cloudflare/src/index.js) / [D1 schema](../server/zero-core/cloudflare/migrations/0001_init.sql) / [package](../server/zero-core/cloudflare/package.json)。
-- D1 最小表已定义：owners / workspaces / threads / messages / provider_calls；messages 建 thread+time 索引。
-- /api/health 会真实执行 D1 SELECT 1；/api/chat 在 OWNER gate 与真实 Provider 未接通前固定 503 NOT_READY，禁止模拟回答。
-- Cloudflare 官方确认 Wrangler deploy 可自动 provision 未带 resource ID 的 D1 binding；Secrets 后续只以 Worker Secret 注入，不进 GitHub/浏览器/聊天。
-- 当前阻塞：本会话没有 Cloudflare 账户连接器，远端 Worker/D1 尚未创建；需要所有者完成一次 Cloudflare 登录/部署授权。
-- 当前边界：REMOTE_DEPLOY=false；D1_REMOTE_READWRITE=false；OWNER_AUTH=false；C/Q/D_REAL=false。
-- 下一实际动作：Cloudflare 登录 → 从仓库 server/zero-core/cloudflare 部署 → 读回 workers.dev /api/health → D1远端写读 → OWNER gate → C真实首轮。
-
-
-## 6｜2026-09-28 当日闭环复盘｜16:21 +08:00
-### MAIN / SUB / TEMP 核对
-- 零一 MAIN：Z05 ACTIVE；当前执行仍 Z05-B / SOURCE_BINDING。SUB：问题路由器 ACTIVE_SUPPORT、SUPPORT_LIBRARY ON_DEMAND。TEMP：Z04、TEMP-M01、TEMP-E01 继续 PAUSED；Z05-A 仅样板候选。
-- 动起来 MAIN：严格 2/4 不变。SUB：COMMON-HUMAN-COORDINATE / HUMAN-3D ACTIVE，今日实际已推进到右肩区代理；独立 HUMAN-3D 队列已同步右腕/右肩现状。TEMP：TEMP-YOUTH、TEMP-CLUB、TESTSET 继续 QUEUED，不冒充执行。
-- ZERO-CORE：公共基础设施 SUB = DEPLOYING。Cloudflare Workers + D1 部署骨架已落库，但远端未部署。
-
-### 今日有效成果
-- ZERO-CORE 运行底座筛选完成；Cloudflare Workers + D1 = PRIMARY_CANDIDATE / DEPLOYING。
-- Worker / D1 最小部署源码已落地；/api/health 为真实 DB 探针；/api/chat 未接真实 Provider 前固定 503，禁止模拟。
-- 零一与动起来已有今日内容增量保持原验收边界，不因基础设施工作虚增完成度。
-
-### 今日无效试错 / 不计成果
-- Vercel Team/OAuth 未形成部署。
-- Cloudflare 官方 MCP 服务存在，但当前 ChatGPT 用户界面没有可用的自定义 Remote MCP 入口，插件目录也未发现可直接安装的 Cloudflare 插件。
-- Zero Trust / OAuth Client / MCP 入口寻找不计项目能力成果；MCP 路线暂停，不再作为部署前置条件。
-
-### 当前真实断点
-- ZERO-CORE：REMOTE_DEPLOY=false；D1_REMOTE_READWRITE=false；OWNER_AUTH=false；C/Q/D_REAL=false。
-- 用户当前无需购买套餐、创建 OAuth Client/API Token 或继续找 MCP。
-- 下一实际动作：直接部署现有 server/zero-core/cloudflare 骨架 → workers.dev /api/health 读回 → D1 远端写读 → OWNER gate → C真实首轮。
-
-
-## 7｜执行纪律升级：知行合一｜2026-09-28 17:21 +08:00
-- 硬规则：重要结论必须同轮完成“记录 → 转成任务/命令 → 实际执行 → 可见发布 → 看板更新 → 读回/用户检查”；只写原则不算落实。
-- 可见进度：改一小步→立即发布网页→更新时间戳→给可点击入口→用户检查→反馈→下一步。后台OBJ/JSON/验证器/commit未进入可见网页，只算开发证据。
-- 动起来当前可见执行节点已切换为 **BICEPS-DYNAMIC-3D-V0.1 / ACTIVE**：复用现有右肱骨、桡骨、尺骨、肱二头肌长/短头，把静态真实资产与动作驱动合并到同一3D视图。
-- 第一完成门：movement.html 可直接播放“伸展→屈肘→肌肉长度/形态变化→离心返回”，支持观察角度/局部定位；网页发布+读回后才升级用户层进度。
-- 科学边界：无对应生物力学/EMG数据，不把动画形变称为真实发力大小。
-
-
-## 8｜思想内核更新：原创能力 × AI分工｜2026-09-28 17:21 +08:00
-- 零一空间的目标不是用AI替人思考，而是让AI承担检索、整理、交叉验证、计算、重复执行、发布/读回等过度搬砖，把人的时间还给提出问题、原创判断、体验、选择、创造与实践。
-- ZERO-CORE不是聊天壳：C/Q/D及未来模型是可替换Provider；问题、对话历史、原创思想、研究方法、任务、成果、版本与知识沉淀属于零一空间，必须可导出、可迁移、可本地保存。
-- 原创保护：事实/来源/他人解释/用户原创判断/AI假设分层；AI不得把生成冒充用户原创，也不得把用户原创稀释进无来源总结。原创思想保留时间、上下文、演化和验证状态。
-- 零一研究继续执行“古人技术与现实运用”：考据够用即停；文本/证据→现实场景→当时怎么用→方法步骤→案例→可运行重建→今天真实输入→检验。
-- 知行合一：改变底层方向的对话，同轮必须产生思想内核更新 + 任务/验收门 + 看板变化。
-- 当前落地任务不另起空项目：Z05继续向实际使用/RULE_TABLE/DECISION_NODES推进；ZERO-CORE继续自有线程/主库/Provider/导出；HUMAN-3D继续BICEPS-DYNAMIC-3D-V0.1网页可见动作。
-
-
-## 9｜成果状态机制纠错｜2026-09-28 21:23 +08:00
-- 已确认系统性错误：此前多次把“文字/任务/commit 已同步”误当成“产品成果已同步”，导致后台管理状态领先于前台真实能力。
-- 新硬门：**实物 → 公开网页 → 公开运行读回 → CURRENT/Drive 成果状态**。顺序不可倒置。
-- ACTIVE 以后只表示当前正在执行，不表示产生新成果；必须同时显示 Pages 可见新成果 与 公开运行认证。
-- BICEPS-DYNAMIC-3D-V0.1 当前如实为：ACTIVE / 代码未验证 / Pages新成果NONE / 公开认证NONE / 用户层新增0。
-- TEMP-MODEL-01 已补回任务账：与 TEMP-M01 区分；已有可运行原型但 Pages 总入口缺失。
-- 右肩8/8、旧队列纠错等回归历史证据，不再冒充 CURRENT。
-- GitHub Pages 是日常第一检查面；Markdown/JSON/commit 只作第二层证据。
-
-
-## 10｜2026-09-29 05:50 +08:00｜实物推进
-- TEMP-MODEL-01：已从历史 commit 5dd22e08... 找回原型定义并恢复独立可运行页面 portal/overlay-model.html；方位、先天/后天八卦、五行、天干、地支、节气、甲子图层可切换，标签可点击说明。恢复提交 379839f6...；总首页入口 8a753680...；研究页入口 78919200...。
-- BICEPS-DYNAMIC-3D-V0.1：movement.html 已接入第一版真实 BodyParts3D OBJ 动作链：播放/暂停、屈肘滑杆、回到伸展；桡骨/尺骨真实OBJ绕估算肘轴运动，肱二头肌长/短头真实OBJ同步长度/厚度可视形变。提交 1da32ffd...。
-- 科学边界：当前肘轴为网格边界估算，肌肉形变为视觉关系演示，不是校准生物力学、真实力值或EMG。
-- Pages 部署：最终 head 78919200... 的 pages build and deployment 已 SUCCESS（2026-09-29 05:50 +08:00）；此前连续提交的中间 Pages run 被后续提交取消，属于正常合并发布。
-- 公开运行读回：本执行环境对 github.io 页面直接抓取仍不可用，因此不能冒充浏览器公开运行认证完成；当前为 PUBLISHED_BUILD_SUCCESS / PUBLIC_RUNTIME_READBACK_PENDING。用户层完成度只在实际公开页面检查通过后再升级。
-
-
-## 11｜ZERO-CORE 真实云端节点 + API 成本看板｜2026-09-29 21:00 +08:00
-- Cloudflare Worker 已真实部署：`https://zero-one-workbench.longfox.workers.dev`；D1 binding `env.DB (zero-core)` 已在部署日志确认。
-- 公网健康读回：`/api/health` 返回 `service=zero-core-api / ok=true / db=true / provider_api=true / auth=OWNER_TOKEN`；因此 REMOTE_DEPLOY、D1_REMOTE_READ、OWNER gate 基础链路均已越过旧断点。
-- C Provider：OWNER_TOKEN 已通过；旧 OpenAI Key 返回 401 后已更换正式 Project API Key；随后真实请求返回 429，定位为 API Billing 余额为 0，而非 Worker/D1/OWNER 故障。
-- 2026-09-29 用户已为 OpenAI API 充值 **USD 10.00**；当前等待充值后的 C Provider 再次真实调用认证。未成功读回前，`C_REAL=false / PENDING_RETEST`。
-- **成本记录硬规则**：ZERO-CORE 从本节点开始固定记录 Provider / model / 调用时间 / input tokens / cached tokens（若有）/ output tokens / 单次估算成本 / 当日累计 / 月累计 / 已知充值额或预算。拿不到 Provider 实际 usage 时不得伪造 token 或余额。
-- **当前 C 计价基准**：`gpt-5.6` alias → GPT-5.6 Sol；标准短上下文官方价（2026-09-29核验）Input USD 4.00/M、Cached input USD 0.40/M、Output USD 20.00/M。>272K 长上下文及 Fast/Regional 等附加计价必须另标，不能混算。
-- **预算基线**：OpenAI API 本轮充值 USD 10.00；这是预算/充值记录，不等于可由 ZERO-CORE 独立读出的实时余额。后续以 Provider usage/billing 读回或实际调用 usage 逐笔核算。
-- 下一完成门：C 真实回复成功 → D1 provider_calls/messages 写入 → usage/cost 记账 → 再接 Q → D → all；任何一项未读回不标完成。
-
-
-### ZERO-CORE C Provider 首次真实认证｜2026-09-29 21:xx +08:00
-- 用户端 PowerShell 实际读回成功：`provider=c / actor=C博士 / text=ZERO-CORE C CONNECTED / model=gpt-5.6-sol`，并返回真实 `thread_id`。
-- 状态升级：`C_REAL=true / OWNER_AUTH=true / REMOTE_PROVIDER_ROUNDTRIP=true`。此前 401（旧Key）与 429（余额0）均已越过。
-- OpenAI API 本轮充值基线：USD 10.00。当前这次返回合同尚未暴露 input/output token usage，因此**本次实际 token 与单次成本暂记 UNKNOWN，不伪造估算值**。
-- 下一实际动作：修改 Gateway，使成功调用把 Provider usage（input/cached/output tokens）写入 `provider_calls` 并返回成本字段；完成读回后再接 Q、D。
-
-
-## 12｜2026-09-29 21:00 +08:00｜任务与真实进度总同步
-- **零一空间研究 MAIN**：Z05 古代技术可运行重建继续 ACTIVE；当前可运行增量已越过单纯 SOURCE_BINDING，Z05-B 已公开加入 RULE_TABLE → DECISION_NODES 轨迹。历史精确页栏仍未冻结，`historical_source_verified=false`；不得把方位归一化冒充完整堪舆方法。
-- **零一 SUB/TEMP**：问题路由器保持 ACTIVE_SUPPORT；TEMP-MODEL-01 已恢复 Pages 页面并新增“关系反证实验 V0.1”，开始做旋转穷举/结构重合测试；只证明定义层结构，不证明历史关系、因果或预测有效性。TEMP-M01 与 TEMP-MODEL-01 继续严格区分。
-- **动起来 MAIN**：M01 COMPLETED；M02 ACCEPTED_L1_CANDIDATE_ONLY；M03 BLOCKED_CLEAN_CONTEXT；M04 BLOCKED_BY_M03；严格 2/4 不变。
-- **动起来 SUB**：BICEPS-DYNAMIC-3D 已把教学视口与真实OBJ视口收束为一个真实 BodyParts3D 主视口并集中播放/复位/角度/定位控制；科学边界仍为视觉教学近似，肘轴与肌肉主轴尚待 OBJ/PCA 校准，因此状态保持 EXECUTING / PENDING_ACCEPTANCE，不冒充已验收。
-- **ZERO-CORE SUB**：Cloudflare Worker + D1 已远端运行；`/api/health` 公网读回 `ok=true/db=true`；OWNER_TOKEN 认证通过；C博士 `gpt-5.6-sol` 首次真实往返成功并返回 thread_id。状态：`REMOTE_DEPLOY=true / D1=true / OWNER_AUTH=true / C_REAL=true / Q_REAL=false / D_REAL=false / ALL_REAL=false`。
-- **ZERO-CORE 成本**：OpenAI API 充值基线 USD 10.00；首次成功调用未暴露 usage，token/单次实际成本=UNKNOWN。成本账硬门：Provider/model/input/cached/output/单次成本/日累计/月累计；未知即 UNKNOWN。
-- **下一执行队列**：P0 ZERO-CORE usage/cost→D1→读回；P0 接 Q 真实首轮；P0 接 D 真实首轮；P0 all 三方同问；P1 安全浏览器 OWNER session + Pages 前端真实往返；研究与运动 MAIN/SUB 继续按既有断点推进，不被基础设施工作替代。
-- **本轮发布**：总首页已同步 ZERO-CORE 真实云端/C首轮/成本状态；GitHub 状态与 Drive CURRENT/两个认知同步文档同轮追加，随后执行读回认证。
+## 4｜今晚断点 / 明日直接从这里继续
+1. **零一 MAIN：** Z05-B 转入一个真实堪舆问题的端到端运行，不再继续无边界考据。
+2. **动起来 SUB：** 校验 BICEPS-DYNAMIC-3D 的真实几何轴，先把当前动作做有效，再扩展身体部位。
+3. **ZERO-CORE SUB：** 先完成最新网页部署刷新/公开读回；随后再逐步给博士项目认知和任务管理能力。
+4. **两个能力目标已进入 Drive 生命层：** 零一空间研究 → 堪舆先生；动起来 → 运动达人。
