@@ -1,25 +1,27 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>ZERO-CORE｜对话工作台 V0.1</title><link rel="stylesheet" href="assets/style.css"><body><main class="wrap">
-<h1 class="hero">ZERO-CORE｜对话工作台 V0.1</h1>
-<p class="muted">公共基础设施 SUB · V0.3：真实 C/Q/D 对话入口。未连接服务端时禁止生成模拟回答。</p>
-<section class="grid" id="loginPanel">
-<article class="card"><h2>登录入口</h2><label>身份</label><select id="role"><option>项目所有者</option><option>协作者（预留）</option><option>评测用户（预留）</option></select><label>工作空间</label><select id="space"><option>零一空间研究</option><option>动起来</option><option>公共工作台</option></select><button id="enter">进入工作台</button><p id="loginState" class="muted">V0.1 只演示权限入口；尚未建立真实认证。</p></article>
-<article class="card"><h2>为什么先登录</h2><p>登录承担身份、权限、私人知识、费用归属和审计边界；对话小窗口只是登录后的交互组件。</p><p><b>API Key 永不进入浏览器。</b>真实调用必须经过 ZERO-CORE 后端。</p></article>
-</section>
-<section class="card" id="desk"><h2>统一对话区</h2>
-<p>参与者：<button class="who" data-who="C博士">C博士</button> <button class="who" data-who="Q博士">Q博士</button> <button class="who" data-who="D博士">D博士</button> <button class="who" data-who="三方协作">三方协作</button></p>
-<p>当前：<b id="who">C博士</b> · 项目：<b id="project">零一空间研究</b></p>
-<div id="history" style="min-height:160px;border:1px solid #ddd;padding:12px;border-radius:8px"><p class="muted">这里将保存：用户原话 → 模型回答 → 项目归属 → 任务/知识事件 → 时间/版本。V0.1只做浏览器内演示。</p></div>
-<textarea id="msg" rows="4" style="width:100%;margin-top:12px" placeholder="在这里和项目里的博士交流……"></textarea>
-<button id="send">发送真实消息</button> <button id="backup">导出当前记录</button>
-<p id="state" class="muted">真实 API：等待 ZERO-CORE Gateway · 未连接时不生成回答</p>
-</section>
-<section class="card"><h2>目标结构</h2><p>浏览器 / App / 小程序 → ZERO-CORE API → 身份与权限 → 项目/知识/对话主库 → C/Q/D Provider Adapter → 任务与看板事件 → 导出/版本备份。</p><p>模型是可替换服务；零一空间自己的数据结构不依附任何一家模型 API。</p></section>
-<section class="card"><h2>V0.1 边界</h2><p>现在只接受 /api/chat 的真实响应；Gateway 未部署/未认证/缺少凭证时明确报错，不生成模拟回答。</p><p><a href="index.html">← 返回总入口</a> · <a href="status-current.md">检查任务看板</a></p></section>
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>ZERO-CORE｜真实对话工作台</title><link rel="stylesheet" href="assets/style.css"><body><main class="wrap">
+<h1 class="hero">ZERO-CORE｜真实对话工作台</h1>
+<p class="muted">默认一对一；需要时再开启多人会谈。API Key 永不进入浏览器源码。</p>
+<section class="grid"><article class="card"><h2>安全进入</h2><label>Owner 访问码</label><input id="owner" type="password" autocomplete="current-password" style="width:100%" placeholder="只在这里输入，不要发到聊天里"><label>工作空间</label><select id="space"><option>零一空间研究</option><option>动起来</option><option>公共工作台</option></select><button id="enter">安全登录</button><p id="loginState" class="muted">访问码只用于向 ZERO-CORE Worker 换取 8 小时签名会话；不写入 GitHub、不写 localStorage。</p></article>
+<article class="card"><h2>当前连接</h2><p>Gateway：<code>zero-one-workbench.longfox.workers.dev</code></p><p id="health" class="muted">正在检查后端…</p><p>会话令牌只保存在当前标签页的 <code>sessionStorage</code>；关闭标签页即清除。</p></article></section>
+<section class="card" id="desk"><h2>对话</h2>
+<p><b>一对一：</b> <button class="who" data-provider="c" data-label="C博士">C博士</button> <button class="who" data-provider="q" data-label="Q博士">Q博士</button> <button class="who" data-provider="d" data-label="D博士">D博士</button>　<button class="who" data-provider="all" data-label="C/Q/D 四人会谈">需要时开启四人会谈</button></p>
+<p>当前：<b id="who">C博士（一对一）</b> · 项目：<b id="project">零一空间研究</b></p>
+<div id="history" style="min-height:260px;max-height:55vh;overflow:auto;border:1px solid #ddd;padding:12px;border-radius:8px"><p class="muted">Enter 发送；Shift+Enter 换行。语音按钮支持时可口述，回答可朗读。</p></div>
+<textarea id="msg" rows="4" style="width:100%;margin-top:12px" placeholder="输入后按 Enter 发送；Shift+Enter 换行"></textarea>
+<p><button id="send">发送</button> <button id="mic">🎙 语音输入</button> <label><input id="speak" type="checkbox"> 自动朗读回答</label> <button id="backup">导出本页记录</button></p>
+<p id="state" class="muted">等待安全登录。</p></section>
+<section class="card"><p><a href="index.html">← 返回总入口</a> · <a href="status-current.md">检查任务看板</a></p></section>
 </main><script>
-let who='C博士', rows=JSON.parse(localStorage.getItem('zeroCoreDemoMessages')||'[]');
-document.querySelectorAll('.who').forEach(b=>b.onclick=()=>{who=b.dataset.who;document.getElementById('who').textContent=who});
-document.getElementById('space').onchange=e=>document.getElementById('project').textContent=e.target.value;
-document.getElementById('enter').onclick=()=>{let ident={role:document.getElementById('role').value,space:document.getElementById('space').value,time:new Date().toISOString()};localStorage.setItem('zeroCoreIdentity',JSON.stringify(ident));document.getElementById('loginState').textContent='本机身份入口已记住：'+ident.role+' / '+ident.space+'（仍非服务器认证）';document.getElementById('project').textContent=ident.space;};let saved=localStorage.getItem('zeroCoreIdentity');if(saved){try{let i=JSON.parse(saved);document.getElementById('loginState').textContent='本机已记住身份：'+i.role+' / '+i.space+'（非服务器认证）';document.getElementById('project').textContent=i.space;}catch(e){}}
-document.getElementById('send').onclick=async()=>{let v=document.getElementById('msg').value.trim();if(!v)return;let map={'C博士':'c','Q博士':'q','D博士':'d','三方协作':'all'},payload={provider:map[who],project:document.getElementById('space').value,thread_id:localStorage.getItem('zeroCoreThread')||null,message:v};document.getElementById('state').textContent='正在连接 ZERO-CORE Gateway…';try{let res=await fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},credentials:'include',body:JSON.stringify(payload)});if(!res.ok)throw new Error('HTTP '+res.status);let data=await res.json();if(data.thread_id)localStorage.setItem('zeroCoreThread',data.thread_id);let p=document.createElement('p');p.textContent='你：'+v;document.getElementById('history').appendChild(p);(data.responses||[]).forEach(x=>{let q=document.createElement('p');q.textContent=x.actor+'：'+x.text;document.getElementById('history').appendChild(q)});document.getElementById('msg').value='';document.getElementById('state').textContent='真实连接成功 · thread '+(data.thread_id||'');}catch(e){document.getElementById('state').textContent='真实服务尚未连接：'+e.message+'。未生成模拟回答。';}};
-document.getElementById('backup').onclick=()=>{let blob=new Blob([JSON.stringify({schema:'zero-core-conversation-demo-v0.1',messages:rows},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='zero-core-conversation-demo.json';a.click();URL.revokeObjectURL(a.href);};
+const API='https://zero-one-workbench.longfox.workers.dev';
+let provider='c',label='C博士',rows=[];
+const $=id=>document.getElementById(id), add=(actor,text)=>{const p=document.createElement('p');p.textContent=actor+'：'+text;$('history').appendChild(p);$('history').scrollTop=$('history').scrollHeight;rows.push({time:new Date().toISOString(),actor,text})};
+async function health(){try{const r=await fetch(API+'/api/health');const j=await r.json();$('health').textContent=j.ok?'后端在线 · D1正常 · '+j.auth:'后端异常'}catch(e){$('health').textContent='后端检查失败：'+e.message}} health();
+document.querySelectorAll('.who').forEach(b=>b.onclick=()=>{provider=b.dataset.provider;label=b.dataset.label;$('who').textContent=provider==='all'?label:label+'（一对一）'});
+$('space').onchange=e=>$('project').textContent=e.target.value;
+$('enter').onclick=async()=>{const secret=$('owner').value;if(!secret)return $('loginState').textContent='请输入 Owner 访问码。';$('loginState').textContent='正在建立安全会话…';try{const r=await fetch(API+'/api/session',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({owner_token:secret})});const j=await r.json();if(!r.ok)throw new Error(j.error||('HTTP '+r.status));sessionStorage.setItem('zeroCoreSession',j.session_token);$('owner').value='';$('loginState').textContent='已认证 · 本标签页会话有效约8小时';$('state').textContent='可以开始真实对话。';}catch(e){$('loginState').textContent='认证失败：'+e.message}};
+async function send(){const v=$('msg').value.trim();if(!v)return;const token=sessionStorage.getItem('zeroCoreSession');if(!token){$('state').textContent='请先安全登录。';return}add('你',v);$('msg').value='';$('state').textContent='正在连接 '+label+'…';try{const payload={provider,project:$('space').value,thread_id:sessionStorage.getItem('zeroCoreThread')||null,message:v};const r=await fetch(API+'/api/chat',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+token},body:JSON.stringify(payload)});const j=await r.json();if(!r.ok)throw new Error(j.error||('HTTP '+r.status));if(j.thread_id)sessionStorage.setItem('zeroCoreThread',j.thread_id);for(const x of (j.responses||[])){if(x.error){add(x.actor,'调用失败：'+x.error);continue}add(x.actor,x.text);if($('speak').checked&&'speechSynthesis'in window){speechSynthesis.speak(new SpeechSynthesisUtterance(x.text))}}$('state').textContent='真实连接成功 · thread '+(j.thread_id||'')+(j.responses?.[0]?.usage?' · usage 已由 Provider 返回':'');}catch(e){$('state').textContent='发送失败：'+e.message}}
+$('send').onclick=send;$('msg').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(SR){const rec=new SR();rec.lang='zh-CN';rec.interimResults=false;rec.onresult=e=>{$('msg').value=(e.results[0][0].transcript||'').trim();send()};rec.onerror=e=>$('state').textContent='语音输入失败：'+e.error;$('mic').onclick=()=>{rec.start();$('state').textContent='正在听…'}}else{$('mic').disabled=true;$('mic').title='当前浏览器不支持 SpeechRecognition'}
+$('backup').onclick=()=>{const blob=new Blob([JSON.stringify({schema:'zero-core-conversation-v0.4',project:$('space').value,provider,thread_id:sessionStorage.getItem('zeroCoreThread'),messages:rows},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='zero-core-conversation.json';a.click();URL.revokeObjectURL(a.href)};
+if(sessionStorage.getItem('zeroCoreSession')){$('loginState').textContent='本标签页已有安全会话';$('state').textContent='可以继续真实对话。'}
 </script></body></html>
