@@ -179,3 +179,10 @@
 - **当前 C 计价基准**：`gpt-5.6` alias → GPT-5.6 Sol；标准短上下文官方价（2026-09-29核验）Input USD 4.00/M、Cached input USD 0.40/M、Output USD 20.00/M。>272K 长上下文及 Fast/Regional 等附加计价必须另标，不能混算。
 - **预算基线**：OpenAI API 本轮充值 USD 10.00；这是预算/充值记录，不等于可由 ZERO-CORE 独立读出的实时余额。后续以 Provider usage/billing 读回或实际调用 usage 逐笔核算。
 - 下一完成门：C 真实回复成功 → D1 provider_calls/messages 写入 → usage/cost 记账 → 再接 Q → D → all；任何一项未读回不标完成。
+
+
+### ZERO-CORE C Provider 首次真实认证｜2026-09-29 21:xx +08:00
+- 用户端 PowerShell 实际读回成功：`provider=c / actor=C博士 / text=ZERO-CORE C CONNECTED / model=gpt-5.6-sol`，并返回真实 `thread_id`。
+- 状态升级：`C_REAL=true / OWNER_AUTH=true / REMOTE_PROVIDER_ROUNDTRIP=true`。此前 401（旧Key）与 429（余额0）均已越过。
+- OpenAI API 本轮充值基线：USD 10.00。当前这次返回合同尚未暴露 input/output token usage，因此**本次实际 token 与单次成本暂记 UNKNOWN，不伪造估算值**。
+- 下一实际动作：修改 Gateway，使成功调用把 Provider usage（input/cached/output tokens）写入 `provider_calls` 并返回成本字段；完成读回后再接 Q、D。
