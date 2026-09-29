@@ -1,16 +1,12 @@
-const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store"}});
-
-export default {
-  async fetch(request, env) {
-    const url=new URL(request.url);
-    if (url.pathname==="/api/health") {
-      let db=false;
-      try { const row=await env.DB.prepare("SELECT 1 AS ok").first(); db=row?.ok===1; } catch {}
-      return json({service:"zero-core-api",ok:db,db,provider_api:false,auth:false});
-    }
-    if (url.pathname==="/api/chat" && request.method==="POST") {
-      return json({error:"NOT_READY",message:"真实 Provider 与 OWNER gate 尚未部署；禁止模拟回答。"},503);
-    }
-    return json({error:"NOT_FOUND"},404);
-  }
-};
+const json=(body,status=200,extra={})=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store",...extra}});
+const SYSTEM="You are a participant in ZERO-CORE, a long-running project workspace. Preserve project boundaries, distinguish facts from hypotheses, and never claim execution without verifiable evidence.";
+const actors={c:"C博士",q:"Q博士",d:"D博士"};
+const uid=()=>crypto.randomUUID();
+async function responses(base,key,model,input){const r=await fetch(base.replace(/\/$/,"")+"/responses",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer "+key},body:JSON.stringify({model,instructions:SYSTEM,input})});if(!r.ok)throw new Error("provider_http_"+r.status);const j=await r.json();const text=j.output_text||(j.output||[]).flatMap(x=>x.content||[]).filter(x=>x.type==="output_text").map(x=>x.text).join("\n");return {text,model:j.model||model,response_id:j.id||null}}
+async function chat(base,key,model,message){const r=await fetch(base.replace(/\/$/,"")+"/chat/completions",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer "+key},body:JSON.stringify({model,messages:[{role:"system",content:SYSTEM},{role:"user",content:message}]})});if(!r.ok)throw new Error("provider_http_"+r.status);const j=await r.json();return {text:j.choices?.[0]?.message?.content||"",model:j.model||model,response_id:j.id||null}}
+async function call(env,p,message){if(p==="c"){if(!env.OPENAI_API_KEY)throw new Error("OPENAI_API_KEY_missing");return responses("https://api.openai.com/v1",env.OPENAI_API_KEY,env.OPENAI_MODEL||"gpt-5.6",message)}if(p==="q"){if(!env.QWEN_API_KEY||!env.QWEN_BASE_URL)throw new Error("QWEN_secret_or_base_missing");return chat(env.QWEN_BASE_URL,env.QWEN_API_KEY,env.QWEN_MODEL||"qwen3-max",message)}if(p==="d"){if(!env.DEEPSEEK_API_KEY)throw new Error("DEEPSEEK_API_KEY_missing");return chat("https://api.deepseek.com",env.DEEPSEEK_API_KEY,env.DEEPSEEK_MODEL||"deepseek-chat",message)}throw new Error("unknown_provider")}
+async function persist(env,sql,...bind){return env.DB.prepare(sql).bind(...bind).run()}
+export default {async fetch(request,env){const url=new URL(request.url);const cors={"access-control-allow-origin":env.PORTAL_ORIGIN||"https://foxlongfei.github.io","access-control-allow-headers":"content-type,x-zero-owner","access-control-allow-methods":"GET,POST,OPTIONS"};if(request.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
+if(url.pathname==="/api/health"){let db=false;try{const row=await env.DB.prepare("SELECT 1 AS ok").first();db=row?.ok===1}catch{}return json({service:"zero-core-api",ok:db,db,provider_api:true,auth:"OWNER_TOKEN"},db?200:503,cors)}
+if(url.pathname==="/api/chat"&&request.method==="POST"){if(!env.OWNER_TOKEN||request.headers.get("x-zero-owner")!==env.OWNER_TOKEN)return json({error:"UNAUTHORIZED"},401,cors);let b;try{b=await request.json()}catch{return json({error:"BAD_JSON"},400,cors)};if(!b?.message||!["c","q","d","all"].includes(b.provider))return json({error:"BAD_REQUEST"},400,cors);const project=String(b.project||"core"),thread=b.thread_id||uid(),owner="owner",workspace="ws-"+project;try{await persist(env,"INSERT OR IGNORE INTO owners(id) VALUES(?)",owner);await persist(env,"INSERT OR IGNORE INTO workspaces(id,owner_id,name) VALUES(?,?,?)",workspace,owner,project);await persist(env,"INSERT OR IGNORE INTO threads(id,workspace_id,project) VALUES(?,?,?)",thread,workspace,project);await persist(env,"INSERT INTO messages(id,thread_id,actor,provider,text) VALUES(?,?,?,?,?)",uid(),thread,"USER",null,b.message);const ps=b.provider==="all"?["c","q","d"]:[b.provider];const settled=await Promise.all(ps.map(async p=>{const callId=uid();try{const x=await call(env,p,b.message);await persist(env,"INSERT INTO provider_calls(id,thread_id,provider,model,status) VALUES(?,?,?,?,?)",callId,thread,p,x.model,"SUCCESS");await persist(env,"INSERT INTO messages(id,thread_id,actor,provider,text) VALUES(?,?,?,?,?)",uid(),thread,actors[p],p,x.text);return {provider:p,actor:actors[p],text:x.text,model:x.model}}catch(e){await persist(env,"INSERT INTO provider_calls(id,thread_id,provider,model,status) VALUES(?,?,?,?,?)",callId,thread,p,null,"FAILED:"+String(e.message).slice(0,80));return {provider:p,actor:actors[p],error:String(e.message)}}}));return json({thread_id:thread,responses:settled},200,cors)}catch(e){return json({error:"GATEWAY_FAILURE",message:String(e.message)},500,cors)}}
+return json({error:"NOT_FOUND"},404,cors)}};
