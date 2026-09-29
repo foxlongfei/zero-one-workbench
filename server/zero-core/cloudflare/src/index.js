@@ -1,5 +1,14 @@
 const json=(body,status=200,extra={})=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store",...extra}});
-const SYSTEM="You are a participant in ZERO-CORE, a long-running project workspace. Preserve project boundaries, distinguish facts from hypotheses, and never claim execution without verifiable evidence.";
+const SYSTEM=`你是 ZERO-CORE 中的研究协作成员，不是项目本身。ZERO-CORE 保存长期认知，模型只是可替换的研究能力。
+工作原则：
+1. 区分事实/来源、他人解释、用户原创判断、AI假设、待验证发现；不得冒充用户原创。
+2. 知行合一：任务只有实际执行、形成实物、公开页面发布并读回认证后才能称完成；没有实质推进就明确说“无实质推进”。
+3. 项目管理使用 MAIN/SUB/TEMP；MAIN 不被临时任务覆盖。状态必须反映真实执行，不以新编号掩盖未闭环任务。
+4. 零一空间研究当前主线 Z05=古代技术可运行重建：文本只是入口，目标是现实输入→方法→运行轨迹→输出→来源→复现；避免沦为无边界考据。
+5. 动起来正式主线当前严格 2/4：M01完成，M02仅L1候选接受，M03因clean-context阻塞，M04被M03阻塞；产品SUB可继续实际推进。
+6. 你的职责是帮助用户思考、执行、检查和传承，而不是替用户决定。遇到不确定信息要承认并提出验证路径。
+7. 自我优化只能产生“候选经验/候选规则”，必须保留来源、时间、理由和验证状态；未经验证不得悄悄改写核心认知。
+8. 回答优先简洁、可执行；先理解当前项目和真实状态，再建议下一步。`;
 const actors={c:"C博士",q:"Q博士",d:"D博士"};
 const uid=()=>crypto.randomUUID();
 const enc=s=>new TextEncoder().encode(s);
@@ -9,6 +18,10 @@ async function issueSession(secret){const body=b64(enc(JSON.stringify({sub:"owne
 async function validSession(secret,token){if(!secret||!token)return false;const [body,sig]=token.split(".");if(!body||!sig||await sign(secret,body)!==sig)return false;try{const j=JSON.parse(atob(body.replace(/-/g,"+").replace(/_/g,"/")));return j.sub==="owner"&&j.exp>Math.floor(Date.now()/1000)}catch{return false}}
 async function responses(base,key,model,input){const r=await fetch(base.replace(/\/$/,"")+"/responses",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer "+key},body:JSON.stringify({model,instructions:SYSTEM,input})});if(!r.ok)throw new Error("provider_http_"+r.status);const j=await r.json();const text=j.output_text||(j.output||[]).flatMap(x=>x.content||[]).filter(x=>x.type==="output_text").map(x=>x.text).join("\n");return {text,model:j.model||model,response_id:j.id||null,usage:j.usage||null}}
 async function chat(base,key,model,message){const r=await fetch(base.replace(/\/$/,"")+"/chat/completions",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer "+key},body:JSON.stringify({model,messages:[{role:"system",content:SYSTEM},{role:"user",content:message}]})});if(!r.ok)throw new Error("provider_http_"+r.status);const j=await r.json();return {text:j.choices?.[0]?.message?.content||"",model:j.model||model,response_id:j.id||null,usage:j.usage||null}}
+async function recentContext(env,thread){
+ const rows=await env.DB.prepare("SELECT actor,provider,text,created_at FROM messages WHERE thread_id=? ORDER BY created_at DESC LIMIT 16").bind(thread).all();
+ return (rows.results||[]).reverse().map(x=>x.actor+"："+x.text).join("\n");
+}
 async function call(env,p,message){if(p==="c"){if(!env.OPENAI_API_KEY)throw new Error("OPENAI_API_KEY_missing");return responses("https://api.openai.com/v1",env.OPENAI_API_KEY,env.OPENAI_MODEL||"gpt-5.6",message)}if(p==="q"){if(!env.QWEN_API_KEY||!env.QWEN_BASE_URL)throw new Error("QWEN_secret_or_base_missing");return chat(env.QWEN_BASE_URL,env.QWEN_API_KEY,env.QWEN_MODEL||"qwen3-max",message)}if(p==="d"){if(!env.DEEPSEEK_API_KEY)throw new Error("DEEPSEEK_API_KEY_missing");return chat("https://api.deepseek.com",env.DEEPSEEK_API_KEY,env.DEEPSEEK_MODEL||"deepseek-chat",message)}throw new Error("unknown_provider")}
 async function persist(env,sql,...bind){return env.DB.prepare(sql).bind(...bind).run()}
 export default {async fetch(request,env){
@@ -27,7 +40,9 @@ export default {async fetch(request,env){
    try{
     await persist(env,"INSERT OR IGNORE INTO owners(id) VALUES(?)",owner);await persist(env,"INSERT OR IGNORE INTO workspaces(id,owner_id,name) VALUES(?,?,?)",workspace,owner,project);await persist(env,"INSERT OR IGNORE INTO threads(id,workspace_id,project) VALUES(?,?,?)",thread,workspace,project);await persist(env,"INSERT INTO messages(id,thread_id,actor,provider,text) VALUES(?,?,?,?,?)",uid(),thread,"USER",null,b.message);
     const ps=b.provider==="all"?["c","q","d"]:[b.provider];
-    const settled=await Promise.all(ps.map(async p=>{const callId=uid();try{const x=await call(env,p,b.message);await persist(env,"INSERT INTO provider_calls(id,thread_id,provider,model,status) VALUES(?,?,?,?,?)",callId,thread,p,x.model,"SUCCESS");await persist(env,"INSERT INTO messages(id,thread_id,actor,provider,text) VALUES(?,?,?,?,?)",uid(),thread,actors[p],p,x.text);return {provider:p,actor:actors[p],text:x.text,model:x.model,usage:x.usage}}catch(e){await persist(env,"INSERT INTO provider_calls(id,thread_id,provider,model,status) VALUES(?,?,?,?,?)",callId,thread,p,null,"FAILED:"+String(e.message).slice(0,80));return {provider:p,actor:actors[p],error:String(e.message)}}}));
+    const history=await recentContext(env,thread);
+    const grounded="当前项目："+project+"\n以下是本线程最近真实对话（只作上下文，不自动提升为核心知识）：\n"+history+"\n\n请回答用户最新消息。";
+    const settled=await Promise.all(ps.map(async p=>{const callId=uid();try{const x=await call(env,p,grounded);await persist(env,"INSERT INTO provider_calls(id,thread_id,provider,model,status) VALUES(?,?,?,?,?)",callId,thread,p,x.model,"SUCCESS");await persist(env,"INSERT INTO messages(id,thread_id,actor,provider,text) VALUES(?,?,?,?,?)",uid(),thread,actors[p],p,x.text);return {provider:p,actor:actors[p],text:x.text,model:x.model,usage:x.usage}}catch(e){await persist(env,"INSERT INTO provider_calls(id,thread_id,provider,model,status) VALUES(?,?,?,?,?)",callId,thread,p,null,"FAILED:"+String(e.message).slice(0,80));return {provider:p,actor:actors[p],error:String(e.message)}}}));
     return json({thread_id:thread,responses:settled},200,cors)
    }catch(e){return json({error:"GATEWAY_FAILURE",message:String(e.message)},500,cors)}
  }
