@@ -85,10 +85,17 @@ try {
   const forearm=[radius,ulna].filter(Boolean);
   const humBox=new THREE.Box3().setFromObject(humerus), foreBox=new THREE.Box3(); forearm.forEach(o=>foreBox.union(new THREE.Box3().setFromObject(o)));
   const hc=humBox.getCenter(new THREE.Vector3()), fc=foreBox.getCenter(new THREE.Vector3());
-  const elbowPivot=hc.clone().lerp(fc,0.52);
+  function dominantAxis(box){const s=box.getSize(new THREE.Vector3());if(s.x>=s.y&&s.x>=s.z)return new THREE.Vector3(1,0,0);if(s.y>=s.z)return new THREE.Vector3(0,1,0);return new THREE.Vector3(0,0,1)}
+  function endpointToward(box,axis,target){const c=box.getCenter(new THREE.Vector3()),half=box.getSize(new THREE.Vector3()).multiplyScalar(.5);const extent=Math.abs(axis.x)*half.x+Math.abs(axis.y)*half.y+Math.abs(axis.z)*half.z;const a=c.clone().add(axis.clone().multiplyScalar(extent)),b=c.clone().add(axis.clone().multiplyScalar(-extent));return a.distanceToSquared(target)<b.distanceToSquared(target)?a:b}
+  const humAxis=dominantAxis(humBox), foreAxis=dominantAxis(foreBox);
+  const humDistal=endpointToward(humBox,humAxis,fc), foreProx=endpointToward(foreBox,foreAxis,hc);
+  const elbowPivot=humDistal.clone().add(foreProx).multiplyScalar(.5);
+  let elbowAxis=humAxis.clone().cross(foreAxis).normalize();
+  if(elbowAxis.lengthSq()<.01){const view=new THREE.Vector3();camera.getWorldDirection(view);elbowAxis=humAxis.clone().cross(view).normalize()}
+  if(elbowAxis.lengthSq()<.01)elbowAxis.set(0,0,1);
   const originals=new Map(); [...forearm,...biceps].forEach(o=>originals.set(o,{pos:o.position.clone(),quat:o.quaternion.clone(),scale:o.scale.clone()}));
-  function rotateAroundPivot(obj,pivot,angle){const base=originals.get(obj);obj.position.copy(base.pos);obj.quaternion.copy(base.quat);const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),angle);obj.position.sub(pivot).applyQuaternion(q).add(pivot);obj.quaternion.premultiply(q)}
-  function setRealElbow(deg){const a=THREE.MathUtils.degToRad(deg);forearm.forEach(o=>rotateAroundPivot(o,elbowPivot,-a));const shorten=1-0.16*(deg/120),bulge=1+0.20*(deg/120);biceps.forEach(o=>{const base=originals.get(o);o.position.copy(base.pos);o.quaternion.copy(base.quat);o.scale.set(base.scale.x*bulge,base.scale.y*shorten,base.scale.z*bulge)});document.getElementById("realElbowRange").value=String(Math.round(deg));document.getElementById("realElbowOut").textContent=Math.round(deg)+"°";document.getElementById("bicepsDynamicState").innerHTML="<b>真实3D动作状态：</b>"+(deg<10?"伸展":deg>105?"屈肘峰值":"屈肘中")+"｜前臂真实OBJ绕估算肘轴运动；肱二头肌真实OBJ作可视长度/厚度形变。V0.1不表示真实发力大小。"}
+  function rotateAroundPivot(obj,pivot,angle){const base=originals.get(obj);obj.position.copy(base.pos);obj.quaternion.copy(base.quat);const q=new THREE.Quaternion().setFromAxisAngle(elbowAxis,angle);obj.position.sub(pivot).applyQuaternion(q).add(pivot);obj.quaternion.premultiply(q)}
+  function setRealElbow(deg){const a=THREE.MathUtils.degToRad(deg);forearm.forEach(o=>rotateAroundPivot(o,elbowPivot,-a));const shorten=1-0.16*(deg/120),bulge=1+0.20*(deg/120);biceps.forEach(o=>{const base=originals.get(o);o.position.copy(base.pos);o.quaternion.copy(base.quat);o.scale.set(base.scale.x*bulge,base.scale.y*shorten,base.scale.z*bulge)});document.getElementById("realElbowRange").value=String(Math.round(deg));document.getElementById("realElbowOut").textContent=Math.round(deg)+"°";document.getElementById("bicepsDynamicState").innerHTML="<b>真实3D动作状态：</b>"+(deg<10?"伸展":deg>105?"屈肘峰值":"屈肘中")+"｜前臂真实OBJ绕骨骼包围盒估算的肘轴/pivot运动；肱二头肌真实OBJ作可视长度/厚度形变。V0.2仍未达到解剖标志点或OpenSim生物力学校准，不表示真实发力大小。"}
   let playing=false, start=0;
   const playBtn=document.getElementById("bicepsPlay");
   playBtn.onclick=()=>{playing=!playing;start=performance.now();playBtn.textContent=playing?"⏸ 暂停":"▶ 播放真实3D屈伸"};
