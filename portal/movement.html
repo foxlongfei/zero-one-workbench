@@ -18,10 +18,13 @@
 <div class="viewer" id="viewer"><canvas id="human3d" aria-label="可交互完整3D人体"></canvas>
 <div class="hud"><b id="loadState">正在加载完整人体…</b><span id="interactionState">拖动旋转 · 滚轮缩放 · 点击选择</span></div></div>
 <aside class="side">
-<h2>找身体部位</h2>
-<div class="searchrow"><input id="bodySearch" placeholder="例如：头、肩、手、膝、脚、躯干"><button id="searchBtn">定位</button></div>
+<h2>我想……</h2>
+<p class="small">直接说目标和现实条件，不必先选身体部位。</p>
+<div class="searchrow"><input id="bodySearch" placeholder="如：我在公园只有单双杠，30分钟，今天想练上肢"><button id="searchBtn">开始</button></div>
+<div class="tools"><button class="tool" data-wish="我在户外，只有单双杠，30分钟，今天练什么">户外单双杠</button><button class="tool" data-wish="我想练肩和上肢力量">练上肢</button><button class="tool" data-wish="我今天只有15分钟，想活动全身">15分钟全身</button></div>
 <div class="tools"><button class="tool" id="resetView">全身</button><button class="tool" id="frontView">正面</button><button class="tool" id="backView">背面</button><button class="tool" id="playMotion">▶ 动作</button></div>
-<div class="result" id="selection"><b>当前：完整人体</b><p>模型加载后可直接操作。</p></div>
+<div class="result" id="selection"><b>当前：完整人体</b><p>你可以点人体，也可以直接告诉我今天想做什么。</p></div>
+<div class="result" id="todayPlan" style="margin-top:10px"><b>今天怎么练</b><p>等待你的“我想……”。</p></div>
 <h3>快速定位</h3>
 <div class="legend" id="quickParts"></div>
 <p class="small">本轮 T1 只验收“完整人体整机”与基本交互，不把它冒充解剖学精细模型。训练场景属于 T2。</p>
@@ -57,7 +60,21 @@ new ResizeObserver(resize).observe(host);resize();
 function fitWhole(direction=1){if(!human)return;const b=new THREE.Box3().setFromObject(human),s=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());const d=Math.max(s.x,s.y,s.z)*1.65;controls.target.copy(c);camera.position.set(0,c.y,d*direction);camera.position.z=d*direction;camera.position.y=c.y;camera.lookAt(c);controls.update()}
 function focusY(y,label){if(!human)return;const b=new THREE.Box3().setFromObject(human),c=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3());const target=new THREE.Vector3(c.x,b.min.y+size.y*y,c.z);controls.target.copy(target);camera.position.set(target.x+1.0,target.y+.12,target.z+1.55);controls.update();selection.innerHTML="<b>当前："+label+"</b><p>已定位到该身体区域。可继续旋转、缩放观察。</p>"}
 function findPart(q){q=(q||"").trim();if(!q)return null;const id=aliases[q]||Object.entries(aliases).find(([k])=>q.includes(k))?.[1];if(!id)return null;const def=partDefs.find(x=>x[1]===id)||partDefs.find(x=>x[1].startsWith(id+"_"));return def}
-document.getElementById("searchBtn").onclick=()=>{const q=document.getElementById("bodySearch").value,d=findPart(q);if(d)focusY(d[2]/1.72,d[0]);else selection.innerHTML="<b>没有定位到“"+q.replace(/[<>]/g,"") +"”</b><p>先试：头、肩、胸、手、髋、膝、脚。</p>"};
+function routeWish(raw){
+ const q=(raw||"").trim(),plan=document.getElementById("todayPlan");if(!q)return;
+ const d=findPart(q);if(d)focusY(d[2]/1.72,d[0]);
+ const outdoor=/户外|公园|室外/.test(q),bars=/单双杠|单杠|双杠/.test(q),short=/15分钟|十五分钟/.test(q),upper=/上肢|肩|背|胸|手臂|引体/.test(q);
+ if(/痛|疼|麻|受伤|眩晕|胸闷/.test(q)){plan.innerHTML="<b>先不直接训练</b><p>你提到了不适/受伤信号。先说明部位、出现方式和严重程度；本轮不自动给负荷动作。</p>";return}
+ let mins=short?15:(/30分钟|三十分钟/.test(q)?30:25);
+ if(outdoor&&bars){
+  plan.innerHTML="<b>今天："+mins+" 分钟｜户外单双杠</b><p><b>热身 5 分钟：</b>肩胛绕环、悬垂准备、髋膝活动。</p><p><b>主练：</b>引体/辅助引体 3组 × 可控次数；双杠支撑或双杠臂屈伸 3组 × 可控次数；悬垂举膝 3组 × 6–12。</p><p><b>反馈：</b>做完告诉我“完成 / 太难 / 某处不适 / 想换动作”，下一轮据此调整。</p>";
+ }else if(upper){
+  plan.innerHTML="<b>今天："+mins+" 分钟｜上肢</b><p>先从拉、推、肩胛控制三类动作各选一个。若告诉我你现在有什么器械/场地，我会把动作直接收敛到可执行版本。</p><p><b>下一步只缺：</b>场地或器械。</p>";
+ }else{
+  plan.innerHTML="<b>已收到：</b>"+q.replace(/[<>]/g,"")+"<p>我会按目标、时间、环境/器械、身体反馈四项组织今天的训练。当前还缺什么就只追问什么，不要求你先懂身体部位名称。</p>";
+ }
+}
+document.getElementById("searchBtn").onclick=()=>routeWish(document.getElementById("bodySearch").value);document.querySelectorAll("[data-wish]").forEach(b=>b.onclick=()=>{document.getElementById("bodySearch").value=b.dataset.wish;routeWish(b.dataset.wish)});
 document.getElementById("bodySearch").onkeydown=e=>{if(e.key==="Enter")document.getElementById("searchBtn").click()};
 const quick=document.getElementById("quickParts");["头","肩","胸/躯干","手","髋","膝","脚"].forEach(label=>{const b=document.createElement("button");b.textContent=label;b.onclick=()=>{const d=findPart(label==="胸/躯干"?"胸":label);if(d)focusY(d[2]/1.72,label)};quick.appendChild(b)});
 document.getElementById("resetView").onclick=()=>fitWhole(1);
