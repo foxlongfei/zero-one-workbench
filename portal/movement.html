@@ -22,14 +22,14 @@
 <p class="small">直接说目标和现实条件，不必先选身体部位。</p>
 <div class="searchrow"><input id="bodySearch" placeholder="如：我在公园只有单双杠，30分钟，今天想练上肢"><button id="searchBtn">开始</button></div>
 <div class="tools"><button class="tool" data-wish="我在户外，只有单双杠，30分钟，今天练什么">户外单双杠</button><button class="tool" data-wish="我想练肩和上肢力量">练上肢</button><button class="tool" data-wish="我今天只有15分钟，想活动全身">15分钟全身</button></div>
-<div class="tools"><button class="tool" id="resetView">全身</button><button class="tool" id="frontView">正面</button><button class="tool" id="backView">背面</button><button class="tool" id="toggleSkeleton">骨骼</button><button class="tool" id="playMotion">▶ 动作</button><button class="tool" id="pauseMotion">暂停</button></div>
+<div class="tools"><button class="tool active" id="anatomyMode">解剖人体</button><button class="tool" id="motionMode">运动人体</button></div><div class="tools" id="anatomyLayers"><button class="tool active" data-system="bone">骨骼</button><button class="tool active" data-system="muscle">肌肉</button><button class="tool active" data-system="nervous">神经</button><button class="tool active" data-system="connective">关节/韧带</button><button class="tool" data-system="vascular">血管</button><button class="tool" data-system="organ">器官</button></div><div class="tools"><button class="tool" id="resetView">全身</button><button class="tool" id="frontView">正面</button><button class="tool" id="backView">背面</button><button class="tool" id="toggleSkeleton">骨骼</button><button class="tool" id="playMotion">▶ 动作</button><button class="tool" id="pauseMotion">暂停</button></div>
 <div class="result" id="selection"><b>当前：完整人体</b><p>你可以点人体，也可以直接告诉我今天想做什么。</p></div>
 <div class="result" id="todayPlan" style="margin-top:10px"><b>今天怎么练</b><p>等待你的“我想……”。</p></div>
 <div class="result" style="margin-top:10px"><b>人体能力</b><p id="rigInfo">正在读取骨骼与动作…</p><div class="tools" id="motionList"></div></div>
 <h3>快速定位</h3>
 <div class="legend" id="quickParts"></div>
 <p class="small">本轮 T1 只验收“完整人体整机”与基本交互，不把它冒充解剖学精细模型。训练场景属于 T2。</p>
-<p class="small">人体底座：Khronos glTF Sample Assets 的 Cesium Man（CC BY 4.0）；渲染与交互：Three.js（MIT）。</p>
+<p class="small">解剖底座：Z-Anatomy / BodyParts3D；运动骨骼动画底座：Khronos Cesium Man（CC BY 4.0）；渲染：Three.js（MIT）。静态解剖结构与动态运动骨骼分层处理，不把动画骨架冒充解剖模型。</p>
 </aside></div>
 </section>
 </main>
@@ -37,6 +37,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/+esm";
 import {OrbitControls} from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js/+esm";
 import {GLTFLoader} from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/GLTFLoader.js/+esm";
+import {DRACOLoader} from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/DRACOLoader.js/+esm";
 
 const canvas=document.getElementById("human3d"),host=document.getElementById("viewer");
 const loadState=document.getElementById("loadState"),interactionState=document.getElementById("interactionState"),selection=document.getElementById("selection");
@@ -48,7 +49,7 @@ const key=new THREE.DirectionalLight(0xffffff,3.2);key.position.set(3,5,4);scene
 const camera=new THREE.PerspectiveCamera(38,1,.01,100);camera.position.set(1.9,1.15,3.2);
 const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.target.set(0,1,0);controls.minDistance=.7;controls.maxDistance=8;
 const ground=new THREE.Mesh(new THREE.CircleGeometry(1.35,64),new THREE.MeshStandardMaterial({color:0xd4ddd6,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.015;scene.add(ground);
-let human=null,mixer=null,activeAction=null,baseBox=null,skeletonHelper=null,bones=[],clips=[];
+let human=null,anatomy=null,currentModel=null,mixer=null,activeAction=null,baseBox=null,skeletonHelper=null,bones=[],clips=[],anatomyMeshes=[];
 const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
 const partDefs=[
 ["头","head",1.58],["颈","neck",1.43],["左肩","shoulder_l",1.34],["右肩","shoulder_r",1.34],
@@ -58,8 +59,8 @@ const partDefs=[
 const aliases={"头":"head","头部":"head","颈":"neck","脖子":"neck","肩":"shoulder","肩膀":"shoulder","左肩":"shoulder_l","右肩":"shoulder_r","胸":"torso","胸部":"torso","躯干":"torso","身体":"torso","手":"hand","手掌":"hand","左手":"hand_l","右手":"hand_r","髋":"hip","胯":"hip","膝":"knee","膝盖":"knee","左膝":"knee_l","右膝":"knee_r","脚":"foot","足":"foot","左脚":"foot_l","右脚":"foot_r"};
 function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
 new ResizeObserver(resize).observe(host);resize();
-function fitWhole(direction=1){if(!human)return;const b=new THREE.Box3().setFromObject(human),s=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());const d=Math.max(s.x,s.y,s.z)*1.65;controls.target.copy(c);camera.position.set(0,c.y,d*direction);camera.position.z=d*direction;camera.position.y=c.y;camera.lookAt(c);controls.update()}
-function focusY(y,label){if(!human)return;const b=new THREE.Box3().setFromObject(human),c=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3());const target=new THREE.Vector3(c.x,b.min.y+size.y*y,c.z);controls.target.copy(target);camera.position.set(target.x+1.0,target.y+.12,target.z+1.55);controls.update();selection.innerHTML="<b>当前："+label+"</b><p>已定位到该身体区域。可继续旋转、缩放观察。</p>"}
+function fitWhole(direction=1){const targetModel=currentModel||human;if(!targetModel)return;const b=new THREE.Box3().setFromObject(targetModel),s=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());const d=Math.max(s.x,s.y,s.z)*1.65;controls.target.copy(c);camera.position.set(0,c.y,d*direction);camera.position.z=d*direction;camera.position.y=c.y;camera.lookAt(c);controls.update()}
+function focusY(y,label){const targetModel=currentModel||human;if(!targetModel)return;const b=new THREE.Box3().setFromObject(targetModel),c=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3());const target=new THREE.Vector3(c.x,b.min.y+size.y*y,c.z);controls.target.copy(target);camera.position.set(target.x+1.0,target.y+.12,target.z+1.55);controls.update();selection.innerHTML="<b>当前："+label+"</b><p>已定位到该身体区域。可继续旋转、缩放观察。</p>"}
 function findPart(q){q=(q||"").trim();if(!q)return null;const id=aliases[q]||Object.entries(aliases).find(([k])=>q.includes(k))?.[1];if(!id)return null;const def=partDefs.find(x=>x[1]===id)||partDefs.find(x=>x[1].startsWith(id+"_"));return def}
 function routeWish(raw){
  const q=(raw||"").trim(),plan=document.getElementById("todayPlan");if(!q)return;
@@ -84,10 +85,17 @@ document.getElementById("backView").onclick=()=>{fitWhole(-1);interactionState.t
 document.getElementById("toggleSkeleton").onclick=()=>{if(!skeletonHelper)return; skeletonHelper.visible=!skeletonHelper.visible;document.getElementById("toggleSkeleton").classList.toggle("active",skeletonHelper.visible);interactionState.textContent=skeletonHelper.visible?"骨骼层已打开｜"+bones.length+" 个骨骼节点":"骨骼层已关闭"};
 document.getElementById("playMotion").onclick=()=>{if(!activeAction)return;activeAction.paused=false;activeAction.reset().play();interactionState.textContent="正在播放骨骼驱动动作";};
 document.getElementById("pauseMotion").onclick=()=>{if(activeAction)activeAction.paused=true;interactionState.textContent="动作已暂停，可旋转观察骨骼/人体";};
-canvas.addEventListener("pointerup",e=>{if(!human)return;const r=canvas.getBoundingClientRect();pointer.x=((e.clientX-r.left)/r.width)*2-1;pointer.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObject(human,true);if(hits.length){const p=hits[0].point,b=new THREE.Box3().setFromObject(human),ratio=(p.y-b.min.y)/(b.max.y-b.min.y);let d=partDefs.reduce((a,x)=>Math.abs(x[2]/1.72-ratio)<Math.abs(a[2]/1.72-ratio)?x:a,partDefs[0]);selection.innerHTML="<b>已点选："+d[0]+"</b><p>点击位置已映射到当前人体区域；T2 再把训练动作与反馈挂到这些入口。</p>";interactionState.textContent="已选择 "+d[0]}});
+canvas.addEventListener("pointerup",e=>{const pickModel=currentModel||human;if(!pickModel)return;const r=canvas.getBoundingClientRect();pointer.x=((e.clientX-r.left)/r.width)*2-1;pointer.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObject(pickModel,true);if(hits.length){const p=hits[0].point,b=new THREE.Box3().setFromObject(pickModel),ratio=(p.y-b.min.y)/(b.max.y-b.min.y);let d=partDefs.reduce((a,x)=>Math.abs(x[2]/1.72-ratio)<Math.abs(a[2]/1.72-ratio)?x:a,partDefs[0]);selection.innerHTML="<b>已点选："+d[0]+"</b><p>点击位置已映射到当前人体区域；T2 再把训练动作与反馈挂到这些入口。</p>";interactionState.textContent="已选择 "+d[0]}});
+const anatomySystems={bone:["bone","skeleton","vertebra","humerus","femur","tibia","fibula","radius","ulna","scapula","clavicle","rib","pelvis","patella","skull","mandible"],muscle:["muscle","musculus","biceps","triceps","deltoid","pectoralis","flexor","extensor","quadriceps","glute","gastrocnemius","soleus","tibialis"],nervous:["nerve","nervus","neural","plexus","brain","spinal cord","cerebr"],connective:["tendon","ligament","cartilage","fascia","meniscus","disc","capsule","retinaculum"],vascular:["artery","vein","aorta","vascular","vessel"],organ:["heart","lung","liver","kidney","stomach","intestine","organ","gland"]};
+function anatomySystem(o){const mats=Array.isArray(o.material)?o.material:[o.material];const t=(o.name+" "+(o.parent?.name||"")+" "+mats.map(m=>m?.name||"").join(" ")+" "+(o.userData?.anatomy_collection_path||"")).toLowerCase();for(const [sys,terms] of Object.entries(anatomySystems))if(terms.some(x=>t.includes(x)))return sys;return "other"}
+function setMode(mode){const isA=mode==="anatomy";if(anatomy)anatomy.visible=isA;if(human)human.visible=!isA;if(skeletonHelper)skeletonHelper.visible=false;currentModel=isA?anatomy:human;document.getElementById("anatomyMode").classList.toggle("active",isA);document.getElementById("motionMode").classList.toggle("active",!isA);document.getElementById("anatomyLayers").style.display=isA?"flex":"none";document.getElementById("toggleSkeleton").style.display=isA?"none":"";document.getElementById("playMotion").style.display=isA?"none":"";document.getElementById("pauseMotion").style.display=isA?"none":"";interactionState.textContent=isA?"解剖人体｜可分层、旋转、缩放、点选":"运动人体｜骨骼绑定与关节动画";fitWhole(1)}
+document.getElementById("anatomyMode").onclick=()=>setMode("anatomy");document.getElementById("motionMode").onclick=()=>setMode("motion");
+document.querySelectorAll("[data-system]").forEach(b=>b.onclick=()=>{b.classList.toggle("active");const sys=b.dataset.system,on=b.classList.contains("active");anatomyMeshes.filter(m=>m.userData.anatomySystem===sys).forEach(m=>m.visible=on);interactionState.textContent=(on?"显示":"隐藏")+"："+b.textContent});
+const draco=new DRACOLoader();draco.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.7/");const anatomyLoader=new GLTFLoader();anatomyLoader.setDRACOLoader(draco);
+anatomyLoader.load("https://raw.githubusercontent.com/desmond9986/open-anatomy-atlas/main/public/models/z-anatomy/z-anatomy.glb",g=>{anatomy=g.scene;anatomy.name="Z-Anatomy";anatomy.traverse(o=>{if(o.isMesh){o.userData.anatomySystem=anatomySystem(o);anatomyMeshes.push(o)}});const box=new THREE.Box3().setFromObject(anatomy),sz=box.getSize(new THREE.Vector3());anatomy.scale.setScalar(1.72/sz.y);const b2=new THREE.Box3().setFromObject(anatomy);anatomy.position.y-=b2.min.y;scene.add(anatomy);currentModel=anatomy;const counts={};anatomyMeshes.forEach(m=>counts[m.userData.anatomySystem]=(counts[m.userData.anatomySystem]||0)+1);loadState.textContent="真实解剖人体已加载｜"+anatomyMeshes.length+" 个结构";loadState.className="status-ok";selection.innerHTML="<b>当前：Z-Anatomy 完整解剖人体</b><p>骨骼 "+(counts.bone||0)+"｜肌肉 "+(counts.muscle||0)+"｜神经 "+(counts.nervous||0)+"｜关节/韧带 "+(counts.connective||0)+"。可按层显示/隐藏并点选观察。</p>";setMode("anatomy")},undefined,e=>{console.error(e);loadState.textContent="解剖人体加载失败｜运动人体仍可用";loadState.className="status-bad"});
 const clock=new THREE.Clock();
 new GLTFLoader().load("https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CesiumMan/glTF-Binary/CesiumMan.glb",gltf=>{
- human=gltf.scene;scene.add(human);human.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}if(o.isBone)bones.push(o)});
+ human=gltf.scene;human.visible=false;scene.add(human);human.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}if(o.isBone)bones.push(o)});
  skeletonHelper=new THREE.SkeletonHelper(human);skeletonHelper.visible=false;scene.add(skeletonHelper);
  baseBox=new THREE.Box3().setFromObject(human);const size=baseBox.getSize(new THREE.Vector3());human.scale.setScalar(1.72/size.y);baseBox=new THREE.Box3().setFromObject(human);const min=baseBox.min;human.position.y-=min.y;
  clips=gltf.animations||[];if(clips.length){mixer=new THREE.AnimationMixer(human);activeAction=mixer.clipAction(clips[0]);}
@@ -95,7 +103,7 @@ new GLTFLoader().load("https://raw.githubusercontent.com/KhronosGroup/glTF-Sampl
  rigInfo.textContent=bones.length+" 个骨骼节点｜"+clips.length+" 个内置动作片段";
  motionList.innerHTML="";
  clips.forEach((clip,i)=>{const b=document.createElement("button");b.className="tool";b.textContent=(clip.name||("动作 "+(i+1)))+" · "+clip.duration.toFixed(1)+"s";b.onclick=()=>{if(!mixer)return;mixer.stopAllAction();activeAction=mixer.clipAction(clip);activeAction.reset().play();interactionState.textContent="正在播放："+(clip.name||("动作 "+(i+1)))};motionList.appendChild(b)});
- loadState.textContent="完整 3D 人体＋骨骼已加载";loadState.className="status-ok";selection.innerHTML="<b>当前：完整人体</b><p>已识别 "+bones.length+" 个骨骼节点；可打开“骨骼”，播放/暂停骨骼驱动动作，并继续旋转缩放观察。</p>";fitWhole(1);
+ if(!anatomy){interactionState.textContent="运动人体已就绪；真实解剖人体仍在加载…"}
 },undefined,err=>{console.error(err);loadState.textContent="人体加载失败";loadState.className="status-bad";selection.innerHTML="<b>加载失败</b><p>请刷新页面；当前没有用假人形替代真实模型。</p>"});
 renderer.setAnimationLoop(()=>{const dt=clock.getDelta();if(mixer)mixer.update(dt);controls.update();renderer.render(scene,camera)});
 </script>
