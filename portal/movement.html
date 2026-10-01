@@ -25,6 +25,7 @@
 <div class="tools"><button class="tool" id="resetView">全身</button><button class="tool" id="frontView">正面</button><button class="tool" id="backView">背面</button><button class="tool" id="toggleSkeleton">骨骼</button><button class="tool" id="playMotion">▶ 动作</button><button class="tool" id="pauseMotion">暂停</button></div>
 <div class="result" id="selection"><b>当前：完整人体</b><p>你可以点人体，也可以直接告诉我今天想做什么。</p></div>
 <div class="result" id="todayPlan" style="margin-top:10px"><b>今天怎么练</b><p>等待你的“我想……”。</p></div>
+<div class="result" style="margin-top:10px"><b>人体能力</b><p id="rigInfo">正在读取骨骼与动作…</p><div class="tools" id="motionList"></div></div>
 <h3>快速定位</h3>
 <div class="legend" id="quickParts"></div>
 <p class="small">本轮 T1 只验收“完整人体整机”与基本交互，不把它冒充解剖学精细模型。训练场景属于 T2。</p>
@@ -47,7 +48,7 @@ const key=new THREE.DirectionalLight(0xffffff,3.2);key.position.set(3,5,4);scene
 const camera=new THREE.PerspectiveCamera(38,1,.01,100);camera.position.set(1.9,1.15,3.2);
 const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.target.set(0,1,0);controls.minDistance=.7;controls.maxDistance=8;
 const ground=new THREE.Mesh(new THREE.CircleGeometry(1.35,64),new THREE.MeshStandardMaterial({color:0xd4ddd6,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.015;scene.add(ground);
-let human=null,mixer=null,activeAction=null,baseBox=null,skeletonHelper=null,bones=[];
+let human=null,mixer=null,activeAction=null,baseBox=null,skeletonHelper=null,bones=[],clips=[];
 const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
 const partDefs=[
 ["头","head",1.58],["颈","neck",1.43],["左肩","shoulder_l",1.34],["右肩","shoulder_r",1.34],
@@ -89,7 +90,11 @@ new GLTFLoader().load("https://raw.githubusercontent.com/KhronosGroup/glTF-Sampl
  human=gltf.scene;scene.add(human);human.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}if(o.isBone)bones.push(o)});
  skeletonHelper=new THREE.SkeletonHelper(human);skeletonHelper.visible=false;scene.add(skeletonHelper);
  baseBox=new THREE.Box3().setFromObject(human);const size=baseBox.getSize(new THREE.Vector3());human.scale.setScalar(1.72/size.y);baseBox=new THREE.Box3().setFromObject(human);const min=baseBox.min;human.position.y-=min.y;
- if(gltf.animations.length){mixer=new THREE.AnimationMixer(human);activeAction=mixer.clipAction(gltf.animations[0]);}
+ clips=gltf.animations||[];if(clips.length){mixer=new THREE.AnimationMixer(human);activeAction=mixer.clipAction(clips[0]);}
+ const rigInfo=document.getElementById("rigInfo"),motionList=document.getElementById("motionList");
+ rigInfo.textContent=bones.length+" 个骨骼节点｜"+clips.length+" 个内置动作片段";
+ motionList.innerHTML="";
+ clips.forEach((clip,i)=>{const b=document.createElement("button");b.className="tool";b.textContent=(clip.name||("动作 "+(i+1)))+" · "+clip.duration.toFixed(1)+"s";b.onclick=()=>{if(!mixer)return;mixer.stopAllAction();activeAction=mixer.clipAction(clip);activeAction.reset().play();interactionState.textContent="正在播放："+(clip.name||("动作 "+(i+1)))};motionList.appendChild(b)});
  loadState.textContent="完整 3D 人体＋骨骼已加载";loadState.className="status-ok";selection.innerHTML="<b>当前：完整人体</b><p>已识别 "+bones.length+" 个骨骼节点；可打开“骨骼”，播放/暂停骨骼驱动动作，并继续旋转缩放观察。</p>";fitWhole(1);
 },undefined,err=>{console.error(err);loadState.textContent="人体加载失败";loadState.className="status-bad";selection.innerHTML="<b>加载失败</b><p>请刷新页面；当前没有用假人形替代真实模型。</p>"});
 renderer.setAnimationLoop(()=>{const dt=clock.getDelta();if(mixer)mixer.update(dt);controls.update();renderer.render(scene,camera)});
