@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "artifact_id": "Z05-B-OBSERVATION-GATE-PUBLIC-READBACK-V0.1",
+  "observed_at": "2026-10-03T06:37:00+08:00",
+  "source_commit": "47cdbc502d71a184de9c763e825fd972d5a9e041",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html?v=be71d9e3",
+  "runtime_input": {
+    "object": "住宅A（公开样例）",
+    "azimuth_degrees": 182.4,
+    "direction": "坐北向南（现场罗盘复测）",
+    "observations": "南侧主要开口；东侧道路；水体与坡向未知"
+  },
+  "runtime_output": {
+    "mountain": "午山",
+    "center_degrees": 180,
+    "observation_gate": "PARTIAL_KNOWN",
+    "known": [
+      "主要开口",
+      "道路"
+    ],
+    "unknown": [
+      "水体",
+      "坡向"
+    ],
+    "decision_node": "DIRECTION_ONLY",
+    "guard_result": "未知项不参与环境判断"
+  },
+  "acceptance": {
+    "substantive_product": true,
+    "pages_published": true,
+    "public_runtime_readback": true,
+    "logic_guard_pass": true,
+    "historical_source_page_frozen": false,
+    "closed": false
+  },
+  "boundary": "仅认证二十四山工程归一化与观察缺失值隔离；不认证吉凶、完整堪舆判断或精确历史页码。"
+}
