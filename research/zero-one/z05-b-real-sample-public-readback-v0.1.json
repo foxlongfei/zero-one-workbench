@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "artifact_id": "Z05-B-REAL-SAMPLE-PUBLIC-READBACK-V0.1",
+  "task_id": "Z05-B",
+  "observed_at": "2026-10-03T05:39:23+08:00",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html?v=912ac691",
+  "commit": "5872172a4e5df656d77b53b6b09f4c59c9144290",
+  "status": "PASS",
+  "input": {
+    "site_object": "住宅A（公开样例）",
+    "orientation_description": "坐北向南（现场罗盘复测）",
+    "degrees_clockwise_from_true_north": 182.4,
+    "observation": "南侧主要开口；东侧道路；水体与坡向未知"
+  },
+  "observed_output": {
+    "normalized_degrees": 182.4,
+    "mountain": "午",
+    "center_degrees": 180,
+    "run_marker": "REAL_SAMPLE_182_4"
+  },
+  "gates": {
+    "product_implemented": true,
+    "pages_published": true,
+    "public_run_readback": true,
+    "scientific_historical_boundary_present": true,
+    "complete_kanyu_method": false,
+    "historical_source_verified": false
+  },
+  "boundary": "只认证二十四山工程归一化现实输入链；不生成吉凶，精确历史页栏仍未冻结。"
+}
