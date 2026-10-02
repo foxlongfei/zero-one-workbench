@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "artifact_id": "BICEPS-DYNAMIC-3D-V0.4-PHASE-PRESETS-PUBLIC-READBACK",
+  "observed_at": "2026-10-03T06:37:00+08:00",
+  "source_commit": "be71d9e312eae9d8ef72019322d4ce09f157ecc4",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html?v=be71d9e3",
+  "environment": {
+    "webgl": false,
+    "status": "STATIC_FALLBACK_INTERACTIVE",
+    "webgl_error": "Error creating WebGL context."
+  },
+  "observed_phases": [
+    {
+      "phase": "伸展",
+      "elbow_degrees": 0,
+      "forearm_degrees": 0
+    },
+    {
+      "phase": "屈曲中段",
+      "elbow_degrees": 60,
+      "forearm_degrees": 30
+    },
+    {
+      "phase": "屈肘峰值",
+      "elbow_degrees": 120,
+      "forearm_degrees": 55
+    },
+    {
+      "phase": "离心返回",
+      "elbow_degrees": 60,
+      "forearm_degrees": 20
+    }
+  ],
+  "acceptance": {
+    "substantive_product": true,
+    "pages_published": true,
+    "public_runtime_readback": true,
+    "fallback_phase_controls_pass": true,
+    "real_obj_dynamic_readback": false,
+    "closed": false
+  },
+  "boundary": "认证四阶段公开降级交互及角度/状态联动；不认证真实OBJ动态、桡尺关节约束、力值或OpenSim校准。"
+}
