@@ -22,8 +22,9 @@ jobs:
           mkdir -p research/depthmap/out portal/data
           ./depthmapXcli -m IMPORT -f research/depthmap/prototype-house.dxf -o research/depthmap/out/imported.graph
           ./depthmapXcli -m VISPREP -f research/depthmap/out/imported.graph -o research/depthmap/out/prepared.graph -pg 0.5 -pp 2,2
-          ./depthmapXcli -m VGA -f research/depthmap/out/prepared.graph -o research/depthmap/out/vga.graph -vm visiblity -vg -vr 99 -vl
+          ./depthmapXcli -m VGA -f research/depthmap/out/prepared.graph -o research/depthmap/out/vga.graph -vm visibility -vg -vr 99 -vl
           ./depthmapXcli -m EXPORT -f research/depthmap/out/vga.graph -o portal/data/depthmap-vga.csv -em pointmap-data-csv
+          test -s portal/data/depthmap-vga.csv
           printf '{"engine":"depthmapX","version":"0.9.1","mode":"VGA visibility","grid":0.5,"source":"research/depthmap/prototype-house.dxf","commit":"%s"}\n' "$GITHUB_SHA" > portal/data/depthmap-run.json
       - name: Publish analysis result
         run: |
