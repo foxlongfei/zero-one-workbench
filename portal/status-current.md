@@ -1,4 +1,4 @@
-# 双项目 CURRENT｜2026-10-03 05:39 +08:00
+# 双项目 CURRENT｜2026-10-03 06:37 +08:00
 
 本页只记录真实执行状态。**实物 → 对应 Pages 接入 → Pages 发布 → 公开运行/读回 → 总首页/CURRENT/Drive 同步**；任一门缺失即 `NOT_CLOSED`，不提高完成度。
 
@@ -8,11 +8,10 @@
 **当前节点：Z05-B｜SOURCE_BINDING → RULE_TABLE / DECISION_NODES / 真实输入运行**
 
 - [公开古代技术实验台](k02-board.html)
-- 本轮实质增量：新增“一键现实样例：住宅A”。公开运行输入为住宅A、182.4°、坐北向南（现场罗盘复测）、南侧主要开口/东侧道路；实际输出为 **182.4° → 午山（中心180°）**，并显示 INPUT→METHOD→OPERATION→OUTPUT→BOUNDARY。
-- [公开读回证据](../research/zero-one/z05-b-real-sample-public-readback-v0.1.json)：PASS。
-- 历史/科学边界：`historical_source_verified=false`；15°等分与真北0°顺时针仍是工程归一化；不生成吉凶，`complete_kanyu_method=false`。
-- 当前状态：现实输入链本轮闭环；Z05-B 整体仍 EXECUTING。
-- 下一断点：仅补影响方法运行的影印页/栏证据；随后把现场观察变成显式 UNKNOWN/KNOWN 决策节点，不回到无边界考据。
+- 本轮实质增量：把住宅A现场观察拆成显式 `KNOWN / UNKNOWN` 门。公开运行实际返回 `PARTIAL_KNOWN`；已知=主要开口、道路，未知=水体、坡向；决策节点=`DIRECTION_ONLY`，未知项不参与环境判断。方位链仍输出 **182.4° → 午山（中心180°）**。
+- [公开读回证据](../research/zero-one/z05-b-observation-gate-public-readback-v0.1.json)：运行/逻辑隔离 PASS。
+- 历史/科学边界：`historical_source_page_frozen=false`；15°等分与真北0°顺时针仍是工程归一化；不生成吉凶，Z05-B 整体 `NOT_CLOSED`。
+- 下一断点：把 UNKNOWN 字段转成可采集的独立真实输入；只补影响规则运行的最小历史页/栏证据。
 
 ### SUB / PAUSED
 - Z05 问题路由器｜ACTIVE_SUPPORT。
@@ -29,24 +28,24 @@
 - M04｜BLOCKED_BY_M03
 
 ### SUB｜COMMON-HUMAN-COORDINATE / HUMAN-3D
-**当前节点：BICEPS-DYNAMIC-3D-V0.1｜PENDING_ACCEPTANCE_WEBGL**
+**当前节点：BICEPS-DYNAMIC-3D-V0.4｜PENDING_ACCEPTANCE_WEBGL**
 
 - [公开运动模型](movement.html)
-- 本轮实质增量：BICEPS-DYNAMIC-3D 升至 V0.3；同一右上肢资产链新增前臂旋转控制，并与屈肘、肱二头肌长度/厚度教学形变和连续播放联动。
-- 公开环境 WebGL 返回 `Error creating WebGL context`。因此新增静态真实 OBJ 预览 + 可操作二维运动降级层；公开手动读回 **屈肘90° / 前臂旋转+45°**，连续播放采样 **61° / +55°**。
-- [公开读回证据](../research/movement/biceps-dynamic-3d-v0.3-public-readback.json)：`PASS_FALLBACK_ONLY`。
-- 验收边界：真实 OBJ 动态公开读回仍为 false；桡尺关节约束、解剖标志点、力值与 OpenSim 校准均未完成。不得把降级层冒充真实3D动态。
-- 当前状态：代码/Pages/降级运行已闭环；真实3D视觉验收 NOT_CLOSED；正式 MAIN 保持 2/4。
-- 下一断点：在可用 WebGL 环境检查旋转方向、穿模与肘 pivot；失败即修正。M03 只在新鲜隔离 D 上下文恢复。
+- 本轮实质增量：恢复受覆盖的 V0.3 真实右上肢资产链并升至 V0.4，新增四个可复现动作阶段预设。
+- 公开环境逐项读回：伸展 **0°/0°**、屈曲中段 **60°/+30°**、屈肘峰值 **120°/+55°**、离心返回 **60°/+20°**；阶段名、屈肘角、前臂旋转与肱二头肌降级状态同步变化。
+- [公开读回证据](../research/movement/biceps-dynamic-3d-v0.4-phase-presets-public-readback.json)：`fallback_phase_controls_pass=true`。
+- 验收边界：云端 WebGL 仍返回 `Error creating WebGL context`；真实 OBJ 动态、桡尺关节约束、力值与 OpenSim 校准均未认证，`real_obj_dynamic_readback=false`。正式 MAIN 保持 2/4。
+- 下一断点：在可用 WebGL 环境逐阶段检查旋转方向、穿模与肘 pivot；M03 只在新鲜隔离 D 上下文恢复。
 - TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
 
 ## 3｜ZERO-CORE｜公共基础设施 SUB
 Drive 权威记录显示 Worker+D1、OWNER 认证与 C 真实往返已完成；Q/D/all 未完成。REMOTE_DEPLOY 已有证据，但 ZERO-CORE 不替代两项目 MAIN。
 
-## 4｜本轮状态纠错
-GitHub CURRENT 与项目页曾被较早的“T1–T5 从零重建”文字覆盖，与 Drive 最新权威断点冲突。本轮按权威结构恢复 Z05 / M01→M04 / BICEPS-DYNAMIC-3D，并用公开运行结果重新认证，不把文字恢复本身计为项目成果。
+## 4｜本轮冲突处理
+GitHub movement 页面被较新的“运动达人/M1”旧结构覆盖，移除了 BICEPS V0.3 控件，与 Drive/CURRENT 权威结构冲突。本轮从已认证提交恢复 V0.3 后再增量到 V0.4；恢复动作本身不计产品进度，四阶段预设及公开读回才计入成果。
 
 ## 5｜本轮成果与提交
-- Z05 页面：[`5872172a`](https://github.com/foxlongfei/zero-one-workbench/commit/5872172a4e5df656d77b53b6b09f4c59c9144290)
-- 动起来 V0.3：[`912ac691`](https://github.com/foxlongfei/zero-one-workbench/commit/912ac691ada262a1dc354a3f4896eef7684e9ac8)
-- WebGL 降级层：[`8e0d0487`](https://github.com/foxlongfei/zero-one-workbench/commit/8e0d0487070599a99eba0c30a7f118b709c90290)
+- Z05 观察门：[`47cdbc50`](https://github.com/foxlongfei/zero-one-workbench/commit/47cdbc502d71a184de9c763e825fd972d5a9e041)
+- Z05 读回证据：[`4c12fc6f`](https://github.com/foxlongfei/zero-one-workbench/commit/4c12fc6f4bb7d3e8c5b54b1f378b85c1097ff81e)
+- 动起来 V0.4：[`be71d9e3`](https://github.com/foxlongfei/zero-one-workbench/commit/be71d9e312eae9d8ef72019322d4ce09f157ecc4)
+- 动起来读回证据：[`4c294312`](https://github.com/foxlongfei/zero-one-workbench/commit/4c294312bca0776ce5b15dfc73d4d040ec6116ea)
