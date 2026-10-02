@@ -1,53 +1,52 @@
-# CURRENT｜V0.1 从零重建｜2026-09-30
+# 双项目 CURRENT｜2026-10-03 05:39 +08:00
 
-## 总规则
-从今天开始，旧项目、旧页面、旧模块、旧任务树全部归入 HISTORY / REFERENCE，不作为新产品设计起点。新产品先按现实使用场景独立设计；只有新架构需要某项能力且旧成果重新评估后确有价值，才作为零件复用。
+本页只记录真实执行状态。**实物 → 对应 Pages 接入 → Pages 发布 → 公开运行/读回 → 总首页/CURRENT/Drive 同步**；任一门缺失即 `NOT_CLOSED`，不提高完成度。
 
-**REUSE-FIRST：外部能力池无限开放，内部产品目标高度收敛。**
-先找世界上成熟、专业、许可清晰、可部署/可调用的开源项目、开放模型、开放数据、大学/研究机构工具和成熟 API；能连接不移植，能调用不重写，能组合不重建。只有确认不存在合适能力且缺口直接阻塞产品时，才开发最薄适配层。
+## 1｜零一空间研究
 
-## MAIN 1｜运动达人 V0.1
-现实场景：用户在家、户外、健身房或只有单双杠，直接说目标、时间、条件、身体反馈或想学的动作；系统给今天能执行的方案、动作演示/人体交互，并根据反馈调整。
+### MAIN｜Z05 古代技术可运行重建｜EXECUTING
+**当前节点：Z05-B｜SOURCE_BINDING → RULE_TABLE / DECISION_NODES / 真实输入运行**
 
-### T1｜完整人体整机｜EXECUTING
-- 新页面直接接成熟完整 3D 人体底座。
-- 第一验收：公开页面真实完整人体可旋转、缩放、点选、搜索/使用。
-- emoji、CSS 人形、局部 OBJ 均不得作为 V0.1 基线。
+- [公开古代技术实验台](k02-board.html)
+- 本轮实质增量：新增“一键现实样例：住宅A”。公开运行输入为住宅A、182.4°、坐北向南（现场罗盘复测）、南侧主要开口/东侧道路；实际输出为 **182.4° → 午山（中心180°）**，并显示 INPUT→METHOD→OPERATION→OUTPUT→BOUNDARY。
+- [公开读回证据](../research/zero-one/z05-b-real-sample-public-readback-v0.1.json)：PASS。
+- 历史/科学边界：`historical_source_verified=false`；15°等分与真北0°顺时针仍是工程归一化；不生成吉凶，`complete_kanyu_method=false`。
+- 当前状态：现实输入链本轮闭环；Z05-B 整体仍 EXECUTING。
+- 下一断点：仅补影响方法运行的影印页/栏证据；随后把现场观察变成显式 UNKNOWN/KNOWN 决策节点，不回到无边界考据。
 
-### T2｜真实训练场景｜QUEUED
-- 至少跑通：“我在户外，只有单双杠和有限时间，今天练什么？”或“我想练某个动作”。
-- 输出可立即执行训练；完成/太难/不适/换动作后能继续调整。
-- 动作库、动作演示、视频读取、姿态估计、动作捕捉、生物力学优先复用世界成熟能力。
+### SUB / PAUSED
+- Z05 问题路由器｜ACTIVE_SUPPORT。
+- SUPPORT_LIBRARY｜ON_DEMAND。
+- TEMP-MODEL-01｜既有可运行研究工具；不替代 MAIN。
+- Z04/K02-03-HXL-01、TEMP-M01、TEMP-E01｜PAUSED_SUPPORT。
 
-## MAIN 2｜堪舆先生 V0.1
-现实场景：用户给现实问题、生辰信息、房间/户型/地点/朝向等；先生自己判断还缺什么，追问后组织不同传统、方法和现实工具，给建议、原因、理论依据、分歧和边界。
+## 2｜动起来
 
-### T3｜真实先生入口｜QUEUED
-- 新页面接真实模型对话能力，用户直接自然语言提问。
-- 前台不出现 Z05、RULE_TABLE、工程编号。
-- 已交付 ZERO-CORE 聊天只作为可复用公共能力，不决定新产品界面和架构。
+### MAIN｜M01→M02/M03→M04｜严格 2/4
+- M01｜COMPLETED
+- M02｜ACCEPTED_L1_CANDIDATE_ONLY
+- M03｜BLOCKED_CLEAN_CONTEXT
+- M04｜BLOCKED_BY_M03
 
-### T4｜真实堪舆场景｜QUEUED
-- 至少跑通一个“生辰 + 房屋/户型/地点/朝向”现实案例。
-- 自动追问缺失信息；后台调用可用历法、天文、地图/GIS、方位、古籍/传统方法。
-- 输出建议 + 原因 + 方法/理论来源 + 不同解释/不确定性。
-- 传统理论与现代可验证事实明确分层。
+### SUB｜COMMON-HUMAN-COORDINATE / HUMAN-3D
+**当前节点：BICEPS-DYNAMIC-3D-V0.1｜PENDING_ACCEPTANCE_WEBGL**
 
-## SUB/TEMP｜T5｜公共交互与发布｜SERVICE
-只服务两个 MAIN，不得抢主线。
-- 保留可用聊天能力；真实 C/Q/D provider 有凭据才标可用。
-- 语音输入/朗读优先使用成熟能力。
-- 两个 V0.1 接总首页，CURRENT 同步。
-- 每次交付：GitHub main → Pages/Worker 部署 → 刷新公开 URL → 实际读回/操作。
+- [公开运动模型](movement.html)
+- 本轮实质增量：BICEPS-DYNAMIC-3D 升至 V0.3；同一右上肢资产链新增前臂旋转控制，并与屈肘、肱二头肌长度/厚度教学形变和连续播放联动。
+- 公开环境 WebGL 返回 `Error creating WebGL context`。因此新增静态真实 OBJ 预览 + 可操作二维运动降级层；公开手动读回 **屈肘90° / 前臂旋转+45°**，连续播放采样 **61° / +55°**。
+- [公开读回证据](../research/movement/biceps-dynamic-3d-v0.3-public-readback.json)：`PASS_FALLBACK_ONLY`。
+- 验收边界：真实 OBJ 动态公开读回仍为 false；桡尺关节约束、解剖标志点、力值与 OpenSim 校准均未完成。不得把降级层冒充真实3D动态。
+- 当前状态：代码/Pages/降级运行已闭环；真实3D视觉验收 NOT_CLOSED；正式 MAIN 保持 2/4。
+- 下一断点：在可用 WebGL 环境检查旋转方向、穿模与肘 pivot；失败即修正。M03 只在新鲜隔离 D 上下文恢复。
+- TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
 
-## V0.1 唯一总验收
-1. 运动达人公开入口能跑：真实完整 3D 人体 + 至少一个现实训练场景闭环。
-2. 堪舆先生公开入口能跑：真实模型 + 至少一个现实问题闭环。
-3. 用户不需要理解底层技术、工程编号或旧项目历史。
+## 3｜ZERO-CORE｜公共基础设施 SUB
+Drive 权威记录显示 Worker+D1、OWNER 认证与 C 真实往返已完成；Q/D/all 未完成。REMOTE_DEPLOY 已有证据，但 ZERO-CORE 不替代两项目 MAIN。
 
-## 防循环纪律
-- 固定 T1–T5，禁止新增第六任务。
-- 未闭环任务不得换编号、换文档、换概念逃走。
-- 研究、候选表、规则文件、commit 数、页面壳不算产品推进。
-- 每轮必须优先推进最靠前的未闭环任务，并以公开可操作增量作为进度。
-- 无公开可操作增量，状态只能写：**无实质推进**。
+## 4｜本轮状态纠错
+GitHub CURRENT 与项目页曾被较早的“T1–T5 从零重建”文字覆盖，与 Drive 最新权威断点冲突。本轮按权威结构恢复 Z05 / M01→M04 / BICEPS-DYNAMIC-3D，并用公开运行结果重新认证，不把文字恢复本身计为项目成果。
+
+## 5｜本轮成果与提交
+- Z05 页面：[`5872172a`](https://github.com/foxlongfei/zero-one-workbench/commit/5872172a4e5df656d77b53b6b09f4c59c9144290)
+- 动起来 V0.3：[`912ac691`](https://github.com/foxlongfei/zero-one-workbench/commit/912ac691ada262a1dc354a3f4896eef7684e9ac8)
+- WebGL 降级层：[`8e0d0487`](https://github.com/foxlongfei/zero-one-workbench/commit/8e0d0487070599a99eba0c30a7f118b709c90290)
