@@ -130,12 +130,16 @@ try {
   const state = document.getElementById("realAssetState");
   const mount = document.getElementById("realUpper3d");
   if (mount) {
-    mount.innerHTML = '<img src="assets/bodyparts3d/right-upper-limb-preview-v0.1.png" alt="BodyParts3D右上肢5件真实OBJ双视角静态预览" style="width:100%;height:100%;object-fit:contain;background:#f4f6f3">';
+    mount.innerHTML = '<img src="assets/bodyparts3d/right-upper-limb-preview-v0.1.png" alt="BodyParts3D右上肢5件真实OBJ双视角静态预览" style="width:100%;height:100%;object-fit:contain;background:#f4f6f3"><div id="fallbackMotion" style="position:absolute;right:12px;bottom:12px;width:190px;padding:10px;background:#fffffff0;border:1px solid #ccd5ce;border-radius:12px"><b>交互降级示意</b><svg viewBox="0 0 170 120" style="width:100%;display:block"><line x1="45" y1="20" x2="82" y2="62" stroke="#c9b98f" stroke-width="14" stroke-linecap="round"/><line id="fallbackForearm" x1="82" y1="62" x2="126" y2="102" stroke="#c9b98f" stroke-width="11" stroke-linecap="round" style="transform-box:fill-box;transform-origin:0% 0%"/><ellipse id="fallbackBiceps" cx="57" cy="45" rx="14" ry="25" fill="#b66360"/></svg><span id="fallbackReadout" class="source">屈肘0°｜前臂旋转0°</span></div>';
   }
   if (state) {
-    state.textContent = "已显示5件真实OBJ的双视角静态预览；当前浏览器WebGL不可用，动态旋转未启用。运行信息：" + String(error.message || error);
-    state.dataset.status = "STATIC_FALLBACK_DISPLAYED";
+    state.textContent = "已显示5件真实OBJ静态预览；WebGL不可用，启用可操作的二维运动降级层。真实OBJ动态仍待WebGL环境验收。运行信息：" + String(error.message || error);
+    state.dataset.status = "STATIC_FALLBACK_INTERACTIVE";
   }
+  const elbow=document.getElementById("realElbowRange"),twist=document.getElementById("realForearmRange"),elbowOut=document.getElementById("realElbowOut"),twistOut=document.getElementById("realForearmOut"),fallbackForearm=document.getElementById("fallbackForearm"),fallbackBiceps=document.getElementById("fallbackBiceps"),readout=document.getElementById("fallbackReadout"),dynamic=document.getElementById("bicepsDynamicState"),playBtn=document.getElementById("bicepsPlay");
+  let fallbackPlaying=false,fallbackStart=0;
+  function setFallbackPose(deg,rot){elbow.value=String(Math.round(deg));twist.value=String(Math.round(rot));elbowOut.textContent=Math.round(deg)+"°";twistOut.textContent=(rot>0?"+":"")+Math.round(rot)+"°";if(fallbackForearm)fallbackForearm.style.transform="rotate("+(-deg*.72)+"deg)";if(fallbackBiceps){fallbackBiceps.setAttribute("rx",String(14+deg*.035));fallbackBiceps.setAttribute("ry",String(25-deg*.045))}if(readout)readout.textContent="屈肘"+Math.round(deg)+"°｜前臂旋转"+(rot>0?"+":"")+Math.round(rot)+"°（旋转以读数表达）";dynamic.innerHTML="<b>公开降级动作状态：</b>屈肘 "+Math.round(deg)+"°｜前臂旋转 "+(rot>0?"+":"")+Math.round(rot)+"°｜二维示意与真实OBJ静态预览同时可见；真实OBJ动态、桡尺关节约束、力值与OpenSim校准均未通过本环境验收。"}
+  elbow.oninput=e=>{fallbackPlaying=false;playBtn.textContent="▶ 播放降级动作";setFallbackPose(Number(e.target.value),Number(twist.value))};twist.oninput=e=>{fallbackPlaying=false;playBtn.textContent="▶ 播放降级动作";setFallbackPose(Number(elbow.value),Number(e.target.value))};playBtn.onclick=()=>{fallbackPlaying=!fallbackPlaying;fallbackStart=performance.now();playBtn.textContent=fallbackPlaying?"⏸ 暂停":"▶ 播放降级动作"};document.getElementById("bicepsReset").onclick=()=>{fallbackPlaying=false;playBtn.textContent="▶ 播放降级动作";setFallbackPose(0,0)};document.getElementById("focusBiceps").onclick=()=>{document.getElementById("fallbackMotion")?.scrollIntoView({behavior:"smooth",block:"center"})};setFallbackPose(0,0);(function fallbackLoop(now){requestAnimationFrame(fallbackLoop);if(fallbackPlaying){const p=((now-fallbackStart)%4000)/4000;setFallbackPose(60-60*Math.cos(p*Math.PI*2),55*Math.sin(p*Math.PI*2))}})(performance.now());
 }
 </script>
 <details class="card"><summary><b>历史研究现场（含2026-09-21旧“今日任务”；仅追溯，全部不代表CURRENT）</b></summary><h1 class="hero">先看“发生了什么”，再看博士怎么判断。</h1><p><b>一个页面原则：</b>研究现场、三博士意见和证据以后都在这里展开，不再要求你来回跳页面。</p>
