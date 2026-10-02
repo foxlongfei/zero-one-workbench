@@ -1,0 +1,34 @@
+name: depthmapX prototype
+on:
+  push:
+    paths:
+      - 'research/depthmap/prototype-house.dxf'
+      - '.github/workflows/depthmap-prototype.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  vga:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download depthmapX CLI v0.9.1
+        run: |
+          curl -L -o depthmapXcli https://github.com/SpaceGroupUCL/depthmapX/releases/download/v0.9.1/depthmapXcli_linux64
+          chmod +x depthmapXcli
+          ./depthmapXcli -h | head -40
+      - name: Run real depthmapX chain
+        run: |
+          mkdir -p research/depthmap/out portal/data
+          ./depthmapXcli -f research/depthmap/prototype-house.dxf -o research/depthmap/out/imported.graph
+          ./depthmapXcli -f research/depthmap/out/imported.graph -o research/depthmap/out/prepared.graph -m VISPREP -pg 0.5 -pp 2,2
+          ./depthmapXcli -f research/depthmap/out/prepared.graph -o research/depthmap/out/vga.graph -m VGA -vm visibility -vg -vr 99 -vl
+          ./depthmapXcli -f research/depthmap/out/vga.graph -o portal/data/depthmap-vga.csv -m EXPORT -em pointmap-data-csv
+          printf '{"engine":"depthmapX","version":"0.9.1","mode":"VGA visibility","grid":0.5,"source":"research/depthmap/prototype-house.dxf","commit":"%s"}\n' "$GITHUB_SHA" > portal/data/depthmap-run.json
+      - name: Publish analysis result
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add portal/data/depthmap-vga.csv portal/data/depthmap-run.json
+          git commit -m 'data: publish real depthmapX VGA prototype result' || exit 0
+          git push
