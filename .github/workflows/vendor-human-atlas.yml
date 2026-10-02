@@ -1,0 +1,60 @@
+name: Vendor complete Human Atlas
+on:
+  push:
+    paths:
+      - '.github/workflows/vendor-human-atlas.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vendor-human-atlas
+  cancel-in-progress: false
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Clone pinned complete upstream
+        run: |
+          git clone https://github.com/ashemag/human-atlas.git /tmp/human-atlas
+          git -C /tmp/human-atlas checkout 1c38bf35c254a891200d3cedecfd57abebe83d8d
+          test "$(git -C /tmp/human-atlas rev-parse HEAD)" = "1c38bf35c254a891200d3cedecfd57abebe83d8d"
+      - name: Install and configure Pages base path
+        working-directory: /tmp/human-atlas
+        run: |
+          npm ci
+          node --input-type=module -e "import fs from 'node:fs';const p='vite.config.ts';let s=fs.readFileSync(p,'utf8');s=s.replace('defineConfig({root:',\"defineConfig({base:'/zero-one-workbench/portal/anatomy/',root:\");fs.writeFileSync(p,s);"
+          node --input-type=module -e "import fs from 'node:fs';const p='app/page.tsx';let s=fs.readFileSync(p,'utf8');s=s.replace(\"fetch('/models/atlas.json'\",\"fetch(import.meta.env.BASE_URL+'models/atlas.json'\");fs.writeFileSync(p,s);"
+      - name: Run upstream validation and build
+        working-directory: /tmp/human-atlas
+        run: |
+          npm run check
+          node scripts/validate-atlas.mjs
+          node scripts/validate-interactions.mjs
+          npm run build
+          test -s dist/index.html
+          test -s dist/models/atlas.json
+          test "$(find dist/models -name 'body-*.bin.gz' | wc -l)" -eq 15
+      - name: Rebase runtime model paths and record provenance
+        working-directory: /tmp/human-atlas
+        run: |
+          node --input-type=module -e "import fs from 'node:fs';const p='dist/models/atlas.json';const a=JSON.parse(fs.readFileSync(p,'utf8'));const base='/zero-one-workbench/portal/anatomy/models/';for(const c of a.chunks){c.url=base+c.url.split('/').pop();if(c.gzip)c.gzip=base+c.gzip.split('/').pop();}fs.writeFileSync(p,JSON.stringify(a));"
+          printf '{"upstream":"ashemag/human-atlas","upstream_commit":"1c38bf35c254a891200d3cedecfd57abebe83d8d","application_license":"MIT","dataset":"BodyParts3D 4.0","dataset_license":"CC BY 4.0","meshes":2234,"systems":15,"concepts":3432,"build_commit":"%s","built_at":"%s"}\n' "$GITHUB_SHA" "$(date -u +%FT%TZ)" > dist/UPSTREAM.json
+          cp LICENSE dist/LICENSE-HUMAN-ATLAS-MIT.txt
+      - name: Publish complete upstream under portal
+        run: |
+          rm -rf portal/anatomy
+          mkdir -p portal/anatomy
+          cp -a /tmp/human-atlas/dist/. portal/anatomy/
+          test -s portal/anatomy/index.html
+          test -s portal/anatomy/models/atlas.json
+          test "$(find portal/anatomy/models -name 'body-*.bin.gz' | wc -l)" -eq 15
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          git add -f portal/anatomy
+          git commit -m 'vendor(anatomy): publish complete pinned Human Atlas' || exit 0
+          git push
