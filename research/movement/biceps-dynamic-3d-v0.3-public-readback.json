@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "artifact_id": "BICEPS-DYNAMIC-3D-V0.3-PUBLIC-READBACK",
+  "task_id": "BICEPS-DYNAMIC-3D-V0.1",
+  "observed_at": "2026-10-03T05:39:23+08:00",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html?v=8e0d0487",
+  "commits": [
+    "912ac691ada262a1dc354a3f4896eef7684e9ac8",
+    "8e0d0487070599a99eba0c30a7f118b709c90290"
+  ],
+  "status": "PASS_FALLBACK_ONLY",
+  "environment": {
+    "webgl": false,
+    "error": "Error creating WebGL context",
+    "real_obj_static_preview": true,
+    "interactive_fallback": true
+  },
+  "manual_observation": {
+    "elbow_degrees": 90,
+    "forearm_rotation_degrees": 45,
+    "readout": "屈肘90°｜前臂旋转+45°（旋转以读数表达）"
+  },
+  "playback_observation": {
+    "button": "⏸ 暂停",
+    "sampled_elbow_degrees": 61,
+    "sampled_forearm_rotation_degrees": 55
+  },
+  "gates": {
+    "product_implemented": true,
+    "pages_published": true,
+    "public_fallback_run_readback": true,
+    "real_obj_dynamic_public_readback": false,
+    "mainline_increment": false
+  },
+  "boundary": "公开云浏览器仅认证静态真实OBJ预览+二维交互降级层。真实OBJ动态、桡尺关节约束、力值与OpenSim校准均未验收；节点继续PENDING_ACCEPTANCE_WEBGL。"
+}
