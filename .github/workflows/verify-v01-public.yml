@@ -1,0 +1,38 @@
+name: Verify V0.1 public entries
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-v01-public.yml'
+      - 'portal/movement.html'
+      - 'portal/k02-board.html'
+      - 'portal/data/depthmap-vga.csv'
+      - 'portal/data/depthmap-run.json'
+  workflow_dispatch:
+jobs:
+  public-readback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for GitHub Pages and verify public artifacts
+        run: |
+          set -euxo pipefail
+          base='https://foxlongfei.github.io/zero-one-workbench/portal'
+          ok=0
+          for i in $(seq 1 24); do
+            curl -fsSL "$base/movement.html?gate=$GITHUB_SHA" -o /tmp/movement.html || true
+            curl -fsSL "$base/k02-board.html?gate=$GITHUB_SHA" -o /tmp/kanyu.html || true
+            curl -fsSL "$base/data/depthmap-run.json?gate=$GITHUB_SHA" -o /tmp/run.json || true
+            curl -fsSL "$base/data/depthmap-vga.csv?gate=$GITHUB_SHA" -o /tmp/vga.csv || true
+            if grep -q '动作识别｜真实照片' /tmp/movement.html 2>/dev/null && grep -q '真实 depthmapX VGA' /tmp/kanyu.html 2>/dev/null && grep -q '"visibility_graph":true' /tmp/run.json 2>/dev/null && grep -q 'Visual Control' /tmp/vga.csv 2>/dev/null; then ok=1; break; fi
+            sleep 10
+          done
+          test "$ok" = 1
+          grep -q 'MediaPipe Pose Landmarker Full' /tmp/movement.html
+          grep -q 'data/depthmap-vga.csv' /tmp/kanyu.html
+          test "$(wc -l < /tmp/vga.csv)" -gt 20
+          echo 'PUBLIC_V01_READBACK_PASS'
+      - name: Verify upstream runtime assets are reachable
+        run: |
+          set -euxo pipefail
+          curl -fsSI 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304/+esm' >/dev/null
+          curl -fsSI 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task' >/dev/null
+          echo 'POSE_RUNTIME_ASSETS_REACHABLE'
