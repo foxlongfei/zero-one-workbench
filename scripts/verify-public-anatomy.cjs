@@ -57,7 +57,7 @@ try {
   const canvas = frame.locator("canvas").first();
   await canvas.waitFor({ state: "visible", timeout: 180000 });
   await page.waitForTimeout(5000);
-  const box = await canvas.boundingBox();
+  let box = await canvas.boundingBox();
   if (!box || box.width < 300 || box.height < 300) throw new Error("3D canvas is missing or too small");
   result.checks.webglCanvas = { passed: true, width: box.width, height: box.height };
 
@@ -66,13 +66,14 @@ try {
   const zoomed = outDir + "/public-after-zoom.png";
   await canvas.screenshot({ path: before });
 
-  await page.mouse.move(box.x + box.width * 0.68, box.y + box.height * 0.48);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.35, box.y + box.height * 0.38, { steps: 24 });
-  await page.mouse.up();
-  await page.waitForTimeout(1500);
+  await frame.getByRole("button", { name: "Rotate body", exact: true }).click();
+  await page.waitForTimeout(2500);
   await canvas.screenshot({ path: rotated });
+  await frame.getByRole("button", { name: "Pause rotation", exact: true }).click();
 
+  await canvas.hover();
+  box = await canvas.boundingBox();
+  if (!box) throw new Error("3D canvas bounding box disappeared before zoom");
   await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
   await page.mouse.wheel(0, -1200);
   await page.waitForTimeout(1500);
