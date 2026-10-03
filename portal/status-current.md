@@ -1,4 +1,4 @@
-# 双项目 CURRENT｜2026-10-03 22:21 +08:00
+# 双项目 CURRENT｜2026-10-04 03:44 +08:00
 
 本页只记录真实执行状态。**实物 → 对应 Pages 接入 → Pages 发布 → 公开运行/读回 → 总首页/CURRENT/Drive 同步**；任一门缺失即 `NOT_CLOSED`，不提高完成度。
 
@@ -8,12 +8,12 @@
 **当前节点：Z05-B｜SOURCE_BINDING → RULE_TABLE / DECISION_NODES / 真实输入运行**
 
 - [公开古代技术实验台](k02-board.html)
-- 本轮实质增量：把已冻结的二十四山循环次序落成 24 行 `RULE_TABLE` 和 D01–D04 `DECISION_NODES`，新增可执行验证器、7 个数值用例与 1 个非法输入反例。
+- 本轮实质增量：四个现场观察字段及采集来源已真正接入 D04–D06 决策节点；新增字段/来源配对门、观察集合分类与就绪度输出，验证器 5/5。
 - 历史来源只认证**名称、组成、循环次序**；15° 等分与真北 0° 顺时针仍明确标为工程归一化，不冒充古籍原文。
-- 公开真实输入读回：`182.4° → 午山`、中心角 `180°`、区间 `[172.5,187.5)`，页面展示 D01 校验→D02 归一化→D03 区间命中→D04 有界输出；`172.4999° → 丙`、`172.5° → 午`，空输入被拒绝。
+- 公开住宅A读回：`182.4° → 午山`；主要开口/道路已知，水体/坡向未知，返回 `DIRECTION_ONLY_PARTIAL_OBSERVATION`。值有而来源缺失返回 `MISSING_SOURCE`；来源有而值为空返回 `ORPHAN_SOURCE`；四字段完整时返回 `DIRECTION_AND_OBSERVATION_READY`。
 - 现代 depthmapX 链已标为 SUPPORT CAPABILITY，不替代 Z05 MAIN。
-- [RULE_TABLE V0.1](../research/zero-one/z05-b-24-mountain-rule-table-v0.1.json) · [公开验收证据](../docs/v0.1/evidence/z05-b/public-rule-table-verification.json) · [页面提交](https://github.com/foxlongfei/zero-one-workbench/commit/2b027c799852be5dfd928549009957133e967d21)
-- 验收：结构、边界、反例、Pages 发布与公开交互读回 **PASS**；历史来源与工程规则边界未越界。Z05-B 整体仍 **NOT_CLOSED**，下一断点是让结构化现场观察字段显式进入决策节点，不添加吉凶断语。
+- [观察决策图 V0.2](../research/zero-one/z05-b-site-observation-decision-graph-v0.2.json) · [公开验收证据](../docs/v0.1/evidence/z05-b/public-observation-decision-verification-v0.2.json) · [页面提交](https://github.com/foxlongfei/zero-one-workbench/commit/95ef1876d90b444465ce595ceca62811123134de)
+- 验收：结构、正常样例、两个配对反例、完整输入、Pages 发布与公开交互读回 **PASS**；就绪度不冒充环境判断或吉凶。Z05-B 整体仍 **NOT_CLOSED**，下一断点是仅在有历史依据时，把一个环境操作绑定到完整就绪输入。
 
 ### SUPPORT / PAUSED
 - Z05 问题路由器｜ACTIVE_SUPPORT；SUPPORT_LIBRARY｜ON_DEMAND。
@@ -44,9 +44,9 @@
 不替代两项目 MAIN。本轮不扩张 ZERO-CORE；REMOTE_DEPLOY 未发生。
 
 ## 4｜本轮角色、在线状态与验收
-- D：Z05 RULE_TABLE / DECISION_NODES 与公开决策轨迹；BICEPS 本轮不改实物。
-- Q：Z05 结构、边界、非法输入与公开交互读回；BICEPS 维持视觉门失败判定。
+- D：Z05 观察字段/来源配对与 D04–D06 就绪图；BICEPS 本轮不改实物。
+- Q：Z05 正常样例、缺来源、孤立来源、完整输入与边界读回；BICEPS 维持视觉门失败判定。
 - C：正式状态与能力块冲突处理；总首页、项目页、CURRENT、Drive 写回与读回。
-- 最近一次后台运行：2026-10-03 22:21 +08:00。
-- 最近一次真实成果变化：Z05 可执行规则表、决策轨迹、边界测试与公开反例闭环。
+- 最近一次后台运行：2026-10-04 03:44 +08:00。
+- 最近一次真实成果变化：Z05 四字段现场观察已进入可执行决策图并完成公开正常/反例/完整输入验收。
 - 本周期结论：**Z05 有经过用户层硬门的实质推进；动起来无新的有效证据，状态与完成度不变。**
