@@ -66,10 +66,10 @@ try {
   const before = outDir + "/public-before.png";
   const rotated = outDir + "/public-after-rotate.png";
   const zoomed = outDir + "/public-after-zoom.png";
-  async function captureCanvas(path) {
-    await frameHost.evaluate(node => node.scrollIntoView({ block: "center", inline: "center" }));
+  async function captureRegion(region, path) {
+    await region.evaluate(node => node.scrollIntoView({ block: "center", inline: "center" }));
     await page.waitForTimeout(500);
-    const current = await frameHost.boundingBox();
+    const current = await region.boundingBox();
     const viewport = page.viewportSize();
     if (!current || !viewport) throw new Error("atlas frame bounds unavailable before capture");
     const viewportX = Math.max(0, current.x);
@@ -88,13 +88,13 @@ try {
     });
     fs.writeFileSync(path, Buffer.from(shot.data, "base64"));
   }
-  await captureCanvas(before);
+  await captureRegion(frameHost, before);
 
   await frame.getByRole("button", { name: "Rotate body", exact: true }).click();
   await page.waitForTimeout(2500);
   await frame.getByRole("button", { name: "Pause rotation", exact: true }).click();
   await page.waitForTimeout(800);
-  await captureCanvas(rotated);
+  await captureRegion(frameHost, rotated);
 
   await canvas.hover();
   box = await canvas.boundingBox();
@@ -102,7 +102,7 @@ try {
   await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
   await page.mouse.wheel(0, -1200);
   await page.waitForTimeout(1500);
-  await captureCanvas(zoomed);
+  await captureRegion(frameHost, zoomed);
 
   const rotateDiff = imageDiff(before, rotated, outDir + "/diff-rotate.png");
   const zoomDiff = imageDiff(rotated, zoomed, outDir + "/diff-zoom.png");
@@ -115,12 +115,55 @@ try {
   await frame.getByText("296 pieces visible", { exact: true }).waitFor({ state: "visible", timeout: 30000 });
   result.checks.systemLayer = { passed: true, preset: "Skeleton", visiblePieces: 296 };
 
+  const bicepsState = page.locator("#realAssetState");
+  await page.waitForFunction(() => document.querySelector("#realAssetState")?.dataset.status === "DISPLAYED", null, { timeout: 180000 });
+  const bicepsMount = page.locator("#realUpper3d");
+  const bicepsCanvas = bicepsMount.locator("canvas").first();
+  await bicepsCanvas.waitFor({ state: "visible", timeout: 30000 });
+  const bicepsBefore = outDir + "/biceps-before.png";
+  const bicepsViewed = outDir + "/biceps-after-view.png";
+  const bicepsPeak = outDir + "/biceps-after-peak.png";
+  await captureRegion(bicepsMount, bicepsBefore);
+
+  await page.locator("#armViewRange").evaluate(node => {
+    node.value = "45";
+    node.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await page.waitForTimeout(1200);
+  const viewState = await page.locator("#armViewOut").evaluate(node => ({ mode: node.dataset.viewMode, angle: node.dataset.viewAngle, text: node.textContent }));
+  if (viewState.mode !== "REAL_OBJ_ORBIT" || viewState.angle !== "45") throw new Error("BICEPS real OBJ view control did not enter +45 orbit");
+  await captureRegion(bicepsMount, bicepsViewed);
+  const bicepsViewDiff = imageDiff(bicepsBefore, bicepsViewed, outDir + "/diff-biceps-view.png");
+  if (bicepsViewDiff.changedPixels < 500) throw new Error("BICEPS +45 real OBJ orbit did not materially change rendered pixels");
+  result.checks.bicepsRealObjOrbit = { passed: true, ...viewState, ...bicepsViewDiff };
+
+  await page.locator('.phasePreset[data-phase="屈肘峰值"]').click();
+  await page.waitForTimeout(1200);
+  const phaseState = await page.evaluate(() => ({
+    phase: document.querySelector("#motionPhases")?.dataset.phase,
+    elbow: document.querySelector("#realElbowRange")?.value,
+    elbowOut: document.querySelector("#realElbowOut")?.textContent,
+    forearm: document.querySelector("#realForearmRange")?.value,
+    forearmOut: document.querySelector("#realForearmOut")?.textContent,
+    assetStatus: document.querySelector("#realAssetState")?.dataset.status
+  }));
+  if (phaseState.phase !== "屈肘峰值" || phaseState.elbow !== "120" || phaseState.forearm !== "55" || phaseState.assetStatus !== "DISPLAYED") {
+    throw new Error("BICEPS peak phase controls did not remain linked to displayed real OBJ");
+  }
+  await captureRegion(bicepsMount, bicepsPeak);
+  const bicepsPhaseDiff = imageDiff(bicepsViewed, bicepsPeak, outDir + "/diff-biceps-peak.png");
+  if (bicepsPhaseDiff.changedPixels < 500) throw new Error("BICEPS peak phase did not materially change rendered pixels");
+  result.checks.bicepsPeakPhase = { passed: true, ...phaseState, ...bicepsPhaseDiff };
+
   await page.screenshot({ path: outDir + "/public-main-entry.png", fullPage: false });
   result.screenshots = {
     before: { path: before, sha256: sha256(before) },
     afterRotate: { path: rotated, sha256: sha256(rotated) },
     afterZoom: { path: zoomed, sha256: sha256(zoomed) },
-    mainEntry: { path: outDir + "/public-main-entry.png", sha256: sha256(outDir + "/public-main-entry.png") }
+    mainEntry: { path: outDir + "/public-main-entry.png", sha256: sha256(outDir + "/public-main-entry.png") },
+    bicepsBefore: { path: bicepsBefore, sha256: sha256(bicepsBefore) },
+    bicepsAfterView: { path: bicepsViewed, sha256: sha256(bicepsViewed) },
+    bicepsAfterPeak: { path: bicepsPeak, sha256: sha256(bicepsPeak) }
   };
   result.passed = true;
 } catch (error) {
