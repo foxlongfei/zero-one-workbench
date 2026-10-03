@@ -8,6 +8,9 @@ const crypto = require("crypto");
 const publicUrl = process.env.PUBLIC_URL || "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html";
 const outDir = process.env.EVIDENCE_DIR || "docs/v0.1/evidence/m2";
 fs.mkdirSync(outDir, { recursive: true });
+for (const entry of fs.readdirSync(outDir)) {
+  fs.rmSync(outDir + "/" + entry, { recursive: true, force: true });
+}
 
 (async () => {
 const browser = await chromium.launch({
@@ -47,9 +50,9 @@ function imageDiff(aPath, bPath, diffPath) {
 
 try {
   await page.goto(publicUrl + "?m2verify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 180000 });
-  const frameHost = page.locator("#humanAtlasFrame");
+  const frameHost = page.locator('iframe[title="完整人体解剖 Human Atlas"]');
   const cdp = await page.context().newCDPSession(page);
-  const frame = page.frameLocator("#humanAtlasFrame");
+  const frame = page.frameLocator('iframe[title="完整人体解剖 Human Atlas"]');
   await frame.getByText(/2,234\s+modeled pieces/).waitFor({ state: "visible", timeout: 180000 });
   result.checks.catalog = { passed: true, meshes: 2234, systems: 15 };
 
@@ -148,7 +151,7 @@ try {
   await page.locator('.phasePreset[data-phase="屈肘峰值"]').click();
   await page.waitForTimeout(1200);
   const phaseState = await page.evaluate(() => ({
-    phase: document.querySelector("#motionPhases")?.dataset.phase,
+    phase: document.querySelector("#biceps-dynamic-3d")?.dataset.phase,
     elbow: document.querySelector("#realElbowRange")?.value,
     elbowOut: document.querySelector("#realElbowOut")?.textContent,
     forearm: document.querySelector("#realForearmRange")?.value,
