@@ -9,7 +9,7 @@ const publicUrl = process.env.PUBLIC_URL || "https://foxlongfei.github.io/zero-o
 const outDir = process.env.EVIDENCE_DIR || "docs/v0.1/evidence/m2";
 fs.mkdirSync(outDir, { recursive: true });
 
-const browser = await chromium.launch({
+(async () => {\nconst browser = await chromium.launch({
   headless: true,
   args: [
     "--use-gl=angle",
@@ -110,3 +110,4 @@ if (!result.passed) {
   process.exit(1);
 }
 console.log(JSON.stringify(result, null, 2));
+})().catch(error => { console.error(error && error.stack || error); process.exit(1); });\n
