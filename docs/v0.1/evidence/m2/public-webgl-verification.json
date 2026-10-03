@@ -1,9 +1,89 @@
 {
   "schema": "zero-one.m2.public-webgl-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-03T13:42:47.784Z",
-  "gitSha": "e5a0bdd78431150e8f524ce8343a8a266a03789f",
-  "checks": {},
-  "passed": false,
-  "error": "locator.waitFor: Timeout 180000ms exceeded.\nCall log:\n  - waiting for locator('#humanAtlasFrame').contentFrame().getByText(/2,234\\s+modeled pieces/) to be visible\n\n    at /home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-anatomy.cjs:53:51"
+  "verifiedAt": "2026-10-03T13:58:00.916Z",
+  "gitSha": "41a87a0b0bbbb3d7e917725dfca2067262239184",
+  "checks": {
+    "catalog": {
+      "passed": true,
+      "meshes": 2234,
+      "systems": 15
+    },
+    "webglCanvas": {
+      "passed": true,
+      "width": 1092,
+      "height": 688
+    },
+    "rotate": {
+      "passed": true,
+      "changedPixels": 2984,
+      "totalPixels": 754860,
+      "ratio": 0.003953050896855046
+    },
+    "zoom": {
+      "passed": true,
+      "changedPixels": 22471,
+      "totalPixels": 754860,
+      "ratio": 0.029768433881779403
+    },
+    "systemLayer": {
+      "passed": true,
+      "preset": "Skeleton",
+      "visiblePieces": 296
+    },
+    "bicepsRealObjOrbit": {
+      "passed": true,
+      "mode": "REAL_OBJ_ORBIT",
+      "angle": "45",
+      "text": "右前斜视 +45°",
+      "changedPixels": 8983,
+      "totalPixels": 568880,
+      "ratio": 0.015790676416819013
+    },
+    "bicepsPeakPhase": {
+      "passed": true,
+      "phase": "屈肘峰值",
+      "elbow": "120",
+      "elbowOut": "120°",
+      "forearm": "55",
+      "forearmOut": "+55°",
+      "assetStatus": "DISPLAYED",
+      "kinematicModel": "GROUP_LOCAL_PIVOT_V0.6",
+      "muscleModel": "CENTERED_LOCAL_WRAPPER",
+      "changedPixels": 2881,
+      "totalPixels": 568880,
+      "ratio": 0.005064336942764731
+    }
+  },
+  "screenshots": {
+    "before": {
+      "path": "docs/v0.1/evidence/m2/public-before.png",
+      "sha256": "685d3baa9fd00c451c1447cf13529ba44f8be2f19171a847c2900df74130688b"
+    },
+    "afterRotate": {
+      "path": "docs/v0.1/evidence/m2/public-after-rotate.png",
+      "sha256": "8907a64b00b9bac23d1eaf3628060a41972b43600b93216f7d2ca4a1be08433b"
+    },
+    "afterZoom": {
+      "path": "docs/v0.1/evidence/m2/public-after-zoom.png",
+      "sha256": "fe5f07ae1d0240fcc38c77f08de5f86a9b5890e9e6d5c7467224d27fdd273c64"
+    },
+    "mainEntry": {
+      "path": "docs/v0.1/evidence/m2/public-main-entry.png",
+      "sha256": "b1af90e9f7a44e00afa89a17d0e8618692307dfa0b842c26cc3088287e5a7384"
+    },
+    "bicepsBefore": {
+      "path": "docs/v0.1/evidence/m2/biceps-before.png",
+      "sha256": "c5e0e66eb12338528dc8f5a2fc97323b95570278e277552ef69e513290c6e70b"
+    },
+    "bicepsAfterView": {
+      "path": "docs/v0.1/evidence/m2/biceps-after-view.png",
+      "sha256": "d14e8154f5054efafa837505fe872f992a726a10efb77b12bf7ac9ef42a3f42e"
+    },
+    "bicepsAfterPeak": {
+      "path": "docs/v0.1/evidence/m2/biceps-after-peak.png",
+      "sha256": "cc388215935f5ded0df9e9647c0876b4045dee75e2557dd57e3954e47f0160df"
+    }
+  },
+  "passed": true
 }
