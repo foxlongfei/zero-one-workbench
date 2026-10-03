@@ -48,6 +48,7 @@ function imageDiff(aPath, bPath, diffPath) {
 try {
   await page.goto(publicUrl + "?m2verify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 180000 });
   const frameHost = page.locator("#humanAtlasFrame");
+  const cdp = await page.context().newCDPSession(page);
   const frame = page.frameLocator("#humanAtlasFrame");
   await frame.getByText(/2,234\s+modeled pieces/).waitFor({ state: "visible", timeout: 180000 });
   result.checks.catalog = { passed: true, meshes: 2234, systems: 15 };
@@ -66,13 +67,23 @@ try {
   const rotated = outDir + "/public-after-rotate.png";
   const zoomed = outDir + "/public-after-zoom.png";
   async function captureCanvas(path) {
-    await frameHost.scrollIntoViewIfNeeded();
-    await frameHost.screenshot({
-      path,
-      animations: "disabled",
-      caret: "hide",
-      timeout: 30000
+    await frameHost.evaluate(node => node.scrollIntoView({ block: "center", inline: "center" }));
+    await page.waitForTimeout(500);
+    const current = await frameHost.boundingBox();
+    const viewport = page.viewportSize();
+    if (!current || !viewport) throw new Error("atlas frame bounds unavailable before capture");
+    const x = Math.max(0, current.x);
+    const y = Math.max(0, current.y);
+    const width = Math.min(current.width - Math.max(0, -current.x), viewport.width - x);
+    const height = Math.min(current.height - Math.max(0, -current.y), viewport.height - y);
+    if (width < 300 || height < 300) throw new Error("atlas frame visible clip is too small");
+    const shot = await cdp.send("Page.captureScreenshot", {
+      format: "png",
+      fromSurface: true,
+      captureBeyondViewport: true,
+      clip: { x, y, width, height, scale: 1 }
     });
+    fs.writeFileSync(path, Buffer.from(shot.data, "base64"));
   }
   await captureCanvas(before);
 
