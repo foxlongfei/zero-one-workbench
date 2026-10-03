@@ -1,0 +1,60 @@
+name: Verify public M3 pose flow
+
+on:
+  push:
+    paths:
+      - ".github/workflows/verify-public-m3.yml"
+      - "portal/movement.html"
+      - "portal/assets/m3-pose-sample-v0.1.js"
+      - "portal/assets/case2_12.jpg"
+      - "scripts/verify-public-m3.cjs"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verify-public-m3-pose
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
+
+      - name: Execute public real-image pose flow
+        env:
+          PUBLIC_URL: https://foxlongfei.github.io/zero-one-workbench/portal/movement.html
+          EVIDENCE_DIR: docs/v0.1/evidence/m3
+        run: node scripts/verify-public-m3.cjs
+
+      - name: Upload immutable verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m3-public-pose-evidence
+          path: docs/v0.1/evidence/m3/
+          if-no-files-found: error
+
+      - name: Commit verifier evidence
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/v0.1/evidence/m3/
+          git commit -m "test(m3): record public real-image pose evidence"
+          git pull --rebase origin main
+          git push origin HEAD:main
