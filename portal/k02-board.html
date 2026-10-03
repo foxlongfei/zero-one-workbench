@@ -116,6 +116,16 @@
         border-radius: 12px;
         margin-top: 10px;
       }
+      .obs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .obs-grid label {
+        display: grid;
+        gap: 4px;
+        font-size: 14px;
+      }
       @media (max-width: 780px) {
         .grid {
           grid-template-columns: 1fr;
@@ -188,7 +198,60 @@
             /></label>
             <button class="chip" id="runDir">归一化</button>
           </p>
-          <div id="dirResult" class="result">等待方位。</div>
+          <fieldset>
+            <legend><b>现场观察与采集来源</b></legend>
+            <div class="obs-grid">
+              <label
+                >主要开口<input
+                  id="obsOpening"
+                  placeholder="空白=UNKNOWN"
+                /><select id="srcOpening">
+                  <option value="">来源未填</option>
+                  <option value="DIRECT_OBSERVATION">现场观察</option>
+                  <option value="MEASURED">仪器测量</option>
+                  <option value="REPORTED">转述/档案</option>
+                </select></label
+              >
+              <label
+                >道路<input id="obsRoad" placeholder="空白=UNKNOWN" /><select
+                  id="srcRoad"
+                >
+                  <option value="">来源未填</option>
+                  <option value="DIRECT_OBSERVATION">现场观察</option>
+                  <option value="MEASURED">仪器测量</option>
+                  <option value="REPORTED">转述/档案</option>
+                </select></label
+              >
+              <label
+                >水体<input id="obsWater" placeholder="空白=UNKNOWN" /><select
+                  id="srcWater"
+                >
+                  <option value="">来源未填</option>
+                  <option value="DIRECT_OBSERVATION">现场观察</option>
+                  <option value="MEASURED">仪器测量</option>
+                  <option value="REPORTED">转述/档案</option>
+                </select></label
+              >
+              <label
+                >坡向<input id="obsSlope" placeholder="空白=UNKNOWN" /><select
+                  id="srcSlope"
+                >
+                  <option value="">来源未填</option>
+                  <option value="DIRECT_OBSERVATION">现场观察</option>
+                  <option value="MEASURED">仪器测量</option>
+                  <option value="REPORTED">转述/档案</option>
+                </select></label
+              >
+            </div>
+            <p class="muted">
+              空值不是负面事实，而是
+              UNKNOWN；有值无来源或有来源无值都会被输入门拒绝。
+            </p>
+            <button class="chip" id="sampleSite" type="button">
+              载入住宅A样例
+            </button>
+          </fieldset>
+          <div id="dirResult" class="result">等待方位与现场观察。</div>
           <div id="decisionTrace" class="result muted" style="margin-top: 8px">
             等待 RULE_TABLE 决策轨迹。
           </div>
@@ -357,6 +420,48 @@
         "[322.5,337.5)",
         "[337.5,352.5)",
       ];
+      const observationFields = [
+        ["主要开口", "obsOpening", "srcOpening"],
+        ["道路", "obsRoad", "srcRoad"],
+        ["水体", "obsWater", "srcWater"],
+        ["坡向", "obsSlope", "srcSlope"],
+      ];
+      function classifyObservations() {
+        const pairs = observationFields.map(([name, valueId, sourceId]) => ({
+          name,
+          value: document.getElementById(valueId).value.trim(),
+          source: document.getElementById(sourceId).value,
+        }));
+        const errors = pairs.flatMap((pair) =>
+          pair.value && !pair.source
+            ? ["MISSING_SOURCE:" + pair.name]
+            : !pair.value && pair.source
+              ? ["ORPHAN_SOURCE:" + pair.name]
+              : [],
+        );
+        const known = pairs.filter((pair) => pair.value && pair.source);
+        const unknown = pairs.filter((pair) => !pair.value && !pair.source);
+        const result = errors.length
+          ? "DIRECTION_ONLY_INPUT_INCOMPLETE"
+          : known.length === pairs.length
+            ? "DIRECTION_AND_OBSERVATION_READY"
+            : known.length
+              ? "DIRECTION_ONLY_PARTIAL_OBSERVATION"
+              : "DIRECTION_ONLY_NO_OBSERVATION";
+        return { pairs, errors, known, unknown, result };
+      }
+      document.getElementById("sampleSite").onclick = () => {
+        document.getElementById("degree").value = "182.4";
+        document.getElementById("obsOpening").value = "南侧主要开口";
+        document.getElementById("srcOpening").value = "DIRECT_OBSERVATION";
+        document.getElementById("obsRoad").value = "东侧道路";
+        document.getElementById("srcRoad").value = "DIRECT_OBSERVATION";
+        document.getElementById("obsWater").value = "";
+        document.getElementById("srcWater").value = "";
+        document.getElementById("obsSlope").value = "";
+        document.getElementById("srcSlope").value = "";
+        document.getElementById("runDir").click();
+      };
       document.getElementById("runDir").onclick = () => {
         const raw = document.getElementById("degree").value,
           n = Number(raw),
@@ -369,6 +474,8 @@
         }
         const d = ((n % 360) + 360) % 360,
           i = Math.floor(((d + 7.5) % 360) / 15);
+        const gate = classifyObservations();
+        result.dataset.readiness = gate.result;
         result.innerHTML =
           "<b>" +
           d.toFixed(1) +
@@ -376,13 +483,32 @@
           labels[i] +
           "山</b><br>中心角 " +
           i * 15 +
-          "°；仅为工程归一化，不生成吉凶。";
+          "°；仅为工程归一化，不生成吉凶。<br><b>观察就绪度：</b>" +
+          gate.result +
+          "<br><b>已知：</b>" +
+          (gate.known.map((x) => x.name).join("、") || "无") +
+          "；<b>未知：</b>" +
+          (gate.unknown.map((x) => x.name).join("、") || "无") +
+          (gate.errors.length
+            ? "；<b>输入错误：</b>" + gate.errors.join("、")
+            : "") +
+          "<br>观察门只判断输入是否就绪，不作环境或吉凶判断。";
         trace.innerHTML =
           "<b>决策轨迹</b><br>D01 数值校验 PASS → D02 归一化 " +
           d.toFixed(4) +
           "° → D03 命中 " +
           intervals[i] +
-          " → D04 返回有界结果；历史来源仅认证名称/组成/循环次序。";
+          " → D04 字段/来源配对 " +
+          (gate.errors.length ? "FAIL" : "PASS") +
+          " → D05 观察集合 " +
+          (gate.known.length === 4
+            ? "COMPLETE"
+            : gate.known.length
+              ? "PARTIAL"
+              : "EMPTY") +
+          " → D06 " +
+          gate.result +
+          "；历史来源仅认证名称/组成/循环次序。";
       };
       function parseCSV(t) {
         const lines = t.trim().split(/\r?\n/),
