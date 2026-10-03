@@ -27,7 +27,7 @@ const sha256 = (file) => crypto.createHash("sha256").update(fs.readFileSync(file
     let deployed = false;
     for (let attempt = 1; attempt <= 24; attempt += 1) {
       await page.goto(`${publicUrl}?m3verify=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 180000 });
-      deployed = (await page.locator("#poseSample").count()) === 1;
+      deployed = (await page.locator('body[data-m3-release="M3_POSE_FLOW_V0.2"] #poseSample').count()) === 1;
       if (deployed) break;
       await page.waitForTimeout(10000);
     }
