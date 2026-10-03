@@ -72,10 +72,13 @@ try {
     const current = await frameHost.boundingBox();
     const viewport = page.viewportSize();
     if (!current || !viewport) throw new Error("atlas frame bounds unavailable before capture");
-    const x = Math.max(0, current.x);
-    const y = Math.max(0, current.y);
-    const width = Math.min(current.width - Math.max(0, -current.x), viewport.width - x);
-    const height = Math.min(current.height - Math.max(0, -current.y), viewport.height - y);
+    const viewportX = Math.max(0, current.x);
+    const viewportY = Math.max(0, current.y);
+    const width = Math.min(current.width - Math.max(0, -current.x), viewport.width - viewportX);
+    const height = Math.min(current.height - Math.max(0, -current.y), viewport.height - viewportY);
+    const scroll = await page.evaluate(() => ({ x: window.scrollX, y: window.scrollY }));
+    const x = viewportX + scroll.x;
+    const y = viewportY + scroll.y;
     if (width < 300 || height < 300) throw new Error("atlas frame visible clip is too small");
     const shot = await cdp.send("Page.captureScreenshot", {
       format: "png",
