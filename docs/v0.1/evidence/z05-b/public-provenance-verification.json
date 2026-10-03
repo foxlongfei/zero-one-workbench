@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.z05-b.public-provenance-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
-  "verifiedAt": "2026-10-03T08:45:42.404Z",
-  "gitSha": "ae5bec75abaab7bae39f38c985f041785ee34f46",
+  "verifiedAt": "2026-10-03T09:01:45.141Z",
+  "gitSha": "48a76d7da2154db4afb60dc064e22fc4e267b47b",
   "checks": {
     "publicSample": {
       "passed": true,
@@ -14,11 +14,17 @@
       "passed": true,
       "observationGate": "PARTIAL_KNOWN",
       "provenanceGate": "MISSING_SOURCE"
+    },
+    "publicStateSync": {
+      "passed": true,
+      "indexUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/index.html",
+      "statusUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/status-current.md",
+      "timestamp": "2026-10-03 16:38 +08:00"
     }
   },
   "screenshot": {
     "path": "docs/v0.1/evidence/z05-b/public-provenance-gate.png",
-    "sha256": "baaa2fbc6648d3e6a93be460b19eac8ffd027b64f9407063c2d49f684ed8432b"
+    "sha256": "dfa6a5579527121cd52444d1abcf4415850f790dffc65c6584b911aa856aae17"
   },
   "passed": true
 }
