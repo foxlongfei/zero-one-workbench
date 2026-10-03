@@ -1,0 +1,49 @@
+{
+  "schema": "zero-one.m3.public-pose-verification.v0.1",
+  "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "verifiedAt": "2026-10-03T19:45:58.898Z",
+  "gitSha": "11a5b7370bf7ded49093f6696e79c5dd37065837",
+  "checks": {
+    "realImagePose": {
+      "passed": true,
+      "sample": "portal/assets/case2_12.jpg",
+      "upstream": "MEDIAPIPE_POSE_LANDMARKER_FULL",
+      "poseCount": 1,
+      "landmarkCount": 33,
+      "worldLandmarkCount": 33,
+      "segmentationMaskCount": 1,
+      "meanVisibility": 0.74,
+      "joints": [
+        {
+          "id": "JOINT_LEFT_ELBOW",
+          "angle": 105
+        },
+        {
+          "id": "JOINT_RIGHT_ELBOW",
+          "angle": 105
+        },
+        {
+          "id": "JOINT_LEFT_HIP",
+          "angle": 161
+        },
+        {
+          "id": "JOINT_RIGHT_HIP",
+          "angle": 139
+        },
+        {
+          "id": "JOINT_LEFT_KNEE",
+          "angle": 104
+        },
+        {
+          "id": "JOINT_RIGHT_KNEE",
+          "angle": 67
+        }
+      ],
+      "paintedPixels": 2406,
+      "coordinateText": "已进入统一人体坐标：JOINT_LEFT_ELBOW = 105°｜world (0.327, -0.077, -0.466) mJOINT_RIGHT_ELBOW = 105°｜world (-0.395, -0.090, -0.478) mJOINT_LEFT_HIP = 161°｜world (0.122, 0.008, 0.010) mJOINT_RIGHT_HIP = 139°｜world (-0.123, -0.010, -0.008) mJOINT_LEFT_KNEE = 104°｜world (0.067, 0.197, 0.354) mJOINT_RIGHT_KNEE = 67°｜world (-0.130, 0.154, 0.353) m",
+      "feedbackText": "真实俯卧撑帧已映射到统一关节 ID。最小膝角约 67°、最小髋角约 139°；这是单帧姿态描述，不自动判断动作好坏或伤病。"
+    }
+  },
+  "passed": false,
+  "error": "Error: natural-language path did not produce a plan\n    at /home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-m3.cjs:73:99"
+}
