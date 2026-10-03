@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m2.public-webgl-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-03T09:07:59.705Z",
-  "gitSha": "4d16116818eac5717550bfd83dff1363c6c9d012",
+  "verifiedAt": "2026-10-03T09:46:02.530Z",
+  "gitSha": "9d1c213cfefb570024a3acc8ed543705a797e19b",
   "checks": {
     "catalog": {
       "passed": true,
@@ -22,66 +22,16 @@
     },
     "zoom": {
       "passed": true,
-      "changedPixels": 38112,
+      "changedPixels": 38109,
       "totalPixels": 1423800,
-      "ratio": 0.026767804466919513
+      "ratio": 0.026765697429414245
     },
     "systemLayer": {
       "passed": true,
       "preset": "Skeleton",
       "visiblePieces": 296
-    },
-    "bicepsRealObjOrbit": {
-      "passed": true,
-      "mode": "REAL_OBJ_ORBIT",
-      "angle": "45",
-      "text": "右前斜视 +45°",
-      "changedPixels": 2737,
-      "totalPixels": 462800,
-      "ratio": 0.00591400172860847
-    },
-    "bicepsPeakPhase": {
-      "passed": true,
-      "phase": "屈肘峰值",
-      "elbow": "120",
-      "elbowOut": "120°",
-      "forearm": "55",
-      "forearmOut": "+55°",
-      "assetStatus": "DISPLAYED",
-      "changedPixels": 3633,
-      "totalPixels": 462800,
-      "ratio": 0.007850043215211754
     }
   },
-  "screenshots": {
-    "before": {
-      "path": "docs/v0.1/evidence/m2/public-before.png",
-      "sha256": "30f5f7af4bf0bcf01a3f2356a84bfdfdcaf0ab2e6fc0ad8c804c68af6a24e1ca"
-    },
-    "afterRotate": {
-      "path": "docs/v0.1/evidence/m2/public-after-rotate.png",
-      "sha256": "ffa65b801936423d7a23b1365cc60ac8018616e1f638cca88199d88812879059"
-    },
-    "afterZoom": {
-      "path": "docs/v0.1/evidence/m2/public-after-zoom.png",
-      "sha256": "f7bd4d2a712ee545c36c839c589fd2de976b3c902c833213df29d8679236684f"
-    },
-    "mainEntry": {
-      "path": "docs/v0.1/evidence/m2/public-main-entry.png",
-      "sha256": "f6a7f89627d65d1b24ac98a9f9de2a5503b556f42be61a639fae088cb976109c"
-    },
-    "bicepsBefore": {
-      "path": "docs/v0.1/evidence/m2/biceps-before.png",
-      "sha256": "01242f2d7338dde5a0bae9d764f82a0b71d2453899369e564f34eb69d5b08855"
-    },
-    "bicepsAfterView": {
-      "path": "docs/v0.1/evidence/m2/biceps-after-view.png",
-      "sha256": "dcd6d22a1a745f36b8edf75840473a4a903518aaafb55ea4779e0c9d1ed708ae"
-    },
-    "bicepsAfterPeak": {
-      "path": "docs/v0.1/evidence/m2/biceps-after-peak.png",
-      "sha256": "5be82c292f2ba7d4481f48224dc1900510b812a7d89a51266a1aa351e0609b20"
-    }
-  },
-  "passed": true
+  "passed": false,
+  "error": "page.waitForFunction: Timeout 180000ms exceeded.\n    at /home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-anatomy.cjs:119:14"
 }
