@@ -30,13 +30,13 @@
 - M04｜BLOCKED_BY_M03
 
 ### SUB｜COMMON-HUMAN-COORDINATE / HUMAN-3D｜EXECUTING
-**当前节点：BICEPS-DYNAMIC-3D-V0.5｜PENDING_ACCEPTANCE_WEBGL**
+**当前节点：BICEPS-DYNAMIC-3D-V0.5｜FUNCTIONAL_WEBGL_PASS / PENDING_VISUAL_ANATOMY_REVIEW**
 
 - [公开运动模型](movement.html)
-- 本周期无用户层实质推进：远端软件 WebGL 已真实创建 Human Atlas 画布（2234 meshes / 15 systems / 1582×900），但旋转像素差取证尚未通过；不能把“能建画布”冒充 BICEPS 真实 OBJ 动态验收。
-- [当前失败证据](../docs/v0.1/evidence/m2/public-webgl-verification.json)：最后已固化失败为取证稳定性/像素差门，产品完成度不变。
-- 已尝试：动画画布元素截图 → 页面坐标裁剪 → 画布像素缓冲 → iframe 表面；现行断点为 [CDP 可见区域取证](https://github.com/foxlongfei/zero-one-workbench/commit/aa0e4baaa8c5a36494616c4b4cf36d2b604d4504) 的远端结果读回。
-- 验收边界：BICEPS `REAL_OBJ_ORBIT`、分阶段屈伸/前臂联动、穿模、肘 pivot 与桡尺约束仍 **NOT_CLOSED**；正式 MAIN 保持 2/4。
+- 公开远端验收：软件 WebGL 创建 Human Atlas 画布（2234 meshes / 15 systems / 1582×900）；旋转、缩放、骨骼层均通过像素级取证。
+- BICEPS 真实 OBJ 功能通过：`assetStatus=DISPLAYED`；观察角度 `REAL_OBJ_ORBIT +45°` 产生 2737 个变化像素；“屈肘峰值”联动 `elbow=120°`、`forearm=+55°`，产生 3633 个变化像素。
+- [公开 WebGL 与 BICEPS 证据](../docs/v0.1/evidence/m2/public-webgl-verification.json) · [观察截图](../docs/v0.1/evidence/m2/biceps-after-view.png) · [峰值截图](../docs/v0.1/evidence/m2/biceps-after-peak.png)
+- 验收边界：真实 OBJ 观察和控制联动 **FUNCTIONAL_WEBGL_PASS**；像素变化只证明功能执行，不证明旋转方向、穿模、肘 pivot 或桡尺约束的解剖正确性，这些仍 **PENDING_VISUAL_ANATOMY_REVIEW**；正式 MAIN 保持 2/4。
 - TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
 
 ## 3｜ZERO-CORE｜公共基础设施 SUB
@@ -44,7 +44,7 @@
 
 ## 4｜本轮可观察成果、角色与断点
 - Z05 实物提交：[`303eb764`](https://github.com/foxlongfei/zero-one-workbench/commit/303eb76431f69d320d9ff2a298ee3ee2ea89a70d)；公开证据提交：[`e07f7853`](https://github.com/foxlongfei/zero-one-workbench/commit/e07f7853015e03e0e483ae7d57226912f0d91f1f)。
-- 动起来诊断证据：[`c2d6a2f2`](https://github.com/foxlongfei/zero-one-workbench/commit/c2d6a2f202d4af221cae335ecd9acd56c5dc3cea)；CDP 取证尝试：[`aa0e4baa`](https://github.com/foxlongfei/zero-one-workbench/commit/aa0e4baaa8c5a36494616c4b4cf36d2b604d4504)。
+- 动起来功能取证实现：[`4d161168`](https://github.com/foxlongfei/zero-one-workbench/commit/4d16116818eac5717550bfd83dff1363c6c9d012)；通过证据：[`f8677a82`](https://github.com/foxlongfei/zero-one-workbench/commit/f8677a825664c8fb5db4171bf7fd24cdfa2f9c98)。
 - 角色责任：D=实现/取证器；Q=公开运行、反例与科学边界；C=门禁判定、冲突处理与状态写回。
 - 最近一次后台运行：2026-10-03 16:38 +08:00。
-- 最近一次真实成果变化：Z05 公开来源门与缺来源反例通过；动起来只有阻塞证据变化，无用户层产品完成度变化。
+- 最近一次真实成果变化：Z05 来源门/反例通过；动起来 BICEPS 真实 OBJ +45°观察与120°/+55°峰值联动通过远端功能门。
