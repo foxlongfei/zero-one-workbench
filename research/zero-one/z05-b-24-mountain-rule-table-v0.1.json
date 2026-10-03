@@ -1,0 +1,190 @@
+{
+  "artifact_id": "Z05-B-24-MOUNTAIN-RULE-TABLE-V0.1",
+  "task_id": "Z05",
+  "status": "RUNNABLE_WITH_BOUNDARIES",
+  "source_binding": "research/zero-one/z05-b-24-mountain-source-binding-v0.2.json",
+  "historical_scope": "The facsimile verifies names, composition and cyclic order only.",
+  "engineering_scope": "True north 0 degrees, clockwise increase, equal 15 degree sectors and left-closed/right-open intervals are implementation rules, not claims about the historical text.",
+  "decision_nodes": [
+    {
+      "id": "D01_VALIDATE_NUMBER",
+      "pass": "D02_NORMALIZE_ANGLE",
+      "fail": "REJECT_INVALID_INPUT"
+    },
+    {
+      "id": "D02_NORMALIZE_ANGLE",
+      "operation": "((degrees % 360) + 360) % 360",
+      "next": "D03_SELECT_SECTOR"
+    },
+    {
+      "id": "D03_SELECT_SECTOR",
+      "operation": "floor(((normalized + 7.5) % 360) / 15)",
+      "next": "D04_RETURN_BOUNDED_RESULT"
+    },
+    {
+      "id": "D04_RETURN_BOUNDED_RESULT",
+      "returns": ["mountain", "center_degrees", "interval", "trace"],
+      "excludes": ["auspiciousness", "site_judgment"]
+    }
+  ],
+  "sectors": [
+    {
+      "index": 0,
+      "mountain": "子",
+      "center_degrees": 0,
+      "interval": "[352.5,360) ∪ [0,7.5)"
+    },
+    {
+      "index": 1,
+      "mountain": "癸",
+      "center_degrees": 15,
+      "interval": "[7.5,22.5)"
+    },
+    {
+      "index": 2,
+      "mountain": "丑",
+      "center_degrees": 30,
+      "interval": "[22.5,37.5)"
+    },
+    {
+      "index": 3,
+      "mountain": "艮",
+      "center_degrees": 45,
+      "interval": "[37.5,52.5)"
+    },
+    {
+      "index": 4,
+      "mountain": "寅",
+      "center_degrees": 60,
+      "interval": "[52.5,67.5)"
+    },
+    {
+      "index": 5,
+      "mountain": "甲",
+      "center_degrees": 75,
+      "interval": "[67.5,82.5)"
+    },
+    {
+      "index": 6,
+      "mountain": "卯",
+      "center_degrees": 90,
+      "interval": "[82.5,97.5)"
+    },
+    {
+      "index": 7,
+      "mountain": "乙",
+      "center_degrees": 105,
+      "interval": "[97.5,112.5)"
+    },
+    {
+      "index": 8,
+      "mountain": "辰",
+      "center_degrees": 120,
+      "interval": "[112.5,127.5)"
+    },
+    {
+      "index": 9,
+      "mountain": "巽",
+      "center_degrees": 135,
+      "interval": "[127.5,142.5)"
+    },
+    {
+      "index": 10,
+      "mountain": "巳",
+      "center_degrees": 150,
+      "interval": "[142.5,157.5)"
+    },
+    {
+      "index": 11,
+      "mountain": "丙",
+      "center_degrees": 165,
+      "interval": "[157.5,172.5)"
+    },
+    {
+      "index": 12,
+      "mountain": "午",
+      "center_degrees": 180,
+      "interval": "[172.5,187.5)"
+    },
+    {
+      "index": 13,
+      "mountain": "丁",
+      "center_degrees": 195,
+      "interval": "[187.5,202.5)"
+    },
+    {
+      "index": 14,
+      "mountain": "未",
+      "center_degrees": 210,
+      "interval": "[202.5,217.5)"
+    },
+    {
+      "index": 15,
+      "mountain": "坤",
+      "center_degrees": 225,
+      "interval": "[217.5,232.5)"
+    },
+    {
+      "index": 16,
+      "mountain": "申",
+      "center_degrees": 240,
+      "interval": "[232.5,247.5)"
+    },
+    {
+      "index": 17,
+      "mountain": "庚",
+      "center_degrees": 255,
+      "interval": "[247.5,262.5)"
+    },
+    {
+      "index": 18,
+      "mountain": "酉",
+      "center_degrees": 270,
+      "interval": "[262.5,277.5)"
+    },
+    {
+      "index": 19,
+      "mountain": "辛",
+      "center_degrees": 285,
+      "interval": "[277.5,292.5)"
+    },
+    {
+      "index": 20,
+      "mountain": "戌",
+      "center_degrees": 300,
+      "interval": "[292.5,307.5)"
+    },
+    {
+      "index": 21,
+      "mountain": "乾",
+      "center_degrees": 315,
+      "interval": "[307.5,322.5)"
+    },
+    {
+      "index": 22,
+      "mountain": "亥",
+      "center_degrees": 330,
+      "interval": "[322.5,337.5)"
+    },
+    {
+      "index": 23,
+      "mountain": "壬",
+      "center_degrees": 345,
+      "interval": "[337.5,352.5)"
+    }
+  ],
+  "acceptance_cases": [
+    { "input": 182.4, "expected": "午", "reason": "real input" },
+    { "input": 172.4999, "expected": "丙", "reason": "left of 午 boundary" },
+    { "input": 172.5, "expected": "午", "reason": "left-closed 午 boundary" },
+    { "input": 187.4999, "expected": "午", "reason": "right interior of 午" },
+    { "input": 187.5, "expected": "丁", "reason": "right-open 午 boundary" },
+    { "input": 359.9, "expected": "子", "reason": "wraparound" },
+    { "input": -0.1, "expected": "子", "reason": "negative normalization" },
+    {
+      "input": "not-a-number",
+      "expected_error": "REJECT_INVALID_INPUT",
+      "reason": "counterexample"
+    }
+  ]
+}
