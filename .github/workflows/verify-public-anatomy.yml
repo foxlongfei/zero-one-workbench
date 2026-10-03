@@ -3,7 +3,7 @@ name: Verify public Human Atlas WebGL
 on:
   push:
     paths:
-      - ".github/workflows/verify-public-anatomy.yml"
+      - ".github/workflows/verify-public-anatomy.yml"\n      - "scripts/verify-public-anatomy.cjs"
   workflow_dispatch:
 
 permissions:
