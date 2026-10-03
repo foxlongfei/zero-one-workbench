@@ -22,11 +22,14 @@
 
 ## 2｜动起来
 
-### MAIN｜M01→M02/M03→M04｜严格状态不变
+### MAIN｜Issue #2 当前验收状态
 - M01｜COMPLETED
-- M02｜ACCEPTED_L1_CANDIDATE_ONLY
-- M03｜BLOCKED_CLEAN_CONTEXT
-- M04｜BLOCKED_BY_M03
+- M02｜COMPLETED
+- M03｜COMPLETED（2026-10-04）
+- M04｜NOT COMPLETED
+- M05｜NOT COMPLETED
+
+M03 已通过公开真实图片闭环：MediaPipe Pose Landmarker Full 实际识别 `case2_12.jpg`，输出 33 个二维关键点、33 个世界坐标关键点、分割掩膜与 6 个标准关节结果，并回写运动达人主页面的统一人体坐标。自然语言训练方案路径同时通过。 [M3 完成报告](../docs/v0.1/M3-completion-report-2026-10-04.md) · [公开证据](../docs/v0.1/evidence/m3/public-pose-verification.json) · [自动验收运行](https://github.com/foxlongfei/zero-one-workbench/actions/runs/37149706517)
 
 ### SUB｜COMMON-HUMAN-COORDINATE / HUMAN-3D｜EXECUTING
 **当前节点：BICEPS-DYNAMIC-3D-V0.6｜NOT_CLOSED / PUBLIC_VISUAL_GATE_FAILED**
@@ -37,7 +40,7 @@
 - 新远端取证仍失败：`f37965cb` 在等待已变化的 Human Atlas DOM 时超时；证据 JSON `passed=false`。当前云浏览器又因 WebGL 被禁用而无法补视觉通过证据。
 - 已修复取证器：每轮先清空旧截图，绑定当前 iframe，读取正确的 BICEPS 阶段节点，避免失败时沿用陈旧图；但由 GitHub 连接器提交未触发新的 Actions 运行，所以本轮不得标 PASS。
 - [BICEPS 实物提交](https://github.com/foxlongfei/zero-one-workbench/commit/a3baed00) · [失败证据](../docs/v0.1/evidence/m2/public-webgl-verification.json) · [取证器修复](https://github.com/foxlongfei/zero-one-workbench/commit/41a87a0b) · [状态边界修正](https://github.com/foxlongfei/zero-one-workbench/commit/dfc3c9c6)
-- 照片姿态识别与 Human Atlas 均为能力块；它们不改写正式 M02/M03。TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
+- Human Atlas 与照片姿态识别分别作为 M2、M3 的已验收能力保留在同一主入口。TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
 - 精确断点：在可创建 WebGL 的远端环境运行修复后的取证器；必须等待 `realAssetState=DISPLAYED` 后再截伸展、+45°观察、峰值三图并人工检查连续性。未通过前不得传播到下一节点。
 
 ## 3｜ZERO-CORE｜公共基础设施 SUB
@@ -47,6 +50,5 @@
 - D：Z05 观察字段/来源配对与 D04–D06 就绪图；BICEPS 本轮不改实物。
 - Q：Z05 正常样例、缺来源、孤立来源、完整输入与边界读回；BICEPS 维持视觉门失败判定。
 - C：正式状态与能力块冲突处理；总首页、项目页、CURRENT、Drive 写回与读回。
-- 最近一次后台运行：2026-10-04 03:44 +08:00。
-- 最近一次真实成果变化：Z05 四字段现场观察已进入可执行决策图并完成公开正常/反例/完整输入验收。
-- 本周期结论：**Z05 有经过用户层硬门的实质推进；动起来无新的有效证据，状态与完成度不变。**
+- 最近一次真实成果变化：2026-10-04，运动达人 M3 完成真实图片姿态与自然语言训练方案公开验收。
+- 本周期结论：**运动达人 M3 通过 Issue #2 验收门；只关闭 M3，下一项为 M4。**
