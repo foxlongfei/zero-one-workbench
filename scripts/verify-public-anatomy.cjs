@@ -68,8 +68,9 @@ try {
 
   await frame.getByRole("button", { name: "Rotate body", exact: true }).click();
   await page.waitForTimeout(2500);
-  await canvas.screenshot({ path: rotated });
   await frame.getByRole("button", { name: "Pause rotation", exact: true }).click();
+  await page.waitForTimeout(800);
+  await canvas.screenshot({ path: rotated });
 
   await canvas.hover();
   box = await canvas.boundingBox();
