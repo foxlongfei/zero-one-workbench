@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.z05-b.public-provenance-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
-  "verifiedAt": "2026-10-03T09:01:45.141Z",
-  "gitSha": "48a76d7da2154db4afb60dc064e22fc4e267b47b",
+  "verifiedAt": "2026-10-03T09:12:45.069Z",
+  "gitSha": "ae1e76217412084fe9f3112213e5cd84ecea489e",
   "checks": {
     "publicSample": {
       "passed": true,
