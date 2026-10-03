@@ -1,4 +1,4 @@
-# 双项目 CURRENT｜2026-10-03 22:05 +08:00
+# 双项目 CURRENT｜2026-10-03 22:21 +08:00
 
 本页只记录真实执行状态。**实物 → 对应 Pages 接入 → Pages 发布 → 公开运行/读回 → 总首页/CURRENT/Drive 同步**；任一门缺失即 `NOT_CLOSED`，不提高完成度。
 
@@ -8,12 +8,12 @@
 **当前节点：Z05-B｜SOURCE_BINDING → RULE_TABLE / DECISION_NODES / 真实输入运行**
 
 - [公开古代技术实验台](k02-board.html)
-- 本轮实质增量：冻结《欽定協紀辨方書·卷二》影印 leaf/PDF 5–7。leaf 5 为二十四方位图；leaf 6 说明四天干、八地支、四隅卦组成二十四方位；leaf 7 给出八组三山次序。
+- 本轮实质增量：把已冻结的二十四山循环次序落成 24 行 `RULE_TABLE` 和 D01–D04 `DECISION_NODES`，新增可执行验证器、7 个数值用例与 1 个非法输入反例。
 - 历史来源只认证**名称、组成、循环次序**；15° 等分与真北 0° 顺时针仍明确标为工程归一化，不冒充古籍原文。
-- 公开真实输入读回：`182.4° → 午山`、中心角 `180°`，页面同时输出“仅为工程归一化，不生成吉凶”。
+- 公开真实输入读回：`182.4° → 午山`、中心角 `180°`、区间 `[172.5,187.5)`，页面展示 D01 校验→D02 归一化→D03 区间命中→D04 有界输出；`172.4999° → 丙`、`172.5° → 午`，空输入被拒绝。
 - 现代 depthmapX 链已标为 SUPPORT CAPABILITY，不替代 Z05 MAIN。
-- [SOURCE_BINDING V0.5](../research/zero-one/z05-b-24-mountain-source-binding-v0.2.json) · [来源提交](https://github.com/foxlongfei/zero-one-workbench/commit/edad0e432) · [公开实验台状态修正](https://github.com/foxlongfei/zero-one-workbench/commit/6655c419)
-- 验收：来源页栏、规则边界、真实输入与公开读回 **PASS**；Z05-B 整体仍 **NOT_CLOSED**，下一断点是把已冻结顺序正式落入 RULE_TABLE / DECISION_NODES 的结构化执行记录与反例。
+- [RULE_TABLE V0.1](../research/zero-one/z05-b-24-mountain-rule-table-v0.1.json) · [公开验收证据](../docs/v0.1/evidence/z05-b/public-rule-table-verification.json) · [页面提交](https://github.com/foxlongfei/zero-one-workbench/commit/2b027c799852be5dfd928549009957133e967d21)
+- 验收：结构、边界、反例、Pages 发布与公开交互读回 **PASS**；历史来源与工程规则边界未越界。Z05-B 整体仍 **NOT_CLOSED**，下一断点是让结构化现场观察字段显式进入决策节点，不添加吉凶断语。
 
 ### SUPPORT / PAUSED
 - Z05 问题路由器｜ACTIVE_SUPPORT；SUPPORT_LIBRARY｜ON_DEMAND。
@@ -44,9 +44,9 @@
 不替代两项目 MAIN。本轮不扩张 ZERO-CORE；REMOTE_DEPLOY 未发生。
 
 ## 4｜本轮角色、在线状态与验收
-- D：Z05 来源绑定、BICEPS 局部 pivot 实物与取证器修复。
-- Q：Z05 公开真实输入/边界读回；BICEPS 陈旧证据识别与公开 WebGL 失败判定。
+- D：Z05 RULE_TABLE / DECISION_NODES 与公开决策轨迹；BICEPS 本轮不改实物。
+- Q：Z05 结构、边界、非法输入与公开交互读回；BICEPS 维持视觉门失败判定。
 - C：正式状态与能力块冲突处理；总首页、项目页、CURRENT、Drive 写回与读回。
-- 最近一次后台运行：2026-10-03 22:05 +08:00。
-- 最近一次真实成果变化：Z05 影印页栏与运行边界闭环；BICEPS 取证门修复并撤销不可靠 PASS。
-- 本周期结论：**Z05 有实质推进；动起来有实物和验收门修复，但用户层成果仍 NOT_CLOSED，不提高完成度。**
+- 最近一次后台运行：2026-10-03 22:21 +08:00。
+- 最近一次真实成果变化：Z05 可执行规则表、决策轨迹、边界测试与公开反例闭环。
+- 本周期结论：**Z05 有经过用户层硬门的实质推进；动起来无新的有效证据，状态与完成度不变。**
