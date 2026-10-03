@@ -116,7 +116,15 @@ try {
   result.checks.systemLayer = { passed: true, preset: "Skeleton", visiblePieces: 296 };
 
   const bicepsState = page.locator("#realAssetState");
-  await page.waitForFunction(() => document.querySelector("#realAssetState")?.dataset.status === "DISPLAYED" && document.querySelector("#realUpper3d")?.dataset.kinematicModel === "GROUP_LOCAL_PIVOT_V0.6", null, { timeout: 180000 });
+  let bicepsReady = false;
+  for (let attempt = 1; attempt <= 8; attempt += 1) {
+    bicepsReady = await page.evaluate(() => document.querySelector("#realAssetState")?.dataset.status === "DISPLAYED" && document.querySelector("#realUpper3d")?.dataset.kinematicModel === "GROUP_LOCAL_PIVOT_V0.6");
+    if (bicepsReady) break;
+    await page.waitForTimeout(15000);
+    await page.goto(publicUrl + "?m2verify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 180000 });
+    await page.waitForTimeout(8000);
+  }
+  if (!bicepsReady) throw new Error("public page did not expose the group-local BICEPS V0.6 model after deployment polling");
   const bicepsMount = page.locator("#realUpper3d");
   const bicepsCanvas = bicepsMount.locator("canvas").first();
   await bicepsCanvas.waitFor({ state: "visible", timeout: 30000 });
