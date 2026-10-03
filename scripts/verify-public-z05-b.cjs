@@ -68,7 +68,7 @@ fs.mkdirSync(outDir, { recursive: true });
       indexText = await page.locator("body").innerText();
       await page.goto(statusUrl + "?syncverify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 120000 });
       statusText = await page.locator("body").innerText();
-      synced = [indexText, statusText].every(text => text.includes("2026-10-03 16:38") && text.includes("SOURCE_COMPLETE_FOR_KNOWN_FIELDS") && text.includes("无用户层实质推进"));
+      synced = [indexText, statusText].every(text => text.includes("2026-10-03 16:38") && text.includes("SOURCE_COMPLETE_FOR_KNOWN_FIELDS") && text.includes("FUNCTIONAL_WEBGL_PASS"));
       if (synced) break;
       await page.waitForTimeout(15000);
     }
