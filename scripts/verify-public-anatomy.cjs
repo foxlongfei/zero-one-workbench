@@ -65,15 +65,13 @@ try {
   const rotated = outDir + "/public-after-rotate.png";
   const zoomed = outDir + "/public-after-zoom.png";
   async function captureCanvas(path) {
-    const current = await canvas.boundingBox();
-    if (!current) throw new Error("3D canvas bounding box disappeared before capture");
-    await page.screenshot({
-      path,
-      clip: { x: current.x, y: current.y, width: current.width, height: current.height },
-      animations: "disabled",
-      caret: "hide",
-      captureBeyondViewport: true
-    });
+    const dataUrl = await canvas.evaluate(node => node.toDataURL("image/png"));
+    const marker = "base64,";
+    const offset = dataUrl.indexOf(marker);
+    if (offset < 0) throw new Error("3D canvas capture returned no PNG payload");
+    const bytes = Buffer.from(dataUrl.slice(offset + marker.length), "base64");
+    if (bytes.length < 1024) throw new Error("3D canvas capture returned an implausibly small PNG");
+    fs.writeFileSync(path, bytes);
   }
   await captureCanvas(before);
 
