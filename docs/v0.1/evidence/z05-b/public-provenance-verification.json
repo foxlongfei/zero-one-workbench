@@ -1,0 +1,24 @@
+{
+  "schema": "zero-one.z05-b.public-provenance-verification.v0.1",
+  "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "verifiedAt": "2026-10-03T08:45:42.404Z",
+  "gitSha": "ae5bec75abaab7bae39f38c985f041785ee34f46",
+  "checks": {
+    "publicSample": {
+      "passed": true,
+      "run": "REAL_SAMPLE_182_4",
+      "observationGate": "PARTIAL_KNOWN",
+      "provenanceGate": "SOURCE_COMPLETE_FOR_KNOWN_FIELDS"
+    },
+    "missingSourceCounterexample": {
+      "passed": true,
+      "observationGate": "PARTIAL_KNOWN",
+      "provenanceGate": "MISSING_SOURCE"
+    }
+  },
+  "screenshot": {
+    "path": "docs/v0.1/evidence/z05-b/public-provenance-gate.png",
+    "sha256": "baaa2fbc6648d3e6a93be460b19eac8ffd027b64f9407063c2d49f684ed8432b"
+  },
+  "passed": true
+}
