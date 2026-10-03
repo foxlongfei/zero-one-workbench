@@ -27,7 +27,7 @@ jobs:
         run: |
           npm ci
           node --input-type=module -e "import fs from 'node:fs';const p='vite.config.ts';let s=fs.readFileSync(p,'utf8');s=s.replace('defineConfig({root:',\"defineConfig({base:'/zero-one-workbench/portal/anatomy/',root:\");fs.writeFileSync(p,s);"
-          node --input-type=module -e "import fs from 'node:fs';const p='app/page.tsx';let s=fs.readFileSync(p,'utf8');s=s.replace(\"fetch('/models/atlas.json'\",\"fetch(import.meta.env.BASE_URL+'models/atlas.json'\");fs.writeFileSync(p,s);"
+          node --input-type=module -e "import fs from 'node:fs';const p='app/page.tsx';let s=fs.readFileSync(p,'utf8');s=s.replace(\"fetch('/models/atlas.json'\",\"fetch('/zero-one-workbench/portal/anatomy/models/atlas.json'\");fs.writeFileSync(p,s);"
       - name: Run upstream validation and build
         working-directory: /tmp/human-atlas
         run: |
