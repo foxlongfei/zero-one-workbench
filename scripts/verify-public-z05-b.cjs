@@ -12,7 +12,7 @@ fs.mkdirSync(outDir, { recursive: true });
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1200 } });
   const result = {
-    schema: "zero-one.z05-b.public-provenance-verification.v0.1",
+    schema: "zero-one.z05-b.public-source-verification.v0.6",
     publicUrl,
     verifiedAt: new Date().toISOString(),
     gitSha: process.env.GITHUB_SHA || null,
@@ -24,11 +24,11 @@ fs.mkdirSync(outDir, { recursive: true });
     let deployed = false;
     for (let attempt = 1; attempt <= 6; attempt += 1) {
       await page.goto(publicUrl + "?z05verify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 120000 });
-      deployed = (await page.title()).includes("V0.5") && await page.locator("#srcOpening").count() === 1;
+      deployed = (await page.title()).includes("V0.6") && await page.locator("#srcOpening").count() === 1 && await page.locator('#historicalSource24[data-source-status="VERIFIED_ORDER_ONLY"]').count() === 1;
       if (deployed) break;
       await page.waitForTimeout(20000);
     }
-    if (!deployed) throw new Error("public page did not expose Z05-B V0.5 provenance inputs");
+    if (!deployed) throw new Error("public page did not expose Z05-B V0.6 provenance and exact-source controls");
 
     await page.locator("#sampleRun").click();
     const output = page.locator("#result");
@@ -38,14 +38,19 @@ fs.mkdirSync(outDir, { recursive: true });
       run: node.dataset.run,
       observationGate: node.dataset.observationGate,
       provenanceGate: node.dataset.provenanceGate,
+      historicalSource: node.dataset.historicalSource,
       text: node.innerText
     }));
     if (sample.observationGate !== "PARTIAL_KNOWN") throw new Error("sample observation gate mismatch");
     if (sample.provenanceGate !== "SOURCE_COMPLETE_FOR_KNOWN_FIELDS") throw new Error("sample provenance gate mismatch");
+    if (sample.historicalSource !== "VERIFIED_ORDER_ONLY") throw new Error("exact historical-source scope is missing");
+    for (const expected of ["欽定協紀辨方書·卷二", "leaf/PDF 5-7", "VERIFIED_ORDER_ONLY"]) {
+      if (!sample.text.includes(expected)) throw new Error("sample source output missing: " + expected);
+    }
     for (const expected of ["主要开口=DIRECT_OBSERVATION", "道路=DIRECT_OBSERVATION", "水体=NOT_APPLICABLE", "坡向=NOT_APPLICABLE", "DIRECTION_ONLY"]) {
       if (!sample.text.includes(expected)) throw new Error("sample output missing: " + expected);
     }
-    result.checks.publicSample = { passed: true, run: sample.run, observationGate: sample.observationGate, provenanceGate: sample.provenanceGate };
+    result.checks.publicSample = { passed: true, run: sample.run, observationGate: sample.observationGate, provenanceGate: sample.provenanceGate, historicalSource: sample.historicalSource };
 
     await page.locator("#srcOpening").selectOption("");
     await page.getByRole("button", { name: "运行二十四山归一化", exact: true }).click();
