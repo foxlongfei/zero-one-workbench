@@ -64,13 +64,24 @@ try {
   const before = outDir + "/public-before.png";
   const rotated = outDir + "/public-after-rotate.png";
   const zoomed = outDir + "/public-after-zoom.png";
-  await canvas.screenshot({ path: before });
+  async function captureCanvas(path) {
+    const current = await canvas.boundingBox();
+    if (!current) throw new Error("3D canvas bounding box disappeared before capture");
+    await page.screenshot({
+      path,
+      clip: { x: current.x, y: current.y, width: current.width, height: current.height },
+      animations: "disabled",
+      caret: "hide",
+      captureBeyondViewport: true
+    });
+  }
+  await captureCanvas(before);
 
   await frame.getByRole("button", { name: "Rotate body", exact: true }).click();
   await page.waitForTimeout(2500);
   await frame.getByRole("button", { name: "Pause rotation", exact: true }).click();
   await page.waitForTimeout(800);
-  await canvas.screenshot({ path: rotated });
+  await captureCanvas(rotated);
 
   await canvas.hover();
   box = await canvas.boundingBox();
@@ -78,7 +89,7 @@ try {
   await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
   await page.mouse.wheel(0, -1200);
   await page.waitForTimeout(1500);
-  await canvas.screenshot({ path: zoomed });
+  await captureCanvas(zoomed);
 
   const rotateDiff = imageDiff(before, rotated, outDir + "/diff-rotate.png");
   const zoomDiff = imageDiff(rotated, zoomed, outDir + "/diff-zoom.png");
