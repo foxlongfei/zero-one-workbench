@@ -30,6 +30,16 @@ jobs:
           grep -q 'data/depthmap-vga.csv' /tmp/kanyu.html
           test "$(wc -l < /tmp/vga.csv)" -gt 20
           echo 'PUBLIC_V01_READBACK_PASS'
+      - name: Execute public K2 page in headless Chrome
+        run: |
+          set -euxo pipefail
+          CHROME=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$CHROME"
+          "$CHROME" --headless --no-sandbox --disable-gpu --virtual-time-budget=8000 --dump-dom "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html?browser=$GITHUB_SHA" > /tmp/kanyu-dom.html
+          grep -q '真实引擎产物已读入' /tmp/kanyu-dom.html
+          grep -q '平均 Connectivity' /tmp/kanyu-dom.html
+          grep -q 'visibility_graph=true' /tmp/kanyu-dom.html
+          echo 'K2_PUBLIC_BROWSER_RENDER_PASS'
       - name: Verify upstream runtime assets are reachable
         run: |
           set -euxo pipefail
