@@ -1,43 +1,70 @@
 {
-  "artifact_id": "Z05-B-24-MOUNTAIN-SOURCE-BINDING-V0.2",
+  "artifact_id": "Z05-B-24-MOUNTAIN-SOURCE-BINDING-V0.5",
   "task_id": "Z05",
   "method_component": "24_MOUNTAIN_ORDER",
-  "status": "TEXT_LOCATOR_BOUND_SCAN_OCR_NEGATIVE_PAGE_OPEN",
-  "textual_locator": {
-    "title": "天玉經·卷一",
-    "url": "https://ctext.org/wiki.pl?chapter=583616&if=gb",
-    "located_sequence": "壬子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥",
-    "evidence_role": "ELECTRONIC_TRANSCRIPTION_LOCATOR",
-    "limitation": "User-contributed electronic transcription; edition lineage and scan-page correspondence are not yet frozen."
-  },
-  "facsimile_candidate": {
-    "title": "欽定協紀辨方書·卷一",
+  "status": "FACSIMILE_PASSAGE_BOUND_ORDER_VERIFIED",
+  "verified_facsimile": {
+    "title": "欽定協紀辨方書·卷二",
     "authors": [
       "允祿",
       "梅瑴成",
       "何國宗"
     ],
     "corpus": "欽定四庫全書·子部七·術數類",
-    "identifier": "06056502.cn",
-    "url": "https://archive.org/details/06056502.cn",
-    "contributor": "浙江大学图书馆",
-    "pages": 237,
-    "evidence_role": "STABLE_FACSIMILE_CANDIDATE_NOT_PASSAGE_BOUND",
-    "passage_page": null,
-    "ocr_audit": {
-      "artifact": "research/zero-one/z05-b-24-mountain-ia-ocr-audit-v0.3.json",
-      "queries": 8,
-      "matched_queries": 0,
-      "quality": "SEVERELY_CORRUPTED",
-      "interpretation": "NONCONCLUSIVE",
-      "exact_page_status": "OPEN"
-    }
+    "archive_identifier": "06056503.cn",
+    "item_url": "https://archive.org/details/06056503.cn",
+    "pdf_url": "https://archive.org/download/06056503.cn/06056503.cn.pdf",
+    "leaf_mapping": {
+      "scandata_leaf_count": 110,
+      "pdf_page_count": 110,
+      "excluded_from_access_formats": 0,
+      "pdf_page_equals_archive_leaf": true
+    },
+    "locators": [
+      {
+        "archive_leaf": 5,
+        "pdf_page": 5,
+        "position": "整页图题及中央图",
+        "visible_text": "二十四方位",
+        "evidence_role": "DIAGRAM_TITLE_AND_CYCLIC_LABELS"
+      },
+      {
+        "archive_leaf": 6,
+        "pdf_page": 6,
+        "position": "自右向左第1-8栏",
+        "visible_excerpt": "卦四天干八地支十二共為二十四方位，陰陽家名二十四山",
+        "evidence_role": "DEFINITION_AND_COMPOSITION"
+      },
+      {
+        "archive_leaf": 7,
+        "pdf_page": 7,
+        "position": "自右向左第1-5栏",
+        "visible_excerpt": "一卦統三山：戌乾亥、壬子癸、丑艮寅、甲卯乙、辰巽巳、丙午丁、未坤申、庚酉辛",
+        "evidence_role": "EIGHT_PALACES_AND_ORDER_GROUPS"
+      }
+    ],
+    "verification_method": "Downloaded public facsimile PDF; rendered and visually inspected pages 5-7; checked scandata.xml that all 110 leaves are included, so PDF page and archive leaf are identical."
+  },
+  "prior_locator": {
+    "title": "天玉經·卷一",
+    "url": "https://ctext.org/wiki.pl?chapter=583616&if=gb",
+    "evidence_role": "SECONDARY_ELECTRONIC_TRANSCRIPTION_LOCATOR",
+    "status": "RETAINED_AS_CROSS_CHECK_NOT_PRIMARY"
   },
   "binding_decision": {
-    "order_supported_by_text_locator": true,
-    "equal_15_degree_segmentation_supported_by_locator": false,
-    "north_zero_clockwise_convention_supported_by_locator": false,
-    "historical_source_verified": false,
-    "next_lookup_key": "Use visual PDF/page-image inspection around tables/headings; record archive leaf and column before promotion. Do not infer absence from corrupted OCR."
-  }
+    "order_supported_by_exact_facsimile": true,
+    "composition_supported_by_exact_facsimile": true,
+    "eight_palace_grouping_supported_by_exact_facsimile": true,
+    "equal_15_degree_segmentation_supported_by_exact_facsimile": false,
+    "north_zero_clockwise_convention_supported_by_exact_facsimile": false,
+    "historical_source_verified": true,
+    "verified_scope": "24 mountains names/order/grouping only",
+    "excluded_scope": [
+      "auspiciousness judgments",
+      "site evaluation rules",
+      "equal-degree modern coordinate conversion",
+      "complete kanyu method"
+    ]
+  },
+  "product_boundary": "The runnable 15-degree sectors and north-zero clockwise coordinates remain an engineering normalization. The facsimile now verifies the historical 24-mountain naming/order layer only."
 }
