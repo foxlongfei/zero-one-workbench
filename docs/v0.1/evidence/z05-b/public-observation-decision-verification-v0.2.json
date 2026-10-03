@@ -1,0 +1,23 @@
+{
+  "artifact_id": "Z05-B-PUBLIC-OBSERVATION-DECISION-VERIFICATION-V0.2",
+  "verified_at": "2026-10-03T19:44:54Z",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "pages_publish": "PASS",
+  "validators": {"rule_table_cases": "8/8", "observation_graph_cases": "5/5", "html_script_parse": "PASS"},
+  "public_cases": [
+    {"id":"REAL_SAMPLE_PARTIAL","input":"182.4°, opening+road known, water+slope blank","result":"DIRECTION_ONLY_PARTIAL_OBSERVATION","pair_gate":"PASS"},
+    {"id":"MISSING_SOURCE","input":"water has value, source blank","result":"DIRECTION_ONLY_INPUT_INCOMPLETE","error":"MISSING_SOURCE:水体"},
+    {"id":"ORPHAN_SOURCE","input":"water blank, source REPORTED","result":"DIRECTION_ONLY_INPUT_INCOMPLETE","error":"ORPHAN_SOURCE:水体"},
+    {"id":"COMPLETE","input":"all four fields have values and sources","result":"DIRECTION_AND_OBSERVATION_READY","pair_gate":"PASS"}
+  ],
+  "visible_trace": "D01 angle validation -> D02 normalization -> D03 sector match -> D04 field/source pairing -> D05 set classification -> D06 readiness result",
+  "scope_check": {
+    "environmental_judgment_emitted": false,
+    "auspiciousness_emitted": false,
+    "unknown_treated_as_negative_fact": false,
+    "historical_scope_preserved": "names, composition and cyclic order only"
+  },
+  "acceptance": "PASS",
+  "project_state": "Z05-B EXECUTING / NOT_CLOSED",
+  "next_checkpoint": "bind one historically supported environmental operation to an explicit ready input; do not treat readiness as judgment"
+}
