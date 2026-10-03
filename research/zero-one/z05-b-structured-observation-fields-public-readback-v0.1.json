@@ -1,0 +1,71 @@
+{
+  "artifact_id": "Z05-B-STRUCTURED-OBSERVATION-PUBLIC-READBACK-V0.1",
+  "recorded_at": "2026-10-03T11:36:49+08:00",
+  "task_id": "Z05-B",
+  "status": "PUBLIC_READBACK_PASS_NOT_CLOSED",
+  "source_commit": "3768520c43b382445a21af0734e7dde783e844cf",
+  "deployed_head": "6e28a14d37e115f2b66fde6206a902af891d80d2",
+  "pages_run": {
+    "id": 37094274531,
+    "conclusion": "success",
+    "url": "https://github.com/foxlongfei/zero-one-workbench/actions/runs/37094274531"
+  },
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "input": {
+    "object": "住宅A（公开样例）",
+    "azimuth_deg": 182.4,
+    "description": "坐北向南（现场罗盘复测）",
+    "observations": {
+      "opening": "南侧主要开口",
+      "road": "东侧道路",
+      "water": null,
+      "slope": null
+    }
+  },
+  "observed_output": {
+    "observation_source": "STRUCTURED_FIELDS",
+    "observation_gate": "PARTIAL_KNOWN",
+    "known": [
+      "主要开口",
+      "道路"
+    ],
+    "unknown": [
+      "水体",
+      "坡向"
+    ],
+    "decision_node": "DIRECTION_ONLY",
+    "mountain": "午山",
+    "center_deg": 180
+  },
+  "assertions": [
+    {
+      "id": "Z05-OBS-01",
+      "result": "PASS",
+      "detail": "四项观察均为独立输入；空白项保持 UNKNOWN"
+    },
+    {
+      "id": "Z05-OBS-02",
+      "result": "PASS",
+      "detail": "现实样例从结构化字段生成 PARTIAL_KNOWN，不从补充说明猜测"
+    },
+    {
+      "id": "Z05-OBS-03",
+      "result": "PASS",
+      "detail": "182.4° 按工程规则映射为午山中心180°"
+    },
+    {
+      "id": "Z05-HIST-01",
+      "result": "NOT_CLOSED",
+      "detail": "15°等分与真北0°顺时针仍为工程标准化，原文页码尚未冻结；不生成吉凶"
+    }
+  ],
+  "closure_gate": {
+    "substantive_increment": true,
+    "page_integrated": true,
+    "pages_success": true,
+    "public_readback": true,
+    "status_sync": false,
+    "drive_sync": false,
+    "overall": "NOT_CLOSED"
+  }
+}
