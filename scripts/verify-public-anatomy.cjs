@@ -47,6 +47,7 @@ function imageDiff(aPath, bPath, diffPath) {
 
 try {
   await page.goto(publicUrl + "?m2verify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 180000 });
+  const frameHost = page.locator("#humanAtlasFrame");
   const frame = page.frameLocator("#humanAtlasFrame");
   await frame.getByText(/2,234\s+modeled pieces/).waitFor({ state: "visible", timeout: 180000 });
   result.checks.catalog = { passed: true, meshes: 2234, systems: 15 };
@@ -65,13 +66,13 @@ try {
   const rotated = outDir + "/public-after-rotate.png";
   const zoomed = outDir + "/public-after-zoom.png";
   async function captureCanvas(path) {
-    const dataUrl = await canvas.evaluate(node => node.toDataURL("image/png"));
-    const marker = "base64,";
-    const offset = dataUrl.indexOf(marker);
-    if (offset < 0) throw new Error("3D canvas capture returned no PNG payload");
-    const bytes = Buffer.from(dataUrl.slice(offset + marker.length), "base64");
-    if (bytes.length < 1024) throw new Error("3D canvas capture returned an implausibly small PNG");
-    fs.writeFileSync(path, bytes);
+    await frameHost.scrollIntoViewIfNeeded();
+    await frameHost.screenshot({
+      path,
+      animations: "disabled",
+      caret: "hide",
+      timeout: 30000
+    });
   }
   await captureCanvas(before);
 
