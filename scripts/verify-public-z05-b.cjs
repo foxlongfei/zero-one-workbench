@@ -4,6 +4,8 @@ const crypto = require("crypto");
 
 const publicUrl = process.env.PUBLIC_URL || "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html";
 const outDir = process.env.EVIDENCE_DIR || "docs/v0.1/evidence/z05-b";
+const indexUrl = process.env.INDEX_URL || "https://foxlongfei.github.io/zero-one-workbench/portal/index.html";
+const statusUrl = process.env.STATUS_URL || "https://foxlongfei.github.io/zero-one-workbench/portal/status-current.md";
 fs.mkdirSync(outDir, { recursive: true });
 
 (async () => {
@@ -58,6 +60,23 @@ fs.mkdirSync(outDir, { recursive: true });
     }
     result.checks.missingSourceCounterexample = { passed: true, observationGate: counterexample.observationGate, provenanceGate: counterexample.provenanceGate };
 
+    let synced = false;
+    let indexText = "";
+    let statusText = "";
+    for (let attempt = 1; attempt <= 8; attempt += 1) {
+      await page.goto(indexUrl + "?syncverify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 120000 });
+      indexText = await page.locator("body").innerText();
+      await page.goto(statusUrl + "?syncverify=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 120000 });
+      statusText = await page.locator("body").innerText();
+      synced = [indexText, statusText].every(text => text.includes("2026-10-03 16:38") && text.includes("SOURCE_COMPLETE_FOR_KNOWN_FIELDS") && text.includes("无用户层实质推进"));
+      if (synced) break;
+      await page.waitForTimeout(15000);
+    }
+    if (!synced) throw new Error("public index/CURRENT did not expose the synchronized 16:38 state");
+    result.checks.publicStateSync = { passed: true, indexUrl, statusUrl, timestamp: "2026-10-03 16:38 +08:00" };
+
+    await page.goto(publicUrl + "?final=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 120000 });
+    await page.locator("#sampleRun").click();
     const screenshot = outDir + "/public-provenance-gate.png";
     await page.screenshot({ path: screenshot, fullPage: true });
     result.screenshot = { path: screenshot, sha256: sha256(screenshot) };
