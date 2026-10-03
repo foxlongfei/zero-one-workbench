@@ -46,12 +46,12 @@ jobs:
           path: docs/v0.1/evidence/m2/
           if-no-files-found: error
 
-      - name: Commit passing evidence
-        if: success()
+      - name: Commit verifier evidence
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/v0.1/evidence/m2/
-          git commit -m "test(anatomy): record public WebGL rotation and zoom evidence"
+          git commit -m "test(anatomy): record public WebGL verifier evidence"
           git pull --rebase origin main
           git push origin HEAD:main
