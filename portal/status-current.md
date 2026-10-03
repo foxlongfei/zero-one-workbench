@@ -1,4 +1,4 @@
-# 双项目 CURRENT｜2026-10-03 16:38 +08:00
+# 双项目 CURRENT｜2026-10-03 22:05 +08:00
 
 本页只记录真实执行状态。**实物 → 对应 Pages 接入 → Pages 发布 → 公开运行/读回 → 总首页/CURRENT/Drive 同步**；任一门缺失即 `NOT_CLOSED`，不提高完成度。
 
@@ -8,13 +8,12 @@
 **当前节点：Z05-B｜SOURCE_BINDING → RULE_TABLE / DECISION_NODES / 真实输入运行**
 
 - [公开古代技术实验台](k02-board.html)
-- 本轮实物：V0.5 给主要开口、道路、水体、坡向分别增加 `DIRECT_OBSERVATION / MEASURED / REPORTED` 来源声明，并加入 `provenance_gate`。
-- 公开正常样例：住宅A `PARTIAL_KNOWN`；主要开口/道路为 `DIRECT_OBSERVATION`，水体/坡向为 `NOT_APPLICABLE`；来源门=`SOURCE_COMPLETE_FOR_KNOWN_FIELDS`，节点仍为 `DIRECTION_ONLY`。
-- 公开反例：保留主要开口值、清空其来源，来源门正确退回 `MISSING_SOURCE`，输出“缺来源=主要开口”，不升级为观察就绪。
-- [公开取证 JSON](../docs/v0.1/evidence/z05-b/public-provenance-verification.json) · [取证截图](../docs/v0.1/evidence/z05-b/public-provenance-gate.png)
-- 验收：Pages 实际运行、正常样例、缺来源反例 **PASS**；来源类型仍是用户声明而非外部核验；历史精确页栏未冻结，不生成吉凶，Z05-B 整体 **NOT_CLOSED**。
-- 当前阻塞：`historical_source_page_frozen=false`。
-- 精确断点：只补会改变运行规则的最小历史页栏证据；不唤醒旧主线。
+- 本轮实质增量：冻结《欽定協紀辨方書·卷二》影印 leaf/PDF 5–7。leaf 5 为二十四方位图；leaf 6 说明四天干、八地支、四隅卦组成二十四方位；leaf 7 给出八组三山次序。
+- 历史来源只认证**名称、组成、循环次序**；15° 等分与真北 0° 顺时针仍明确标为工程归一化，不冒充古籍原文。
+- 公开真实输入读回：`182.4° → 午山`、中心角 `180°`，页面同时输出“仅为工程归一化，不生成吉凶”。
+- 现代 depthmapX 链已标为 SUPPORT CAPABILITY，不替代 Z05 MAIN。
+- [SOURCE_BINDING V0.5](../research/zero-one/z05-b-24-mountain-source-binding-v0.2.json) · [来源提交](https://github.com/foxlongfei/zero-one-workbench/commit/edad0e432) · [公开实验台状态修正](https://github.com/foxlongfei/zero-one-workbench/commit/6655c419)
+- 验收：来源页栏、规则边界、真实输入与公开读回 **PASS**；Z05-B 整体仍 **NOT_CLOSED**，下一断点是把已冻结顺序正式落入 RULE_TABLE / DECISION_NODES 的结构化执行记录与反例。
 
 ### SUPPORT / PAUSED
 - Z05 问题路由器｜ACTIVE_SUPPORT；SUPPORT_LIBRARY｜ON_DEMAND。
@@ -23,28 +22,31 @@
 
 ## 2｜动起来
 
-### MAIN｜M01→M02/M03→M04｜严格 2/4
+### MAIN｜M01→M02/M03→M04｜严格状态不变
 - M01｜COMPLETED
 - M02｜ACCEPTED_L1_CANDIDATE_ONLY
 - M03｜BLOCKED_CLEAN_CONTEXT
 - M04｜BLOCKED_BY_M03
 
 ### SUB｜COMMON-HUMAN-COORDINATE / HUMAN-3D｜EXECUTING
-**当前节点：BICEPS-DYNAMIC-3D-V0.5｜FUNCTIONAL_WEBGL_PASS / PENDING_VISUAL_ANATOMY_REVIEW**
+**当前节点：BICEPS-DYNAMIC-3D-V0.6｜NOT_CLOSED / PUBLIC_VISUAL_GATE_FAILED**
 
-- [公开运动模型](movement.html)
-- 公开远端验收：软件 WebGL 创建 Human Atlas 画布（2234 meshes / 15 systems / 1582×900）；旋转、缩放、骨骼层均通过像素级取证。
-- BICEPS 真实 OBJ 功能通过：`assetStatus=DISPLAYED`；观察角度 `REAL_OBJ_ORBIT +45°` 产生 2737 个变化像素；“屈肘峰值”联动 `elbow=120°`、`forearm=+55°`，产生 3633 个变化像素。
-- [公开 WebGL 与 BICEPS 证据](../docs/v0.1/evidence/m2/public-webgl-verification.json) · [观察截图](../docs/v0.1/evidence/m2/biceps-after-view.png) · [峰值截图](../docs/v0.1/evidence/m2/biceps-after-peak.png)
-- 验收边界：真实 OBJ 观察和控制联动 **FUNCTIONAL_WEBGL_PASS**；像素变化只证明功能执行，不证明旋转方向、穿模、肘 pivot 或桡尺约束的解剖正确性，这些仍 **PENDING_VISUAL_ANATOMY_REVIEW**；正式 MAIN 保持 2/4。
-- TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
+- [公开运动页面](movement.html)
+- 实物：真实 BodyParts3D 右肱骨、桡骨、尺骨、肱二头肌长/短头已恢复到主页面；桡尺骨组使用组内肘 pivot，肌肉形变使用自身中心 wrapper。
+- 本轮否决旧结论：旧峰值截图是在“正在加载”状态截取，且仍显示肌肉与骨架明显分离；旧像素差只能证明控件触发，不能证明解剖连续。
+- 新远端取证仍失败：`f37965cb` 在等待已变化的 Human Atlas DOM 时超时；证据 JSON `passed=false`。当前云浏览器又因 WebGL 被禁用而无法补视觉通过证据。
+- 已修复取证器：每轮先清空旧截图，绑定当前 iframe，读取正确的 BICEPS 阶段节点，避免失败时沿用陈旧图；但由 GitHub 连接器提交未触发新的 Actions 运行，所以本轮不得标 PASS。
+- [BICEPS 实物提交](https://github.com/foxlongfei/zero-one-workbench/commit/a3baed00) · [失败证据](../docs/v0.1/evidence/m2/public-webgl-verification.json) · [取证器修复](https://github.com/foxlongfei/zero-one-workbench/commit/41a87a0b) · [状态边界修正](https://github.com/foxlongfei/zero-one-workbench/commit/dfc3c9c6)
+- 照片姿态识别与 Human Atlas 均为能力块；它们不改写正式 M02/M03。TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
+- 精确断点：在可创建 WebGL 的远端环境运行修复后的取证器；必须等待 `realAssetState=DISPLAYED` 后再截伸展、+45°观察、峰值三图并人工检查连续性。未通过前不得传播到下一节点。
 
 ## 3｜ZERO-CORE｜公共基础设施 SUB
-不替代两项目 MAIN。本轮不扩张 ZERO-CORE。
+不替代两项目 MAIN。本轮不扩张 ZERO-CORE；REMOTE_DEPLOY 未发生。
 
-## 4｜本轮可观察成果、角色与断点
-- Z05 实物提交：[`303eb764`](https://github.com/foxlongfei/zero-one-workbench/commit/303eb76431f69d320d9ff2a298ee3ee2ea89a70d)；公开证据提交：[`e07f7853`](https://github.com/foxlongfei/zero-one-workbench/commit/e07f7853015e03e0e483ae7d57226912f0d91f1f)。
-- 动起来功能取证实现：[`4d161168`](https://github.com/foxlongfei/zero-one-workbench/commit/4d16116818eac5717550bfd83dff1363c6c9d012)；通过证据：[`f8677a82`](https://github.com/foxlongfei/zero-one-workbench/commit/f8677a825664c8fb5db4171bf7fd24cdfa2f9c98)。
-- 角色责任：D=实现/取证器；Q=公开运行、反例与科学边界；C=门禁判定、冲突处理与状态写回。
-- 最近一次后台运行：2026-10-03 16:38 +08:00。
-- 最近一次真实成果变化：Z05 来源门/反例通过；动起来 BICEPS 真实 OBJ +45°观察与120°/+55°峰值联动通过远端功能门。
+## 4｜本轮角色、在线状态与验收
+- D：Z05 来源绑定、BICEPS 局部 pivot 实物与取证器修复。
+- Q：Z05 公开真实输入/边界读回；BICEPS 陈旧证据识别与公开 WebGL 失败判定。
+- C：正式状态与能力块冲突处理；总首页、项目页、CURRENT、Drive 写回与读回。
+- 最近一次后台运行：2026-10-03 22:05 +08:00。
+- 最近一次真实成果变化：Z05 影印页栏与运行边界闭环；BICEPS 取证门修复并撤销不可靠 PASS。
+- 本周期结论：**Z05 有实质推进；动起来有实物和验收门修复，但用户层成果仍 NOT_CLOSED，不提高完成度。**
