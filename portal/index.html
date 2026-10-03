@@ -1,20 +1,19 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>零一空间｜双项目看板</title><link rel="stylesheet" href="assets/style.css"><body><main class="wrap">
 <h1 class="hero">零一空间｜双项目可运行入口</h1>
-<p class="muted">首页只展示已进入公开页面并经过实际读回的能力；研究材料、任务文字与提交数量不冒充产品进度。最近一次真实成果变化：2026-10-03 11:36 +08:00。</p>
+<p class="muted">首页只展示已进入公开页面并经过实际读回的能力；研究材料、任务文字与提交数量不冒充产品进度。最近一次后台运行：2026-10-03 16:38 +08:00。</p>
 <section class="grid">
-<article class="card"><h2>零一空间研究｜Z05-B</h2>
+<article class="card"><h2>零一空间研究｜Z05-B V0.5</h2>
 <p><b>状态：</b>MAIN EXECUTING；古代技术可运行重建。</p>
-<p><b>当前可运行：</b>住宅A的主要开口、道路、水体、坡向已成为四个独立输入。公开样例回读 STRUCTURED_FIELDS / PARTIAL_KNOWN；水体与坡向保持 UNKNOWN，不从说明文字猜测。</p>
-<p><b>方位输出：</b>182.4° → 午山（中心180°）；决策节点 DIRECTION_ONLY。</p>
-<p><b>验收与阻塞：</b>结构化输入、UNKNOWN 隔离、规则链与公开读回 PASS；历史精确页栏仍未冻结，不生成吉凶，整体 NOT_CLOSED。</p>
-<p><b>下一步：</b>增加字段级采集/测量来源校验，补最小历史页栏证据。</p>
-<p class="links"><a href="k02-board.html?v=6e28a14d">运行 Z05-B →</a> · <a href="../research/zero-one/z05-b-structured-observation-fields-public-readback-v0.1.json">查看证据 →</a> · <a href="overlay-model.html">叠加关系工具 →</a></p></article>
+<p><b>本轮可运行：</b>四个现场观察字段各自声明采集来源。住宅A正常样例返回 SOURCE_COMPLETE_FOR_KNOWN_FIELDS；保留字段值但清空来源的反例返回 MISSING_SOURCE，不升级为观察就绪。</p>
+<p><b>验收：</b>GitHub Pages 正常样例与缺来源反例实际运行 PASS；来源仍是用户声明、历史精确页栏未冻结，不生成吉凶，整体 NOT_CLOSED。</p>
+<p><b>下一步：</b>只补会改变运行规则的最小历史页栏证据。</p>
+<p class="links"><a href="k02-board.html?v=e07f7853">运行 Z05-B V0.5 →</a> · <a href="../docs/v0.1/evidence/z05-b/public-provenance-verification.json">查看公开取证 →</a> · <a href="overlay-model.html">叠加关系工具 →</a></p></article>
 <article class="card"><h2>动起来｜BICEPS-DYNAMIC-3D V0.5</h2>
 <p><b>正式主线：</b>M01 COMPLETED；M02 ACCEPTED_L1_CANDIDATE_ONLY；M03 BLOCKED_CLEAN_CONTEXT；M04 BLOCKED_BY_M03，严格2/4。</p>
-<p><b>当前可运行：</b>同一右上肢链支持屈伸、前臂运动、肱二头肌形态联动与观察角度拖动。公开页回读 +45°、屈肘峰值120°、前臂+55°。</p>
-<p><b>验收与阻塞：</b>二维降级交互 PASS，并明确标记 FALLBACK_2D_VIEW；当前环境无 WebGL，真实OBJ动态、穿模/肘pivot、桡尺约束、力值与OpenSim校准仍 NOT_CLOSED。</p>
-<p><b>下一步：</b>在可用 WebGL 环境读回 REAL_OBJ_ORBIT 并逐阶段验收。</p>
-<p class="links"><a href="movement.html?v=6e28a14d">运行右上肢 V0.5 →</a> · <a href="../research/movement/biceps-dynamic-3d-v0.5-view-control-public-readback.json">查看证据 →</a></p></article>
+<p><b>本周期：</b>无用户层实质推进。远端软件 WebGL 已建立 2234 网格/15 系统、1582×900 画布，但旋转像素差取证仍失败；不能据此认证 BICEPS 真实 OBJ。</p>
+<p><b>验收与阻塞：</b>只有 WebGL 画布创建 PASS；BICEPS REAL_OBJ_ORBIT、分阶段动作、穿模/肘pivot与桡尺约束均 NOT_CLOSED。</p>
+<p><b>下一步：</b>读回 CDP 取证；通过后再把同一门用于 BICEPS 分阶段验收。</p>
+<p class="links"><a href="movement.html?v=aa0e4baa">运行右上肢 V0.5 →</a> · <a href="../docs/v0.1/evidence/m2/public-webgl-verification.json">查看当前失败证据 →</a></p></article>
 </section>
 <section class="card"><h2>并行辅线</h2><p>Z05 路由器 ACTIVE_SUPPORT；TEMP-MODEL-01 可调用但不替代主线。Z04/TEMP-M01/TEMP-E01 PAUSED_SUPPORT。TEMP-YOUTH/TEMP-CLUB/TESTSET QUEUED。ZERO-CORE 为公共基础设施 SUB。</p></section>
 <section class="card"><h2>验收纪律</h2><p><b>实物 → Pages → 公开运行读回 → 状态同步。</b>任一门缺失即 NOT_CLOSED。</p><p><a href="status-current.md">查看 CURRENT、提交、阻塞与精确断点 →</a></p></section>
