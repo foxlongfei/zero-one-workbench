@@ -1,1 +1,72 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>零一空间｜V0.1 原型机入口</title><link rel="stylesheet" href="assets/style.css"><body><main class="wrap"><h1 class="hero">零一空间｜V0.1 原型机入口</h1><p class="muted">只按 Issue #2 的真实验收门计数：实物 → 真实运行 → 产物 → 主页面 → Pages → 公共读回。更新：2026-10-03。</p><section class="grid"><article class="card"><h2>运动达人 V0.1</h2><p><b>正式 MAIN：</b>M01 COMPLETED；M02 ACCEPTED_L1_CANDIDATE_ONLY；M03 BLOCKED_CLEAN_CONTEXT；M04 BLOCKED_BY_M03。完整 Human Atlas 已作为 HUMAN-3D 能力块公开验收，不替代正式 M02。</p><p><b>照片识别能力块 PENDING_ACCEPTANCE：</b>同页已经加入 MediaPipe Pose Landmarker Full → 33 关键点 → 骨架回绘 → 左右肘/髋/膝角度 → 标准关节 ID；它尚未解除正式 M03 的 BLOCKED_CLEAN_CONTEXT。</p><p><b>边界：</b>照片识别能力块已有公开源码，但尚未完成带真实输入的公开功能验收；正式 M03 仍为 BLOCKED_CLEAN_CONTEXT，M04 仍为 BLOCKED_BY_M03。</p><p class="links"><a href="movement.html?v=6a38fcd0">进入运动达人 V0.1 →</a></p></article><article class="card"><h2>堪舆先生 V0.1</h2><p><b>depthmapX 空间分析能力块已验收。</b> 它作为 Z05 的现代空间分析辅线，不替代“古代技术可运行重建”主线。</p><p><b>真实链已经跑通：</b>住宅 DXF → depthmapX 0.9.1 IMPORT → VISPREP 建 visibility graph → VGA local visibility → CSV → 主页面真实指标与 Connectivity 格点图。</p><p><b>公开验收：</b>CI 真计算成功；CSV/metadata 已发布；公共页面读回成功；headless Chrome 已实际执行公开页面并读回真实引擎结果与平均 Connectivity。</p><p><b>边界：</b>上传普通户型图片仍不冒充自动墙线识别。K3 环境模型、K4 传统证据分层完整案例、K5 先生式反馈闭环仍未完成。</p><p class="links"><a href="k02-board.html?v=948fcb1e">进入堪舆先生 V0.1 →</a> · <a href="../docs/v0.1/K2-completion-report-2026-10-03.md">K2 完成报告 →</a></p></article></section><section class="card"><h2>今天通过硬验收</h2><p><b>运动达人：</b>完整人体/解剖能力块；正式 M02 状态不变。</p><p><b>零一空间：</b>depthmapX 真实空间分析能力块；正式 MAIN 仍是 Z05。</p><p>照片识别能力块已从独立测试页移回正式主入口，但没有越过真实照片公开功能验收前，不计完成，也不改写正式 M03 状态。</p></section><section class="card"><h2>验收纪律</h2><p>不以 commits、研究材料、规则表、独立 Demo 数量代替产品完成度。未跑通的仍写 EXECUTING。</p></section></main></body></html>
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width"
+  /><title>零一空间｜V0.1 原型机入口</title
+  ><link rel="stylesheet" href="assets/style.css" />
+  <body>
+    <main class="wrap">
+      <h1 class="hero">零一空间｜V0.1 原型机入口</h1>
+      <p class="muted">
+        只按 Issue #2 的真实验收门计数：实物 → 真实运行 → 产物 → 主页面 → Pages
+        → 公共读回。更新：2026-10-03。
+      </p>
+      <section class="grid">
+        <article class="card">
+          <h2>运动达人 V0.1</h2>
+          <p>
+            <b>正式 MAIN：</b>M01 COMPLETED；M02 ACCEPTED_L1_CANDIDATE_ONLY；M03
+            BLOCKED_CLEAN_CONTEXT；M04 BLOCKED_BY_M03。完整 Human Atlas 已作为
+            HUMAN-3D 能力块公开验收，不替代正式 M02。
+          </p>
+          <p><b>BICEPS-DYNAMIC-3D-V0.6：</b>NOT_CLOSED / PUBLIC_VISUAL_GATE_FAILED；旧加载中截图与像素差结论已撤销，正式 MAIN 状态不变。</p>
+          <p>
+            <b>边界：</b
+            >照片识别能力块已有公开源码，但尚未完成带真实输入的公开功能验收；正式
+            M03 仍为 BLOCKED_CLEAN_CONTEXT，M04 仍为 BLOCKED_BY_M03。
+          </p>
+          <p class="links">
+            <a href="movement.html?v=6a38fcd0">进入运动达人 V0.1 →</a>
+          </p>
+        </article>
+        <article class="card">
+          <h2>堪舆先生 V0.1</h2>
+          <p><b>MAIN Z05-B：</b>已把影印核验的二十四山循环次序落成 24 行 RULE_TABLE 与 D01–D04 决策节点；历史来源只认证名称、组成和次序。</p>
+          <p>
+            <b>真实链已经跑通：</b>住宅 DXF → depthmapX 0.9.1 IMPORT → VISPREP
+            建 visibility graph → VGA local visibility → CSV → 主页面真实指标与
+            Connectivity 格点图。
+          </p>
+          <p><b>公开验收：</b>182.4°→午山；172.4999°→丙、172.5°→午；空输入被拒绝。页面展示区间和决策轨迹，不生成吉凶。</p>
+          <p>
+            <b>边界：</b>上传普通户型图片仍不冒充自动墙线识别。K3 环境模型、K4
+            传统证据分层完整案例、K5 先生式反馈闭环仍未完成。
+          </p>
+          <p class="links">
+            <a href="k02-board.html?v=948fcb1e">进入堪舆先生 V0.1 →</a> ·
+            <a href="../docs/v0.1/K2-completion-report-2026-10-03.md"
+              >K2 完成报告 →</a
+            >
+          </p>
+        </article>
+      </section>
+      <section class="card">
+        <h2>今天通过硬验收</h2>
+        <p><b>运动达人：</b>本轮无新有效证据；BICEPS 视觉门仍失败，正式 MAIN 状态不变。</p>
+        <p><b>零一空间：</b>Z05-B 规则表、决策节点、边界测试、公开交互与反例读回 PASS；整体仍 NOT_CLOSED。</p>
+        <p>
+          照片识别能力块已从独立测试页移回正式主入口，但没有越过真实照片公开功能验收前，不计完成，也不改写正式
+          M03 状态。
+        </p>
+      </section>
+      <section class="card">
+        <h2>验收纪律</h2>
+        <p>
+          不以 commits、研究材料、规则表、独立 Demo
+          数量代替产品完成度。未跑通的仍写 EXECUTING。
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
