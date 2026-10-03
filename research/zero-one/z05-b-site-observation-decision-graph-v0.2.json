@@ -1,0 +1,74 @@
+{
+  "artifact_id": "Z05-B-SITE-OBSERVATION-DECISION-GRAPH-V0.2",
+  "task_id": "Z05",
+  "status": "RUNNABLE_READINESS_GATE",
+  "depends_on": "research/zero-one/z05-b-24-mountain-rule-table-v0.1.json",
+  "scope": "Classify whether four site-observation fields are ready for a later environmental method. This graph does not make an environmental or auspiciousness judgment.",
+  "fields": ["opening", "road", "water", "slope"],
+  "allowed_sources": ["DIRECT_OBSERVATION", "MEASURED", "REPORTED"],
+  "decision_nodes": [
+    {
+      "id": "D04_VALIDATE_FIELD_SOURCE_PAIRS",
+      "errors": ["MISSING_SOURCE", "ORPHAN_SOURCE"],
+      "next": "D05_CLASSIFY_OBSERVATION_SET"
+    },
+    {
+      "id": "D05_CLASSIFY_OBSERVATION_SET",
+      "states": [
+        "NO_OBSERVATION",
+        "PARTIAL_OBSERVATION",
+        "COMPLETE_OBSERVATION"
+      ],
+      "next": "D06_RETURN_READINESS"
+    },
+    {
+      "id": "D06_RETURN_READINESS",
+      "outputs": [
+        "DIRECTION_ONLY_NO_OBSERVATION",
+        "DIRECTION_ONLY_PARTIAL_OBSERVATION",
+        "DIRECTION_ONLY_INPUT_INCOMPLETE",
+        "DIRECTION_AND_OBSERVATION_READY"
+      ]
+    }
+  ],
+  "rules": [
+    "A non-empty value requires one allowed source; otherwise MISSING_SOURCE.",
+    "A source without a value is ORPHAN_SOURCE.",
+    "A blank value and blank source is UNKNOWN, not a negative observation.",
+    "Only four known fields with no pair errors return DIRECTION_AND_OBSERVATION_READY.",
+    "All other valid states return a direction-only readiness result and never an environmental judgment."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "REAL_SAMPLE_PARTIAL",
+      "fields": {
+        "opening": ["南侧主要开口", "DIRECT_OBSERVATION"],
+        "road": ["东侧道路", "DIRECT_OBSERVATION"],
+        "water": ["", ""],
+        "slope": ["", ""]
+      },
+      "expected": "DIRECTION_ONLY_PARTIAL_OBSERVATION"
+    },
+    {
+      "id": "MISSING_SOURCE",
+      "fields": { "opening": ["南侧主要开口", ""] },
+      "expected": "DIRECTION_ONLY_INPUT_INCOMPLETE"
+    },
+    {
+      "id": "ORPHAN_SOURCE",
+      "fields": { "water": ["", "REPORTED"] },
+      "expected": "DIRECTION_ONLY_INPUT_INCOMPLETE"
+    },
+    {
+      "id": "COMPLETE",
+      "fields": {
+        "opening": ["南侧", "DIRECT_OBSERVATION"],
+        "road": ["东侧", "MEASURED"],
+        "water": ["西侧", "REPORTED"],
+        "slope": ["北高南低", "MEASURED"]
+      },
+      "expected": "DIRECTION_AND_OBSERVATION_READY"
+    },
+    { "id": "EMPTY", "fields": {}, "expected": "DIRECTION_ONLY_NO_OBSERVATION" }
+  ]
+}
