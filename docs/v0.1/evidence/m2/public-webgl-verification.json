@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m2.public-webgl-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-03T08:52:46.304Z",
-  "gitSha": "43329a1f8d341712a99ce352de66fc2c405e44a8",
+  "verifiedAt": "2026-10-03T08:58:05.191Z",
+  "gitSha": "aa0e4baaa8c5a36494616c4b4cf36d2b604d4504",
   "checks": {
     "catalog": {
       "passed": true,
@@ -16,5 +16,5 @@
     }
   },
   "passed": false,
-  "error": "locator.screenshot: Timeout 29989.386ms exceeded.\nCall log:\n  - taking element screenshot\n    - disabled all CSS animations\n  - waiting for fonts to load...\n  - fonts loaded\n  - attempting scroll into view action\n    - waiting for element to be stable\n\n    at captureCanvas (/home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-anatomy.cjs:70:21)\n    at async /home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-anatomy.cjs:83:3"
+  "error": "Error: rotation did not materially change rendered pixels\n    at /home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-anatomy.cjs:106:46"
 }
