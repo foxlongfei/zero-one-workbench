@@ -1,0 +1,21 @@
+{
+  "artifact_id": "Z05-B-PUBLIC-RULE-TABLE-VERIFICATION-V0.1",
+  "verified_at": "2026-10-03T14:21:33Z",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "pages_publish": "PASS",
+  "validator": {"passed": true, "sectors": 24, "cases": 8},
+  "public_cases": [
+    {"input": 182.4, "result": "午", "center_degrees": 180, "interval": "[172.5,187.5)", "trace_visible": true},
+    {"input": 172.4999, "result": "丙", "purpose": "left-of-boundary"},
+    {"input": 172.5, "result": "午", "purpose": "left-closed-boundary"},
+    {"input": "", "result": "REJECT_INVALID_INPUT", "purpose": "counterexample"}
+  ],
+  "scope_check": {
+    "historical_claim": "names, composition and cyclic order only",
+    "engineering_rule": "true-north zero, clockwise, equal 15-degree sectors, left-closed/right-open",
+    "fortune_output": false
+  },
+  "acceptance": "PASS",
+  "project_state": "Z05-B EXECUTING / NOT_CLOSED",
+  "next_checkpoint": "connect structured site-observation fields to explicit decision nodes without adding auspiciousness claims"
+}
