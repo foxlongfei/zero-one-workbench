@@ -1,0 +1,58 @@
+name: Verify public Z05-B provenance gate
+
+on:
+  push:
+    paths:
+      - ".github/workflows/verify-public-z05-b.yml"
+      - "scripts/verify-public-z05-b.cjs"
+      - "portal/k02-board.html"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verify-public-z05-b
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
+
+      - name: Verify public provenance gate and counterexample
+        env:
+          PUBLIC_URL: https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html
+          EVIDENCE_DIR: docs/v0.1/evidence/z05-b
+        run: node scripts/verify-public-z05-b.cjs
+
+      - name: Upload immutable verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: z05-b-public-provenance-evidence
+          path: docs/v0.1/evidence/z05-b/
+          if-no-files-found: error
+
+      - name: Commit passing evidence
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/v0.1/evidence/z05-b/
+          git commit -m "test(z05): record public provenance gate evidence"
+          git pull --rebase origin main
+          git push origin HEAD:main
