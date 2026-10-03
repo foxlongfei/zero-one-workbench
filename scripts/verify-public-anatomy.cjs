@@ -116,7 +116,7 @@ try {
   result.checks.systemLayer = { passed: true, preset: "Skeleton", visiblePieces: 296 };
 
   const bicepsState = page.locator("#realAssetState");
-  await page.waitForFunction(() => document.querySelector("#realAssetState")?.dataset.status === "DISPLAYED", null, { timeout: 180000 });
+  await page.waitForFunction(() => document.querySelector("#realAssetState")?.dataset.status === "DISPLAYED" && document.querySelector("#realUpper3d")?.dataset.kinematicModel === "GROUP_LOCAL_PIVOT_V0.6", null, { timeout: 180000 });
   const bicepsMount = page.locator("#realUpper3d");
   const bicepsCanvas = bicepsMount.locator("canvas").first();
   await bicepsCanvas.waitFor({ state: "visible", timeout: 30000 });
@@ -145,9 +145,11 @@ try {
     elbowOut: document.querySelector("#realElbowOut")?.textContent,
     forearm: document.querySelector("#realForearmRange")?.value,
     forearmOut: document.querySelector("#realForearmOut")?.textContent,
-    assetStatus: document.querySelector("#realAssetState")?.dataset.status
+    assetStatus: document.querySelector("#realAssetState")?.dataset.status,
+    kinematicModel: document.querySelector("#realUpper3d")?.dataset.kinematicModel,
+    muscleModel: document.querySelector("#realUpper3d")?.dataset.muscleModel
   }));
-  if (phaseState.phase !== "屈肘峰值" || phaseState.elbow !== "120" || phaseState.forearm !== "55" || phaseState.assetStatus !== "DISPLAYED") {
+  if (phaseState.phase !== "屈肘峰值" || phaseState.elbow !== "120" || phaseState.forearm !== "55" || phaseState.assetStatus !== "DISPLAYED" || phaseState.kinematicModel !== "GROUP_LOCAL_PIVOT_V0.6" || phaseState.muscleModel !== "CENTERED_LOCAL_WRAPPER") {
     throw new Error("BICEPS peak phase controls did not remain linked to displayed real OBJ");
   }
   await captureRegion(bicepsMount, bicepsPeak);
