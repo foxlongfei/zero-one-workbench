@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m2.public-webgl-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-03T08:58:05.191Z",
-  "gitSha": "aa0e4baaa8c5a36494616c4b4cf36d2b604d4504",
+  "verifiedAt": "2026-10-03T09:03:13.542Z",
+  "gitSha": "95dac7d8b9fa58af7538d096a704662a9a9d1268",
   "checks": {
     "catalog": {
       "passed": true,
@@ -13,8 +13,42 @@
       "passed": true,
       "width": 1582,
       "height": 900
+    },
+    "rotate": {
+      "passed": true,
+      "changedPixels": 2638,
+      "totalPixels": 1423800,
+      "ratio": 0.001852788312965304
+    },
+    "zoom": {
+      "passed": true,
+      "changedPixels": 38135,
+      "totalPixels": 1423800,
+      "ratio": 0.026783958421126564
+    },
+    "systemLayer": {
+      "passed": true,
+      "preset": "Skeleton",
+      "visiblePieces": 296
     }
   },
-  "passed": false,
-  "error": "Error: rotation did not materially change rendered pixels\n    at /home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-anatomy.cjs:106:46"
+  "screenshots": {
+    "before": {
+      "path": "docs/v0.1/evidence/m2/public-before.png",
+      "sha256": "30f5f7af4bf0bcf01a3f2356a84bfdfdcaf0ab2e6fc0ad8c804c68af6a24e1ca"
+    },
+    "afterRotate": {
+      "path": "docs/v0.1/evidence/m2/public-after-rotate.png",
+      "sha256": "ffa65b801936423d7a23b1365cc60ac8018616e1f638cca88199d88812879059"
+    },
+    "afterZoom": {
+      "path": "docs/v0.1/evidence/m2/public-after-zoom.png",
+      "sha256": "0f6e9c8a2d4d0189f40cb878ce37738e939923f3ef5aba6feb7c8669b35edc81"
+    },
+    "mainEntry": {
+      "path": "docs/v0.1/evidence/m2/public-main-entry.png",
+      "sha256": "870c77b65fb176823227a75002793811c49270381a7a15decbc7c6d3b5b144f0"
+    }
+  },
+  "passed": true
 }
