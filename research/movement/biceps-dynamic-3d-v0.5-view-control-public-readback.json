@@ -1,0 +1,65 @@
+{
+  "artifact_id": "BICEPS-DYNAMIC-3D-V0.5-VIEW-CONTROL-PUBLIC-READBACK",
+  "recorded_at": "2026-10-03T11:36:49+08:00",
+  "task_id": "BICEPS-DYNAMIC-3D-V0.1",
+  "product_version": "V0.5",
+  "status": "PUBLIC_FALLBACK_READBACK_PASS_REAL_OBJ_DYNAMIC_PENDING",
+  "implementation_commit": "6104b2f00146168793c2b2f9738898372e748d54",
+  "syntax_repair_commit": "0f3841abee79693fe826a63f2b378467e3b94480",
+  "deployed_head": "6e28a14d37e115f2b66fde6206a902af891d80d2",
+  "pages_run": {
+    "id": 37094274531,
+    "conclusion": "success",
+    "url": "https://github.com/foxlongfei/zero-one-workbench/actions/runs/37094274531"
+  },
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "observed_environment": {
+    "webgl": false,
+    "asset_status": "STATIC_FALLBACK_INTERACTIVE",
+    "view_mode": "FALLBACK_2D_VIEW"
+  },
+  "observed_interaction": {
+    "view_angle_deg": 45,
+    "view_label": "右前斜视 +45°（二维预览倾斜）",
+    "phase": "屈肘峰值",
+    "elbow_deg": 120,
+    "forearm_deg": 55
+  },
+  "assertions": [
+    {
+      "id": "MOVE-VIEW-01",
+      "result": "PASS",
+      "detail": "公开页观察角度控件可将降级预览设为+45°并回读"
+    },
+    {
+      "id": "MOVE-PHASE-01",
+      "result": "PASS",
+      "detail": "屈肘峰值预设回读120°与前臂+55°"
+    },
+    {
+      "id": "MOVE-SYNTAX-01",
+      "result": "PASS",
+      "detail": "并发合并引入的字面量反斜杠n已修复；四个脚本块均可解析"
+    },
+    {
+      "id": "MOVE-3D-01",
+      "result": "NOT_CLOSED",
+      "detail": "本次环境无法创建WebGL上下文；只认证二维降级交互，不认证真实OBJ动态、解剖标志点、桡尺约束、力值或OpenSim校准"
+    }
+  ],
+  "mainline_state": {
+    "M01": "COMPLETED",
+    "M02": "ACCEPTED_L1_CANDIDATE_ONLY",
+    "M03": "BLOCKED_CLEAN_CONTEXT",
+    "M04": "BLOCKED_BY_M03"
+  },
+  "closure_gate": {
+    "substantive_increment": true,
+    "page_integrated": true,
+    "pages_success": true,
+    "public_readback": true,
+    "status_sync": false,
+    "drive_sync": false,
+    "overall": "NOT_CLOSED"
+  }
+}
