@@ -1,0 +1,46 @@
+{
+  "schema_version": "z05-public-operation-gate-verification/v0.3",
+  "task_id": "Z05-B",
+  "verified_at": "2026-10-04T09:57:53+08:00",
+  "page_url": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html?v=b140bfce",
+  "page_commit": "b140bfce60d3de0d0084cbd6db5294027ebc583a",
+  "result": "PASS",
+  "checks": [
+    {
+      "case_id": "PUBLIC-D07-ALLOW-01",
+      "operation_id": "DIRECTION_NORMALIZATION",
+      "input": {
+        "bearing_degrees": 182.4,
+        "observations": {
+          "opening": "南侧主要开口",
+          "road": "东侧道路",
+          "water": null,
+          "slope": null
+        }
+      },
+      "observed_direction": "午山",
+      "observed_readiness": "DIRECTION_ONLY_PARTIAL_OBSERVATION",
+      "observed_gate": "EXECUTION_ALLOWED_NON_ENVIRONMENTAL",
+      "source_binding": "《欽定協紀辨方書·卷二》影印 leaf/PDF 5–7｜仅名称/组成/循环次序",
+      "passed": true
+    },
+    {
+      "case_id": "PUBLIC-D07-BLOCK-01",
+      "operation_id": "ENV_WATER_RELATION",
+      "input": {
+        "bearing_degrees": 182.4,
+        "water": null
+      },
+      "observed_gate": "BLOCKED_NO_SOURCE_BINDING",
+      "observed_message": "缺少作品/页叶/栏位的冻结绑定，环境操作不执行。",
+      "no_environment_or_auspice_judgment_emitted": true,
+      "passed": true
+    }
+  ],
+  "boundary": {
+    "user_input_cannot_create_source_binding": true,
+    "direction_normalization_is_non_environmental_engineering": true,
+    "environment_operations_without_exact_binding_remain_blocked": true,
+    "z05_b_overall_status": "NOT_CLOSED"
+  }
+}
