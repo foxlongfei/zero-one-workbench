@@ -1,0 +1,31 @@
+{
+  "schema": "zero-one.m4.public-opensim-verification.v0.1",
+  "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
+  "verifiedAt": "2026-10-04T01:38:14.660Z",
+  "gitSha": "5b1170a66aaaeab98c80762207674017701916e8",
+  "checks": {
+    "publicPage": {
+      "passed": true,
+      "initial": {
+        "release": "M4_OPENSIM_CORE_V0.1",
+        "calculation": "OPENSIM46_ARM26_ELBOW_POSITION_GRID_V0.1",
+        "status": "真实引擎产物已读入｜OpenSim Core｜arm26｜5 个状态 × 6 条肌肉",
+        "angle": 90,
+        "muscles": [
+          "TRIlong\n          肌腱总长 0.312263 m\n          肘屈力臂 -0.019946 m",
+          "TRIlat\n          肌腱总长 0.201265 m\n          肘屈力臂 -0.019950 m",
+          "TRImed\n          肌腱总长 0.188892 m\n          肘屈力臂 -0.019950 m",
+          "BIClong\n          肌腱总长 0.373656 m\n          肘屈力臂 0.048753 m",
+          "BICshort\n          肌腱总长 0.290769 m\n          肘屈力臂 0.048753 m",
+          "BRA\n          肌腱总长 0.122367 m\n          肘屈力臂 0.022694 m"
+        ],
+        "source": "来源与单位：OpenSim Core version 4.6-2026-06-22-85aaf64, build date 18:14:53 Jun 22 2026；Arm26 @ 84b487c4；模型 SHA-256 e2224d0044eb393b05d64926c3fa1682c451a9adc7f510e5517ef9958d3d41b9；长度/力臂单位 m，角度单位 degree/radian。"
+      },
+      "selected": {
+        "angle": 120,
+        "biceps": "BIClong\n          肌腱总长 0.348258 m\n          肘屈力臂 0.045642 m"
+      }
+    }
+  },
+  "passed": true
+}
