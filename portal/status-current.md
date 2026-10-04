@@ -1,4 +1,4 @@
-# 双项目 CURRENT｜2026-10-04 09:45 +08:00
+# 双项目 CURRENT｜2026-10-04 09:58 +08:00
 
 本页只记录真实执行状态。**实物 → 对应 Pages 接入 → Pages 发布 → 公开运行/读回 → 总首页/CURRENT/Drive 同步**；任一门缺失即 **NOT_CLOSED**，不提高完成度。
 
@@ -11,7 +11,8 @@
 - 本轮实质增量：新增 D07 SOURCE_BOUND_OPERATION_GATE。只有注册操作且存在冻结来源绑定时才允许执行；环境操作缺少作品/页叶/栏位绑定时统一返回 `BLOCKED_NO_SOURCE_BINDING`，不生成环境或吉凶结论。
 - `DIRECTION_NORMALIZATION` 仅以已冻结的二十四山名称/组成/循环次序为非环境工程操作，返回 `EXECUTION_ALLOWED_NON_ENVIRONMENTAL`；主要开口、道路、水体、坡向四类环境操作继续阻塞。
 - 验证器 6/6 PASS；页面接入 D07 后与 D01–D06 同步输出真实决策轨迹。
-- [D07 结构化门](../research/zero-one/z05-b-source-bound-operation-gate-v0.3.json) · [验证器](../scripts/validate-z05-operation-gate.mjs) · [页面提交](https://github.com/foxlongfei/zero-one-workbench/commit/b140bfce60d3de0d0084cbd6db5294027ebc583a)
+- [D07 结构化门](../research/zero-one/z05-b-source-bound-operation-gate-v0.3.json) · [验证器](../scripts/validate-z05-operation-gate.mjs) · [页面提交](https://github.com/foxlongfei/zero-one-workbench/commit/b140bfce60d3de0d0084cbd6db5294027ebc583a) · [公开运行证据](../docs/v0.1/evidence/z05-b/public-operation-gate-verification-v0.3.json)
+- 公开 Pages 已发布并读回：182.4°/住宅A 的 `DIRECTION_NORMALIZATION` 返回 `EXECUTION_ALLOWED_NON_ENVIRONMENTAL`；同输入切换 `ENV_WATER_RELATION` 返回 `BLOCKED_NO_SOURCE_BINDING`，且未输出环境或吉凶判断。本轮 D07 增量硬门 **PASS**。
 - 有效性边界：用户输入不能创建或升级可信来源绑定；Z05-B 整体仍 **NOT_CLOSED**。
 - 精确断点：定位首个具有作品、页叶和栏位的环境操作证据；命中前 D07 保持阻塞。
 
@@ -47,5 +48,5 @@
 - D：Z05 D07 来源绑定操作门；BICEPS 视觉证据审计。
 - Q：Z05 六个正常/反例；BICEPS 版本新鲜度、锚点连续、关节约束边界。
 - C：并发状态冲突处理；Pages、CURRENT、总首页与 Drive 同步。
-- 最近一次真实成果变化：2026-10-04 09:45 +08:00。
-- 本周期结论：**Z05 有实质推进；动起来形成新的否决性视觉证据与公开验收边界，但未提高完成度。**
+- 最近一次真实成果变化：2026-10-04 09:58 +08:00。
+- 本周期结论：**Z05 的 D07 本轮增量完成公开硬门，但 Z05-B 整体仍 NOT_CLOSED；动起来形成新的否决性视觉证据与公开验收边界，未提高完成度。**
