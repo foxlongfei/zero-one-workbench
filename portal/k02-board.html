@@ -250,6 +250,18 @@
             <button class="chip" id="sampleSite" type="button">
               载入住宅A样例
             </button>
+            <p>
+              <label
+                >拟执行操作
+                <select id="operationCandidate">
+                  <option value="DIRECTION_NORMALIZATION">方位归一化（非环境判断）</option>
+                  <option value="ENV_OPENING_RELATION">主要开口关系</option>
+                  <option value="ENV_ROAD_RELATION">道路关系</option>
+                  <option value="ENV_WATER_RELATION">水体关系</option>
+                  <option value="ENV_SLOPE_RELATION">坡向关系</option>
+                </select></label
+              >
+            </p>
           </fieldset>
           <div id="dirResult" class="result">等待方位与现场观察。</div>
           <div id="decisionTrace" class="result muted" style="margin-top: 8px">
@@ -450,6 +462,24 @@
               : "DIRECTION_ONLY_NO_OBSERVATION";
         return { pairs, errors, known, unknown, result };
       }
+      const operationRegistry = {
+        DIRECTION_NORMALIZATION: {
+          kind: "NON_ENVIRONMENTAL_ENGINEERING",
+          binding: "《欽定協紀辨方書·卷二》影印 leaf/PDF 5–7｜仅名称/组成/循环次序",
+          result: "EXECUTION_ALLOWED_NON_ENVIRONMENTAL",
+        },
+        ENV_OPENING_RELATION: { kind: "ENVIRONMENTAL", binding: null },
+        ENV_ROAD_RELATION: { kind: "ENVIRONMENTAL", binding: null },
+        ENV_WATER_RELATION: { kind: "ENVIRONMENTAL", binding: null },
+        ENV_SLOPE_RELATION: { kind: "ENVIRONMENTAL", binding: null },
+      };
+      function gateOperation(operationId) {
+        const operation = operationRegistry[operationId];
+        if (!operation) return { result: "REJECT_UNREGISTERED_OPERATION", binding: null };
+        if (operation.kind === "ENVIRONMENTAL" && !operation.binding)
+          return { result: "BLOCKED_NO_SOURCE_BINDING", binding: null };
+        return { result: operation.result, binding: operation.binding };
+      }
       document.getElementById("sampleSite").onclick = () => {
         document.getElementById("degree").value = "182.4";
         document.getElementById("obsOpening").value = "南侧主要开口";
@@ -475,7 +505,10 @@
         const d = ((n % 360) + 360) % 360,
           i = Math.floor(((d + 7.5) % 360) / 15);
         const gate = classifyObservations();
+        const operationId = document.getElementById("operationCandidate").value;
+        const operationGate = gateOperation(operationId);
         result.dataset.readiness = gate.result;
+        result.dataset.operationGate = operationGate.result;
         result.innerHTML =
           "<b>" +
           d.toFixed(1) +
@@ -492,7 +525,12 @@
           (gate.errors.length
             ? "；<b>输入错误：</b>" + gate.errors.join("、")
             : "") +
-          "<br>观察门只判断输入是否就绪，不作环境或吉凶判断。";
+          "<br><b>D07 操作门：</b>" +
+          operationId +
+          " → " +
+          operationGate.result +
+          (operationGate.binding ? "<br><b>绑定：</b>" + operationGate.binding : "<br>缺少作品/页叶/栏位的冻结绑定，环境操作不执行。") +
+          "<br>观察门只判断输入是否就绪；操作门未通过时不作环境或吉凶判断。";
         trace.innerHTML =
           "<b>决策轨迹</b><br>D01 数值校验 PASS → D02 归一化 " +
           d.toFixed(4) +
@@ -508,6 +546,8 @@
               : "EMPTY") +
           " → D06 " +
           gate.result +
+          " → D07 " +
+          operationGate.result +
           "；历史来源仅认证名称/组成/循环次序。";
       };
       function parseCSV(t) {
