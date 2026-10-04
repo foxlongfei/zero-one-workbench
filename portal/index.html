@@ -1,69 +1,22 @@
 <!doctype html>
 <html lang="zh-CN">
-  <meta charset="utf-8" /><meta
-    name="viewport"
-    content="width=device-width"
-  /><title>零一空间｜V0.1 原型机入口</title
-  ><link rel="stylesheet" href="assets/style.css" />
-  <body>
-    <main class="wrap">
-      <h1 class="hero">零一空间｜V0.1 原型机入口</h1>
-      <p class="muted">
-        只按 Issue #2 的真实验收门计数：实物 → 真实运行 → 产物 → 主页面 → Pages
-        → 公共读回。更新：2026-10-04。
-      </p>
-      <section class="grid">
-        <article class="card">
-          <h2>运动达人 V0.1</h2>
-          <p>
-            <b>Issue #2 验收状态：</b>M1 COMPLETED；M2 COMPLETED；M3
-            COMPLETED；M4 COMPLETED；M5 NOT COMPLETED。
-          </p>
-          <p>
-            <b>M4 公开验收：</b
-            >OpenSim Core 4.6 已实际加载 Arm26，运行 5 个肘屈状态 × 6 条肌肉，生成 muscle-tendon length 与 moment arm；主页面可切换状态并显示来源、模型与单位。下一项为 M5。
-          </p>
-          <p class="links">
-            <a href="movement.html?v=M4_COMPLETED_20261004">进入运动达人 V0.1 →</a> ·
-            <a href="../docs/v0.1/M4-completion-report-2026-10-04.md">M4 完成报告 →</a>
-          </p>
-        </article>
-        <article class="card">
-          <h2>堪舆先生 V0.1</h2>
-          <p><b>MAIN Z05-B：</b>二十四山规则表已延伸到 D04–D06 现场观察就绪图；主要开口、道路、水体、坡向及各自来源进入真实执行。</p>
-          <p>
-            <b>真实链已经跑通：</b>住宅 DXF → depthmapX 0.9.1 IMPORT → VISPREP
-            建 visibility graph → VGA local visibility → CSV → 主页面真实指标与
-            Connectivity 格点图。
-          </p>
-          <p><b>公开验收：</b>住宅A部分已知、缺来源、孤立来源及四字段完整四类输入均按规则返回；就绪度不冒充环境判断，不生成吉凶。</p>
-          <p>
-            <b>边界：</b>上传普通户型图片仍不冒充自动墙线识别。K3 环境模型、K4
-            传统证据分层完整案例、K5 先生式反馈闭环仍未完成。
-          </p>
-          <p class="links">
-            <a href="k02-board.html?v=948fcb1e">进入堪舆先生 V0.1 →</a> ·
-            <a href="../docs/v0.1/K2-completion-report-2026-10-03.md"
-              >K2 完成报告 →</a
-            >
-          </p>
-        </article>
-      </section>
-      <section class="card">
-        <h2>今天通过硬验收</h2>
-        <p><b>运动达人：</b>M4 已通过 OpenSim Core 真实重算、可复现产物、同页状态切换及公开读回硬验收。</p>
-        <p><b>零一空间：</b>Z05-B 四字段/来源配对、观察集合分类、就绪度决策及公开正常/反例/完整输入读回 PASS；整体仍 NOT_CLOSED。</p>
-        <p>
-          M4 公开验收记录为 <code>passed: true</code>；本页只据此关闭 M4，不提前标记 M5。
-        </p>
-      </section>
-      <section class="card">
-        <h2>验收纪律</h2>
-        <p>
-          不以 commits、研究材料、规则表、独立 Demo
-          数量代替产品完成度。未跑通的仍写 EXECUTING。
-        </p>
-      </section>
-    </main>
-  </body>
-</html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>零一空间｜双项目入口</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><main class="wrap">
+<h1 class="hero">零一空间｜双项目入口</h1>
+<p class="muted">只按用户层硬门计数：实物 → Pages 接入 → 发布 → 公开运行/读回 → CURRENT/Drive 同步。更新：2026-10-04 09:45 +08:00。</p>
+<section class="grid">
+<article class="card"><h2>零一空间研究｜Z05-B</h2>
+<p><b>MAIN：EXECUTING / NOT_CLOSED。</b> D01–D06 方位与现场观察就绪图之后，新增 D07 来源绑定操作门。</p>
+<p>二十四山方位归一化可作为非环境工程操作执行；主要开口、道路、水体、坡向等环境操作在缺少作品、页叶、栏位绑定时全部返回 <code>BLOCKED_NO_SOURCE_BINDING</code>，不生成吉凶。</p>
+<p><a href="k02-board.html?v=b140bfce">运行 Z05-B →</a> · <a href="../research/zero-one/z05-b-source-bound-operation-gate-v0.3.json">D07 规则 →</a></p></article>
+<article class="card"><h2>动起来｜严格状态</h2>
+<p><b>M01 COMPLETED；M02 ACCEPTED_L1_CANDIDATE_ONLY；M03 BLOCKED_CLEAN_CONTEXT；M04 BLOCKED_BY_M03。</b></p>
+<p>真实图片姿态与 OpenSim 产物保留为能力证据，不替代正式主线状态。BICEPS V0.7 人工视觉审计仍为 <code>PUBLIC_VISUAL_GATE_FAILED</code>：功能响应可见，但肌肉近/远端附着连续和关节约束尚未被证明。</p>
+<p><a href="movement.html?v=879e6853">查看运动页面 →</a> · <a href="../docs/v0.1/evidence/m2/biceps-visual-anatomy-audit-v0.7.json">视觉审计 →</a></p></article>
+</section>
+<section class="card"><h2>本轮验收</h2>
+<p><b>Z05：</b>D07 页面执行与 6/6 规则验证形成实质增量，整体仍未闭环。</p>
+<p><b>动起来：</b>形成新的否决性视觉证据并纠正状态漂移；没有通过 BICEPS 视觉门，不提高完成度。</p>
+</section>
+<section class="card"><h2>验收纪律</h2><p>不以 commit、独立 JSON 或状态文字代替产品完成度；无公开运行和读回的结果不传播到下一节点。</p></section>
+</main></body></html>
