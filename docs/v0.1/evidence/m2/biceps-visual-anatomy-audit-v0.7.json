@@ -1,0 +1,50 @@
+{
+  "schema": "zero-one.biceps.visual-anatomy-audit.v0.7",
+  "audited_at": "2026-10-04T01:51:00Z",
+  "input_evidence": {
+    "functional_json": "docs/v0.1/evidence/m2/public-webgl-verification.json",
+    "functional_verified_at": "2026-10-03T13:58:00.916Z",
+    "functional_git_sha": "41a87a0b0bbbb3d7e917725dfca2067262239184",
+    "screenshots": [
+      "docs/v0.1/evidence/m2/biceps-before.png",
+      "docs/v0.1/evidence/m2/biceps-after-view.png",
+      "docs/v0.1/evidence/m2/biceps-after-peak.png"
+    ]
+  },
+  "checks": {
+    "real_assets_visible": {
+      "passed": true,
+      "finding": "The three images visibly contain the humerus, radius, ulna, and two biceps meshes."
+    },
+    "view_change_visible": {
+      "passed": true,
+      "finding": "The +45 degree image changes viewpoint and exposes the upper-arm and forearm meshes."
+    },
+    "elbow_flexion_visible": {
+      "passed": true,
+      "finding": "The peak image visibly changes the forearm orientation relative to the humerus."
+    },
+    "proximal_distal_muscle_attachment_proven": {
+      "passed": false,
+      "finding": "The CENTERED_LOCAL_WRAPPER scales each muscle around its own center; the evidence contains no tracked proximal/distal anchors or endpoint-distance invariant. The screenshots therefore cannot prove that muscle attachment continuity is preserved through flexion."
+    },
+    "joint_surface_constraint_proven": {
+      "passed": false,
+      "finding": "The screenshots and pixel deltas do not prove anatomical joint-surface contact, collision avoidance, or a validated elbow axis."
+    },
+    "evidence_is_fresh_for_current_page": {
+      "passed": false,
+      "finding": "The functional evidence identifies gitSha 41a87a0b and predates later movement-page changes, including the M3/M4 additions. It cannot certify the current page revision."
+    }
+  },
+  "result": "PUBLIC_VISUAL_GATE_FAILED",
+  "passed": false,
+  "accepted_scope": "Functional WebGL rendering and input response only.",
+  "rejected_scope": "Anatomical continuity, validated joint mechanics, and current-page certification.",
+  "next_required_evidence": [
+    "Track proximal and distal biceps anchors through extension, mid-flexion, and peak flexion.",
+    "Record endpoint distances or another explicit continuity invariant for both biceps heads.",
+    "Capture fresh screenshots against the deployed revision after the anchor model is present.",
+    "Perform a human visual review of rotation direction, penetration, elbow pivot, and radius/ulna grouping."
+  ]
+}
