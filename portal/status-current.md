@@ -26,10 +26,12 @@
 - M01｜COMPLETED
 - M02｜COMPLETED
 - M03｜COMPLETED（2026-10-04）
-- M04｜NOT COMPLETED
+- M04｜COMPLETED（2026-10-04）
 - M05｜NOT COMPLETED
 
 M03 已通过公开真实图片闭环：MediaPipe Pose Landmarker Full 实际识别 `case2_12.jpg`，输出 33 个二维关键点、33 个世界坐标关键点、分割掩膜与 6 个标准关节结果，并回写运动达人主页面的统一人体坐标。自然语言训练方案路径同时通过。 [M3 完成报告](../docs/v0.1/M3-completion-report-2026-10-04.md) · [公开证据](../docs/v0.1/evidence/m3/public-pose-verification.json) · [自动验收运行](https://github.com/foxlongfei/zero-one-workbench/actions/runs/37149706517)
+
+M04 已通过真实 OpenSim Core 闭环：官方 OpenSim 4.6 加载固定哈希的 Arm26，设置 5 个 `r_elbow_flex` 状态，对 6 条肌肉生成 30 行 muscle-tendon length / elbow moment arm；主页面可切换状态并显示来源、模型、单位。 [M4 完成报告](../docs/v0.1/M4-completion-report-2026-10-04.md) · [公开证据](../docs/v0.1/evidence/m4/public-opensim-verification.json) · [OpenSim 重算](https://github.com/foxlongfei/zero-one-workbench/actions/runs/37168584402) · [公开验收](https://github.com/foxlongfei/zero-one-workbench/actions/runs/37168584440)
 
 ### SUB｜COMMON-HUMAN-COORDINATE / HUMAN-3D｜EXECUTING
 **当前节点：BICEPS-DYNAMIC-3D-V0.6｜NOT_CLOSED / PUBLIC_VISUAL_GATE_FAILED**
@@ -50,5 +52,5 @@ M03 已通过公开真实图片闭环：MediaPipe Pose Landmarker Full 实际识
 - D：Z05 观察字段/来源配对与 D04–D06 就绪图；BICEPS 本轮不改实物。
 - Q：Z05 正常样例、缺来源、孤立来源、完整输入与边界读回；BICEPS 维持视觉门失败判定。
 - C：正式状态与能力块冲突处理；总首页、项目页、CURRENT、Drive 写回与读回。
-- 最近一次真实成果变化：2026-10-04，运动达人 M3 完成真实图片姿态与自然语言训练方案公开验收。
-- 本周期结论：**运动达人 M3 通过 Issue #2 验收门；只关闭 M3，下一项为 M4。**
+- 最近一次真实成果变化：2026-10-04，运动达人 M4 完成 OpenSim Core 肌骨计算与公开状态切换验收。
+- 本周期结论：**运动达人 M4 通过 Issue #2 验收门；只关闭 M4，下一项为 M5。**
