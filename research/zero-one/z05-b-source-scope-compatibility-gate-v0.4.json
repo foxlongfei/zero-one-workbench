@@ -1,0 +1,29 @@
+{
+  "artifact_id": "Z05-B-SOURCE-SCOPE-COMPATIBILITY-GATE-V0.4",
+  "task_id": "Z05",
+  "status": "RUNNABLE_SCOPE_GATE",
+  "depends_on": "research/zero-one/z05-b-source-bound-operation-gate-v0.3.json",
+  "scope": "Reject bindings whose verified evidence scope does not cover the requested operation, even when a work and page range are present.",
+  "verified_source": {
+    "work": "欽定協紀辨方書·卷二",
+    "leaf_pdf": "5-7",
+    "verified_scope_tags": ["DIRECTION_NAMING", "DIRECTION_COMPOSITION", "CYCLIC_ORDER"],
+    "excluded_scope_tags": ["ENV_OPENING_RELATION", "ENV_ROAD_RELATION", "ENV_WATER_RELATION", "ENV_SLOPE_RELATION"]
+  },
+  "rules": [
+    "A binding is not executable merely because work and page fields are non-empty.",
+    "Every requested operation declares required scope tags.",
+    "All required scope tags must be present in verified_source_scope.",
+    "A wrong-domain candidate returns BLOCKED_SOURCE_SCOPE_MISMATCH and produces no environmental or auspiciousness output.",
+    "Candidate bindings remain non-authoritative until scope compatibility and exact locator checks both pass."
+  ],
+  "operations": [
+    {"operation_id":"DIRECTION_NORMALIZATION","required_scope_tags":["DIRECTION_NAMING","CYCLIC_ORDER"],"candidate_binding":"Qinding Xiejibianfangshu vol.2 PDF 5-7","expected":"EXECUTION_ALLOWED_NON_ENVIRONMENTAL"},
+    {"operation_id":"ENV_WATER_RELATION","required_scope_tags":["ENV_WATER_RELATION"],"candidate_binding":"Qinding Xiejibianfangshu vol.2 PDF 5-7","expected":"BLOCKED_SOURCE_SCOPE_MISMATCH"},
+    {"operation_id":"ENV_WATER_RELATION","required_scope_tags":["ENV_WATER_RELATION"],"candidate_binding":null,"expected":"BLOCKED_NO_SOURCE_BINDING"},
+    {"operation_id":"UNKNOWN_OPERATION","required_scope_tags":[],"candidate_binding":null,"expected":"REJECT_UNREGISTERED_OPERATION"}
+  ],
+  "result": "SCOPE_MISMATCH_GUARD_READY",
+  "historical_source_verified_for_environment": false,
+  "mainline_status": "NOT_CLOSED"
+}
