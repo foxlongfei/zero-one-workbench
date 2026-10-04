@@ -470,15 +470,19 @@
         },
         ENV_OPENING_RELATION: { kind: "ENVIRONMENTAL", binding: null },
         ENV_ROAD_RELATION: { kind: "ENVIRONMENTAL", binding: null },
-        ENV_WATER_RELATION: { kind: "ENVIRONMENTAL", binding: null },
+        ENV_WATER_RELATION: { kind: "ENVIRONMENTAL", binding: null, candidateBinding: "《欽定協紀辨方書·卷二》影印 leaf/PDF 5–7", verifiedScope: ["DIRECTION_NAMING","DIRECTION_COMPOSITION","CYCLIC_ORDER"], requiredScope: ["ENV_WATER_RELATION"] },
         ENV_SLOPE_RELATION: { kind: "ENVIRONMENTAL", binding: null },
       };
       function gateOperation(operationId) {
         const operation = operationRegistry[operationId];
-        if (!operation) return { result: "REJECT_UNREGISTERED_OPERATION", binding: null };
+        if (!operation) return { result: "REJECT_UNREGISTERED_OPERATION", binding: null, candidate: null };
+        if (operation.candidateBinding) {
+          const compatible = operation.requiredScope.every((tag) => operation.verifiedScope.includes(tag));
+          if (!compatible) return { result: "BLOCKED_SOURCE_SCOPE_MISMATCH", binding: null, candidate: operation.candidateBinding };
+        }
         if (operation.kind === "ENVIRONMENTAL" && !operation.binding)
-          return { result: "BLOCKED_NO_SOURCE_BINDING", binding: null };
-        return { result: operation.result, binding: operation.binding };
+          return { result: "BLOCKED_NO_SOURCE_BINDING", binding: null, candidate: null };
+        return { result: operation.result, binding: operation.binding, candidate: null };
       }
       document.getElementById("sampleSite").onclick = () => {
         document.getElementById("degree").value = "182.4";
@@ -529,7 +533,7 @@
           operationId +
           " → " +
           operationGate.result +
-          (operationGate.binding ? "<br><b>绑定：</b>" + operationGate.binding : "<br>缺少作品/页叶/栏位的冻结绑定，环境操作不执行。") +
+          (operationGate.binding ? "<br><b>生效绑定：</b>" + operationGate.binding : operationGate.candidate ? "<br><b>D08 候选绑定：</b>" + operationGate.candidate + "；已有页码但证据适用域仅覆盖二十四山名称/组成/次序，不能授权水体关系。" : "<br>缺少作品/页叶/栏位的冻结绑定，环境操作不执行。") +
           "<br>观察门只判断输入是否就绪；操作门未通过时不作环境或吉凶判断。";
         trace.innerHTML =
           "<b>决策轨迹</b><br>D01 数值校验 PASS → D02 归一化 " +
@@ -546,9 +550,9 @@
               : "EMPTY") +
           " → D06 " +
           gate.result +
-          " → D07 " +
+          " → D07 定位字段检查 → D08 " +
           operationGate.result +
-          "；历史来源仅认证名称/组成/循环次序。";
+          "；历史来源仅认证名称/组成/循环次序，错误领域的现有页码同样被阻断。";
       };
       function parseCSV(t) {
         const lines = t.trim().split(/\r?\n/),
