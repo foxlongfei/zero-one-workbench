@@ -1,0 +1,51 @@
+name: Run OpenSim Core M4 analysis
+
+on:
+  push:
+    paths:
+      - ".github/workflows/run-opensim-m4.yml"
+      - "scripts/run-opensim-m4.py"
+      - "portal/data/m4-opensim-arm26-results.json"
+      - "portal/data/m4-opensim-arm26-results.csv"
+  workflow_dispatch:
+
+jobs:
+  opensim-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install official OpenSim 4.6 Python package
+        run: python -m pip install --disable-pip-version-check opensim==4.6
+
+      - name: Fetch pinned official Arm26 model
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/opensim-org/opensim-models/84b487c4e3245359a64381e01f01b9cf4772d457/Models/Arm26/arm26.osim" -o /tmp/arm26.osim
+          echo "e2224d0044eb393b05d64926c3fa1682c451a9adc7f510e5517ef9958d3d41b9  /tmp/arm26.osim" | sha256sum --check
+
+      - name: Execute real OpenSim Core state analysis
+        run: |
+          python scripts/run-opensim-m4.py \
+            --model /tmp/arm26.osim \
+            --output-json /tmp/m4-opensim-arm26-results.json \
+            --output-csv /tmp/m4-opensim-arm26-results.csv
+
+      - name: Verify published artifacts are reproducible
+        run: |
+          diff -u portal/data/m4-opensim-arm26-results.json /tmp/m4-opensim-arm26-results.json
+          diff -u portal/data/m4-opensim-arm26-results.csv /tmp/m4-opensim-arm26-results.csv
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/m4-opensim-arm26-results.json'))
+          assert data['passed'] is True
+          assert data['checks']['modelLoadedByOpenSimCore'] is True
+          assert data['analysis']['stateCount'] == 5
+          assert len(data['analysis']['states']) == 5
+          assert all(len(state['muscles']) == 6 for state in data['analysis']['states'])
+          print('OPENSIM_M4_REPRODUCIBILITY_PASS')
+          PY

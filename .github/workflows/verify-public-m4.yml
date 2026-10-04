@@ -1,0 +1,60 @@
+name: Verify public M4 OpenSim results
+
+on:
+  push:
+    paths:
+      - ".github/workflows/verify-public-m4.yml"
+      - "portal/movement.html"
+      - "portal/assets/m4-opensim-results-v0.1.js"
+      - "portal/data/m4-opensim-arm26-results.json"
+      - "scripts/verify-public-m4.cjs"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verify-public-m4-opensim
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
+
+      - name: Execute public OpenSim result flow
+        env:
+          PUBLIC_URL: https://foxlongfei.github.io/zero-one-workbench/portal/movement.html
+          EVIDENCE_DIR: docs/v0.1/evidence/m4
+        run: node scripts/verify-public-m4.cjs
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m4-public-opensim-evidence
+          path: docs/v0.1/evidence/m4/
+          if-no-files-found: error
+
+      - name: Commit verifier evidence
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/v0.1/evidence/m4/
+          git commit -m "test(m4): record public OpenSim evidence"
+          git pull --rebase origin main
+          git push origin HEAD:main

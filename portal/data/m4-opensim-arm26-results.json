@@ -1,0 +1,237 @@
+{
+  "schema": "zero-one.m4.opensim-arm26.v0.1",
+  "calculationId": "OPENSIM46_ARM26_ELBOW_POSITION_GRID_V0.1",
+  "engine": {
+    "name": "OpenSim Core",
+    "versionAndDate": "version 4.6-2026-06-22-85aaf64, build date 18:14:53 Jun 22 2026",
+    "pythonPackage": "opensim==4.6",
+    "license": "Apache-2.0"
+  },
+  "model": {
+    "name": "arm26",
+    "sourceRepository": "opensim-org/opensim-models",
+    "sourceCommit": "84b487c4e3245359a64381e01f01b9cf4772d457",
+    "sourceUrl": "https://raw.githubusercontent.com/opensim-org/opensim-models/84b487c4e3245359a64381e01f01b9cf4772d457/Models/Arm26/arm26.osim",
+    "sha256": "e2224d0044eb393b05d64926c3fa1682c451a9adc7f510e5517ef9958d3d41b9",
+    "license": "CC BY 3.0",
+    "credits": "The OpenSim Development Team (Reinbolt, J; Seth, A; Habib, A; Hamner, S) adapted from a model originally created by Kate Holzbaur (11/22/04) License: Creative Commons (CCBY 3.0). You are free to distribute, remix, tweak, and build upon this work, even commercially, as long as you credit us for the original creation. http://creativecommons.org/licenses/by/3.0/",
+    "publication": "Holzbaur, K.R.S., Murray, W.M., Delp, S.L. A Model of the Upper Extremity for Simulating Musculoskeletal Surgery and Analyzing Neuromuscular Control. Annals of Biomedical Engineering, vol 33, pp 829–840, 2005",
+    "bodyCount": 3,
+    "coordinateCount": 2,
+    "muscleCount": 6
+  },
+  "analysis": {
+    "coordinate": "r_elbow_flex",
+    "fixedCoordinate": {
+      "name": "r_shoulder_elev",
+      "valueRad": 0.0
+    },
+    "stateCount": 5,
+    "anglesDeg": [
+      0,
+      30,
+      60,
+      90,
+      120
+    ],
+    "outputs": [
+      "muscle-tendon length",
+      "elbow flexion moment arm"
+    ],
+    "units": {
+      "angle": "degree/radian",
+      "length": "m",
+      "momentArm": "m"
+    },
+    "states": [
+      {
+        "angleDeg": 0,
+        "coordinateValueRad": 0.0,
+        "muscles": [
+          {
+            "name": "TRIlong",
+            "muscleTendonLengthM": 0.277609177,
+            "elbowMomentArmM": -0.020095289
+          },
+          {
+            "name": "TRIlat",
+            "muscleTendonLengthM": 0.166610488,
+            "elbowMomentArmM": -0.020095289
+          },
+          {
+            "name": "TRImed",
+            "muscleTendonLengthM": 0.154238292,
+            "elbowMomentArmM": -0.020095289
+          },
+          {
+            "name": "BIClong",
+            "muscleTendonLengthM": 0.424575382,
+            "elbowMomentArmM": 0.00937993
+          },
+          {
+            "name": "BICshort",
+            "muscleTendonLengthM": 0.341687913,
+            "elbowMomentArmM": 0.00937993
+          },
+          {
+            "name": "BRA",
+            "muscleTendonLengthM": 0.147352687,
+            "elbowMomentArmM": 0.015270221
+          }
+        ]
+      },
+      {
+        "angleDeg": 30,
+        "coordinateValueRad": 0.523598776,
+        "muscles": [
+          {
+            "name": "TRIlong",
+            "muscleTendonLengthM": 0.289794053,
+            "elbowMomentArmM": -0.024076046
+          },
+          {
+            "name": "TRIlat",
+            "muscleTendonLengthM": 0.178795365,
+            "elbowMomentArmM": -0.024076046
+          },
+          {
+            "name": "TRImed",
+            "muscleTendonLengthM": 0.166423168,
+            "elbowMomentArmM": -0.024076046
+          },
+          {
+            "name": "BIClong",
+            "muscleTendonLengthM": 0.415103812,
+            "elbowMomentArmM": 0.026475495
+          },
+          {
+            "name": "BICshort",
+            "muscleTendonLengthM": 0.332216343,
+            "elbowMomentArmM": 0.026475495
+          },
+          {
+            "name": "BRA",
+            "muscleTendonLengthM": 0.140013563,
+            "elbowMomentArmM": 0.013069644
+          }
+        ]
+      },
+      {
+        "angleDeg": 60,
+        "coordinateValueRad": 1.047197551,
+        "muscles": [
+          {
+            "name": "TRIlong",
+            "muscleTendonLengthM": 0.301781717,
+            "elbowMomentArmM": -0.021220179
+          },
+          {
+            "name": "TRIlat",
+            "muscleTendonLengthM": 0.190783028,
+            "elbowMomentArmM": -0.021220179
+          },
+          {
+            "name": "TRImed",
+            "muscleTendonLengthM": 0.178410832,
+            "elbowMomentArmM": -0.021220179
+          },
+          {
+            "name": "BIClong",
+            "muscleTendonLengthM": 0.397375085,
+            "elbowMomentArmM": 0.040542681
+          },
+          {
+            "name": "BICshort",
+            "muscleTendonLengthM": 0.314487616,
+            "elbowMomentArmM": 0.040542681
+          },
+          {
+            "name": "BRA",
+            "muscleTendonLengthM": 0.132859771,
+            "elbowMomentArmM": 0.01670981
+          }
+        ]
+      },
+      {
+        "angleDeg": 90,
+        "coordinateValueRad": 1.570796327,
+        "muscles": [
+          {
+            "name": "TRIlong",
+            "muscleTendonLengthM": 0.312262997,
+            "elbowMomentArmM": -0.019946479
+          },
+          {
+            "name": "TRIlat",
+            "muscleTendonLengthM": 0.201264683,
+            "elbowMomentArmM": -0.01994987
+          },
+          {
+            "name": "TRImed",
+            "muscleTendonLengthM": 0.188892487,
+            "elbowMomentArmM": -0.01994987
+          },
+          {
+            "name": "BIClong",
+            "muscleTendonLengthM": 0.373656419,
+            "elbowMomentArmM": 0.048753405
+          },
+          {
+            "name": "BICshort",
+            "muscleTendonLengthM": 0.290768951,
+            "elbowMomentArmM": 0.048753405
+          },
+          {
+            "name": "BRA",
+            "muscleTendonLengthM": 0.122367456,
+            "elbowMomentArmM": 0.022694054
+          }
+        ]
+      },
+      {
+        "angleDeg": 120,
+        "coordinateValueRad": 2.094395102,
+        "muscles": [
+          {
+            "name": "TRIlong",
+            "muscleTendonLengthM": 0.322680697,
+            "elbowMomentArmM": -0.019685379
+          },
+          {
+            "name": "TRIlat",
+            "muscleTendonLengthM": 0.211683615,
+            "elbowMomentArmM": -0.019702853
+          },
+          {
+            "name": "TRImed",
+            "muscleTendonLengthM": 0.199311419,
+            "elbowMomentArmM": -0.019702853
+          },
+          {
+            "name": "BIClong",
+            "muscleTendonLengthM": 0.348258242,
+            "elbowMomentArmM": 0.045641839
+          },
+          {
+            "name": "BICshort",
+            "muscleTendonLengthM": 0.265370773,
+            "elbowMomentArmM": 0.045641839
+          },
+          {
+            "name": "BRA",
+            "muscleTendonLengthM": 0.109989506,
+            "elbowMomentArmM": 0.023546494
+          }
+        ]
+      }
+    ]
+  },
+  "checks": {
+    "modelLoadedByOpenSimCore": true,
+    "coordinateStateApplied": true,
+    "allSixMusclesComputedAtFiveStates": true,
+    "finiteOutputs": true,
+    "bicepsLengthChangesWithElbowState": true
+  },
+  "passed": true
+}
