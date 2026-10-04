@@ -1,0 +1,59 @@
+{
+  "artifact_id": "Z05-B-SOURCE-BOUND-OPERATION-GATE-V0.3",
+  "task_id": "Z05",
+  "status": "RUNNABLE_EVIDENCE_GATE",
+  "depends_on": "research/zero-one/z05-b-site-observation-decision-graph-v0.2.json",
+  "scope": "Permit only registered operations with a frozen source binding. Environmental operations without an exact work/leaf/column binding remain blocked and produce no environmental or auspiciousness judgment.",
+  "registry": [
+    {
+      "operation_id": "DIRECTION_NORMALIZATION",
+      "kind": "NON_ENVIRONMENTAL_ENGINEERING",
+      "source_scope": "二十四山名称、组成与循环次序",
+      "source_binding": {
+        "work": "欽定協紀辨方書·卷二",
+        "leaf_pdf": "5-7",
+        "column": "frozen-sequence-scope"
+      },
+      "result": "EXECUTION_ALLOWED_NON_ENVIRONMENTAL"
+    },
+    {
+      "operation_id": "ENV_OPENING_RELATION",
+      "kind": "ENVIRONMENTAL",
+      "source_binding": null,
+      "result": "BLOCKED_NO_SOURCE_BINDING"
+    },
+    {
+      "operation_id": "ENV_ROAD_RELATION",
+      "kind": "ENVIRONMENTAL",
+      "source_binding": null,
+      "result": "BLOCKED_NO_SOURCE_BINDING"
+    },
+    {
+      "operation_id": "ENV_WATER_RELATION",
+      "kind": "ENVIRONMENTAL",
+      "source_binding": null,
+      "result": "BLOCKED_NO_SOURCE_BINDING"
+    },
+    {
+      "operation_id": "ENV_SLOPE_RELATION",
+      "kind": "ENVIRONMENTAL",
+      "source_binding": null,
+      "result": "BLOCKED_NO_SOURCE_BINDING"
+    }
+  ],
+  "rules": [
+    "An operation must exist in the registry.",
+    "An environmental operation requires an exact work, leaf/PDF page, and column binding before execution.",
+    "A missing binding returns BLOCKED_NO_SOURCE_BINDING and no environmental output.",
+    "DIRECTION_NORMALIZATION remains non-environmental and cannot be relabeled as an environmental judgment.",
+    "User-entered text cannot create or upgrade a trusted source binding."
+  ],
+  "acceptance_cases": [
+    { "operation_id": "DIRECTION_NORMALIZATION", "expected": "EXECUTION_ALLOWED_NON_ENVIRONMENTAL" },
+    { "operation_id": "ENV_OPENING_RELATION", "expected": "BLOCKED_NO_SOURCE_BINDING" },
+    { "operation_id": "ENV_ROAD_RELATION", "expected": "BLOCKED_NO_SOURCE_BINDING" },
+    { "operation_id": "ENV_WATER_RELATION", "expected": "BLOCKED_NO_SOURCE_BINDING" },
+    { "operation_id": "ENV_SLOPE_RELATION", "expected": "BLOCKED_NO_SOURCE_BINDING" },
+    { "operation_id": "UNKNOWN_OPERATION", "expected": "REJECT_UNREGISTERED_OPERATION" }
+  ]
+}
