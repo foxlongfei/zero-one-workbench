@@ -1,0 +1,97 @@
+const { chromium } = require("playwright");
+const fs = require("fs");
+
+const publicUrl = process.env.PUBLIC_URL || "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html";
+const outDir = process.env.EVIDENCE_DIR || "docs/v0.1/evidence/m5";
+fs.mkdirSync(outDir, { recursive: true });
+
+async function plan(page, input, expectedScenario, expectedActions, feedback, decision) {
+  await page.locator("#wish").fill(input);
+  await page.locator("#runWish").click();
+  await page.locator('body[data-m5-state="plan-ready"]').waitFor({ state: "attached" });
+  const before = await page.evaluate(() => ({
+    scenario: document.body.dataset.m5Scenario,
+    parsed: document.querySelector("#m5Parsed").textContent.trim(),
+    result: document.querySelector("#wishResult").textContent.trim(),
+    actions: [...document.querySelectorAll("#m5Actions .m5-action")].map((node) => node.textContent.trim()),
+    feedbackHidden: document.querySelector("#m5FeedbackPanel").hidden
+  }));
+  if (before.scenario !== expectedScenario) throw new Error(`scenario mismatch: ${before.scenario}`);
+  if (before.actions.length !== expectedActions) throw new Error(`action count mismatch: ${before.actions.length}`);
+  if (!before.parsed.includes("身体：") || !before.parsed.includes("目的：") || !before.parsed.includes("时间：") || !before.parsed.includes("环境：") || !before.parsed.includes("器械：") || !before.parsed.includes("限制：")) throw new Error("parsed fields missing");
+  if (!before.actions.every((text) => text.includes("示范：") && text.includes("解剖：") && text.includes("关节：") && text.includes("技术："))) throw new Error("action explanation incomplete");
+  if (!before.feedbackHidden) throw new Error("feedback was available before session completion");
+
+  await page.locator("#m5CompleteSession").click();
+  await page.locator('body[data-m5-state="awaiting-feedback"]').waitFor({ state: "attached" });
+  await page.locator(`.feedback[data-v="${feedback}"]`).click();
+  await page.locator(`body[data-m5-decision="${decision}"]`).waitFor({ state: "attached" });
+  const after = await page.evaluate(() => ({
+    state: document.body.dataset.m5State,
+    decision: document.body.dataset.m5Decision,
+    feedback: document.querySelector("#feedbackResult").textContent.trim()
+  }));
+  if (!after.feedback.includes("闭环记录：输入")) throw new Error("feedback loop record missing");
+  return { input, before, feedback, after };
+}
+
+(async () => {
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const evidence = {
+    schema: "zero-one.m5.public-training-loop-verification.v0.1",
+    publicUrl,
+    verifiedAt: new Date().toISOString(),
+    gitSha: process.env.GITHUB_SHA || null,
+    checks: {}
+  };
+
+  try {
+    let deployed = false;
+    for (let attempt = 1; attempt <= 30; attempt += 1) {
+      await page.goto(`${publicUrl}?m5verify=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 180000 });
+      deployed = (await page.locator('body[data-m5-release="M5_TRAINING_LOOP_V0.1"] #m5-training-loop').count()) === 1;
+      if (deployed) break;
+      await page.waitForTimeout(10000);
+    }
+    if (!deployed) throw new Error("public page did not expose the M5 release after deployment polling");
+
+    evidence.checks.outdoorPullup = await plan(page, "户外有单杠，想练背和手臂，15分钟", "outdoor-pullup", 4, "偏吃力", "REGRESS");
+    evidence.checks.homeWholeBody = await plan(page, "15分钟在家徒手练全身", "home-whole-body-15", 5, "轻松", "PROGRESS_SMALL");
+
+    await page.locator("#wish").fill("想去户外练单杠，但现在右手麻木并且胸闷");
+    await page.locator("#runWish").click();
+    await page.locator('body[data-m5-state="safety-triage"]').waitFor({ state: "attached" });
+    const safety = await page.evaluate(() => ({
+      state: document.body.dataset.m5State,
+      result: document.querySelector("#wishResult").textContent.trim(),
+      parsed: document.querySelector("#m5Parsed").textContent.trim(),
+      actions: document.querySelector("#m5Actions").textContent.trim(),
+      session: document.querySelector("#m5Session").textContent.trim(),
+      feedbackHidden: document.querySelector("#m5FeedbackPanel").hidden
+    }));
+    if (!safety.result.includes("安全分流") || !safety.result.includes("停止生成推进性训练计划")) throw new Error("safety routing missing");
+    if (!safety.parsed.includes("麻") || !safety.parsed.includes("胸闷")) throw new Error("safety signals missing");
+    if (!safety.feedbackHidden || !safety.session.includes("安全分流优先")) throw new Error("unsafe plan was allowed to continue");
+    evidence.checks.safetyTriage = safety;
+
+    evidence.passed = true;
+    await page.locator("#m5-training-loop").screenshot({ path: `${outDir}/public-training-loop.png` });
+  } catch (error) {
+    evidence.passed = false;
+    evidence.error = String((error && error.stack) || error);
+    await page.screenshot({ path: `${outDir}/failure.png`, fullPage: false }).catch(() => {});
+  } finally {
+    fs.writeFileSync(`${outDir}/public-training-loop-verification.json`, `${JSON.stringify(evidence, null, 2)}\n`);
+    await browser.close();
+  }
+
+  if (!evidence.passed) {
+    console.error(JSON.stringify(evidence, null, 2));
+    process.exit(1);
+  }
+  console.log(JSON.stringify(evidence, null, 2));
+})().catch((error) => {
+  console.error((error && error.stack) || error);
+  process.exit(1);
+});
