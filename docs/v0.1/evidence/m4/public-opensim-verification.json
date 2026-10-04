@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m4.public-opensim-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-04T01:45:27.885Z",
-  "gitSha": "879e6853beb85e221183f1589b4f74d118637893",
+  "verifiedAt": "2026-10-04T06:42:22.071Z",
+  "gitSha": "26b5c5410646d282734ecf1e5d618bfb85454c97",
   "checks": {
     "publicPage": {
       "passed": true,
