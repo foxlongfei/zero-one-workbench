@@ -1,0 +1,170 @@
+{
+  "schema": "zero-one.k5.advisor-case.v0.1",
+  "caseId": "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
+  "status": "PENDING_ACCEPTANCE",
+  "generatedAt": "2026-10-07T17:09:51.627Z",
+  "runtime": {
+    "engine": "Node.js deterministic evidence-bound advisor",
+    "node": "v22.23.3",
+    "actualRun": true,
+    "githubSha": "6babc24956f5810ccdbad88e214b23264f0ee30f",
+    "sourceArtifacts": [
+      {
+        "id": "K2_DEPTHMAPX_VGA",
+        "path": "portal/data/depthmap-vga.csv",
+        "sha256": "263d86742bb3ad0f0c8e6d176e6554997047bae00868d22e49d76c7eb68ea1be"
+      },
+      {
+        "id": "RADIANCE_GZ_ROOM_SUMMER_CLEAR_WORKPLANE_V0.1",
+        "path": "portal/data/k3-radiance-daylight.json",
+        "sha256": "8b1ce1ee474ed372d3c45c95b91464cbb77f9e8dac21e165fe233e4ef9bd4530"
+      },
+      {
+        "id": "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
+        "path": "portal/data/k4-evidence-layers.json",
+        "sha256": "eae339536aaf3aab4b0e0005dd0584072c3227e3266cf8c2fe426b16cf4c244c"
+      }
+    ]
+  },
+  "conversation": {
+    "userMaterial": {
+      "question": "请综合看这个住宅样板的空间、采光和传统坐向层，并说明还不能判断什么。",
+      "supplied": [
+        "K2 reference residential DXF",
+        "K3 5 m x 4 m x 3 m Radiance reference room with south window",
+        "measured azimuth input 180 degrees"
+      ]
+    },
+    "recognizedKnown": [
+      "K2 depthmapX artifact is reproducible for its stored reference DXF",
+      "K3 Radiance artifact is reproducible for its fixed reference room and clear-sky point in time",
+      "180 degrees normalizes to 午 under the product 24-mountain engineering convention",
+      "K4 evidence layers and blocking rules are available"
+    ],
+    "necessaryUnknowns": [
+      "K2/K3 geometry continuity is NOT_PROVEN",
+      "No user-home geometry identity is established",
+      "No annual climate daylight result is available",
+      "No field-verified road, water, slope or external obstruction observations are supplied"
+    ],
+    "clarification": "若要判断你的实际住宅，必须补充可转换墙线的户型、窗墙尺寸/朝向、地点或天气文件，并把现场道路、水体、坡向、遮挡逐项注明采集来源。"
+  },
+  "modelResults": {
+    "spatial": {
+      "engine": "depthmapX 0.9.1",
+      "artifact": "portal/data/depthmap-vga.csv",
+      "unit": "graph connections per VGA point",
+      "pointCount": 263,
+      "meanConnectivity": 124.8,
+      "minimumConnectivity": 65,
+      "maximumConnectivity": 200,
+      "interpretation": "Only the stored reference DXF may be described; Connectivity is not qi or auspiciousness."
+    },
+    "daylight": {
+      "engine": "RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)",
+      "artifact": "portal/data/k3-radiance-daylight.json",
+      "unit": "lux",
+      "sensorCount": 20,
+      "meanLux": 771.6,
+      "minimumLux": 421.2,
+      "maximumLux": 1976.2,
+      "uniformityMinOverMean": 0.546,
+      "nearWindowMeanLux": 1049.2,
+      "deepZoneMeanLux": 494,
+      "interpretation": "The fixed K3 model shows a point-in-time daylight gradient; it is not a measurement or annual result for another dwelling."
+    },
+    "traditional": {
+      "normalizedDirection": "午",
+      "azimuthDegrees": 180,
+      "evidenceId": "T-K4-03",
+      "interpretation": "The label is a traceable nomenclature normalization only; it does not produce a fortune verdict."
+    }
+  },
+  "advisorFeedback": [
+    {
+      "id": "K5-F01",
+      "type": "ACTIONABLE_WITHIN_MODEL",
+      "priority": 1,
+      "title": "先建立同一几何，再做跨模型综合",
+      "reason": "K2/K3 geometry continuity is NOT_PROVEN.",
+      "action": "为实际住宅准备同一套墙线、窗墙尺寸、方位和地点输入，分别重跑 depthmapX 与 Radiance 后再比较。",
+      "evidence": [
+        "F-K2-01",
+        "F-K3-01",
+        "K4-R04"
+      ]
+    },
+    {
+      "id": "K5-F02",
+      "type": "MODEL_SCOPED_OBSERVATION",
+      "priority": 2,
+      "title": "参考采光模型的深区弱于近窗区",
+      "reason": "K3 near-window mean is 1049.2 lx and deep-zone mean is 494.0 lx.",
+      "action": "在真实个案重算前，只把它作为检查深区采光、遮挡和补光需求的提示，不直接套用数值。",
+      "evidence": [
+        "F-K3-01",
+        "H-K4-01"
+      ]
+    },
+    {
+      "id": "K5-F03",
+      "type": "EVIDENCE_BOUNDARY",
+      "priority": 3,
+      "title": "传统坐向层保留来源，不生成吉凶断语",
+      "reason": "180 degrees maps to 午 under the explicit engineering convention; K4 blocks cross-layer equivalence.",
+      "action": "继续收集用户要讨论的传统命题及其具体出处，逐条与现代可测结果分栏解释。",
+      "evidence": [
+        "T-K4-03",
+        "K4-R03",
+        "U-K4-01"
+      ]
+    }
+  ],
+  "followUps": [
+    {
+      "id": "WHY_NO_FORTUNE",
+      "question": "为什么不直接说吉凶？",
+      "answer": "现有产物只能证明特定模型输入下的空间与照度结果，以及传统文本中确有相关术语。没有可操作的证据桥把 Connectivity 或 lux 等同为吉凶，因此该等同主张被 K4-R03 阻断。",
+      "evidence": [
+        "K4-R03",
+        "U-K4-01"
+      ]
+    },
+    {
+      "id": "WHAT_DEEP_LUX_MEANS",
+      "question": "深区照度较低意味着什么？",
+      "answer": "只对固定 K3 参考房间，它说明该晴空时刻深区工作面照度低于近窗区；可提示检查采光分布，但不能替代全年指标、现场测量或你的住宅重算。",
+      "evidence": [
+        "F-K3-01",
+        "H-K4-01"
+      ]
+    },
+    {
+      "id": "CAN_USE_MY_HOME",
+      "question": "这个结果能用于我的房子吗？",
+      "answer": "不能直接套用。需要你的可转换户型、窗墙尺寸和朝向、地点/天气以及现场遮挡资料，先建立同一几何并重新运行两个引擎。",
+      "evidence": [
+        "K4-R04",
+        "K5-F01"
+      ]
+    }
+  ],
+  "evidenceSummary": {
+    "computedFacts": 2,
+    "traditionalTexts": 3,
+    "modernHypotheses": 1,
+    "unverifiedClaims": 1,
+    "geometryContinuity": "NOT_PROVEN",
+    "crossLayerEquivalence": "BLOCK"
+  },
+  "checks": {
+    "sourceArtifactsReadAtRuntime": true,
+    "knownAndUnknownSeparated": true,
+    "modelResultsCarryUnitsAndScope": true,
+    "feedbackCitesEvidenceIds": true,
+    "followUpAnswersAvailable": true,
+    "crossLayerEquivalenceBlocked": true,
+    "geometryContinuityNotOverclaimed": true,
+    "userHomeTransferBlockedUntilRerun": true
+  }
+}
