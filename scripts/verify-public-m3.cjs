@@ -68,11 +68,19 @@ const sha256 = (file) => crypto.createHash("sha256").update(fs.readFileSync(file
     if (!pose.coordinateText.includes("JOINT_RIGHT_ELBOW") || !pose.coordinateText.includes("world")) throw new Error("world coordinates did not return to the main page");
     evidence.checks.realImagePose = { passed: true, sample: "portal/assets/case2_12.jpg", ...pose };
 
+    await page.locator('body[data-m5-state="ready"]').waitFor({ state: "attached", timeout: 180000 });
     await page.locator("#wish").fill("15分钟在家练全身");
     await page.locator("#runWish").click();
-    const naturalLanguageResult = await page.locator("#wishResult").textContent();
-    if (!naturalLanguageResult.includes("15分钟全身") || !naturalLanguageResult.includes("深蹲")) throw new Error("natural-language path did not produce a plan");
-    evidence.checks.naturalLanguage = { passed: true, input: "15分钟在家练全身", output: naturalLanguageResult.trim() };
+    await page.locator('body[data-m5-scenario="home-whole-body-15"][data-m5-state="plan-ready"]').waitFor({ state: "attached", timeout: 30000 });
+    const naturalLanguage = await page.evaluate(() => ({
+      result: document.querySelector("#wishResult").textContent.trim(),
+      scenario: document.body.dataset.m5Scenario,
+      actions: [...document.querySelectorAll("#m5Actions [data-m5-action]")].map((node) => node.textContent.trim()),
+    }));
+    if (naturalLanguage.scenario !== "home-whole-body-15" || naturalLanguage.actions.length !== 5 || !naturalLanguage.actions.some((text) => text.includes("深蹲"))) {
+      throw new Error("natural-language path did not produce the expected five-action whole-body plan");
+    }
+    evidence.checks.naturalLanguage = { passed: true, input: "15分钟在家练全身", ...naturalLanguage };
 
     const shot = `${outDir}/public-real-image-result.png`;
     await page.locator("#poseStage").scrollIntoViewIfNeeded();
