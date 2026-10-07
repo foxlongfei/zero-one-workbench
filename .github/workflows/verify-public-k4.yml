@@ -50,6 +50,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/v0.1/evidence/k4/
+          if git diff --cached --quiet; then
+            echo "Public evidence already matches the verified deployment; no commit required."
+            exit 0
+          fi
           git commit -m "test(k4): record public evidence-layer verification"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "Unable to push evidence after 3 attempts." >&2
+          exit 1
