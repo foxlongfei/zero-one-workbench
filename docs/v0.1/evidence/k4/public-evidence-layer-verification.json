@@ -1,0 +1,43 @@
+{
+  "schema": "zero-one.k4.public-evidence-layer-verification.v0.1",
+  "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "verifiedAt": "2026-10-07T16:08:20.490Z",
+  "gitSha": "5d9784f4d255ad55dc5d5ad0a9f2f51ecb9cf23a",
+  "checks": {
+    "deploymentAttempt": 1,
+    "publicPage": {
+      "passed": true,
+      "status": "PENDING_ACCEPTANCE",
+      "caseId": "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
+      "geometryContinuity": "NOT_PROVEN",
+      "recordCount": 7,
+      "text": "K4｜PENDING_ACCEPTANCE｜传统体系证据分层\n证据分层｜事实不改名，古籍不越界\n\n同一产品案例把 depthmapX 与 Radiance 的可复现结果、古籍文本、现代解释假设和未验证主张分开保存。 K2 与 K3 的几何连续性当前明确为 NOT_PROVEN，因此禁止跨引擎因果推断。\n\n证据分层产物已读入。 7 条记录｜K2/K3 geometry continuity=NOT_PROVEN｜跨层等同默认 BLOCK。\n现代计算事实｜F-K2-01｜depthmapX reference output\n\ndepthmapX 0.9.1 VGA local visibility produced 263 points with mean Connectivity 124.8, minimum 65 and maximum 200.\n\n允许：Report the stored spatial-analysis result.\n禁止：Do not rename Connectivity as qi, fortune, health, or life outcome.\n\n现代计算事实｜F-K3-01｜Radiance reference output\n\nRadiance 6.0.2 produced 20 workplane illuminance values: mean 771.6 lx, minimum 421.2 lx, maximum 1976.2 lx, near-window mean 1049.2 lx and deep-zone mean 494.0 lx.\n\n允许：Report the point-in-time modeled illuminance distribution.\n禁止：Do not claim annual daylight performance, user-home measurement, qi, or auspiciousness.\n\n传统文本证据｜T-K4-01｜《宅经》住宅论述\n\nThe received text treats the dwelling as a distinct object of traditional judgement.\n\n夫宅者，乃是陰陽之樞紐，人倫之軌模。\n\n来源：《宅经》卷上（题《黄帝宅经》）｜归属/传承：TRADITIONALLY_ATTRIBUTED; AUTHORSHIP_NOT_TREATED_AS_PROVEN\n\n允许：Show that a residential interpretive tradition exists and preserve its own vocabulary.\n禁止：The passage does not validate any numerical daylight, visibility, health, wealth, or event prediction.\n\n传统文本证据｜T-K4-02｜《葬书》风与水语句\n\nThe received text links dispersal with wind and stopping with water in a burial/site-selection discourse.\n\n氣乘風則散，界水則止。\n\n来源：《葬书》｜归属/传承：ATTRIBUTION_TO_GUO_PU_DISPUTED_IN_RECEIVED_BIBLIOGRAPHIC_NOTICE\n\n允许：Describe the wording and its burial/landscape scope.\n禁止：Do not equate wind with Radiance, water with depthmapX, or extend burial claims to indoor residential outcomes.\n\n传统文本证据｜T-K4-03｜二十四山名称与次序\n\nThe frozen source supports names, composition and cyclic order used by the direction normalizer.\n\n\n来源：《欽定協紀辨方書》卷二｜frozen facsimile leaf/PDF 5-7｜归属/传承：IMPERIALLY_COMPILED_RECEIVED_TEXT\n\n允许：Normalize a measured azimuth into a named 24-mountain sector under the product's explicit 15-degree engineering convention.\n禁止：The source binding does not authorize environmental, causal or auspiciousness conclusions.\n\n现代解释假设｜H-K4-01｜南窗与采光梯度的现代解释\n\nFor the K3 model inputs, distance from the south window is associated with a modeled illuminance gradient.\n\n允许：Explain the K3 model output under its stated geometry and sky.\n禁止：Do not treat this as proof of a traditional south-facing rule or as a result for another dwelling.\n\n未验证主张｜U-K4-01｜现代指标等同气或吉凶\n\nConnectivity or illuminance directly measures qi, auspiciousness, health, wealth, or future events.\n\n允许：Display only as a blocked claim requiring independent evidence and an operational definition.\n禁止：Do not use in recommendations or status decisions.\n\n规则：计算事实必须附引擎、产物和适用范围；传统文本必须附作品、见证版本、归属/传承状态和原始语境； 任何“Connectivity/lux＝气/吉凶/健康/财富/未来”的等同主张默认阻断。",
+      "layers": [
+        "COMPUTED_FACT",
+        "COMPUTED_FACT",
+        "TRADITIONAL_TEXT",
+        "TRADITIONAL_TEXT",
+        "TRADITIONAL_TEXT",
+        "MODERN_HYPOTHESIS",
+        "UNVERIFIED_CLAIM"
+      ]
+    },
+    "publicArtifact": {
+      "passed": true,
+      "httpStatus": 200,
+      "schema": "zero-one.k4.evidence-layers.v0.1",
+      "records": 7,
+      "decisionRules": [
+        "K4-R01",
+        "K4-R02",
+        "K4-R03",
+        "K4-R04"
+      ]
+    }
+  },
+  "screenshot": {
+    "path": "docs/v0.1/evidence/k4/public-evidence-layers.png",
+    "sha256": "74c08360efd19a068be9cceda8e13ff543049115ba4b25e4020385bf8f9d2267"
+  },
+  "passed": true
+}
