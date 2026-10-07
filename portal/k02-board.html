@@ -157,6 +157,25 @@
         font-size: 13px;
         border: 1px solid rgba(32,37,31,.16);
       }
+      .advisor-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 12px 0;
+      }
+      .advisor-panel,
+      .advisor-item {
+        border: 1px solid #d7d0c2;
+        border-radius: 12px;
+        padding: 12px;
+        background: #fffdf8;
+      }
+      .advisor-panel.known { border-left: 5px solid #457565; }
+      .advisor-panel.unknown-panel { border-left: 5px solid #a06d44; }
+      .advisor-item { margin: 9px 0; border-left: 5px solid #5b6e92; }
+      .advisor-item small,
+      .metric small { display: block; color: #6b716b; }
+      .followup-answer { min-height: 76px; margin-top: 10px; }
       @media (max-width: 780px) {
         .grid {
           grid-template-columns: 1fr;
@@ -174,7 +193,7 @@
     <main>
       <section class="card">
         <div class="muted">
-          V0.1 单一产品入口｜MAIN B EXECUTING｜K1/K2/K3/K4 COMPLETED · K5 PENDING_ACCEPTANCE
+          V0.1 单一产品入口｜MAIN B EXECUTING｜K1/K2/K3/K4 COMPLETED · K5 EXECUTING
         </div>
         <h1>堪舆先生</h1>
         <p>
@@ -367,6 +386,29 @@
           <a href="../docs/v0.1/K4-completion-report-2026-10-08.md">完成报告</a> ·
           <a href="../docs/v0.1/evidence/k4/public-evidence-layer-verification.json">公开验收证据</a> ·
           <a href="https://github.com/foxlongfei/zero-one-workbench/actions/runs/37649598819">严格验收运行</a>。
+        </p>
+      </section>
+      <section class="card" id="k5-advisor" data-k5-status="EXECUTING" data-artifact-ready="false" data-executed="false">
+        <div class="muted">K5｜EXECUTING｜2026-10-08｜先生式反馈闭环</div>
+        <h2>先生反馈｜材料、缺口、模型、证据与追问</h2>
+        <p>
+          这个闭环直接读取 K2 depthmapX、K3 Radiance 和 K4 证据分层的真实产物。
+          它先分开已知与未知，再给出限定在模型范围内的建议；没有证据桥时不生成吉凶断语。
+        </p>
+        <button class="btn" id="k5RunCase" type="button" disabled>运行住宅A完整反馈</button>
+        <div id="k5State" class="result" style="margin-top:10px">正在读取 K5 实际运行产物…</div>
+        <div class="advisor-grid">
+          <div id="k5Known" class="advisor-panel known"><b>已知</b><p class="muted">运行后显示。</p></div>
+          <div id="k5Unknown" class="advisor-panel unknown-panel"><b>未知 / 必须补充</b><p class="muted">运行后显示。</p></div>
+        </div>
+        <div id="k5Models" class="metrics"></div>
+        <div id="k5Feedback" aria-label="先生反馈建议"></div>
+        <h3>继续追问</h3>
+        <div id="k5Followups" class="chips"></div>
+        <div id="k5Answer" class="result followup-answer">运行案例后可继续追问。</div>
+        <p class="muted">
+          边界：当前是仓库参考案例，不是用户住宅实测；K2/K3 geometry continuity 保持 NOT_PROVEN，
+          Connectivity/lux 与“气/吉凶/健康/财富/未来”的等同保持 BLOCK。
         </p>
       </section>
       <section class="card">
@@ -712,6 +754,6 @@
       loadEngine();
     </script>
     <script src="assets/k3-radiance-daylight-v0.1.js?v=RADIANCE_K3_V0.1"></script>
-    <script src="assets/k4-evidence-layer-v0.1.js?v=EVIDENCE_K4_V0.1"></script>
+    <script src="assets/k4-evidence-layer-v0.1.js?v=EVIDENCE_K4_V0.1"></script>\n    <script src="assets/k5-advisor-v0.1.js?v=ADVISOR_K5_V0.1"></script>
   </body>
 </html>
