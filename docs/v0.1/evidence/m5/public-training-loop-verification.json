@@ -1,14 +1,14 @@
 {
   "schema": "zero-one.m5.public-training-loop-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-07T05:25:28.125Z",
-  "gitSha": "d3b3f143004c4f59698ba7f1919ddc9446e9d9a9",
+  "verifiedAt": "2026-10-07T06:08:55.010Z",
+  "gitSha": "15a563fcd95065c0e1bf783072278a342c0ad6d3",
   "checks": {
     "deploymentProbe": {
       "title": "运动达人 V0.1",
       "release": "M5_TRAINING_LOOP_V0.1",
       "trainingLoopCount": 1,
-      "attempt": 3,
+      "attempt": 1,
       "httpStatus": 200
     },
     "currentPagePose": {
