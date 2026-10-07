@@ -1,0 +1,58 @@
+name: Run K5 advisor feedback closure
+
+on:
+  push:
+    paths:
+      - "scripts/run-k5-advisor.cjs"
+      - ".github/workflows/run-k5-advisor.yml"
+      - "portal/data/depthmap-vga.csv"
+      - "portal/data/k3-radiance-daylight.json"
+      - "portal/data/k4-evidence-layers.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: run-k5-advisor
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run evidence-bound advisor against K2-K4 artifacts
+        run: node scripts/run-k5-advisor.cjs portal/data/k5-advisor-case.json
+      - name: Verify generated artifact
+        run: |
+          node -e 'const a=require("./portal/data/k5-advisor-case.json"); if(a.status!=="PENDING_ACCEPTANCE"||a.modelResults.spatial.pointCount!==263||a.modelResults.daylight.sensorCount!==20||a.advisorFeedback.length<3||a.followUps.length<3||!Object.values(a.checks).every(Boolean)) process.exit(1); console.log({caseId:a.caseId,feedback:a.advisorFeedback.length,followUps:a.followUps.length,passed:true})'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: k5-advisor-runtime-artifact
+          path: portal/data/k5-advisor-case.json
+          if-no-files-found: error
+      - name: Commit runtime artifact
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add portal/data/k5-advisor-case.json
+          if git diff --cached --quiet; then
+            echo "K5 runtime artifact is unchanged."
+            exit 0
+          fi
+          git commit -m "feat(k5): record advisor runtime artifact"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          exit 1
