@@ -28,14 +28,18 @@ jobs:
         run: |
           curl -fsSL "https://github.com/LBNL-ETA/Radiance/releases/download/rad6R0P2/Radiance_c1700d56_Linux.zip" -o /tmp/radiance.zip
           echo "04ee53cafbb64b943a53616b3d0ee379dd7ef80379c83aa7a145e547d9809c28  /tmp/radiance.zip" | sha256sum --check
-          unzip -q /tmp/radiance.zip -d /tmp/radiance
-          unzip -Z1 /tmp/radiance.zip | sed -n '1,120p'
+          unzip -q /tmp/radiance.zip -d /tmp/radiance-outer
+          RADIANCE_TARBALL="$(find /tmp/radiance-outer -type f -name '*.tar.gz' -print -quit)"
+          test -n "$RADIANCE_TARBALL"
+          mkdir -p /tmp/radiance
+          tar -xzf "$RADIANCE_TARBALL" -C /tmp/radiance
           RTRACE_PATH="$(find /tmp/radiance -type f -name rtrace -print -quit)"
+          RAYINIT_PATH="$(find /tmp/radiance -type f -name rayinit.cal -print -quit)"
           test -n "$RTRACE_PATH"
+          test -n "$RAYINIT_PATH"
           RAD_BIN="$(dirname "$RTRACE_PATH")"
+          RAD_LIB="$(dirname "$RAYINIT_PATH")"
           chmod +x "$RAD_BIN"/*
-          git clone --depth 1 --branch rad6R0P2 https://github.com/LBNL-ETA/Radiance.git /tmp/radiance-source
-          RAD_LIB="/tmp/radiance-source/lib"
           test -x "$RAD_BIN/rtrace"
           test -f "$RAD_LIB/rayinit.cal"
           echo "$RAD_BIN" >> "$GITHUB_PATH"
