@@ -126,6 +126,21 @@
         gap: 4px;
         font-size: 14px;
       }
+      .daylight-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(58px, 1fr));
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .daylight-cell {
+        min-height: 58px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        font-size: 13px;
+        border: 1px solid rgba(32,37,31,.16);
+      }
       @media (max-width: 780px) {
         .grid {
           grid-template-columns: 1fr;
@@ -295,6 +310,22 @@
         <p class="muted">
           图中每个格点来自 depthmapX CSV 的 x/y/Connectivity；颜色只用于把
           Connectivity 数值可视化，不新增空间句法结论。
+        </p>
+      </section>
+      <section class="card modern" id="k3-environment-engine" data-k3-status="EXECUTING">
+        <div class="muted">K3｜EXECUTING｜真实 Radiance 环境引擎</div>
+        <h2>成熟环境模型｜Radiance 住宅采光</h2>
+        <p>
+          固定 5×4×3 m 住宅参考房间、南向窗和广州夏至晴空，由 LBNL Radiance 6.0.2
+          依次运行 <code>gensky → oconv → rtrace</code>；以下照度不是网页公式估算。
+        </p>
+        <div id="radianceState" class="result">正在读取 Radiance 真实运行产物…</div>
+        <div id="radianceMetrics" class="metrics"></div>
+        <div id="radianceHeatmap" class="daylight-grid" aria-label="20个工作面照度传感点"></div>
+        <p id="radianceSource" class="muted">等待引擎版本、模型哈希、天空条件与单位。</p>
+        <p class="muted">
+          边界：这是固定参考房间的夏至晴空时刻计算，不是用户住宅实测，也不是全年气候采光自治率。
+          后续真实个案必须替换几何、窗参数和天气条件后重算。
         </p>
       </section>
       <section class="card">
@@ -639,5 +670,6 @@
       }
       loadEngine();
     </script>
+    <script src="assets/k3-radiance-daylight-v0.1.js?v=RADIANCE_K3_V0.1"></script>
   </body>
 </html>
