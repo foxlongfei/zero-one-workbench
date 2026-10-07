@@ -28,6 +28,7 @@ const jointMap = document.querySelector("#jointMap");
 const coordinates = document.querySelector("#coordResult");
 const feedback = document.querySelector("#motionFeedback");
 let landmarker;
+let activeDelegate = "GPU";
 
 function angle(a, b, c) {
   const ux = a.x - b.x;
@@ -71,7 +72,17 @@ async function runSample() {
     canvas.height = image.naturalHeight;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
-    const output = landmarker.detect(image);
+    let output;
+    try {
+      output = landmarker.detect(image);
+    } catch (detectError) {
+      if (activeDelegate !== "GPU") throw detectError;
+      status.textContent = "GPU 推理不可用，正在切换 MediaPipe CPU 路径重试真实样本…";
+      landmarker?.close?.();
+      landmarker = await createLandmarker();
+      activeDelegate = "CPU";
+      output = landmarker.detect(image);
+    }
     const landmarks = output.landmarks?.[0];
     const world = output.worldLandmarks?.[0];
     if (!landmarks || landmarks.length !== 33 || !world || world.length !== 33) {
@@ -118,9 +129,11 @@ async function runSample() {
 async function initialize() {
   try {
     landmarker = await createLandmarker("GPU");
+    activeDelegate = "GPU";
     status.textContent = "姿态模型已就绪：可上传照片，或运行公开可复验的真实样本。";
   } catch (gpuError) {
     landmarker = await createLandmarker();
+    activeDelegate = "CPU";
     status.textContent = "姿态模型已就绪（CPU 路径）：可上传照片，或运行公开可复验的真实样本。";
   }
   button.disabled = false;
