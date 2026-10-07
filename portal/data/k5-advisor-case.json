@@ -1,13 +1,13 @@
 {
   "schema": "zero-one.k5.advisor-case.v0.1",
   "caseId": "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
-  "status": "PENDING_ACCEPTANCE",
-  "generatedAt": "2026-10-07T17:09:51.627Z",
+  "status": "COMPLETED",
+  "generatedAt": "2026-10-07T17:14:33.474Z",
   "runtime": {
     "engine": "Node.js deterministic evidence-bound advisor",
     "node": "v22.23.3",
     "actualRun": true,
-    "githubSha": "6babc24956f5810ccdbad88e214b23264f0ee30f",
+    "githubSha": "8131fdd7123758a302ff0c985c89b751f9f08fba",
     "sourceArtifacts": [
       {
         "id": "K2_DEPTHMAPX_VGA",
