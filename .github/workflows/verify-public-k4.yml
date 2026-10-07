@@ -1,0 +1,55 @@
+name: Verify public K4 evidence layers
+
+on:
+  push:
+    paths:
+      - ".github/workflows/verify-public-k4.yml"
+      - "scripts/verify-public-k4.cjs"
+      - "portal/k02-board.html"
+      - "portal/assets/k4-evidence-layer-v0.1.js"
+      - "portal/data/k4-evidence-layers.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verify-public-k4
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
+      - name: Verify deployed K4 evidence-layer artifact and main-page rendering
+        env:
+          PUBLIC_URL: https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html
+          EVIDENCE_DIR: docs/v0.1/evidence/k4
+        run: node scripts/verify-public-k4.cjs
+      - name: Upload immutable public evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k4-public-evidence-layer-evidence
+          path: docs/v0.1/evidence/k4/
+          if-no-files-found: error
+      - name: Commit passing public evidence
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/v0.1/evidence/k4/
+          git commit -m "test(k4): record public evidence-layer verification"
+          git pull --rebase origin main
+          git push origin HEAD:main
