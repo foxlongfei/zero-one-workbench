@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m5.public-training-loop-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-04T06:42:17.305Z",
-  "gitSha": "26b5c5410646d282734ecf1e5d618bfb85454c97",
+  "verifiedAt": "2026-10-07T04:10:49.541Z",
+  "gitSha": "24aead48413f0b0788cc53e9dd5f537ec51ea899",
   "checks": {
     "outdoorPullup": {
       "input": "户外有单杠，想练背和手臂，15分钟",
