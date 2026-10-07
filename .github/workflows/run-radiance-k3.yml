@@ -29,6 +29,7 @@ jobs:
           curl -fsSL "https://github.com/LBNL-ETA/Radiance/releases/download/rad6R0P2/Radiance_c1700d56_Linux.zip" -o /tmp/radiance.zip
           echo "04ee53cafbb64b943a53616b3d0ee379dd7ef80379c83aa7a145e547d9809c28  /tmp/radiance.zip" | sha256sum --check
           unzip -q /tmp/radiance.zip -d /tmp/radiance
+          unzip -Z1 /tmp/radiance.zip | sed -n '1,120p'
           RTRACE_PATH="$(find /tmp/radiance -type f -name rtrace -print -quit)"
           test -n "$RTRACE_PATH"
           RAD_BIN="$(dirname "$RTRACE_PATH")"
