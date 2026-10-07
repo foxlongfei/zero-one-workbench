@@ -59,13 +59,25 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
 
   try {
     let deployed = false;
-    for (let attempt = 1; attempt <= 30; attempt += 1) {
-      await page.goto(`${publicUrl}?m5verify=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 180000 });
-      deployed = (await page.locator('body[data-m5-release="M5_TRAINING_LOOP_V0.1"] #m5-training-loop').count()) === 1;
-      if (deployed) break;
+    let deploymentProbe = null;
+    for (let attempt = 1; attempt <= 18; attempt += 1) {
+      const response = await page.goto(`${publicUrl}?m5verify=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 180000 });
+      await page.locator("#m5-training-loop").waitFor({ state: "attached", timeout: 15000 }).catch(() => {});
+      deploymentProbe = await page.evaluate(() => ({
+        title: document.title,
+        release: document.body.dataset.m5Release || null,
+        trainingLoopCount: document.querySelectorAll("#m5-training-loop").length
+      }));
+      deploymentProbe.attempt = attempt;
+      deploymentProbe.httpStatus = response?.status() || null;
+      if (deploymentProbe.release === "M5_TRAINING_LOOP_V0.1" && deploymentProbe.trainingLoopCount === 1) {
+        deployed = true;
+        break;
+      }
       await page.waitForTimeout(10000);
     }
-    if (!deployed) throw new Error("public page did not expose the M5 release after deployment polling");
+    evidence.checks.deploymentProbe = deploymentProbe;
+    if (!deployed) throw new Error(`public page did not expose the M5 release: ${JSON.stringify(deploymentProbe)}`);
 
     await page.locator('#poseSample[data-model-ready="true"]').waitFor({ state: "visible", timeout: 180000 });
     await page.locator("#poseSample").click();
