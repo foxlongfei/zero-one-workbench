@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m3.public-pose-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-07T06:08:46.318Z",
-  "gitSha": "427fcc04e4fec2064b2d1dc14cc59e81949cdf03",
+  "verifiedAt": "2026-10-07T06:13:01.585Z",
+  "gitSha": "ba91fa3fc3d356440d160a0fd2758289cb2c787e",
   "checks": {
     "realImagePose": {
       "passed": true,
@@ -41,7 +41,7 @@
       ],
       "paintedPixels": 2406,
       "coordinateText": "已进入统一人体坐标：JOINT_LEFT_ELBOW = 105°｜world (0.327, -0.077, -0.466) mJOINT_RIGHT_ELBOW = 105°｜world (-0.395, -0.090, -0.478) mJOINT_LEFT_HIP = 161°｜world (0.122, 0.008, 0.010) mJOINT_RIGHT_HIP = 139°｜world (-0.123, -0.010, -0.008) mJOINT_LEFT_KNEE = 104°｜world (0.067, 0.197, 0.354) mJOINT_RIGHT_KNEE = 67°｜world (-0.130, 0.154, 0.353) m",
-      "feedbackText": "真实俯卧撑帧已映射到统一关节 ID。最小膝角约 67°、最小髋角约 139°；这是单帧姿态描述，不自动判断动作好坏或伤病。"
+      "feedbackText": "当前帧已映射到统一关节 ID。最小膝角约 67°、最小髋角约 139°；这是单帧姿态描述，不自动判断动作好坏或伤病。"
     },
     "naturalLanguage": {
       "passed": true,
@@ -59,7 +59,7 @@
   },
   "screenshot": {
     "path": "docs/v0.1/evidence/m3/public-real-image-result.png",
-    "sha256": "9631dafeb671f05b342f03d3f140140dce9db542b772e1613b749944bcfaa362"
+    "sha256": "bf435e4e388389a5855fe25af5f046c986ae6f9c88a20c518a7ecfe29d7ba301"
   },
   "passed": true
 }
