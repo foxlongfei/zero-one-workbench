@@ -29,8 +29,12 @@ jobs:
           curl -fsSL "https://github.com/LBNL-ETA/Radiance/releases/download/rad6R0P2/Radiance_c1700d56_Linux.zip" -o /tmp/radiance.zip
           echo "04ee53cafbb64b943a53616b3d0ee379dd7ef80379c83aa7a145e547d9809c28  /tmp/radiance.zip" | sha256sum --check
           unzip -q /tmp/radiance.zip -d /tmp/radiance
-          RAD_BIN="$(dirname "$(find /tmp/radiance -type f -name rtrace -print -quit)")"
-          RAD_LIB="$(dirname "$(find /tmp/radiance -type f -name rayinit.cal -print -quit)")"
+          RTRACE_PATH="$(find /tmp/radiance -type f -name rtrace -print -quit)"
+          test -n "$RTRACE_PATH"
+          RAD_BIN="$(dirname "$RTRACE_PATH")"
+          chmod +x "$RAD_BIN"/*
+          git clone --depth 1 --branch rad6R0P2 https://github.com/LBNL-ETA/Radiance.git /tmp/radiance-source
+          RAD_LIB="/tmp/radiance-source/lib"
           test -x "$RAD_BIN/rtrace"
           test -f "$RAD_LIB/rayinit.cal"
           echo "$RAD_BIN" >> "$GITHUB_PATH"
