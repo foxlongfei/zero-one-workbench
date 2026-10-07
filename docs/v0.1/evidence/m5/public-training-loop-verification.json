@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m5.public-training-loop-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-07T06:08:55.010Z",
-  "gitSha": "15a563fcd95065c0e1bf783072278a342c0ad6d3",
+  "verifiedAt": "2026-10-07T06:12:50.940Z",
+  "gitSha": "31f603c93e733fe20618459b8877909aae49a1cf",
   "checks": {
     "deploymentProbe": {
       "title": "运动达人 V0.1",
@@ -13,7 +13,10 @@
     },
     "currentPagePose": {
       "source": "MEDIAPIPE_POSE_LANDMARKER_FULL",
+      "inputSource": "user-upload",
+      "inputName": "case2_12.jpg",
       "landmarkCount": 33,
+      "worldLandmarkCount": 33,
       "rightElbow": 105
     },
     "outdoorPullup": {
@@ -22,9 +25,10 @@
         "scenario": "outdoor-pullup",
         "integration": "linked",
         "poseSource": "current-page-pose",
+        "poseInput": "user-upload",
         "mappedElbow": 105,
         "openSimState": 90,
-        "integratedText": "整机真实证据已桥接｜不是独立文本方案M2 完整人体：2234 个网格 / 15 个系统；M3 当前页实时动作：33 个关键点，右肘 105°；M4 OpenSim：OpenSim Core version 4.6-2026-06-22-85aaf64, build date 18:14:53 Jun 22 2026，映射最近状态 90°，BIClong 长度 0.373656 m / 力臂 0.048753 m。当前场景：户外单杠｜背部与手臂。这些数值用于把人体、动作和生物力学证据带入训练解释，不等同个人诊断或个体化力值。",
+        "integratedText": "整机真实证据已桥接｜不是独立文本方案M2 完整人体：2234 个网格 / 15 个系统；M3 当前页用户上传动作：33 个关键点，右肘 105°；M4 OpenSim：OpenSim Core version 4.6-2026-06-22-85aaf64, build date 18:14:53 Jun 22 2026，映射最近状态 90°，BIClong 长度 0.373656 m / 力臂 0.048753 m。当前场景：户外单杠｜背部与手臂。这些数值用于把人体、动作和生物力学证据带入训练解释，不等同个人诊断或个体化力值。",
         "parsed": "已解析输入\n    \n      身体：背部、手臂/肘屈肌群\n      目的：力量与动作控制\n      时间：15 分钟\n      环境：户外\n      器械：单杠\n      限制：未描述异常信号",
         "result": "户外单杠｜背部与手臂匹配 4 个动作；按 15 分钟组织。先查看示范、解剖/关节和技术提示，再开始会话。",
         "actions": [
@@ -48,9 +52,10 @@
         "scenario": "home-whole-body-15",
         "integration": "linked",
         "poseSource": "current-page-pose",
+        "poseInput": "user-upload",
         "mappedElbow": 105,
         "openSimState": 90,
-        "integratedText": "整机真实证据已桥接｜不是独立文本方案M2 完整人体：2234 个网格 / 15 个系统；M3 当前页实时动作：33 个关键点，右肘 105°；M4 OpenSim：OpenSim Core version 4.6-2026-06-22-85aaf64, build date 18:14:53 Jun 22 2026，映射最近状态 90°，BIClong 长度 0.373656 m / 力臂 0.048753 m。当前场景：15 分钟在家全身。这些数值用于把人体、动作和生物力学证据带入训练解释，不等同个人诊断或个体化力值。",
+        "integratedText": "整机真实证据已桥接｜不是独立文本方案M2 完整人体：2234 个网格 / 15 个系统；M3 当前页用户上传动作：33 个关键点，右肘 105°；M4 OpenSim：OpenSim Core version 4.6-2026-06-22-85aaf64, build date 18:14:53 Jun 22 2026，映射最近状态 90°，BIClong 长度 0.373656 m / 力臂 0.048753 m。当前场景：15 分钟在家全身。这些数值用于把人体、动作和生物力学证据带入训练解释，不等同个人诊断或个体化力值。",
         "parsed": "已解析输入\n    \n      身体：全身\n      目的：全身基础力量与活动\n      时间：15 分钟\n      环境：室内/家中\n      器械：徒手\n      限制：未描述异常信号",
         "result": "15 分钟在家全身匹配 5 个动作；按 15 分钟组织。先查看示范、解剖/关节和技术提示，再开始会话。",
         "actions": [
