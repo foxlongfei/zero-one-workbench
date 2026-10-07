@@ -137,7 +137,7 @@ ground_glow source ground
         "engine": {
             "name": "Radiance",
             "version": version_line,
-            "packageSource": "Ubuntu radiance package",
+            "packageSource": "LBNL-ETA/Radiance rad6R0P2 official Linux release",
             "license": "Radiance License",
             "commands": ["gensky", "oconv", "rtrace"],
         },

@@ -24,18 +24,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create conda-forge Radiance environment
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-name: radiance
-          create-args: >-
-            -c conda-forge
-            radiance
-          cache-environment: true
-          init-shell: bash
+      - name: Install pinned official Radiance 6.0.2 Linux binaries
+        run: |
+          curl -fsSL "https://github.com/LBNL-ETA/Radiance/releases/download/rad6R0P2/Radiance_c1700d56_Linux.zip" -o /tmp/radiance.zip
+          echo "04ee53cafbb64b943a53616b3d0ee379dd7ef80379c83aa7a145e547d9809c28  /tmp/radiance.zip" | sha256sum --check
+          unzip -q /tmp/radiance.zip -d /tmp/radiance
+          RAD_BIN="$(dirname "$(find /tmp/radiance -type f -name rtrace -print -quit)")"
+          RAD_LIB="$(dirname "$(find /tmp/radiance -type f -name rayinit.cal -print -quit)")"
+          test -x "$RAD_BIN/rtrace"
+          test -f "$RAD_LIB/rayinit.cal"
+          echo "$RAD_BIN" >> "$GITHUB_PATH"
+          echo "RAYPATH=.:$RAD_LIB" >> "$GITHUB_ENV"
 
       - name: Confirm mature Radiance binaries
-        shell: micromamba-shell {0}
         run: |
           which gensky
           which oconv
@@ -43,7 +44,6 @@ jobs:
           rtrace -version
 
       - name: Execute real gensky to oconv to rtrace chain
-        shell: micromamba-shell {0}
         run: |
           python scripts/run-radiance-k3.py             --model models/k3-radiance/guangzhou-room.rad             --output-json portal/data/k3-radiance-daylight.json             --output-csv portal/data/k3-radiance-daylight.csv             --evidence-json docs/v0.1/evidence/k3/radiance-engine-run.json
 
