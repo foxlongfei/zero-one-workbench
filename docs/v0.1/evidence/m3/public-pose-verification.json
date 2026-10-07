@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m3.public-pose-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-07T05:16:53.249Z",
-  "gitSha": "7ddd948a66279902daa2e44376173a556ecbfc7b",
+  "verifiedAt": "2026-10-07T06:08:46.318Z",
+  "gitSha": "427fcc04e4fec2064b2d1dc14cc59e81949cdf03",
   "checks": {
     "realImagePose": {
       "passed": true,
