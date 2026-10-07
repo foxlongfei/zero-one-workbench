@@ -158,8 +158,7 @@
     <main>
       <section class="card">
         <div class="muted">
-          V0.1 单一产品入口｜MAIN Z05 EXECUTING · 当前 Z05-B｜depthmapX 为
-          SUPPORT CAPABILITY
+          V0.1 单一产品入口｜MAIN B EXECUTING｜K1/K2/K3 COMPLETED · K4/K5 PENDING_ACCEPTANCE
         </div>
         <h1>堪舆先生</h1>
         <p>
@@ -312,8 +311,8 @@
           Connectivity 数值可视化，不新增空间句法结论。
         </p>
       </section>
-      <section class="card modern" id="k3-environment-engine" data-k3-status="EXECUTING">
-        <div class="muted">K3｜EXECUTING｜真实 Radiance 环境引擎</div>
+      <section class="card modern" id="k3-environment-engine" data-k3-status="COMPLETED">
+        <div class="muted">K3｜COMPLETED｜2026-10-07｜真实 Radiance 环境引擎</div>
         <h2>成熟环境模型｜Radiance 住宅采光</h2>
         <p>
           固定 5×4×3 m 住宅参考房间、南向窗和广州夏至晴空，由 LBNL Radiance 6.0.2
@@ -326,6 +325,12 @@
         <p class="muted">
           边界：这是固定参考房间的夏至晴空时刻计算，不是用户住宅实测，也不是全年气候采光自治率。
           后续真实个案必须替换几何、窗参数和天气条件后重算。
+        </p>
+        <p class="result"><b>K3 COMPLETED｜2026-10-07。</b><br>
+          官方 Radiance 6.0.2 已实际执行 gensky → oconv → rtrace，20 点照度产物、主页面、Pages 与公开浏览器验收均通过。
+          <a href="../docs/v0.1/K3-completion-report-2026-10-07.md">完成报告</a> ·
+          <a href="../docs/v0.1/evidence/k3/public-radiance-verification.json">公开验收证据</a> ·
+          <a href="https://github.com/foxlongfei/zero-one-workbench/actions/runs/37613463955">严格验收运行</a>。
         </p>
       </section>
       <section class="card">
