@@ -68,11 +68,12 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
       deploymentProbe = await page.evaluate(() => ({
         title: document.title,
         release: document.body.dataset.m5Release || null,
+        build: document.body.dataset.m5Build || null,
         trainingLoopCount: document.querySelectorAll("#m5-training-loop").length
       }));
       deploymentProbe.attempt = attempt;
       deploymentProbe.httpStatus = response?.status() || null;
-      if (deploymentProbe.release === "M5_TRAINING_LOOP_V0.1" && deploymentProbe.trainingLoopCount === 1) {
+      if (deploymentProbe.release === "M5_TRAINING_LOOP_V0.1" && deploymentProbe.build === "M5_USER_UPLOAD_CHAIN_V0.1" && deploymentProbe.trainingLoopCount === 1) {
         deployed = true;
         break;
       }
