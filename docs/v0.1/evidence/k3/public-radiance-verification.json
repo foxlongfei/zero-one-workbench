@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.k3.public-radiance-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
-  "verifiedAt": "2026-10-07T16:05:22.601Z",
-  "gitSha": "718b9c50194fedd05f3c78036ca1f91e258cabe7",
+  "verifiedAt": "2026-10-07T16:10:26.539Z",
+  "gitSha": "c6edbd1dacbdd6bf0ec2c367b903c1f977f57ad8",
   "checks": {
     "deploymentAttempt": 1,
     "publicPage": {
