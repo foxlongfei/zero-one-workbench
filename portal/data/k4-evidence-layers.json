@@ -1,0 +1,155 @@
+{
+  "schema": "zero-one.k4.evidence-layers.v0.1",
+  "caseId": "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
+  "generatedAt": "2026-10-08T00:08:00+08:00",
+  "status": "PENDING_ACCEPTANCE",
+  "caseBoundary": {
+    "k2Artifact": "portal/data/depthmap-vga.csv",
+    "k3Artifact": "portal/data/k3-radiance-daylight.json",
+    "geometryContinuity": "NOT_PROVEN",
+    "statement": "K2 and K3 are separately reproducible reference artifacts presented in one product case. Their geometries are not asserted to be identical; cross-engine causal inference is prohibited."
+  },
+  "layers": [
+    {
+      "id": "F-K2-01",
+      "layer": "COMPUTED_FACT",
+      "label": "depthmapX reference output",
+      "claim": "depthmapX 0.9.1 VGA local visibility produced 263 points with mean Connectivity 124.8, minimum 65 and maximum 200.",
+      "provenance": {
+        "artifact": "portal/data/depthmap-vga.csv",
+        "engine": "depthmapX 0.9.1",
+        "scope": "the stored reference DXF only"
+      },
+      "strength": "ENGINE_OUTPUT",
+      "allowedUse": "Report the stored spatial-analysis result.",
+      "prohibitedUse": "Do not rename Connectivity as qi, fortune, health, or life outcome."
+    },
+    {
+      "id": "F-K3-01",
+      "layer": "COMPUTED_FACT",
+      "label": "Radiance reference output",
+      "claim": "Radiance 6.0.2 produced 20 workplane illuminance values: mean 771.6 lx, minimum 421.2 lx, maximum 1976.2 lx, near-window mean 1049.2 lx and deep-zone mean 494.0 lx.",
+      "provenance": {
+        "artifact": "portal/data/k3-radiance-daylight.json",
+        "calculationId": "RADIANCE_GZ_ROOM_SUMMER_CLEAR_WORKPLANE_V0.1",
+        "scope": "fixed 5 m x 4 m x 3 m room, Guangzhou clear-sky point in time"
+      },
+      "strength": "ENGINE_OUTPUT",
+      "allowedUse": "Report the point-in-time modeled illuminance distribution.",
+      "prohibitedUse": "Do not claim annual daylight performance, user-home measurement, qi, or auspiciousness."
+    },
+    {
+      "id": "T-K4-01",
+      "layer": "TRADITIONAL_TEXT",
+      "label": "《宅经》住宅论述",
+      "claim": "The received text treats the dwelling as a distinct object of traditional judgement.",
+      "source": {
+        "work": "《宅经》卷上（题《黄帝宅经》）",
+        "excerpt": "夫宅者，乃是陰陽之樞紐，人倫之軌模。",
+        "witnesses": [
+          {
+            "type": "TRANSCRIPTION",
+            "url": "https://ctext.org/wiki.pl?chapter=289951&if=gb&remap=gb"
+          },
+          {
+            "type": "DIGITAL_SCAN",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/9/98/NCL-15275-0051_%E9%BB%83%E5%B8%9D%E5%AE%85%E7%B6%93.pdf"
+          }
+        ],
+        "attributionStatus": "TRADITIONALLY_ATTRIBUTED; AUTHORSHIP_NOT_TREATED_AS_PROVEN",
+        "period": "received premodern text; exact authorship/date unresolved in this product"
+      },
+      "strength": "TEXTUAL_ATTESTATION",
+      "allowedUse": "Show that a residential interpretive tradition exists and preserve its own vocabulary.",
+      "prohibitedUse": "The passage does not validate any numerical daylight, visibility, health, wealth, or event prediction."
+    },
+    {
+      "id": "T-K4-02",
+      "layer": "TRADITIONAL_TEXT",
+      "label": "《葬书》风与水语句",
+      "claim": "The received text links dispersal with wind and stopping with water in a burial/site-selection discourse.",
+      "source": {
+        "work": "《葬书》",
+        "excerpt": "氣乘風則散，界水則止。",
+        "witnesses": [
+          {
+            "type": "TRANSCRIPTION_WITH_SIKU_NOTICE",
+            "url": "https://zh.wikisource.org/zh-hans/%E8%91%AC%E6%9B%B8"
+          },
+          {
+            "type": "DIGITAL_SCAN",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/4/40/NLC511-13056613-69057_%E9%83%AD%E7%92%9E%E8%91%AC%E7%B6%93_%E6%B0%B4%E9%BE%8D%E7%B6%93.pdf"
+          }
+        ],
+        "attributionStatus": "ATTRIBUTION_TO_GUO_PU_DISPUTED_IN_RECEIVED_BIBLIOGRAPHIC_NOTICE",
+        "period": "received text appears in later bibliographic transmission; exact original authorship unresolved"
+      },
+      "strength": "TEXTUAL_ATTESTATION_WITH_TRANSMISSION_DISPUTE",
+      "allowedUse": "Describe the wording and its burial/landscape scope.",
+      "prohibitedUse": "Do not equate wind with Radiance, water with depthmapX, or extend burial claims to indoor residential outcomes."
+    },
+    {
+      "id": "T-K4-03",
+      "layer": "TRADITIONAL_TEXT",
+      "label": "二十四山名称与次序",
+      "claim": "The frozen source supports names, composition and cyclic order used by the direction normalizer.",
+      "source": {
+        "work": "《欽定協紀辨方書》卷二",
+        "locator": "frozen facsimile leaf/PDF 5-7",
+        "attributionStatus": "IMPERIALLY_COMPILED_RECEIVED_TEXT",
+        "period": "Qing"
+      },
+      "strength": "SOURCE_BOUND_NOMENCLATURE",
+      "allowedUse": "Normalize a measured azimuth into a named 24-mountain sector under the product's explicit 15-degree engineering convention.",
+      "prohibitedUse": "The source binding does not authorize environmental, causal or auspiciousness conclusions."
+    },
+    {
+      "id": "H-K4-01",
+      "layer": "MODERN_HYPOTHESIS",
+      "label": "南窗与采光梯度的现代解释",
+      "claim": "For the K3 model inputs, distance from the south window is associated with a modeled illuminance gradient.",
+      "basis": ["F-K3-01"],
+      "strength": "MODEL_SPECIFIC_EXPLANATION",
+      "allowedUse": "Explain the K3 model output under its stated geometry and sky.",
+      "prohibitedUse": "Do not treat this as proof of a traditional south-facing rule or as a result for another dwelling."
+    },
+    {
+      "id": "U-K4-01",
+      "layer": "UNVERIFIED_CLAIM",
+      "label": "现代指标等同气或吉凶",
+      "claim": "Connectivity or illuminance directly measures qi, auspiciousness, health, wealth, or future events.",
+      "strength": "UNVERIFIED",
+      "allowedUse": "Display only as a blocked claim requiring independent evidence and an operational definition.",
+      "prohibitedUse": "Do not use in recommendations or status decisions."
+    }
+  ],
+  "decisionRules": [
+    {
+      "id": "K4-R01",
+      "if": "layer == COMPUTED_FACT",
+      "then": "report value, engine, artifact, units and scope"
+    },
+    {
+      "id": "K4-R02",
+      "if": "layer == TRADITIONAL_TEXT",
+      "then": "report work, excerpt, witness, attribution/transmission status and original scope"
+    },
+    {
+      "id": "K4-R03",
+      "if": "cross-layer equivalence is requested",
+      "then": "BLOCK unless an explicit operational bridge and independent evidence exist"
+    },
+    {
+      "id": "K4-R04",
+      "if": "geometry continuity between K2 and K3 is requested",
+      "then": "return NOT_PROVEN and prohibit cross-engine causal inference"
+    }
+  ],
+  "checks": {
+    "computedFactsHaveArtifactAndScope": true,
+    "traditionalTextsHaveWitnessAndAttributionStatus": true,
+    "unverifiedClaimIsBlocked": true,
+    "crossLayerEquivalenceIsBlocked": true,
+    "k2K3GeometryContinuityNotOverclaimed": true
+  }
+}
