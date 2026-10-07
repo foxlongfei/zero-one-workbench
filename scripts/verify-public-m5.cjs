@@ -6,7 +6,27 @@ const publicUrl = process.env.PUBLIC_URL || "https://foxlongfei.github.io/zero-o
 const outDir = process.env.EVIDENCE_DIR || "docs/v0.1/evidence/m5";
 fs.mkdirSync(outDir, { recursive: true });
 
-async function plan(page, input, expectedScenario, expectedActions, feedback, decision) {
+async function uploadPose(page, fixturePath, expectedName) {
+  await page.locator("#poseFile").setInputFiles(fixturePath);
+  await page.locator(`body[data-m3-pose-state="passed"][data-m3-pose-input="user-upload"][data-m3-pose-file="${expectedName}"]`).waitFor({ state: "attached", timeout: 180000 });
+  const pose = await page.evaluate(() => ({
+    source: document.body.dataset.m3Upstream,
+    inputSource: document.body.dataset.m3PoseInput,
+    inputName: document.body.dataset.m3PoseFile,
+    landmarkCount: Number(document.querySelector("#poseResult").dataset.landmarkCount),
+    worldLandmarkCount: Number(document.querySelector("#poseResult").dataset.worldLandmarkCount),
+    rightElbow: Number(document.querySelector('#jointMap [data-joint-id="JOINT_RIGHT_ELBOW"]').dataset.angle)
+  }));
+  if (pose.source !== "MEDIAPIPE_POSE_LANDMARKER_FULL" || pose.inputSource !== "user-upload" || pose.inputName !== expectedName || pose.landmarkCount !== 33 || pose.worldLandmarkCount !== 33 || !Number.isFinite(pose.rightElbow)) {
+    throw new Error(`user-upload pose failed for ${expectedName}: ${JSON.stringify(pose)}`);
+  }
+  return pose;
+}
+
+async function plan(page, input, expectedScenario, expectedActions, feedback, decision, expectedPose) {
+  const expectedOpenSimState = [0, 30, 60, 90, 120].reduce((best, angle) =>
+    Math.abs(angle - expectedPose.rightElbow) < Math.abs(best - expectedPose.rightElbow) ? angle : best
+  );
   await page.locator("#wish").fill(input);
   await page.locator("#runWish").click();
   await page.locator('body[data-m5-state="plan-ready"]').waitFor({ state: "attached" });
@@ -26,8 +46,8 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
   if (before.scenario !== expectedScenario) throw new Error(`scenario mismatch: ${before.scenario}`);
   if (before.integration !== "linked") throw new Error(`M2/M3/M4 integration not linked: ${before.integration}`);
   if (before.poseSource !== "current-page-pose" || before.poseInput !== "user-upload") throw new Error(`training loop did not consume user-upload pose: ${before.poseSource}/${before.poseInput}`);
-  if (before.mappedElbow !== 105 || before.openSimState !== 90) throw new Error(`unexpected pose-to-OpenSim mapping: ${before.mappedElbow} -> ${before.openSimState}`);
-  if (!before.integratedText.includes("2234 个网格 / 15 个系统") || !before.integratedText.includes("当前页用户上传动作") || !before.integratedText.includes("0.373656 m") || !before.integratedText.includes("0.048753 m")) {
+  if (before.mappedElbow !== expectedPose.rightElbow || before.openSimState !== expectedOpenSimState) throw new Error(`unexpected pose-to-OpenSim mapping: ${before.mappedElbow} -> ${before.openSimState}; expected ${expectedPose.rightElbow} -> ${expectedOpenSimState}`);
+  if (!before.integratedText.includes("2234 个网格 / 15 个系统") || !before.integratedText.includes("当前页用户上传动作") || !before.integratedText.includes("M4 OpenSim") || !before.integratedText.includes(`映射最近状态 ${expectedOpenSimState}°`)) {
     throw new Error("integrated M2/M3/M4 evidence values missing");
   }
   if (before.actions.length !== expectedActions) throw new Error(`action count mismatch: ${before.actions.length}`);
@@ -83,23 +103,20 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
     if (!deployed) throw new Error(`public page did not expose the M5 release: ${JSON.stringify(deploymentProbe)}`);
 
     await page.locator('#poseFile[data-model-ready="true"]').waitFor({ state: "attached", timeout: 180000 });
-    const uploadFixture = path.resolve(__dirname, "../portal/assets/case2_12.jpg");
-    await page.locator("#poseFile").setInputFiles(uploadFixture);
-    await page.locator('body[data-m3-pose-state="passed"][data-m3-pose-input="user-upload"]').waitFor({ state: "attached", timeout: 180000 });
-    evidence.checks.currentPagePose = await page.evaluate(() => ({
-      source: document.body.dataset.m3Upstream,
-      inputSource: document.body.dataset.m3PoseInput,
-      inputName: document.body.dataset.m3PoseFile,
-      landmarkCount: Number(document.querySelector("#poseResult").dataset.landmarkCount),
-      worldLandmarkCount: Number(document.querySelector("#poseResult").dataset.worldLandmarkCount),
-      rightElbow: Number(document.querySelector('#jointMap [data-joint-id="JOINT_RIGHT_ELBOW"]').dataset.angle)
-    }));
-    if (evidence.checks.currentPagePose.source !== "MEDIAPIPE_POSE_LANDMARKER_FULL" || evidence.checks.currentPagePose.inputSource !== "user-upload" || evidence.checks.currentPagePose.inputName !== "case2_12.jpg" || evidence.checks.currentPagePose.landmarkCount !== 33 || evidence.checks.currentPagePose.worldLandmarkCount !== 33 || evidence.checks.currentPagePose.rightElbow !== 105) {
-      throw new Error("user-upload pose did not produce expected reusable joint output");
+    const uploadFixtures = [
+      { path: path.resolve(__dirname, "../portal/assets/case2_12.jpg"), name: "case2_12.jpg", source: "existing-real-pose-fixture" },
+      { path: path.resolve(__dirname, "../portal/assets/mediapipe-pose-test-image.jpg"), name: "mediapipe-pose-test-image.jpg", source: "google-ai-edge/mediapipe-samples PoseLandmarkerTests" }
+    ];
+    evidence.checks.uploadSamples = [];
+    for (const fixture of uploadFixtures) {
+      const pose = await uploadPose(page, fixture.path, fixture.name);
+      evidence.checks.uploadSamples.push({ ...pose, fixtureSource: fixture.source });
     }
+    if (evidence.checks.uploadSamples[0].rightElbow !== 105) throw new Error("first upload fixture regression");
+    evidence.checks.currentPagePose = evidence.checks.uploadSamples[1];
 
-    evidence.checks.outdoorPullup = await plan(page, "户外有单杠，想练背和手臂，15分钟", "outdoor-pullup", 4, "偏吃力", "REGRESS");
-    evidence.checks.homeWholeBody = await plan(page, "15分钟在家徒手练全身", "home-whole-body-15", 5, "轻松", "PROGRESS_SMALL");
+    evidence.checks.outdoorPullup = await plan(page, "户外有单杠，想练背和手臂，15分钟", "outdoor-pullup", 4, "偏吃力", "REGRESS", evidence.checks.currentPagePose);
+    evidence.checks.homeWholeBody = await plan(page, "15分钟在家徒手练全身", "home-whole-body-15", 5, "轻松", "PROGRESS_SMALL", evidence.checks.currentPagePose);
 
     await page.locator("#wish").fill("想去户外练单杠，但现在右手麻木并且胸闷");
     await page.locator("#runWish").click();
