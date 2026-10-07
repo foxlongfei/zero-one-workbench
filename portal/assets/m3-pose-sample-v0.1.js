@@ -79,7 +79,7 @@ async function runSample() {
       if (activeDelegate !== "GPU") throw detectError;
       status.textContent = "GPU 推理不可用，正在切换 MediaPipe CPU 路径重试真实样本…";
       landmarker?.close?.();
-      landmarker = await createLandmarker();
+      landmarker = await createLandmarker("CPU");
       activeDelegate = "CPU";
       output = landmarker.detect(image);
     }
@@ -132,8 +132,8 @@ async function initialize() {
     activeDelegate = "GPU";
     status.textContent = "姿态模型已就绪：可上传照片，或运行公开可复验的真实样本。";
   } catch (gpuError) {
-    landmarker = await createLandmarker();
-    activeDelegate = "CPU";
+    landmarker = await createLandmarker("CPU");
+      activeDelegate = "CPU";
     status.textContent = "姿态模型已就绪（CPU 路径）：可上传照片，或运行公开可复验的真实样本。";
   }
   button.disabled = false;
