@@ -1,0 +1,22 @@
+name: Verify K4 evidence layers
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "portal/data/k4-evidence-layers.json"
+      - "portal/assets/k4-evidence-layer-v0.1.js"
+      - "portal/k02-board.html"
+      - "scripts/verify-k4-evidence.cjs"
+      - ".github/workflows/verify-k4-evidence.yml"
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node scripts/verify-k4-evidence.cjs
