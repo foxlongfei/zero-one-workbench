@@ -1,0 +1,70 @@
+{
+  "schema": "zero-one.k5.public-advisor-verification.v0.1",
+  "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "verifiedAt": "2026-10-07T17:16:19.946Z",
+  "gitSha": "f4c2e4a4807d153c08b38b974f771937ef221f1c",
+  "checks": {
+    "deploymentAttempt": 2,
+    "publicPage": {
+      "passed": true,
+      "status": "COMPLETED",
+      "artifactReady": "true",
+      "executed": "true",
+      "caseId": "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
+      "runtimeSha": "8131fdd7123758a302ff0c985c89b751f9f08fba",
+      "geometryContinuity": "NOT_PROVEN",
+      "crossLayerEquivalence": "BLOCK",
+      "text": "K5｜COMPLETED｜2026-10-08｜先生式反馈闭环\n先生反馈｜材料、缺口、模型、证据与追问\n\n这个闭环直接读取 K2 depthmapX、K3 Radiance 和 K4 证据分层的真实产物。 它先分开已知与未知，再给出限定在模型范围内的建议；没有证据桥时不生成吉凶断语。\n\n运行住宅A完整反馈\n住宅A反馈链已运行。 已读取 K2/K3/K4 三份真实产物；3 条证据化反馈、3 个可继续追问项。geometry continuity=NOT_PROVEN；cross-layer equivalence=BLOCK。\n已知\nK2 depthmapX artifact is reproducible for its stored reference DXF\nK3 Radiance artifact is reproducible for its fixed reference room and clear-sky point in time\n180 degrees normalizes to 午 under the product 24-mountain engineering convention\nK4 evidence layers and blocking rules are available\n未知 / 必须补充\nK2/K3 geometry continuity is NOT_PROVEN\nNo user-home geometry identity is established\nNo annual climate daylight result is available\nNo field-verified road, water, slope or external obstruction observations are supplied\n\n先生追问：若要判断你的实际住宅，必须补充可转换墙线的户型、窗墙尺寸/朝向、地点或天气文件，并把现场道路、水体、坡向、遮挡逐项注明采集来源。\n\ndepthmapX 点数\n263\nConnectivity 65–200｜均值 124.8\nRadiance 传感点\n20\n421.2–1976.2 lx｜均值 771.6 lx\n近窗 / 深区\n1049.2 / 494\nlux｜固定参考模型\n坐向归一化\n午\n180°｜只作名称归一化\n1｜先建立同一几何，再做跨模型综合\n\n原因：K2/K3 geometry continuity is NOT_PROVEN.\n\n建议：为实际住宅准备同一套墙线、窗墙尺寸、方位和地点输入，分别重跑 depthmapX 与 Radiance 后再比较。\n\n证据：F-K2-01、F-K3-01、K4-R04\n2｜参考采光模型的深区弱于近窗区\n\n原因：K3 near-window mean is 1049.2 lx and deep-zone mean is 494.0 lx.\n\n建议：在真实个案重算前，只把它作为检查深区采光、遮挡和补光需求的提示，不直接套用数值。\n\n证据：F-K3-01、H-K4-01\n3｜传统坐向层保留来源，不生成吉凶断语\n\n原因：180 degrees maps to 午 under the explicit engineering convention; K4 blocks cross-layer equivalence.\n\n建议：继续收集用户要讨论的传统命题及其具体出处，逐条与现代可测结果分栏解释。\n\n证据：T-K4-03、K4-R03、U-K4-01\n继续追问\n为什么不直接说吉凶？\n深区照度较低意味着什么？\n这个结果能用于我的房子吗？\n请选择一个追问，先生将按证据 ID 回答。\n\n边界：当前是仓库参考案例，不是用户住宅实测；K2/K3 geometry continuity 保持 NOT_PROVEN， Connectivity/lux 与“气/吉凶/健康/财富/未来”的等同保持 BLOCK。\n\nK5 COMPLETED｜2026-10-08。\n住宅A已完成材料→已知/未知→必要追问→K2/K3/K4真实产物→证据化反馈→三个继续追问的公开操作闭环。 完成报告 · 公开验收证据 · 实际运行。",
+      "feedbackIds": [
+        "K5-F01",
+        "K5-F02",
+        "K5-F03"
+      ],
+      "replies": [
+        {
+          "question": "为什么不直接说吉凶？",
+          "answer": "为什么不直接说吉凶？\n\n现有产物只能证明特定模型输入下的空间与照度结果，以及传统文本中确有相关术语。没有可操作的证据桥把 Connectivity 或 lux 等同为吉凶，因此该等同主张被 K4-R03 阻断。\n\n证据：K4-R03、U-K4-01"
+        },
+        {
+          "question": "深区照度较低意味着什么？",
+          "answer": "深区照度较低意味着什么？\n\n只对固定 K3 参考房间，它说明该晴空时刻深区工作面照度低于近窗区；可提示检查采光分布，但不能替代全年指标、现场测量或你的住宅重算。\n\n证据：F-K3-01、H-K4-01"
+        },
+        {
+          "question": "这个结果能用于我的房子吗？",
+          "answer": "这个结果能用于我的房子吗？\n\n不能直接套用。需要你的可转换户型、窗墙尺寸和朝向、地点/天气以及现场遮挡资料，先建立同一几何并重新运行两个引擎。\n\n证据：K4-R04、K5-F01"
+        }
+      ]
+    },
+    "publicArtifact": {
+      "passed": true,
+      "httpStatus": 200,
+      "reportHttpStatus": 200,
+      "schema": "zero-one.k5.advisor-case.v0.1",
+      "status": "COMPLETED",
+      "sourceArtifacts": [
+        {
+          "id": "K2_DEPTHMAPX_VGA",
+          "path": "portal/data/depthmap-vga.csv",
+          "sha256": "263d86742bb3ad0f0c8e6d176e6554997047bae00868d22e49d76c7eb68ea1be"
+        },
+        {
+          "id": "RADIANCE_GZ_ROOM_SUMMER_CLEAR_WORKPLANE_V0.1",
+          "path": "portal/data/k3-radiance-daylight.json",
+          "sha256": "8b1ce1ee474ed372d3c45c95b91464cbb77f9e8dac21e165fe233e4ef9bd4530"
+        },
+        {
+          "id": "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
+          "path": "portal/data/k4-evidence-layers.json",
+          "sha256": "eae339536aaf3aab4b0e0005dd0584072c3227e3266cf8c2fe426b16cf4c244c"
+        }
+      ],
+      "feedbackItems": 3,
+      "followUps": 3
+    }
+  },
+  "screenshot": {
+    "path": "docs/v0.1/evidence/k5/public-advisor-closure.png",
+    "sha256": "cf0e00520c7b930f371c65cac32e6e1df1971e6def77a5f5382087c56d60d18d"
+  },
+  "passed": true
+}
