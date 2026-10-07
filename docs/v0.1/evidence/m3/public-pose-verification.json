@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.m3.public-pose-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html",
-  "verifiedAt": "2026-10-04T06:44:36.216Z",
-  "gitSha": "7c09f3f700d5be183c0a9e74284bc126cce9217c",
+  "verifiedAt": "2026-10-07T04:10:59.202Z",
+  "gitSha": "66e35bbd0871d78efad0664e028eda1e1df8c870",
   "checks": {
     "realImagePose": {
       "passed": true,
@@ -42,8 +42,24 @@
       "paintedPixels": 2406,
       "coordinateText": "已进入统一人体坐标：JOINT_LEFT_ELBOW = 105°｜world (0.327, -0.077, -0.466) mJOINT_RIGHT_ELBOW = 105°｜world (-0.395, -0.090, -0.478) mJOINT_LEFT_HIP = 161°｜world (0.122, 0.008, 0.010) mJOINT_RIGHT_HIP = 139°｜world (-0.123, -0.010, -0.008) mJOINT_LEFT_KNEE = 104°｜world (0.067, 0.197, 0.354) mJOINT_RIGHT_KNEE = 67°｜world (-0.130, 0.154, 0.353) m",
       "feedbackText": "真实俯卧撑帧已映射到统一关节 ID。最小膝角约 67°、最小髋角约 139°；这是单帧姿态描述，不自动判断动作好坏或伤病。"
+    },
+    "naturalLanguage": {
+      "passed": true,
+      "input": "15分钟在家练全身",
+      "result": "15 分钟在家全身匹配 5 个动作；按 15 分钟组织。先查看示范、解剖/关节和技术提示，再开始会话。",
+      "scenario": "home-whole-body-15",
+      "actions": [
+        "1. 椅前深蹲或徒手深蹲\n      剂量：8–12 次\n      示范：脚掌三点着地，髋部向后下坐；需要时在椅子前完成并轻触椅面。\n      解剖：股四头肌、臀大肌、内收肌群\n      关节：髋屈/伸 + 膝屈/伸 + 踝背屈\n      技术：膝盖方向与脚尖大致一致；只下到能保持稳定和无异常症状的深度。",
+        "2. 墙面或桌边俯卧撑\n      剂量：6–12 次\n      示范：双手撑稳，身体保持一条直线，胸口靠近支撑面后推回。\n      解剖：胸大肌、肱三头肌、前三角肌、前锯肌\n      关节：肩水平内收 + 肘屈伸 + 肩胛前伸\n      技术：支撑面越高越容易；肩腕不适时提高支撑面。",
+        "3. 髋铰链\n      剂量：10–15 次\n      示范：膝微屈，髋向后移，脊柱保持自然中立；感受大腿后侧拉长后站起。\n      解剖：臀大肌、腘绳肌、竖脊肌\n      关节：以髋屈伸为主，膝角变化较小\n      技术：不追求触地；腰部紧张增加时缩小幅度。",
+        "4. 扶墙反向点步\n      剂量：每侧 6–8 次\n      示范：一手扶墙，单脚向后轻点并屈膝，再由前脚推地回到站立。\n      解剖：臀大肌、股四头肌、臀中肌\n      关节：前侧髋膝协同屈伸；扶墙降低平衡要求\n      技术：膝部不适时改为原地分腿重心移动，减少幅度。",
+        "5. 站立抗旋转收尾\n      剂量：每侧 20–30 秒\n      示范：双脚站稳，双手在胸前相抵，轻收腹并维持自然呼吸。\n      解剖：腹横肌、腹斜肌、竖脊肌\n      关节：躯干保持中立，避免反复大幅屈伸\n      技术：保持能说完整短句的呼吸，不憋气。"
+      ]
     }
   },
-  "passed": false,
-  "error": "Error: natural-language path did not produce a plan\n    at /home/runner/work/zero-one-workbench/zero-one-workbench/scripts/verify-public-m3.cjs:74:99"
+  "screenshot": {
+    "path": "docs/v0.1/evidence/m3/public-real-image-result.png",
+    "sha256": "9631dafeb671f05b342f03d3f140140dce9db542b772e1613b749944bcfaa362"
+  },
+  "passed": true
 }
