@@ -11,12 +11,23 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
   await page.locator('body[data-m5-state="plan-ready"]').waitFor({ state: "attached" });
   const before = await page.evaluate(() => ({
     scenario: document.body.dataset.m5Scenario,
+    integration: document.body.dataset.m5Integration,
+    poseSource: document.body.dataset.m5PoseSource,
+    mappedElbow: Number(document.body.dataset.m5MappedElbow),
+    openSimState: Number(document.body.dataset.m5OpenSimState),
+    integratedText: document.querySelector("#m5IntegratedEvidence").textContent.trim(),
     parsed: document.querySelector("#m5Parsed").textContent.trim(),
     result: document.querySelector("#wishResult").textContent.trim(),
     actions: [...document.querySelectorAll("#m5Actions .m5-action")].map((node) => node.textContent.trim()),
     feedbackHidden: document.querySelector("#m5FeedbackPanel").hidden
   }));
   if (before.scenario !== expectedScenario) throw new Error(`scenario mismatch: ${before.scenario}`);
+  if (before.integration !== "linked") throw new Error(`M2/M3/M4 integration not linked: ${before.integration}`);
+  if (before.poseSource !== "current-page-pose") throw new Error(`training loop did not consume current page pose: ${before.poseSource}`);
+  if (before.mappedElbow !== 105 || before.openSimState !== 90) throw new Error(`unexpected pose-to-OpenSim mapping: ${before.mappedElbow} -> ${before.openSimState}`);
+  if (!before.integratedText.includes("2234 个网格 / 15 个系统") || !before.integratedText.includes("当前页实时动作") || !before.integratedText.includes("0.373656 m") || !before.integratedText.includes("0.048753 m")) {
+    throw new Error("integrated M2/M3/M4 evidence values missing");
+  }
   if (before.actions.length !== expectedActions) throw new Error(`action count mismatch: ${before.actions.length}`);
   if (!before.parsed.includes("身体：") || !before.parsed.includes("目的：") || !before.parsed.includes("时间：") || !before.parsed.includes("环境：") || !before.parsed.includes("器械：") || !before.parsed.includes("限制：")) throw new Error("parsed fields missing");
   if (!before.actions.every((text) => text.includes("示范：") && text.includes("解剖：") && text.includes("关节：") && text.includes("技术："))) throw new Error("action explanation incomplete");
@@ -55,6 +66,18 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
       await page.waitForTimeout(10000);
     }
     if (!deployed) throw new Error("public page did not expose the M5 release after deployment polling");
+
+    await page.locator('#poseSample[data-model-ready="true"]').waitFor({ state: "visible", timeout: 180000 });
+    await page.locator("#poseSample").click();
+    await page.locator('body[data-m3-pose-state="passed"]').waitFor({ state: "attached", timeout: 180000 });
+    evidence.checks.currentPagePose = await page.evaluate(() => ({
+      source: document.body.dataset.m3Upstream,
+      landmarkCount: Number(document.querySelector("#poseResult").dataset.landmarkCount),
+      rightElbow: Number(document.querySelector('#jointMap [data-joint-id="JOINT_RIGHT_ELBOW"]').dataset.angle)
+    }));
+    if (evidence.checks.currentPagePose.source !== "MEDIAPIPE_POSE_LANDMARKER_FULL" || evidence.checks.currentPagePose.landmarkCount !== 33 || evidence.checks.currentPagePose.rightElbow !== 105) {
+      throw new Error("current page pose did not produce expected reusable joint output");
+    }
 
     evidence.checks.outdoorPullup = await plan(page, "户外有单杠，想练背和手臂，15分钟", "outdoor-pullup", 4, "偏吃力", "REGRESS");
     evidence.checks.homeWholeBody = await plan(page, "15分钟在家徒手练全身", "home-whole-body-15", 5, "轻松", "PROGRESS_SMALL");
