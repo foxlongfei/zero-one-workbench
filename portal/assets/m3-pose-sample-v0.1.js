@@ -18,6 +18,7 @@ const defs = [
   ["右膝", "JOINT_RIGHT_KNEE", 24, 26, 28],
 ];
 
+const upload = document.querySelector("#poseFile");
 const button = document.querySelector("#poseSample");
 const image = document.querySelector("#poseImg");
 const canvas = document.querySelector("#poseCanvas");
@@ -41,11 +42,11 @@ function angle(a, b, c) {
   return Math.round((Math.acos(cosine) * 180) / Math.PI);
 }
 
-function loadImage(url) {
+function loadImage(url, cacheBust = false) {
   return new Promise((resolve, reject) => {
     image.onload = resolve;
     image.onerror = reject;
-    image.src = `${url}?m3=${Date.now()}`;
+    image.src = cacheBust ? `${url}?m3=${Date.now()}` : url;
   });
 }
 
@@ -61,28 +62,36 @@ async function createLandmarker(delegate) {
   });
 }
 
-async function runSample() {
-  button.disabled = true;
-  document.body.dataset.m3PoseState = "running";
-  status.textContent = "正在把真实俯卧撑照片送入 MediaPipe Pose Landmarker Full…";
+async function detectWithFallback() {
   try {
-    await loadImage(SAMPLE);
+    return landmarker.detect(image);
+  } catch (detectError) {
+    if (activeDelegate !== "GPU") throw detectError;
+    status.textContent = "GPU 推理不可用，正在切换 MediaPipe CPU 路径重试…";
+    landmarker?.close?.();
+    landmarker = await createLandmarker("CPU");
+    activeDelegate = "CPU";
+    return landmarker.detect(image);
+  }
+}
+
+async function runImage({ url, inputSource, inputName, cacheBust = false }) {
+  button.disabled = true;
+  upload.disabled = true;
+  document.body.dataset.m3PoseState = "running";
+  document.body.dataset.m3PoseInput = inputSource;
+  document.body.dataset.m3PoseFile = inputName;
+  status.textContent = inputSource === "user-upload"
+    ? "正在把用户上传照片送入 MediaPipe Pose Landmarker Full…"
+    : "正在把真实俯卧撑照片送入 MediaPipe Pose Landmarker Full…";
+  try {
+    await loadImage(url, cacheBust);
     stage.style.display = "block";
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
-    let output;
-    try {
-      output = landmarker.detect(image);
-    } catch (detectError) {
-      if (activeDelegate !== "GPU") throw detectError;
-      status.textContent = "GPU 推理不可用，正在切换 MediaPipe CPU 路径重试真实样本…";
-      landmarker?.close?.();
-      landmarker = await createLandmarker("CPU");
-      activeDelegate = "CPU";
-      output = landmarker.detect(image);
-    }
+    const output = await detectWithFallback();
     const landmarks = output.landmarks?.[0];
     const world = output.worldLandmarks?.[0];
     if (!landmarks || landmarks.length !== 33 || !world || world.length !== 33) {
@@ -108,38 +117,69 @@ async function runSample() {
     result.dataset.worldLandmarkCount = String(world.length);
     result.dataset.segmentationMaskCount = String(maskCount);
     result.dataset.meanVisibility = confidence.toFixed(4);
-    result.innerHTML = `<b>真实样本识别成功：1 人，33 个二维关键点，33 个三维世界关键点。</b><br>${values.map((item) => `<span class="pill">${item.name} ${item.angle}°</span>`).join("")}<br><span class="status">分割掩码 ${maskCount} 个｜平均可见度 ${confidence.toFixed(3)}</span>`;
+    result.dataset.inputSource = inputSource;
+    result.dataset.inputName = inputName;
+    result.innerHTML = `<b>${inputSource === "user-upload" ? "用户上传照片" : "真实公开样本"}识别成功：1 人，33 个二维关键点，33 个三维世界关键点。</b><br>${values.map((item) => `<span class="pill">${item.name} ${item.angle}°</span>`).join("")}<br><span class="status">分割掩码 ${maskCount} 个｜平均可见度 ${confidence.toFixed(3)}</span>`;
     jointMap.innerHTML = values.map((item) => `<div class="joint" data-joint-id="${item.id}" data-angle="${item.angle}"><b>${item.name} ${item.angle}°</b><br><span class="status">${item.id}</span></div>`).join("");
     coordinates.innerHTML = `<b>已进入统一人体坐标：</b><br>${values.map((item) => `${item.id} = ${item.angle}°｜world (${item.world.x.toFixed(3)}, ${item.world.y.toFixed(3)}, ${item.world.z.toFixed(3)}) m`).join("<br>")}`;
     const knee = Math.min(...values.filter((item) => item.id.includes("KNEE")).map((item) => item.angle));
     const hip = Math.min(...values.filter((item) => item.id.includes("HIP")).map((item) => item.angle));
-    feedback.innerHTML = `真实俯卧撑帧已映射到统一关节 ID。最小膝角约 ${knee}°、最小髋角约 ${hip}°；这是单帧姿态描述，不自动判断动作好坏或伤病。`;
-    status.textContent = "真实样本运行完成：骨架、二维/三维关键点、关节角和标准关节 ID 已回到主页面。";
+    feedback.innerHTML = `当前帧已映射到统一关节 ID。最小膝角约 ${knee}°、最小髋角约 ${hip}°；这是单帧姿态描述，不自动判断动作好坏或伤病。`;
+    status.textContent = `${inputSource === "user-upload" ? "用户上传照片" : "真实样本"}运行完成：骨架、二维/三维关键点、关节角和标准关节 ID 已回到主页面，可供 OpenSim 与训练反馈复用。`;
     document.body.dataset.m3PoseState = "passed";
     document.body.dataset.m3Upstream = "MEDIAPIPE_POSE_LANDMARKER_FULL";
   } catch (error) {
     document.body.dataset.m3PoseState = "failed";
-    status.textContent = `真实样本识别失败：${error.message || error}`;
+    status.textContent = `姿态识别失败：${error.message || error}`;
     throw error;
   } finally {
     button.disabled = false;
+    upload.disabled = false;
+  }
+}
+
+async function runSample() {
+  return runImage({
+    url: SAMPLE,
+    inputSource: "public-sample",
+    inputName: "case2_12.jpg",
+    cacheBust: true,
+  });
+}
+
+async function runUpload() {
+  const file = upload.files?.[0];
+  if (!file || !landmarker) return;
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    await runImage({
+      url: objectUrl,
+      inputSource: "user-upload",
+      inputName: file.name,
+    });
+  } finally {
+    URL.revokeObjectURL(objectUrl);
   }
 }
 
 async function initialize() {
+  upload.disabled = true;
   try {
     landmarker = await createLandmarker("GPU");
     activeDelegate = "GPU";
     status.textContent = "姿态模型已就绪：可上传照片，或运行公开可复验的真实样本。";
   } catch (gpuError) {
     landmarker = await createLandmarker("CPU");
-      activeDelegate = "CPU";
+    activeDelegate = "CPU";
     status.textContent = "姿态模型已就绪（CPU 路径）：可上传照片，或运行公开可复验的真实样本。";
   }
+  upload.disabled = false;
+  upload.dataset.modelReady = "true";
   button.disabled = false;
   button.dataset.modelReady = "true";
 }
 
+upload?.addEventListener("change", () => runUpload().catch(() => {}));
 button?.addEventListener("click", () => runSample().catch(() => {}));
 initialize().catch((error) => {
   document.body.dataset.m3PoseState = "model-error";
