@@ -1,4 +1,5 @@
 const RELEASE = "M5_TRAINING_LOOP_V0.1";
+const BUILD = "M5_USER_UPLOAD_CHAIN_V0.1";
 const wish = document.querySelector("#wish");
 const wishResult = document.querySelector("#wishResult");
 const parsed = document.querySelector("#m5Parsed");
@@ -197,6 +198,7 @@ async function init() {
       integrationPanel.innerHTML = "<b>整机证据桥接阻塞。</b><br>" + integrationError.message + "；训练组织仍可预览，但不计整机闭环完成。";
     }
     document.body.dataset.m5Release = RELEASE;
+    document.body.dataset.m5Build = BUILD;
     document.body.dataset.m5State = "ready";
     document.querySelector("#m5EngineStatus").textContent = `闭环引擎已就绪｜${catalog.scenarios.length} 个完整场景｜安全分流已启用｜整机证据桥接：${integratedEvidence ? "已加载" : "阻塞"}`;
     document.querySelector("#runWish").addEventListener("click", submit);
