@@ -1,0 +1,275 @@
+{
+  "schema": "zero-one.k3.radiance-daylight.v0.1",
+  "calculationId": "RADIANCE_GZ_ROOM_SUMMER_CLEAR_WORKPLANE_V0.1",
+  "engine": {
+    "name": "Radiance",
+    "version": "RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)",
+    "packageSource": "LBNL-ETA/Radiance rad6R0P2 official Linux release",
+    "license": "Radiance License",
+    "commands": [
+      "gensky",
+      "oconv",
+      "rtrace"
+    ]
+  },
+  "model": {
+    "name": "5x4x3 m reference residential room with south window",
+    "path": "models/k3-radiance/guangzhou-room.rad",
+    "sha256": "513601ce6db129f984eca410c539e90eb2e5eb90c245566d461d40013cb04615",
+    "units": "m",
+    "room": {
+      "widthM": 5.0,
+      "depthM": 4.0,
+      "heightM": 3.0
+    },
+    "window": {
+      "orientation": "south",
+      "widthM": 3.0,
+      "heightM": 1.4,
+      "sillHeightM": 1.0,
+      "visibleTransmittanceInput": 0.6
+    }
+  },
+  "sky": {
+    "generator": "gensky",
+    "month": 6,
+    "day": 21,
+    "solarTimeHour": 12,
+    "type": "CIE clear with sun (+s)",
+    "latitudeDeg": 23.1291,
+    "longitudeDegWest": -113.2644,
+    "standardMeridianDegWest": -120.0,
+    "locationLabel": "Guangzhou"
+  },
+  "analysis": {
+    "method": "rtrace irradiance mode (-I+) on horizontal workplane",
+    "radianceParameters": "-ab 5 -ad 4096 -as 1024 -ar 256 -aa 0.10 -lw 0.0001",
+    "workplaneHeightM": 0.8,
+    "sensorCount": 20,
+    "unit": "lux",
+    "rgbToIlluminance": "179 * (0.265 R + 0.670 G + 0.065 B)",
+    "summary": {
+      "meanLux": 771.6,
+      "minimumLux": 421.2,
+      "maximumLux": 1976.2,
+      "uniformityMinOverMean": 0.546,
+      "nearWindowMeanLux": 1049.2,
+      "deepZoneMeanLux": 494.0
+    },
+    "sensors": [
+      {
+        "id": "P01",
+        "xM": 0.5,
+        "yM": 0.5,
+        "zM": 0.8,
+        "radianceR": 3.273858,
+        "radianceG": 3.273858,
+        "radianceB": 3.273858,
+        "illuminanceLux": 586.0
+      },
+      {
+        "id": "P02",
+        "xM": 1.5,
+        "yM": 0.5,
+        "zM": 0.8,
+        "radianceR": 9.958752,
+        "radianceG": 9.958752,
+        "radianceB": 9.958752,
+        "illuminanceLux": 1782.6
+      },
+      {
+        "id": "P03",
+        "xM": 2.5,
+        "yM": 0.5,
+        "zM": 0.8,
+        "radianceR": 11.04021,
+        "radianceG": 11.04021,
+        "radianceB": 11.04022,
+        "illuminanceLux": 1976.2
+      },
+      {
+        "id": "P04",
+        "xM": 3.5,
+        "yM": 0.5,
+        "zM": 0.8,
+        "radianceR": 9.582324,
+        "radianceG": 9.582324,
+        "radianceB": 9.582324,
+        "illuminanceLux": 1715.2
+      },
+      {
+        "id": "P05",
+        "xM": 4.5,
+        "yM": 0.5,
+        "zM": 0.8,
+        "radianceR": 2.82185,
+        "radianceG": 2.82185,
+        "radianceB": 2.82185,
+        "illuminanceLux": 505.1
+      },
+      {
+        "id": "P06",
+        "xM": 0.5,
+        "yM": 1.5,
+        "zM": 0.8,
+        "radianceR": 3.474896,
+        "radianceG": 3.474896,
+        "radianceB": 3.474896,
+        "illuminanceLux": 622.0
+      },
+      {
+        "id": "P07",
+        "xM": 1.5,
+        "yM": 1.5,
+        "zM": 0.8,
+        "radianceR": 4.952203,
+        "radianceG": 4.952203,
+        "radianceB": 4.952203,
+        "illuminanceLux": 886.4
+      },
+      {
+        "id": "P08",
+        "xM": 2.5,
+        "yM": 1.5,
+        "zM": 0.8,
+        "radianceR": 5.599722,
+        "radianceG": 5.599722,
+        "radianceB": 5.599722,
+        "illuminanceLux": 1002.4
+      },
+      {
+        "id": "P09",
+        "xM": 3.5,
+        "yM": 1.5,
+        "zM": 0.8,
+        "radianceR": 4.695314,
+        "radianceG": 4.695314,
+        "radianceB": 4.695314,
+        "illuminanceLux": 840.5
+      },
+      {
+        "id": "P10",
+        "xM": 4.5,
+        "yM": 1.5,
+        "zM": 0.8,
+        "radianceR": 3.214341,
+        "radianceG": 3.214341,
+        "radianceB": 3.214343,
+        "illuminanceLux": 575.4
+      },
+      {
+        "id": "P11",
+        "xM": 0.5,
+        "yM": 2.5,
+        "zM": 0.8,
+        "radianceR": 2.718524,
+        "radianceG": 2.718524,
+        "radianceB": 2.718524,
+        "illuminanceLux": 486.6
+      },
+      {
+        "id": "P12",
+        "xM": 1.5,
+        "yM": 2.5,
+        "zM": 0.8,
+        "radianceR": 3.12597,
+        "radianceG": 3.12597,
+        "radianceB": 3.12597,
+        "illuminanceLux": 559.5
+      },
+      {
+        "id": "P13",
+        "xM": 2.5,
+        "yM": 2.5,
+        "zM": 0.8,
+        "radianceR": 3.323499,
+        "radianceG": 3.323499,
+        "radianceB": 3.323499,
+        "illuminanceLux": 594.9
+      },
+      {
+        "id": "P14",
+        "xM": 3.5,
+        "yM": 2.5,
+        "zM": 0.8,
+        "radianceR": 3.046847,
+        "radianceG": 3.046847,
+        "radianceB": 3.046847,
+        "illuminanceLux": 545.4
+      },
+      {
+        "id": "P15",
+        "xM": 4.5,
+        "yM": 2.5,
+        "zM": 0.8,
+        "radianceR": 2.623316,
+        "radianceG": 2.623316,
+        "radianceB": 2.623316,
+        "illuminanceLux": 469.6
+      },
+      {
+        "id": "P16",
+        "xM": 0.5,
+        "yM": 3.5,
+        "zM": 0.8,
+        "radianceR": 2.415915,
+        "radianceG": 2.415915,
+        "radianceB": 2.415915,
+        "illuminanceLux": 432.4
+      },
+      {
+        "id": "P17",
+        "xM": 1.5,
+        "yM": 3.5,
+        "zM": 0.8,
+        "radianceR": 2.640245,
+        "radianceG": 2.640245,
+        "radianceB": 2.640245,
+        "illuminanceLux": 472.6
+      },
+      {
+        "id": "P18",
+        "xM": 2.5,
+        "yM": 3.5,
+        "zM": 0.8,
+        "radianceR": 2.750368,
+        "radianceG": 2.750368,
+        "radianceB": 2.750368,
+        "illuminanceLux": 492.3
+      },
+      {
+        "id": "P19",
+        "xM": 3.5,
+        "yM": 3.5,
+        "zM": 0.8,
+        "radianceR": 2.598347,
+        "radianceG": 2.598347,
+        "radianceB": 2.598346,
+        "illuminanceLux": 465.1
+      },
+      {
+        "id": "P20",
+        "xM": 4.5,
+        "yM": 3.5,
+        "zM": 0.8,
+        "radianceR": 2.353271,
+        "radianceG": 2.353271,
+        "radianceB": 2.353271,
+        "illuminanceLux": 421.2
+      }
+    ]
+  },
+  "checks": {
+    "radianceBinariesExecuted": true,
+    "sceneCompiledByOconv": true,
+    "rtraceSensorCount": 20,
+    "allIlluminanceFiniteAndPositive": true,
+    "nearWindowMeanExceedsDeepZoneMean": true
+  },
+  "passed": true,
+  "limitations": [
+    "Reference-room simulation, not a measurement of a user's home.",
+    "Clear-sky point-in-time calculation; not annual climate-based daylight autonomy.",
+    "Window transmittance and surface reflectances are fixed model inputs."
+  ]
+}

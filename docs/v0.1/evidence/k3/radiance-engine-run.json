@@ -1,0 +1,34 @@
+{
+  "schema": "zero-one.k3.radiance-engine-run.v0.1",
+  "calculationId": "RADIANCE_GZ_ROOM_SUMMER_CLEAR_WORKPLANE_V0.1",
+  "engine": {
+    "name": "Radiance",
+    "version": "RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)",
+    "packageSource": "LBNL-ETA/Radiance rad6R0P2 official Linux release",
+    "license": "Radiance License",
+    "commands": [
+      "gensky",
+      "oconv",
+      "rtrace"
+    ]
+  },
+  "modelSha256": "513601ce6db129f984eca410c539e90eb2e5eb90c245566d461d40013cb04615",
+  "sensorCount": 20,
+  "summary": {
+    "meanLux": 771.6,
+    "minimumLux": 421.2,
+    "maximumLux": 1976.2,
+    "uniformityMinOverMean": 0.546,
+    "nearWindowMeanLux": 1049.2,
+    "deepZoneMeanLux": 494.0
+  },
+  "checks": {
+    "radianceBinariesExecuted": true,
+    "sceneCompiledByOconv": true,
+    "rtraceSensorCount": 20,
+    "allIlluminanceFiniteAndPositive": true,
+    "nearWindowMeanExceedsDeepZoneMean": true
+  },
+  "resultPath": "portal/data/k3-radiance-daylight.json",
+  "passed": true
+}
