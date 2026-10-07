@@ -54,17 +54,28 @@ function renderIntegratedEvidence(scenario) {
     return;
   }
   const pose = integratedEvidence.m3.checks.realImagePose;
-  const rightElbow = pose.joints.find((joint) => joint.id === "JOINT_RIGHT_ELBOW");
+  const verifiedRightElbow = pose.joints.find((joint) => joint.id === "JOINT_RIGHT_ELBOW");
+  const liveRightElbowNode = document.querySelector('#jointMap [data-joint-id="JOINT_RIGHT_ELBOW"]');
+  const liveRightElbowAngle = Number(liveRightElbowNode?.dataset.angle);
+  const hasLivePose = document.body.dataset.m3PoseState === "passed" && Number.isFinite(liveRightElbowAngle);
+  const rightElbowAngle = hasLivePose ? liveRightElbowAngle : verifiedRightElbow.angle;
+  const landmarkCount = hasLivePose
+    ? Number(document.querySelector("#poseResult")?.dataset.landmarkCount || pose.landmarkCount)
+    : pose.landmarkCount;
   const state = integratedEvidence.m4.analysis.states.reduce((best, item) =>
-    Math.abs(item.angleDeg - rightElbow.angle) < Math.abs(best.angleDeg - rightElbow.angle) ? item : best
+    Math.abs(item.angleDeg - rightElbowAngle) < Math.abs(best.angleDeg - rightElbowAngle) ? item : best
   );
   const biceps = state.muscles.find((muscle) => muscle.name === "BIClong");
   document.body.dataset.m5Integration = "linked";
+  document.body.dataset.m5PoseSource = hasLivePose ? "current-page-pose" : "verified-evidence-fallback";
+  document.body.dataset.m5MappedElbow = String(rightElbowAngle);
+  document.body.dataset.m5OpenSimState = String(state.angleDeg);
   integrationPanel.innerHTML =
     "<b>整机真实证据已桥接｜不是独立文本方案</b><br>" +
     "M2 完整人体：" + integratedEvidence.m2.checks.catalog.meshes + " 个网格 / " +
     integratedEvidence.m2.checks.catalog.systems + " 个系统；" +
-    "M3 真实动作：" + pose.landmarkCount + " 个关键点，右肘 " + rightElbow.angle + "°；" +
+    "M3 " + (hasLivePose ? "当前页实时动作" : "已验收样本（当前页尚无新动作）") + "：" +
+    landmarkCount + " 个关键点，右肘 " + rightElbowAngle + "°；" +
     "M4 OpenSim：" + integratedEvidence.m4.engine.name + " " +
     integratedEvidence.m4.engine.versionAndDate + "，映射最近状态 " + state.angleDeg +
     "°，BIClong 长度 " + biceps.muscleTendonLengthM.toFixed(6) +
