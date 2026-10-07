@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.k4.public-evidence-layer-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
-  "verifiedAt": "2026-10-07T17:11:51.729Z",
-  "gitSha": "5bee10933a000f3c6fff0892a15f904a28c555c9",
+  "verifiedAt": "2026-10-07T17:19:52.996Z",
+  "gitSha": "9d042dfe11a2157f046bbe358229596ef44f8e86",
   "checks": {
     "deploymentAttempt": 1,
     "publicPage": {
@@ -37,7 +37,7 @@
   },
   "screenshot": {
     "path": "docs/v0.1/evidence/k4/public-evidence-layers.png",
-    "sha256": "f2e13e110a3b91a891ac0f53310e8dfeb33d602d4c1f5b18d80c0f05f2325631"
+    "sha256": "335822e63500da889145e60cfcb309026c382c1ad811c4265ee6313c6338f507"
   },
   "passed": true
 }
