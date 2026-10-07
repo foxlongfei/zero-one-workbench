@@ -1,0 +1,43 @@
+{
+  "schema": "zero-one.k3.public-radiance-verification.v0.1",
+  "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
+  "verifiedAt": "2026-10-07T11:21:36.292Z",
+  "gitSha": "40fd065c86321d2844263a70c0e596e534bdf0d3",
+  "checks": {
+    "deploymentAttempt": 2,
+    "publicPage": {
+      "passed": true,
+      "status": "EXECUTING",
+      "calculationId": "RADIANCE_GZ_ROOM_SUMMER_CLEAR_WORKPLANE_V0.1",
+      "engineVersion": "RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)",
+      "sensorCount": 20,
+      "unit": "lux",
+      "meanLux": 771.6,
+      "minimumLux": 421.2,
+      "maximumLux": 1976.2,
+      "nearWindowMeanLux": 1049.2,
+      "deepZoneMeanLux": 494,
+      "text": "K3｜EXECUTING｜真实 Radiance 环境引擎\n成熟环境模型｜Radiance 住宅采光\n\n固定 5×4×3 m 住宅参考房间、南向窗和广州夏至晴空，由 LBNL Radiance 6.0.2 依次运行 gensky → oconv → rtrace；以下照度不是网页公式估算。\n\n真实引擎产物已读入。 RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)｜gensky → oconv → rtrace｜20 个工作面点｜单位 lux\n771.6\n平均 lux\n421.2\n最低 lux\n1976.2\n最高 lux\n0.5\n最低/平均\n586.0\nlux\n1782.6\nlux\n1976.2\nlux\n1715.2\nlux\n505.1\nlux\n622.0\nlux\n886.4\nlux\n1002.4\nlux\n840.5\nlux\n575.4\nlux\n486.6\nlux\n559.5\nlux\n594.9\nlux\n545.4\nlux\n469.6\nlux\n432.4\nlux\n472.6\nlux\n492.3\nlux\n465.1\nlux\n421.2\nlux\n\n5x4x3 m reference residential room with south window｜模型 SHA-256 513601ce6db129f984eca410c539e90eb2e5eb90c245566d461d40013cb04615｜广州 6月21日 12:00 CIE clear + sun｜工作面 0.8 m｜窗边均值 1049.2 lux / 深区 494.0 lux。\n\n边界：这是固定参考房间的夏至晴空时刻计算，不是用户住宅实测，也不是全年气候采光自治率。 后续真实个案必须替换几何、窗参数和天气条件后重算。",
+      "heatmapCells": 20
+    },
+    "publicArtifact": {
+      "passed": true,
+      "httpStatus": 200,
+      "modelSha256": "513601ce6db129f984eca410c539e90eb2e5eb90c245566d461d40013cb04615",
+      "engine": "RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)",
+      "summary": {
+        "meanLux": 771.6,
+        "minimumLux": 421.2,
+        "maximumLux": 1976.2,
+        "uniformityMinOverMean": 0.546,
+        "nearWindowMeanLux": 1049.2,
+        "deepZoneMeanLux": 494
+      }
+    }
+  },
+  "screenshot": {
+    "path": "docs/v0.1/evidence/k3/public-radiance-daylight.png",
+    "sha256": "38902069acf30fcddf330fd767f540b002e6502d149451265b76b2239330bd58"
+  },
+  "passed": true
+}
