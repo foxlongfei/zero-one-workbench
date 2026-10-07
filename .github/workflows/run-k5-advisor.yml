@@ -32,7 +32,7 @@ jobs:
         run: node scripts/run-k5-advisor.cjs portal/data/k5-advisor-case.json
       - name: Verify generated artifact
         run: |
-          node -e 'const a=require("./portal/data/k5-advisor-case.json"); if(a.status!=="PENDING_ACCEPTANCE"||a.modelResults.spatial.pointCount!==263||a.modelResults.daylight.sensorCount!==20||a.advisorFeedback.length<3||a.followUps.length<3||!Object.values(a.checks).every(Boolean)) process.exit(1); console.log({caseId:a.caseId,feedback:a.advisorFeedback.length,followUps:a.followUps.length,passed:true})'
+          node -e 'const a=require("./portal/data/k5-advisor-case.json"); if(a.status!=="COMPLETED"||a.modelResults.spatial.pointCount!==263||a.modelResults.daylight.sensorCount!==20||a.advisorFeedback.length<3||a.followUps.length<3||!Object.values(a.checks).every(Boolean)) process.exit(1); console.log({caseId:a.caseId,feedback:a.advisorFeedback.length,followUps:a.followUps.length,passed:true})'
       - uses: actions/upload-artifact@v4
         with:
           name: k5-advisor-runtime-artifact
