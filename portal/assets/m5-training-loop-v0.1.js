@@ -9,6 +9,8 @@ const feedbackResult = document.querySelector("#feedbackResult");
 
 let catalog;
 let current = null;
+let integratedEvidence = null;
+let integrationPanel = null;
 
 function includesAny(text, terms) {
   return terms.some((term) => text.includes(term));
@@ -44,6 +46,47 @@ function chooseScenario(text) {
   return ranked[0].score > 0 ? ranked[0].scenario : catalog.scenarios[1];
 }
 
+function renderIntegratedEvidence(scenario) {
+  if (!integrationPanel) return;
+  if (!integratedEvidence) {
+    document.body.dataset.m5Integration = "blocked";
+    integrationPanel.innerHTML = "<b>整机证据桥接未就绪。</b><br>M2 人体、M3 真实动作或 M4 OpenSim 产物未能读入；以下训练组织不计整机闭环完成。";
+    return;
+  }
+  const pose = integratedEvidence.m3.checks.realImagePose;
+  const rightElbow = pose.joints.find((joint) => joint.id === "JOINT_RIGHT_ELBOW");
+  const state = integratedEvidence.m4.analysis.states.reduce((best, item) =>
+    Math.abs(item.angleDeg - rightElbow.angle) < Math.abs(best.angleDeg - rightElbow.angle) ? item : best
+  );
+  const biceps = state.muscles.find((muscle) => muscle.name === "BIClong");
+  document.body.dataset.m5Integration = "linked";
+  integrationPanel.innerHTML =
+    "<b>整机真实证据已桥接｜不是独立文本方案</b><br>" +
+    "M2 完整人体：" + integratedEvidence.m2.checks.catalog.meshes + " 个网格 / " +
+    integratedEvidence.m2.checks.catalog.systems + " 个系统；" +
+    "M3 真实动作：" + pose.landmarkCount + " 个关键点，右肘 " + rightElbow.angle + "°；" +
+    "M4 OpenSim：" + integratedEvidence.m4.engine.name + " " +
+    integratedEvidence.m4.engine.versionAndDate + "，映射最近状态 " + state.angleDeg +
+    "°，BIClong 长度 " + biceps.muscleTendonLengthM.toFixed(6) +
+    " m / 力臂 " + biceps.elbowMomentArmM.toFixed(6) + " m。<br>" +
+    "当前场景：" + scenario.title + "。这些数值用于把人体、动作和生物力学证据带入训练解释，不等同个人诊断或个体化力值。";
+}
+
+async function loadIntegratedEvidence() {
+  const [m2Response, m3Response, m4Response] = await Promise.all([
+    fetch("../docs/v0.1/evidence/m2/public-webgl-verification.json", { cache: "no-store" }),
+    fetch("../docs/v0.1/evidence/m3/public-pose-verification.json", { cache: "no-store" }),
+    fetch("data/m4-opensim-arm26-results.json", { cache: "no-store" })
+  ]);
+  if (!m2Response.ok || !m3Response.ok || !m4Response.ok) throw new Error("整机证据产物 HTTP 读取失败");
+  const [m2, m3, m4] = await Promise.all([m2Response.json(), m3Response.json(), m4Response.json()]);
+  const pose = m3.checks?.realImagePose;
+  if (!m2.passed || !pose?.passed || !m4.passed || !Array.isArray(pose.joints) || !Array.isArray(m4.analysis?.states)) {
+    throw new Error("M2/M3/M4 真实证据链不完整");
+  }
+  return { m2, m3, m4 };
+}
+
 function renderParsed(model) {
   parsed.innerHTML = `
     <b>已解析输入</b>
@@ -77,6 +120,7 @@ function renderPlan(text) {
   document.body.dataset.m5Scenario = scenario.id;
   wishResult.innerHTML = `<b>${scenario.title}</b><br>匹配 ${scenario.actions.length} 个动作；按 ${model.minutes} 分钟组织。先查看示范、解剖/关节和技术提示，再开始会话。`;
   renderParsed(model);
+  renderIntegratedEvidence(scenario);
   actions.innerHTML = scenario.actions.map((action, index) => `
     <article class="m5-action" data-m5-action="${action.id}">
       <h3>${index + 1}. ${action.name}</h3>
@@ -121,13 +165,26 @@ function applyFeedback(value) {
 
 async function init() {
   try {
+    integrationPanel = document.createElement("div");
+    integrationPanel.id = "m5IntegratedEvidence";
+    integrationPanel.className = "plan";
+    integrationPanel.innerHTML = "<b>正在读取 M2/M3/M4 真实产物…</b>";
+    actions.before(integrationPanel);
     const response = await fetch("data/m5-training-scenarios.json", { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     catalog = await response.json();
     if (catalog.release !== RELEASE || catalog.scenarios.length < 2) throw new Error("训练场景产物版本不匹配");
+    try {
+      integratedEvidence = await loadIntegratedEvidence();
+      document.body.dataset.m5Integration = "loaded";
+      integrationPanel.innerHTML = "<b>整机证据桥接已加载。</b><br>生成场景后显示 M2 完整人体、M3 真实动作和 M4 OpenSim 的同页证据链。";
+    } catch (integrationError) {
+      document.body.dataset.m5Integration = "blocked";
+      integrationPanel.innerHTML = "<b>整机证据桥接阻塞。</b><br>" + integrationError.message + "；训练组织仍可预览，但不计整机闭环完成。";
+    }
     document.body.dataset.m5Release = RELEASE;
     document.body.dataset.m5State = "ready";
-    document.querySelector("#m5EngineStatus").textContent = `闭环引擎已就绪｜${catalog.scenarios.length} 个完整场景｜安全分流已启用`;
+    document.querySelector("#m5EngineStatus").textContent = `闭环引擎已就绪｜${catalog.scenarios.length} 个完整场景｜安全分流已启用｜整机证据桥接：${integratedEvidence ? "已加载" : "阻塞"}`;
     document.querySelector("#runWish").addEventListener("click", submit);
     wish.addEventListener("keydown", (event) => { if (event.key === "Enter") submit(); });
     document.querySelectorAll(".preset").forEach((button) => button.addEventListener("click", () => {
