@@ -1,0 +1,69 @@
+name: Run Radiance K3 daylight analysis
+
+on:
+  push:
+    paths:
+      - ".github/workflows/run-radiance-k3.yml"
+      - "scripts/run-radiance-k3.py"
+      - "models/k3-radiance/guangzhou-room.rad"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: run-radiance-k3
+  cancel-in-progress: false
+
+jobs:
+  radiance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install mature Radiance engine
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y radiance
+          rtrace -version
+
+      - name: Execute real gensky to oconv to rtrace chain
+        run: |
+          python scripts/run-radiance-k3.py             --model models/k3-radiance/guangzhou-room.rad             --output-json portal/data/k3-radiance-daylight.json             --output-csv portal/data/k3-radiance-daylight.csv             --evidence-json docs/v0.1/evidence/k3/radiance-engine-run.json
+
+      - name: Validate engine artifacts
+        run: |
+          python - <<'PY'
+          import json
+          data = json.load(open("portal/data/k3-radiance-daylight.json"))
+          assert data["passed"] is True
+          assert data["engine"]["name"] == "Radiance"
+          assert data["analysis"]["sensorCount"] == 20
+          assert data["analysis"]["unit"] == "lux"
+          assert data["checks"]["radianceBinariesExecuted"] is True
+          assert data["checks"]["sceneCompiledByOconv"] is True
+          assert data["checks"]["nearWindowMeanExceedsDeepZoneMean"] is True
+          print("RADIANCE_K3_ENGINE_PASS", data["analysis"]["summary"])
+          PY
+
+      - name: Upload immutable engine artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: k3-radiance-engine-artifacts
+          path: |
+            portal/data/k3-radiance-daylight.json
+            portal/data/k3-radiance-daylight.csv
+            docs/v0.1/evidence/k3/radiance-engine-run.json
+          if-no-files-found: error
+
+      - name: Commit reproducible calculation products
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add portal/data/k3-radiance-daylight.json portal/data/k3-radiance-daylight.csv docs/v0.1/evidence/k3/radiance-engine-run.json
+          git commit -m "data(k3): record real Radiance daylight results"
+          git pull --rebase origin main
+          git push origin HEAD:main
