@@ -132,6 +132,22 @@
         gap: 6px;
         margin-top: 12px;
       }
+      .evidence-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      .evidence-item {
+        border: 1px solid #ddd6ca;
+        border-radius: 12px;
+        padding: 12px;
+        background: #fffdf8;
+      }
+      .evidence-item[data-layer="COMPUTED_FACT"] { border-left: 5px solid #457565; }
+      .evidence-item[data-layer="TRADITIONAL_TEXT"] { border-left: 5px solid #8c6744; }
+      .evidence-item[data-layer="MODERN_HYPOTHESIS"] { border-left: 5px solid #5b6e92; }
+      .evidence-item[data-layer="UNVERIFIED_CLAIM"] { border-left: 5px solid #a04444; }
+      .evidence-item blockquote { margin: 8px 0; padding-left: 12px; border-left: 3px solid #cec8bd; }
       .daylight-cell {
         min-height: 58px;
         border-radius: 9px;
@@ -331,6 +347,20 @@
           <a href="../docs/v0.1/K3-completion-report-2026-10-07.md">完成报告</a> ·
           <a href="../docs/v0.1/evidence/k3/public-radiance-verification.json">公开验收证据</a> ·
           <a href="https://github.com/foxlongfei/zero-one-workbench/actions/runs/37613463955">严格验收运行</a>。
+        </p>
+      </section>
+      <section class="card" id="k4-evidence-layer" data-k4-status="PENDING_ACCEPTANCE">
+        <div class="muted">K4｜PENDING_ACCEPTANCE｜传统体系证据分层</div>
+        <h2>证据分层｜事实不改名，古籍不越界</h2>
+        <p>
+          同一产品案例把 depthmapX 与 Radiance 的可复现结果、古籍文本、现代解释假设和未验证主张分开保存。
+          K2 与 K3 的几何连续性当前明确为 <code>NOT_PROVEN</code>，因此禁止跨引擎因果推断。
+        </p>
+        <div id="k4EvidenceState" class="result">正在读取 K4 机器可读证据层…</div>
+        <div id="k4EvidenceList" class="evidence-list"></div>
+        <p class="muted">
+          规则：计算事实必须附引擎、产物和适用范围；传统文本必须附作品、见证版本、归属/传承状态和原始语境；
+          任何“Connectivity/lux＝气/吉凶/健康/财富/未来”的等同主张默认阻断。
         </p>
       </section>
       <section class="card">
@@ -676,5 +706,6 @@
       loadEngine();
     </script>
     <script src="assets/k3-radiance-daylight-v0.1.js?v=RADIANCE_K3_V0.1"></script>
+    <script src="assets/k4-evidence-layer-v0.1.js?v=EVIDENCE_K4_V0.1"></script>
   </body>
 </html>
