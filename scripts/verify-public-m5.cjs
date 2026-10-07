@@ -1,5 +1,6 @@
 const { chromium } = require("playwright");
 const fs = require("fs");
+const path = require("path");
 
 const publicUrl = process.env.PUBLIC_URL || "https://foxlongfei.github.io/zero-one-workbench/portal/movement.html";
 const outDir = process.env.EVIDENCE_DIR || "docs/v0.1/evidence/m5";
@@ -13,6 +14,7 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
     scenario: document.body.dataset.m5Scenario,
     integration: document.body.dataset.m5Integration,
     poseSource: document.body.dataset.m5PoseSource,
+    poseInput: document.body.dataset.m5PoseInput,
     mappedElbow: Number(document.body.dataset.m5MappedElbow),
     openSimState: Number(document.body.dataset.m5OpenSimState),
     integratedText: document.querySelector("#m5IntegratedEvidence").textContent.trim(),
@@ -23,9 +25,9 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
   }));
   if (before.scenario !== expectedScenario) throw new Error(`scenario mismatch: ${before.scenario}`);
   if (before.integration !== "linked") throw new Error(`M2/M3/M4 integration not linked: ${before.integration}`);
-  if (before.poseSource !== "current-page-pose") throw new Error(`training loop did not consume current page pose: ${before.poseSource}`);
+  if (before.poseSource !== "current-page-pose" || before.poseInput !== "user-upload") throw new Error(`training loop did not consume user-upload pose: ${before.poseSource}/${before.poseInput}`);
   if (before.mappedElbow !== 105 || before.openSimState !== 90) throw new Error(`unexpected pose-to-OpenSim mapping: ${before.mappedElbow} -> ${before.openSimState}`);
-  if (!before.integratedText.includes("2234 个网格 / 15 个系统") || !before.integratedText.includes("当前页实时动作") || !before.integratedText.includes("0.373656 m") || !before.integratedText.includes("0.048753 m")) {
+  if (!before.integratedText.includes("2234 个网格 / 15 个系统") || !before.integratedText.includes("当前页用户上传动作") || !before.integratedText.includes("0.373656 m") || !before.integratedText.includes("0.048753 m")) {
     throw new Error("integrated M2/M3/M4 evidence values missing");
   }
   if (before.actions.length !== expectedActions) throw new Error(`action count mismatch: ${before.actions.length}`);
@@ -79,16 +81,20 @@ async function plan(page, input, expectedScenario, expectedActions, feedback, de
     evidence.checks.deploymentProbe = deploymentProbe;
     if (!deployed) throw new Error(`public page did not expose the M5 release: ${JSON.stringify(deploymentProbe)}`);
 
-    await page.locator('#poseSample[data-model-ready="true"]').waitFor({ state: "visible", timeout: 180000 });
-    await page.locator("#poseSample").click();
-    await page.locator('body[data-m3-pose-state="passed"]').waitFor({ state: "attached", timeout: 180000 });
+    await page.locator('#poseFile[data-model-ready="true"]').waitFor({ state: "attached", timeout: 180000 });
+    const uploadFixture = path.resolve(__dirname, "../portal/assets/case2_12.jpg");
+    await page.locator("#poseFile").setInputFiles(uploadFixture);
+    await page.locator('body[data-m3-pose-state="passed"][data-m3-pose-input="user-upload"]').waitFor({ state: "attached", timeout: 180000 });
     evidence.checks.currentPagePose = await page.evaluate(() => ({
       source: document.body.dataset.m3Upstream,
+      inputSource: document.body.dataset.m3PoseInput,
+      inputName: document.body.dataset.m3PoseFile,
       landmarkCount: Number(document.querySelector("#poseResult").dataset.landmarkCount),
+      worldLandmarkCount: Number(document.querySelector("#poseResult").dataset.worldLandmarkCount),
       rightElbow: Number(document.querySelector('#jointMap [data-joint-id="JOINT_RIGHT_ELBOW"]').dataset.angle)
     }));
-    if (evidence.checks.currentPagePose.source !== "MEDIAPIPE_POSE_LANDMARKER_FULL" || evidence.checks.currentPagePose.landmarkCount !== 33 || evidence.checks.currentPagePose.rightElbow !== 105) {
-      throw new Error("current page pose did not produce expected reusable joint output");
+    if (evidence.checks.currentPagePose.source !== "MEDIAPIPE_POSE_LANDMARKER_FULL" || evidence.checks.currentPagePose.inputSource !== "user-upload" || evidence.checks.currentPagePose.inputName !== "case2_12.jpg" || evidence.checks.currentPagePose.landmarkCount !== 33 || evidence.checks.currentPagePose.worldLandmarkCount !== 33 || evidence.checks.currentPagePose.rightElbow !== 105) {
+      throw new Error("user-upload pose did not produce expected reusable joint output");
     }
 
     evidence.checks.outdoorPullup = await plan(page, "户外有单杠，想练背和手臂，15分钟", "outdoor-pullup", 4, "偏吃力", "REGRESS");
