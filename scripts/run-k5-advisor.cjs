@@ -48,7 +48,7 @@ const radiance = k3.analysis.summary;
 const artifact = {
   schema: "zero-one.k5.advisor-case.v0.1",
   caseId: "K02_REFERENCE_RESIDENTIAL_CASE_V0.1",
-  status: "PENDING_ACCEPTANCE",
+  status: "COMPLETED",
   generatedAt: new Date().toISOString(),
   runtime: {
     engine: "Node.js deterministic evidence-bound advisor",
