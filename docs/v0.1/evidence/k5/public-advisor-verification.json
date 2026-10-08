@@ -1,10 +1,10 @@
 {
   "schema": "zero-one.k5.public-advisor-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
-  "verifiedAt": "2026-10-07T17:16:19.946Z",
-  "gitSha": "f4c2e4a4807d153c08b38b974f771937ef221f1c",
+  "verifiedAt": "2026-10-08T04:43:19.641Z",
+  "gitSha": "f7fd19362231e8af01339de191d6226c2d7bd9de",
   "checks": {
-    "deploymentAttempt": 2,
+    "deploymentAttempt": 1,
     "publicPage": {
       "passed": true,
       "status": "COMPLETED",
