@@ -1,0 +1,44 @@
+name: V0.2 dual-track autonomous verification
+on:
+  schedule:
+    - cron: '17 2,14 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: v02-verification
+  cancel-in-progress: false
+jobs:
+  dual-track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify both V0.2 tracks
+        id: verify
+        continue-on-error: true
+        run: node scripts/v02-verify.mjs
+      - name: Upload independent evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v02-evidence-${{ github.run_id }}
+          path: artifacts/v02/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Open or update blocker issue
+        if: steps.verify.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="V0.2 automatic verification blocked"
+          existing=$(gh issue list --state open --search "$title in:title" --json number,title --jq '.[] | select(.title == "V0.2 automatic verification blocked") | .number' | head -1)
+          body="Automatic verification failed in run ${{ github.run_id }}. Inspect uploaded evidence and workflow logs. A01 and B01 remain IN_PROGRESS; do not claim completion. Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ -z "$existing" ]; then gh issue create --title "$title" --body "$body"; else gh issue comment "$existing" --body "$body"; fi
+      - name: Enforce verification result
+        if: steps.verify.outcome == 'failure'
+        run: exit 1
