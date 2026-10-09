@@ -42,3 +42,26 @@ jobs:
       - name: Enforce verification result
         if: steps.verify.outcome == 'failure'
         run: exit 1
+  product-stall-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Detect absence of product code changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          since=$(date -u -d '24 hours ago' '+%Y-%m-%dT%H:%M:%SZ')
+          total=0
+          for path in portal/assets/v02-exercise-workbench.js portal/assets/v02-residence-workbench.js portal/movement.html portal/k02-board.html; do
+            n=$(gh api -X GET "repos/${{ github.repository }}/commits" -f path="$path" -f since="$since" --jq 'length')
+            total=$((total+n))
+          done
+          echo "V0.2 product-path commits in last 24h: $total"
+          if [ "$total" -eq 0 ]; then
+            title="V0.2 A01/B01 product development stalled"
+            body="No changes to the four V0.2 product paths in the past 24 hours (checked $since to now). This is a stall signal, NOT proof no external PR or work occurred. Original Issue #3 remains the source of truth. A01/B01 are not accepted. Check coding-agent provisioning, workflow runs, open PRs and runtime artifacts. Do not substitute CI or documentation commits for product progress."
+            existing=$(gh issue list --state open --search "$title in:title" --json number,title --jq '.[] | select(.title == "V0.2 A01/B01 product development stalled") | .number' | head -1)
+            if [ -z "$existing" ]; then gh issue create --title "$title" --body "$body"; fi
+            echo "::warning::No product-path commits within 24h; autonomous development is not established by this verifier."
+          fi
