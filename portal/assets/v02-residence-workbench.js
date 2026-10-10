@@ -181,8 +181,8 @@
       if (!response.ok) throw Error(`HTTP ${response.status}`);
       const record = await response.json();
       if (!hydrate(record)) throw Error('参考材料格式不符');
-      root.dataset.sampleStatus = record.sampleStatus || 'STATUS_MISSING';
       check();
+      root.dataset.sampleStatus = record.sampleStatus || 'STATUS_MISSING';
       root.dataset.sourceArtifact = record.sourceArtifact || '';
       root.querySelector('#r-result').textContent += ' 已加载K3可追溯参考模型；它不是用户真实住宅，楼层与周边现场材料仍缺失。';
     } catch (error) {
