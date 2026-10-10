@@ -74,7 +74,7 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#r-name').fill('东明居');
   await page.locator('#r-place').fill('上海市浦东新区');
   await page.locator('#r-material').fill('现场手工测量记录 v1');
-  await page.locator('#r-source').selectOption('USER_MEASURED');
+  await page.locator('#r-source').selectOption('DRAWING_OR_ARCHIVE');
   await page.locator('#r-confidence').selectOption('MEDIUM');
   await page.locator('#r-material-license').fill('PROJECT_REFERENCE_ONLY');
   await page.locator('#r-material-file').setInputFiles('research/depthmap/prototype-house.dxf');
