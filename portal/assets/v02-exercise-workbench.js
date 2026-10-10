@@ -55,6 +55,17 @@
       license: '仓库内项目内容；未声明可复用的第三方动作库许可证',
       evidenceStatus: 'PROJECT_GUIDANCE_NOT_UPSTREAM_STANDARD',
     },
+    upstream: {
+      project: 'wger Workout Manager',
+      exerciseName: 'Push Ups',
+      exerciseUuid: '9d756e84-6b77-4f17-b21d-7d266d6a8bd2',
+      repositoryRevision: 'ec97d5e4c83b2531ba08b9abb04f78fefd48aa1c',
+      identityEvidenceUrl: 'https://github.com/wger-project/wger/blob/ec97d5e4c83b2531ba08b9abb04f78fefd48aa1c/wger/exercises/migrations/0011_auto_20201214_0033.py',
+      projectLicense: 'AGPL-3.0',
+      projectLicenseUrl: 'https://github.com/wger-project/wger/blob/ec97d5e4c83b2531ba08b9abb04f78fefd48aa1c/LICENSE.txt',
+      integrationStatus: 'IDENTITY_MAPPED_CONTENT_NOT_IMPORTED',
+      limitation: '已核对上游动作身份与项目许可证；尚未读回该动作记录自己的内容/媒体许可证，因此不复制其说明或媒体。',
+    },
   };
 
   let timer = null;
@@ -95,6 +106,9 @@
       <p><b>常见调整：</b>${data.variants.map(x => `${x.name}（${x.relation}）`).join('、')}</p>
       <fieldset id="v02-form-checklist"><legend>常见错误自查（项目原创教学提示，非医学诊断）</legend><ul>${data.formErrors.map((item, i) => `<li><input type="checkbox" id="v02-form-${i}"><label for="v02-form-${i}"><b>错误：</b>${item.error}；<b>纠正：</b>${item.correction}</label></li>`).join('')}</ul></fieldset>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
+      <section id="v02-upstream"><h4>成熟开放底层映射</h4><p><b>${data.upstream.project}</b>｜${data.upstream.exerciseName}｜UUID <code>${data.upstream.exerciseUuid}</code><br>
+        项目许可：<a href="${data.upstream.projectLicenseUrl}">${data.upstream.projectLicense}</a>｜<a href="${data.upstream.identityEvidenceUrl}">固定版本身份记录</a><br>
+        接入状态：<code>${data.upstream.integrationStatus}</code><br>${data.upstream.limitation}</p></section>
       <p class="status">状态：A01部分交互样机；开放动作库接入、正式来源审计和公开验收均未完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
     out.querySelector('#v02-play').onclick = () => {
       clearInterval(timer);
@@ -105,6 +119,7 @@
     out.querySelector('#v02-phase').oninput = event => { phase = Number(event.target.value); draw(); };
     root.dataset.exerciseId = data.id;
     root.dataset.provenance = data.provenance.evidenceStatus;
+    root.dataset.upstreamStatus = data.upstream.integrationStatus;
     draw();
   }
 

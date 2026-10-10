@@ -1,0 +1,54 @@
+name: V0.2 PR browser verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "portal/assets/v02-exercise-workbench.js"
+      - "portal/assets/v02-residence-workbench.js"
+      - "portal/movement.html"
+      - "portal/k02-board.html"
+      - "scripts/v02-verify.mjs"
+      - "scripts/v02-browser-verify.cjs"
+      - ".github/workflows/v02-pr-browser.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Static checks
+        run: node scripts/v02-verify.mjs
+      - name: Install Chromium verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
+      - name: Start branch web server
+        run: |
+          python3 -m http.server 4173 >/tmp/v02-http.log 2>&1 &
+          echo $! >/tmp/v02-http.pid
+          for attempt in {1..20}; do
+            curl --fail --silent http://127.0.0.1:4173/portal/movement.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/v02-http.log
+          exit 1
+      - name: Run real browser interaction
+        env:
+          V02_BASE_URL: http://127.0.0.1:4173
+        run: node scripts/v02-browser-verify.cjs
+      - name: Upload verification artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v02-pr-browser-${{ github.sha }}
+          path: artifacts/v02-browser/
+          if-no-files-found: error

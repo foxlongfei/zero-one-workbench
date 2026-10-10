@@ -26,6 +26,7 @@
     </div>
     <div id="r-result" class="result" aria-live="polite"></div>
     <div id="r-next-question" class="result" aria-live="polite"></div>
+    <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
     <details><summary>同一住宅补充记录</summary><ol id="r-history"></ol></details>`;
   const main = document.querySelector('main');
   main.insertBefore(root, main.children[1] || null);
@@ -40,11 +41,13 @@
   const fields = Object.fromEntries(keys.map(key => [key, root.querySelector(`#r-${key}`)]));
   let caseId = `residence-${Date.now().toString(36)}`;
   let revisions = [];
+  let evidence = {};
 
   function hydrate(record) {
     if (!record || record.schema !== 'zero-one.residence.v0.2') return false;
     caseId = String(record.id || caseId);
     revisions = Array.isArray(record.revisions) ? record.revisions.slice(-20) : [];
+    evidence = record.evidence && typeof record.evidence === 'object' ? record.evidence : {};
     keys.forEach(key => { fields[key].value = String(record.fields?.[key] || record[key] || ''); });
     return true;
   }
@@ -61,6 +64,7 @@
       id: caseId,
       updatedAt: new Date().toISOString(),
       fields: fieldSnapshot(),
+      evidence,
       revisions,
       boundaries: {
         modelRun: 'NOT_STARTED',
@@ -80,6 +84,27 @@
       : '<li>尚无保存记录。</li>';
   }
 
+  function renderEvidence() {
+    const rows = Object.entries(evidence).filter(([key]) => labels[key]);
+    root.querySelector('#r-evidence').innerHTML = rows.length
+      ? rows.map(([key, item]) => `<li data-field="${key}"><b>${labels[key]}</b>｜${item.source || 'SOURCE_MISSING'}｜${item.confidence || 'CONFIDENCE_MISSING'}｜${item.capturedAt}</li>`).join('')
+      : '<li>尚无已保存的字段证据。</li>';
+  }
+
+  function captureEvidence(snapshot, at) {
+    for (const [key, value] of Object.entries(snapshot)) {
+      if (!value || key === 'source' || key === 'confidence') continue;
+      if (!evidence[key] || evidence[key].value !== value) {
+        evidence[key] = {
+          value,
+          source: snapshot.source || 'SOURCE_MISSING',
+          confidence: snapshot.confidence || 'CONFIDENCE_MISSING',
+          capturedAt: at,
+        };
+      }
+    }
+  }
+
   function check() {
     const record = collect();
     const missing = missingFields(record);
@@ -93,12 +118,14 @@
     root.dataset.missingCount = String(missing.length);
     root.dataset.nextField = missing[0] || '';
     renderHistory();
+    renderEvidence();
     return directionValid;
   }
 
   root.querySelector('#r-save').onclick = () => {
     if (!check()) return;
     const record = collect();
+    captureEvidence(record.fields, record.updatedAt);
     const missing = missingFields(record);
     revisions.push({at: record.updatedAt, known: keys.length - missing.length, missing});
     revisions = revisions.slice(-20);
@@ -135,6 +162,7 @@
   root.querySelector('#r-new').onclick = () => {
     caseId = `residence-${Date.now().toString(36)}`;
     revisions = [];
+    evidence = {};
     keys.forEach(key => { fields[key].value = ''; });
     check();
   };
