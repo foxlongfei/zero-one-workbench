@@ -1,0 +1,40 @@
+{
+  "schema": "zero-one.v02.upstream-exercise-snapshot.v1",
+  "observedAt": "2026-10-10T17:32:42Z",
+  "source": "https://wger.de/api/v2/exerciseinfo/?name__search=Push-up&limit=100",
+  "project": "wger Workout Manager",
+  "exercise": {
+    "id": 1551,
+    "uuid": "f5b84269-18af-4464-a61f-b767cbcd81dc",
+    "name": "Push-Up",
+    "translationId": 2498,
+    "translationUuid": "2f99b628-1389-40c0-8fa6-dcc72eea7b3b",
+    "language": 2,
+    "lastUpdate": "2025-10-12T23:57:01.562559+02:00",
+    "license": {
+      "id": 2,
+      "name": "Creative Commons Attribution Share Alike 4",
+      "shortName": "CC-BY-SA 4",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "author": "Settebello"
+    },
+    "description": "The push-up is a fundamental bodyweight exercise that targets the chest, arms, and shoulders while engaging the core for stability. It requires no equipment and is excellent for building upper body strength.",
+    "equipment": "none (bodyweight exercise)",
+    "primaryMuscles": ["Pectoralis major"],
+    "secondaryMuscles": ["Anterior deltoid", "Rectus abdominis", "Triceps brachii"],
+    "image": {
+      "id": 524,
+      "uuid": "a6a9e561-3965-45c6-9f2b-ee671e1a3a45",
+      "url": "https://wger.de/media/exercise-images/1551/a6a9e561-3965-45c6-9f2b-ee671e1a3a45.png",
+      "title": "Push-Up",
+      "license": "CC-BY-SA 4",
+      "author": "Settebello",
+      "isAiGenerated": false
+    }
+  },
+  "supersedes": {
+    "uuid": "9d756e84-6b77-4f17-b21d-7d266d6a8bd2",
+    "status": "CURRENT_API_RETURNED_ZERO_RESULTS",
+    "note": "The legacy migration identity remains historical evidence but is not used as an importable current record."
+  }
+}

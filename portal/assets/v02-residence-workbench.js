@@ -20,6 +20,7 @@
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
       <button class="btn" id="r-save">保存补充并检查</button>
+      <button class="btn" id="r-load-sample">加载K3可追溯参考材料</button>
       <button class="btn" id="r-export">导出连续档案JSON</button>
       <label class="btn">导入JSON<input type="file" accept=".json,application/json" id="r-import" style="display:none"></label>
       <button class="btn ghost" id="r-new">新建另一住宅</button>
@@ -135,6 +136,21 @@
       check();
     } catch (error) {
       root.querySelector('#r-result').textContent += ` 浏览器保存失败：${error.message}`;
+    }
+  };
+
+  root.querySelector('#r-load-sample').onclick = async () => {
+    try {
+      const response = await fetch('data/v02-residence-reference-room.json');
+      if (!response.ok) throw Error(`HTTP ${response.status}`);
+      const record = await response.json();
+      if (!hydrate(record)) throw Error('参考材料格式不符');
+      root.dataset.sampleStatus = record.sampleStatus || 'STATUS_MISSING';
+      root.dataset.sourceArtifact = record.sourceArtifact || '';
+      check();
+      root.querySelector('#r-result').textContent += ' 已加载K3可追溯参考模型；它不是用户真实住宅，楼层与周边现场材料仍缺失。';
+    } catch (error) {
+      root.querySelector('#r-result').textContent = `参考材料加载失败：${error.message}`;
     }
   };
 

@@ -33,9 +33,10 @@ const record = (track, name, passed, evidence) => {
 
   await page.locator('#v02-ex-input').fill('我要练俯卧撑');
   await page.locator('#v02-ex-find').click();
-  record('A01', 'stable exercise identity', await page.locator('#v02-exercise').getAttribute('data-exercise-id') === 'exercise:push-up:prototype', 'exercise:push-up:prototype');
-  record('A01', 'upstream boundary', await page.locator('#v02-exercise').getAttribute('data-upstream-status') === 'IDENTITY_MAPPED_CONTENT_NOT_IMPORTED', 'wger identity mapped without copying unverified content');
-  record('A01', 'upstream links visible', await page.locator('#v02-upstream a').count() === 2, 'license and fixed-revision identity links');
+  record('A01', 'stable exercise identity', await page.locator('#v02-exercise').getAttribute('data-exercise-id') === 'exercise:wger:1551:push-up', 'exercise:wger:1551:push-up');
+  record('A01', 'licensed upstream record imported', await page.locator('#v02-exercise').getAttribute('data-upstream-status') === 'LICENSED_RECORD_IMPORTED', 'wger record 1551 with record-level CC-BY-SA 4 attribution');
+  record('A01', 'upstream links visible', await page.locator('#v02-upstream a').count() === 3, 'record license, live API and repository snapshot links');
+  record('A01', 'licensed media visible', await page.locator('#v02-upstream-media img').evaluate(image => image.complete && image.naturalWidth > 0), 'wger image loaded with visible attribution');
   record('A01', 'muscle and joint object visible', await page.locator('#v02-joints li').count() === 4 && (await page.locator('#v02-ex-content').innerText()).includes('稳定：'), '4 joint rows plus stabilizer role');
 
   await page.locator('#v02-speed').selectOption('0.5');
@@ -54,9 +55,15 @@ const record = (track, name, passed, evidence) => {
 
   await page.goto(`${baseUrl}/portal/k02-board.html?sha=${process.env.GITHUB_SHA || 'local'}`, { waitUntil: 'domcontentloaded' });
   await page.locator('#v02-residence').waitFor();
-  const residenceId = await page.locator('#v02-residence').getAttribute('data-residence-id');
+  let residenceId = await page.locator('#v02-residence').getAttribute('data-residence-id');
   record('B01', 'new residence identity', Boolean(residenceId && residenceId.startsWith('residence-')), residenceId);
   record('B01', 'active first question', (await page.locator('#r-next-question').innerText()).includes('住宅名称'), await page.locator('#r-next-question').innerText());
+
+  await page.locator('#r-load-sample').click();
+  record('B01', 'traceable reference sample loaded', await page.locator('#v02-residence').getAttribute('data-sample-status') === 'REFERENCE_MODEL_NOT_USER_RESIDENCE', await page.locator('#v02-residence').getAttribute('data-source-artifact'));
+  record('B01', 'reference sample boundary visible', (await page.locator('#r-result').innerText()).includes('不是用户真实住宅'), await page.locator('#r-result').innerText());
+  await page.locator('#r-new').click();
+  residenceId = await page.locator('#v02-residence').getAttribute('data-residence-id');
 
   await page.locator('#r-name').fill('东明居');
   await page.locator('#r-place').fill('上海市浦东新区');

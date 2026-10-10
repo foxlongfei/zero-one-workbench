@@ -1,0 +1,37 @@
+{
+  "schema": "zero-one.residence.v0.2",
+  "id": "residence:reference-room-a:v0.2",
+  "sampleStatus": "REFERENCE_MODEL_NOT_USER_RESIDENCE",
+  "sourceArtifact": "portal/data/k3-radiance-daylight.json",
+  "sourceModel": "models/k3-radiance/guangzhou-room.rad",
+  "sourceModelSha256": "513601ce6db129f984eca410c539e90eb2e5eb90c245566d461d40013cb04615",
+  "fields": {
+    "name": "住宅A参考房间",
+    "place": "广州（K3固定晴空参考地点）",
+    "dir": "180",
+    "floor": "",
+    "rooms": "单房间；南向窗；固定参考几何",
+    "size": "房间5m×4m×3m；窗3m×1.4m；窗台高1m",
+    "needs": "验证采光计算链；不是实际住户需求",
+    "surround": "",
+    "material": "K3 Radiance参考模型：guangzhou-room.rad；SHA-256 513601ce…4615",
+    "source": "DRAWING_OR_ARCHIVE",
+    "confidence": "HIGH"
+  },
+  "evidence": {
+    "name": {"value": "住宅A参考房间", "source": "portal/data/k3-radiance-daylight.json", "confidence": "HIGH", "capturedAt": "2026-10-10T17:32:42Z"},
+    "place": {"value": "广州（K3固定晴空参考地点）", "source": "portal/data/k3-radiance-daylight.json#sky", "confidence": "HIGH", "capturedAt": "2026-10-10T17:32:42Z"},
+    "dir": {"value": "180", "source": "portal/data/k3-radiance-daylight.json#model.window.orientation=south; north=0 clockwise", "confidence": "HIGH", "capturedAt": "2026-10-10T17:32:42Z"},
+    "rooms": {"value": "单房间；南向窗；固定参考几何", "source": "models/k3-radiance/guangzhou-room.rad", "confidence": "HIGH", "capturedAt": "2026-10-10T17:32:42Z"},
+    "size": {"value": "房间5m×4m×3m；窗3m×1.4m；窗台高1m", "source": "portal/data/k3-radiance-daylight.json#model", "confidence": "HIGH", "capturedAt": "2026-10-10T17:32:42Z"},
+    "needs": {"value": "验证采光计算链；不是实际住户需求", "source": "K3 acceptance scope", "confidence": "HIGH", "capturedAt": "2026-10-10T17:32:42Z"},
+    "material": {"value": "K3 Radiance参考模型：guangzhou-room.rad；SHA-256 513601ce…4615", "source": "portal/data/k3-radiance-daylight.json", "confidence": "HIGH", "capturedAt": "2026-10-10T17:32:42Z"}
+  },
+  "revisions": [],
+  "boundaries": {
+    "modelRun": "REFERENCE_ARTIFACT_AVAILABLE",
+    "actualResidence": "NOT_PROVEN",
+    "geometryContinuity": "REFERENCE_MODEL_ONLY",
+    "crossLayerEquivalence": "BLOCK"
+  }
+}

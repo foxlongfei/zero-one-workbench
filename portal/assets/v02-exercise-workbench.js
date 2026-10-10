@@ -12,7 +12,7 @@
 
   const data = {
     schema: 'zero-one.exercise.v0.2',
-    id: 'exercise:push-up:prototype',
+    id: 'exercise:wger:1551:push-up',
     name: '标准俯卧撑',
     aliases: ['俯卧撑', 'push-up', 'pushup'],
     category: '水平推',
@@ -57,14 +57,20 @@
     },
     upstream: {
       project: 'wger Workout Manager',
-      exerciseName: 'Push Ups',
-      exerciseUuid: '9d756e84-6b77-4f17-b21d-7d266d6a8bd2',
-      repositoryRevision: 'ec97d5e4c83b2531ba08b9abb04f78fefd48aa1c',
-      identityEvidenceUrl: 'https://github.com/wger-project/wger/blob/ec97d5e4c83b2531ba08b9abb04f78fefd48aa1c/wger/exercises/migrations/0011_auto_20201214_0033.py',
-      projectLicense: 'AGPL-3.0',
-      projectLicenseUrl: 'https://github.com/wger-project/wger/blob/ec97d5e4c83b2531ba08b9abb04f78fefd48aa1c/LICENSE.txt',
-      integrationStatus: 'IDENTITY_MAPPED_CONTENT_NOT_IMPORTED',
-      limitation: '已核对上游动作身份与项目许可证；尚未读回该动作记录自己的内容/媒体许可证，因此不复制其说明或媒体。',
+      exerciseName: 'Push-Up',
+      exerciseId: 1551,
+      exerciseUuid: 'f5b84269-18af-4464-a61f-b767cbcd81dc',
+      translationUuid: '2f99b628-1389-40c0-8fa6-dcc72eea7b3b',
+      apiEvidenceUrl: 'https://wger.de/api/v2/exerciseinfo/?name__search=Push-up&limit=100',
+      snapshotUrl: 'data/v02-wger-pushup.json',
+      recordLicense: 'CC-BY-SA 4',
+      recordLicenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
+      recordAuthor: 'Settebello',
+      officialDescription: 'The push-up is a fundamental bodyweight exercise that targets the chest, arms, and shoulders while engaging the core for stability. It requires no equipment and is excellent for building upper body strength.',
+      officialImageUrl: 'https://wger.de/media/exercise-images/1551/a6a9e561-3965-45c6-9f2b-ee671e1a3a45.png',
+      integrationStatus: 'LICENSED_RECORD_IMPORTED',
+      legacyStatus: '旧UUID 9d756e84…当前API返回0条；仅保留为历史迁移证据，不再作为可导入记录。',
+      limitation: '已导入当前API记录级说明、肌群和图片许可元数据；中文步骤、自查与二维动画仍是项目原创教学层。',
     },
   };
 
@@ -106,10 +112,12 @@
       <p><b>常见调整：</b>${data.variants.map(x => `${x.name}（${x.relation}）`).join('、')}</p>
       <fieldset id="v02-form-checklist"><legend>常见错误自查（项目原创教学提示，非医学诊断）</legend><ul>${data.formErrors.map((item, i) => `<li><input type="checkbox" id="v02-form-${i}"><label for="v02-form-${i}"><b>错误：</b>${item.error}；<b>纠正：</b>${item.correction}</label></li>`).join('')}</ul></fieldset>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
-      <section id="v02-upstream"><h4>成熟开放底层映射</h4><p><b>${data.upstream.project}</b>｜${data.upstream.exerciseName}｜UUID <code>${data.upstream.exerciseUuid}</code><br>
-        项目许可：<a href="${data.upstream.projectLicenseUrl}">${data.upstream.projectLicense}</a>｜<a href="${data.upstream.identityEvidenceUrl}">固定版本身份记录</a><br>
+      <section id="v02-upstream"><h4>成熟开放动作记录｜已导入</h4><p><b>${data.upstream.project}</b>｜${data.upstream.exerciseName}｜record ${data.upstream.exerciseId}｜UUID <code>${data.upstream.exerciseUuid}</code><br>
+        记录许可：<a href="${data.upstream.recordLicenseUrl}">${data.upstream.recordLicense}</a>｜作者 ${data.upstream.recordAuthor}｜<a href="${data.upstream.apiEvidenceUrl}">当前API</a>｜<a href="${data.upstream.snapshotUrl}">本仓快照</a><br>
         接入状态：<code>${data.upstream.integrationStatus}</code><br>${data.upstream.limitation}</p></section>
-      <p class="status">状态：A01部分交互样机；开放动作库接入、正式来源审计和公开验收均未完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
+      <figure id="v02-upstream-media"><img src="${data.upstream.officialImageUrl}" alt="wger Push-Up动作图片，CC-BY-SA 4，作者Settebello" style="max-width:260px;width:100%;height:auto"><figcaption>${data.upstream.officialDescription}<br>来源：wger record 1551；图片与说明 CC-BY-SA 4，作者 Settebello。</figcaption></figure>
+      <p class="muted">${data.upstream.legacyStatus}</p>
+      <p class="status">状态：A01已接入一条记录级许可明确的成熟动作库样板；仍需第二动作样板、公开Pages操作与完整A01报告，不能标完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
     out.querySelector('#v02-play').onclick = () => {
       clearInterval(timer);
       timer = setInterval(() => { phase = (phase + 2 * speed) % 101; draw(); }, 55);
