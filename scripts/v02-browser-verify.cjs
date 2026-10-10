@@ -7,16 +7,23 @@ const artifactDir = path.resolve('artifacts/v02-browser');
 fs.mkdirSync(artifactDir, { recursive: true });
 
 const checks = [];
+let browser;
 const record = (track, name, passed, evidence) => {
   checks.push({ track, name, status: passed ? 'PASS' : 'FAIL', evidence });
   if (!passed) throw new Error(`${track} ${name}: ${evidence}`);
 };
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
-  await context.addInitScript(() => localStorage.clear());
+  await context.addInitScript(() => {
+    if (!sessionStorage.getItem('__v02StoragePrepared')) {
+      localStorage.clear();
+      sessionStorage.setItem('__v02StoragePrepared', '1');
+    }
+  });
   const page = await context.newPage();
+  page.setDefaultTimeout(10000);
 
   await page.goto(`${baseUrl}/portal/movement.html?sha=${process.env.GITHUB_SHA || 'local'}`, { waitUntil: 'domcontentloaded' });
   await page.locator('#v02-exercise').waitFor();
@@ -84,8 +91,11 @@ const record = (track, name, passed, evidence) => {
   fs.writeFileSync(path.join(artifactDir, 'browser-verification.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.log(JSON.stringify(report, null, 2));
   await browser.close();
+  browser = null;
 })().catch(error => {
-  fs.writeFileSync(path.join(artifactDir, 'browser-failure.txt'), `${error.stack || error}\n`);
-  console.error(error);
-  process.exitCode = 1;
+  Promise.resolve(browser?.close()).finally(() => {
+    fs.writeFileSync(path.join(artifactDir, 'browser-failure.txt'), `${error.stack || error}\n`);
+    console.error(error);
+    process.exitCode = 1;
+  });
 });
