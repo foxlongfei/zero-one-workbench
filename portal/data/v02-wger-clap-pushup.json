@@ -1,0 +1,42 @@
+{
+  "schema": "zero-one.v02.upstream-exercise-snapshot.v1",
+  "observedAt": "2026-10-10T23:32:00Z",
+  "source": "https://wger.de/api/v2/exerciseinfo/?name__search=push%20up&limit=100",
+  "project": "wger Workout Manager",
+  "exercise": {
+    "id": 1554,
+    "uuid": "fdeb0973-121f-494d-8b94-54f1d7ba003f",
+    "name": "Clap Push-UP",
+    "translationId": 2501,
+    "translationUuid": "906e2287-dae0-4479-8951-3ab556aca03a",
+    "language": 2,
+    "lastUpdateGlobal": "2026-06-19T18:54:10.864491+02:00",
+    "license": {
+      "id": 2,
+      "name": "Creative Commons Attribution Share Alike 4",
+      "shortName": "CC-BY-SA 4",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "author": "Settebello"
+    },
+    "description": "The clap push-up is an explosive upper body movement that builds power and fast-twitch muscle strength. It adds a plyometric challenge to the traditional push-up by requiring the hands to leave the ground mid-rep.",
+    "equipment": "none (bodyweight exercise)",
+    "primaryMuscles": ["Pectoralis major"],
+    "secondaryMuscles": ["Anterior deltoid", "Rectus abdominis", "Triceps brachii"],
+    "instructions": [
+      "Start in a strong push-up position with your hands slightly wider than shoulder-width and core engaged.",
+      "Lower your body explosively and push off the ground with enough force to lift your hands.",
+      "Quickly clap your hands together at chest level before returning them to the floor.",
+      "Land with soft elbows to absorb the impact and immediately move into the next rep."
+    ],
+    "image": {
+      "id": 526,
+      "uuid": "49207a62-8799-4b47-8c0b-7bde02926f3d",
+      "url": "https://wger.de/media/exercise-images/1554/49207a62-8799-4b47-8c0b-7bde02926f3d.png",
+      "title": "Clap Push-Up",
+      "license": "CC-BY-SA 4",
+      "author": "Settebello",
+      "isAiGenerated": false
+    },
+    "mediaStatus": "LICENSED_MEDIA_LINKED_NOT_VENDORED"
+  }
+}

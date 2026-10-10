@@ -37,9 +37,12 @@ const record = (track, name, passed, evidence) => {
   record('A01', 'licensed upstream record imported', await page.locator('#v02-exercise').getAttribute('data-upstream-status') === 'LICENSED_RECORD_IMPORTED', 'wger record 1551 with record-level CC-BY-SA 4 attribution');
   record('A01', 'upstream links visible', await page.locator('#v02-upstream a').count() === 3, 'record license, live API and repository snapshot links');
   record('A01', 'licensed media visible', await page.locator('#v02-upstream-media img').evaluate(image => image.complete && image.naturalWidth > 0), 'wger image loaded with visible attribution');
-  record('A01', 'second licensed variant visible', await page.locator('#v02-exercise').getAttribute('data-variant-count') === '2' && (await page.locator('#v02-upstream-variant').innerText()).includes('record 1964'), 'wger Wide Push-Up record 1964');
+  record('A01', 'three licensed records visible', await page.locator('#v02-exercise').getAttribute('data-variant-count') === '3' && (await page.locator('#v02-upstream-variant').innerText()).includes('record 1964') && (await page.locator('#v02-licensed-media-variant').innerText()).includes('record 1554'), 'wger Push-Up 1551, Wide 1964, Clap 1554');
   await page.locator('#v02-load-wide').click();
   record('A01', 'second variant selection works', await page.locator('#v02-exercise').getAttribute('data-variant-status') === 'LICENSED_VARIANT_IMPORTED' && (await page.locator('#v02-variant-state').innerText()).includes('无上游媒体'), await page.locator('#v02-variant-state').innerText());
+  await page.locator('#v02-load-clap').click();
+  record('A01', 'licensed-media variant selection works', await page.locator('#v02-exercise').getAttribute('data-media-variant-status') === 'LICENSED_VARIANT_AND_MEDIA_LINKED' && (await page.locator('#v02-clap-state').innerText()).includes('记录与图片 CC-BY-SA 4'), await page.locator('#v02-clap-state').innerText());
+  record('A01', 'licensed-media chain visible', await page.locator('#v02-licensed-media-variant a').count() === 4 && (await page.locator('#v02-licensed-media-variant').innerText()).includes('图片 UUID'), 'license, image, live API and repository snapshot links');
   record('A01', 'muscle and joint object visible', await page.locator('#v02-joints li').count() === 4 && (await page.locator('#v02-ex-content').innerText()).includes('稳定：'), '4 joint rows plus stabilizer role');
 
   await page.locator('#v02-speed').selectOption('0.5');
@@ -68,6 +71,10 @@ const record = (track, name, passed, evidence) => {
   ));
   record('B01', 'traceable reference sample loaded', (await page.locator('#v02-residence').getAttribute('data-sample-status')) === 'REFERENCE_MODEL_NOT_USER_RESIDENCE' && (await page.locator('#v02-residence').getAttribute('data-source-artifact')) === 'portal/data/k3-radiance-daylight.json', await page.locator('#v02-residence').getAttribute('data-source-artifact'));
   record('B01', 'reference sample boundary visible', (await page.locator('#r-result').innerText()).includes('不是用户真实住宅'), await page.locator('#r-result').innerText());
+  await page.locator('#r-load-archive-home').click();
+  await page.waitForFunction(() => document.querySelector('#v02-residence')?.dataset.sampleStatus === 'PUBLIC_ARCHIVE_REAL_RESIDENCE_NOT_USER_HOME');
+  record('B01', 'public archive real residence loaded', await page.locator('#v02-residence').getAttribute('data-archive-license') === 'PUBLIC_DOMAIN_US_NPS' && await page.locator('#v02-residence').getAttribute('data-source-artifact') === 'HABS DC,WASH,166- (sheet 1 of 8)', await page.locator('#r-result').innerText());
+  record('B01', 'archive engine boundary visible', await page.locator('#v02-residence').getAttribute('data-engine-geometry') === 'MEASURED_DRAWING_NOT_YET_VECTORIZED' && (await page.locator('#r-result').innerText()).includes('未送入depthmapX或Radiance'), await page.locator('#r-result').innerText());
   await page.locator('#r-new').click();
   residenceId = await page.locator('#v02-residence').getAttribute('data-residence-id');
 

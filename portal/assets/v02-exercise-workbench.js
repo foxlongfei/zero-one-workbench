@@ -88,6 +88,23 @@
       mediaStatus: 'NO_MEDIA_IN_CURRENT_RECORD',
       limitation: '当前上游记录无图片或视频；页面只导入记录级说明、肌群、步骤和许可，不复制或伪造媒体。',
     },
+    licensedMediaVariant: {
+      name: '击掌俯卧撑',
+      exerciseName: 'Clap Push-UP',
+      exerciseId: 1554,
+      exerciseUuid: 'fdeb0973-121f-494d-8b94-54f1d7ba003f',
+      translationUuid: '906e2287-dae0-4479-8951-3ab556aca03a',
+      apiEvidenceUrl: 'https://wger.de/api/v2/exerciseinfo/?name__search=push%20up&limit=100',
+      snapshotUrl: 'data/v02-wger-clap-pushup.json',
+      recordLicense: 'CC-BY-SA 4',
+      recordLicenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
+      recordAuthor: 'Settebello',
+      imageUrl: 'https://wger.de/media/exercise-images/1554/49207a62-8799-4b47-8c0b-7bde02926f3d.png',
+      imageUuid: '49207a62-8799-4b47-8c0b-7bde02926f3d',
+      integrationStatus: 'LICENSED_VARIANT_AND_MEDIA_LINKED',
+      mediaStatus: 'LICENSED_MEDIA_LINKED_NOT_VENDORED',
+      limitation: '已核验同一 wger record 1554 的记录与图片许可链；图片保持上游链接，未宣称已固化到仓库。',
+    },
   };
 
   let timer = null;
@@ -136,8 +153,12 @@
         记录许可：<a href="${data.upstreamVariant.recordLicenseUrl}">${data.upstreamVariant.recordLicense}</a>｜作者 ${data.upstreamVariant.recordAuthor}｜<a href="${data.upstreamVariant.apiEvidenceUrl}">当前API</a>｜<a href="${data.upstreamVariant.snapshotUrl}">本仓快照</a><br>
         <button class="btn ghost" id="v02-load-wide" type="button">切换到宽距变式证据</button> <span id="v02-variant-state">尚未选择</span><br>
         接入状态：<code>${data.upstreamVariant.integrationStatus}</code>｜媒体状态：<code>${data.upstreamVariant.mediaStatus}</code><br>${data.upstreamVariant.limitation}</p></section>
+      <section id="v02-licensed-media-variant"><h4>许可记录 + 同记录媒体｜击掌变式</h4><p><b>${data.licensedMediaVariant.name}</b>｜${data.licensedMediaVariant.exerciseName}｜record ${data.licensedMediaVariant.exerciseId}｜UUID <code>${data.licensedMediaVariant.exerciseUuid}</code><br>
+        记录与图片许可：<a href="${data.licensedMediaVariant.recordLicenseUrl}">${data.licensedMediaVariant.recordLicense}</a>｜作者 ${data.licensedMediaVariant.recordAuthor}｜图片 UUID <code>${data.licensedMediaVariant.imageUuid}</code>｜<a href="${data.licensedMediaVariant.imageUrl}">上游许可图片</a>｜<a href="${data.licensedMediaVariant.apiEvidenceUrl}">当前API</a>｜<a href="${data.licensedMediaVariant.snapshotUrl}">本仓快照</a><br>
+        <button class="btn ghost" id="v02-load-clap" type="button">切换到击掌变式证据</button> <span id="v02-clap-state">尚未选择</span><br>
+        接入状态：<code>${data.licensedMediaVariant.integrationStatus}</code>｜媒体状态：<code>${data.licensedMediaVariant.mediaStatus}</code><br>${data.licensedMediaVariant.limitation}</p></section>
       <p class="muted">${data.upstream.legacyStatus}</p>
-      <p class="status">状态：A01已接入标准俯卧撑与宽距俯卧撑两条记录级许可明确的成熟动作库样板；仍需公开Pages操作与完整A01报告，不能标完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
+      <p class="status">状态：A01已接入标准、宽距和击掌俯卧撑三条许可明确的成熟动作库记录；击掌变式包含同记录许可图片链。媒体尚未固化到仓库，仍不能标完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
     out.querySelector('#v02-play').onclick = () => {
       clearInterval(timer);
       timer = setInterval(() => { phase = (phase + 2 * speed) % 101; draw(); }, 55);
@@ -150,10 +171,15 @@
       root.dataset.variantStatus = data.upstreamVariant.integrationStatus;
       out.querySelector('#v02-variant-state').textContent = `${data.upstreamVariant.exerciseName} 已选择｜${data.upstreamVariant.recordLicense}｜作者 ${data.upstreamVariant.recordAuthor}｜无上游媒体`;
     };
+    out.querySelector('#v02-load-clap').onclick = () => {
+      root.dataset.selectedExerciseId = `exercise:wger:${data.licensedMediaVariant.exerciseId}:clap-push-up`;
+      root.dataset.mediaVariantStatus = data.licensedMediaVariant.integrationStatus;
+      out.querySelector('#v02-clap-state').textContent = `${data.licensedMediaVariant.exerciseName} 已选择｜记录与图片 ${data.licensedMediaVariant.recordLicense}｜作者 ${data.licensedMediaVariant.recordAuthor}`;
+    };
     root.dataset.exerciseId = data.id;
     root.dataset.provenance = data.provenance.evidenceStatus;
     root.dataset.upstreamStatus = data.upstream.integrationStatus;
-    root.dataset.variantCount = '2';
+    root.dataset.variantCount = '3';
     draw();
   }
 

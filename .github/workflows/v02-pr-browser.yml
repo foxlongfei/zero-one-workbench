@@ -1,6 +1,8 @@
 name: V0.2 PR browser verification
 
 on:
+  push:
+    branches: [agent/a01-pilot-38018904993]
   pull_request:
     branches: [main]
     paths:

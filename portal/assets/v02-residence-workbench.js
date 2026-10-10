@@ -24,6 +24,7 @@
       <button class="btn" id="r-save">保存补充并检查</button>
       <button class="btn" id="r-ingest-material">绑定材料文件与SHA-256</button>
       <button class="btn" id="r-load-sample">加载K3可追溯参考材料</button>
+      <button class="btn" id="r-load-archive-home">加载HABS真实历史住宅档案</button>
       <button class="btn" id="r-export">导出连续档案JSON</button>
       <label class="btn">导入JSON<input type="file" accept=".json,application/json" id="r-import" style="display:none"></label>
       <button class="btn ghost" id="r-new">新建另一住宅</button>
@@ -187,6 +188,23 @@
       root.querySelector('#r-result').textContent += ' 已加载K3可追溯参考模型；它不是用户真实住宅，楼层与周边现场材料仍缺失。';
     } catch (error) {
       root.querySelector('#r-result').textContent = `参考材料加载失败：${error.message}`;
+    }
+  };
+
+  root.querySelector('#r-load-archive-home').onclick = async () => {
+    try {
+      const response = await fetch('data/v02-habs-frederick-douglass-house.json');
+      if (!response.ok) throw Error(`HTTP ${response.status}`);
+      const record = await response.json();
+      if (!hydrate(record)) throw Error('HABS档案格式不符');
+      check();
+      root.dataset.sampleStatus = record.sampleStatus || 'STATUS_MISSING';
+      root.dataset.sourceArtifact = record.sourceArtifact || '';
+      root.dataset.archiveLicense = record.license || '';
+      root.dataset.engineGeometry = record.boundaries?.geometryContinuity || '';
+      root.querySelector('#r-result').textContent += ' 已加载HABS真实历史住宅测绘档案；它不是用户住宅。图纸尚未矢量化，也未送入depthmapX或Radiance，不输出空间、环境或吉凶结论。';
+    } catch (error) {
+      root.querySelector('#r-result').textContent = `HABS档案加载失败：${error.message}`;
     }
   };
 

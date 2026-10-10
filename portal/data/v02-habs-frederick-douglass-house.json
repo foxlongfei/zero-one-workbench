@@ -1,0 +1,42 @@
+{
+  "schema": "zero-one.residence.v0.2",
+  "id": "residence:habs-dc-97:frederick-douglass-house",
+  "sampleStatus": "PUBLIC_ARCHIVE_REAL_RESIDENCE_NOT_USER_HOME",
+  "sourceArtifact": "HABS DC,WASH,166- (sheet 1 of 8)",
+  "sourceUrl": "https://www.loc.gov/pictures/item/dc0092.sheet.00001a",
+  "repositoryPage": "https://commons.wikimedia.org/wiki/File:Frederick_Douglass_House,_1411_W_Street,_Southeast,_Washington,_District_of_Columbia,_DC_HABS_DC,WASH,166-_(sheet_1_of_8).png",
+  "license": "PUBLIC_DOMAIN_US_NPS",
+  "surveyNumber": "HABS DC-97",
+  "archiveAccession": "HABS DC,WASH,166- (sheet 1 of 8)",
+  "documentationDate": "compiled after 1933",
+  "buildingDates": ["ca. 1855 initial construction", "ca. 1889-ca. 1895 subsequent work", "1917-1920 subsequent work"],
+  "fields": {
+    "name": "Frederick Douglass House（Cedar Hill）",
+    "place": "Washington, District of Columbia, USA",
+    "dir": "",
+    "floor": "",
+    "rooms": "HABS measured-drawing set；本条仅登记第1/8张，尚未从图纸推导房间拓扑",
+    "size": "sheet 19 × 24 in（B size）；建筑尺度待从图纸读取",
+    "needs": "公开历史住宅空间分析样板；不代表现住户需求",
+    "surround": "",
+    "material": "HABS DC,WASH,166- sheet 1/8；真实历史住宅测绘档案",
+    "source": "DRAWING_OR_ARCHIVE",
+    "confidence": "HIGH"
+  },
+  "evidence": {
+    "name": {"value": "Frederick Douglass House（Cedar Hill）", "source": "Library of Congress HABS DC-97", "confidence": "HIGH", "capturedAt": "2026-10-10T23:32:00Z"},
+    "place": {"value": "Washington, District of Columbia, USA", "source": "Library of Congress accession HABS DC,WASH,166-", "confidence": "HIGH", "capturedAt": "2026-10-10T23:32:00Z"},
+    "material": {"value": "HABS DC,WASH,166- sheet 1/8；真实历史住宅测绘档案", "source": "https://www.loc.gov/pictures/item/dc0092.sheet.00001a", "confidence": "HIGH", "capturedAt": "2026-10-10T23:32:00Z"}
+  },
+  "materialFiles": [],
+  "revisions": [],
+  "boundaries": {
+    "actualResidence": "HISTORIC_REAL_RESIDENCE_ARCHIVE",
+    "userResidence": "NOT_USER_HOME",
+    "modelRun": "NOT_STARTED",
+    "geometryContinuity": "MEASURED_DRAWING_NOT_YET_VECTORIZED",
+    "depthmapX": "NOT_RUN_FOR_THIS_CASE",
+    "radiance": "NOT_RUN_FOR_THIS_CASE",
+    "crossLayerEquivalence": "BLOCK"
+  }
+}
