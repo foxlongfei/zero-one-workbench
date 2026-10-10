@@ -42,11 +42,12 @@ jobs:
           OPENAI_API_BASE: https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
           OPENAI_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
           AIDER_ANALYTICS: 'false'
+          AIDER_CHECK_UPDATE: 'false'
         run: |
           test -n "$OPENAI_API_KEY" || { echo 'Missing Q secret'; exit 1; }
           timeout 150s aider --model openai/qwen3.8-flash --message-file /tmp/a01-task.txt \
             --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
-            --map-tokens 0 --no-show-model-warnings \
+            --map-tokens 0 --no-check-update --no-show-model-warnings \
             portal/assets/v02-exercise-workbench.js
       - name: Validate scope and actual product change
         run: |
