@@ -66,7 +66,8 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#r-save').click();
   record('B01', 'same ID after save', await page.locator('#v02-residence').getAttribute('data-residence-id') === residenceId, residenceId);
   record('B01', 'field evidence captured', await page.locator('#r-evidence li[data-field]').count() === 3, 'name/place/material each have evidence');
-  record('B01', 'revision captured', await page.locator('#r-history li').count() === 1 && (await page.locator('#r-history').innerText()).includes('已知 5/11'), await page.locator('#r-history').innerText());
+  const revisionText = await page.locator('#r-history').textContent();
+  record('B01', 'revision captured', await page.locator('#r-history li').count() === 1 && revisionText.includes('已知 5/11'), revisionText);
 
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('#v02-residence').waitFor();
