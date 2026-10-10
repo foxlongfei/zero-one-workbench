@@ -46,7 +46,7 @@ jobs:
           test -n "$OPENAI_API_KEY" || { echo 'Missing Q secret'; exit 1; }
           timeout 150s aider --model openai/qwen3.8-flash --message-file /tmp/a01-task.txt \
             --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
-            --map-tokens 0 --max-reflections 0 --no-show-model-warnings \
+            --map-tokens 0 --no-show-model-warnings \
             portal/assets/v02-exercise-workbench.js
       - name: Validate scope and actual product change
         run: |
