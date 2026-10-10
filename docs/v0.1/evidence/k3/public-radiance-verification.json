@@ -1,8 +1,8 @@
 {
   "schema": "zero-one.k3.public-radiance-verification.v0.1",
   "publicUrl": "https://foxlongfei.github.io/zero-one-workbench/portal/k02-board.html",
-  "verifiedAt": "2026-10-08T04:43:26.711Z",
-  "gitSha": "f7fd19362231e8af01339de191d6226c2d7bd9de",
+  "verifiedAt": "2026-10-10T22:35:03.459Z",
+  "gitSha": "4e945c0a7936053d089514296e45b3d15db8af09",
   "checks": {
     "deploymentAttempt": 1,
     "publicPage": {
@@ -37,7 +37,7 @@
   },
   "screenshot": {
     "path": "docs/v0.1/evidence/k3/public-radiance-daylight.png",
-    "sha256": "29ed5ee3165648b5c8fe02d43e6612696e965d823328753114ddec5945e9ed8d"
+    "sha256": "7ded02ce1da3f96d0bdd56d1a33381a901e10fbb1827c41cceb16a047dccd994"
   },
   "passed": true
 }
