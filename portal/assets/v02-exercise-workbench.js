@@ -67,7 +67,7 @@
       recordLicenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
       recordAuthor: 'Settebello',
       officialDescription: 'The push-up is a fundamental bodyweight exercise that targets the chest, arms, and shoulders while engaging the core for stability. It requires no equipment and is excellent for building upper body strength.',
-      officialImageUrl: 'https://wger.de/media/exercise-images/1551/a6a9e561-3965-45c6-9f2b-ee671e1a3a45.png',
+      officialImageUrl: 'assets/vendor/wger-push-up-settebello-cc-by-sa-4.png',
       integrationStatus: 'LICENSED_RECORD_IMPORTED',
       legacyStatus: '旧UUID 9d756e84…当前API返回0条；仅保留为历史迁移证据，不再作为可导入记录。',
       limitation: '已导入当前API记录级说明、肌群和图片许可元数据；中文步骤、自查与二维动画仍是项目原创教学层。',
