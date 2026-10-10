@@ -1,0 +1,55 @@
+{
+  "schema": "zero-one.v02.product-progress-evidence.v1",
+  "runStart": "2026-10-10T14:22:48Z",
+  "recordedAt": "2026-10-10T14:29:54Z",
+  "branch": "agent/a01-pilot-38018904993",
+  "baseSha": "490b4b4d0b28e21b6074bc61c83b0bca559e87a5",
+  "previousHeadSha": "e1f4a63824e607947bb743e91cd00ee42f4f2d93",
+  "result": "PRODUCT_PROGRESS",
+  "tracks": {
+    "A01": {
+      "status": "EXECUTING",
+      "implemented": [
+        "push-up phase model and speed control",
+        "primary, secondary, and stabilizer muscle roles",
+        "joint and bone motion list",
+        "form-error self-check",
+        "explicit source and prototype limitations"
+      ],
+      "notAccepted": [
+        "licensed mature open action library",
+        "public browser interaction",
+        "independent D/Q acceptance"
+      ]
+    },
+    "B01": {
+      "status": "EXECUTING",
+      "implemented": [
+        "same-ID Residence/Case revisions",
+        "material source and confidence fields",
+        "active next-missing-field question",
+        "known/missing counters",
+        "explicit model and geometry boundaries"
+      ],
+      "notAccepted": [
+        "real depthmapX computation",
+        "public browser interaction",
+        "independent D/Q acceptance"
+      ]
+    }
+  },
+  "verification": {
+    "nodeSyntax": "PASS",
+    "staticIntegration": "PASS_10_OF_10",
+    "diffCheck": "PASS",
+    "browserInteraction": "BLOCKED_RUNTIME_MISSING",
+    "browserRetry": "FAILED_DOWNLOAD_TRUNCATED",
+    "pagesReadback": "NOT_APPLICABLE_UNMERGED_BRANCH"
+  },
+  "executionEnvironment": {
+    "localAider": "NOT_AVAILABLE",
+    "priorCiAiderQwenEvidence": "workflow 38018904993 edit and validation steps succeeded; workflow failed at draft PR step",
+    "retryPolicy": "one safe browser-runtime retry performed; no further retry in this run"
+  },
+  "acceptance": "NOT_COMPLETED"
+}
