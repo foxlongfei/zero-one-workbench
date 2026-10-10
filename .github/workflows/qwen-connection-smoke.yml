@@ -1,0 +1,51 @@
+name: Qwen API connection smoke test
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Verify secret exists without exposing it
+        env:
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+        run: |
+          if [ -z "$DASHSCOPE_API_KEY" ]; then
+            echo "::error::DASHSCOPE_API_KEY is missing"
+            exit 1
+          fi
+          echo "API secret configured (value not displayed)"
+      - name: Bounded one-request model connectivity check
+        env:
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          DASHSCOPE_BASE_URL: https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          endpoint=os.environ['DASHSCOPE_BASE_URL'].rstrip('/')+'/chat/completions'
+          payload=json.dumps({
+            'model':'qwen3.8-flash',
+            'messages':[{'role':'user','content':'Reply with exactly OK.'}],
+            'max_tokens':24,
+            'stream':False
+          }).encode()
+          req=urllib.request.Request(endpoint,data=payload,headers={
+            'Authorization':'Bearer '+os.environ['DASHSCOPE_API_KEY'],
+            'Content-Type':'application/json'
+          },method='POST')
+          try:
+            with urllib.request.urlopen(req,timeout=30) as response:
+              data=json.load(response)
+            assert data.get('choices'), 'No choices returned'
+            print('Qwen API responded successfully; model='+str(data.get('model','unknown')))
+            print('Token usage: '+json.dumps(data.get('usage',{}),ensure_ascii=False))
+          except urllib.error.HTTPError as e:
+            print('HTTP error status:',e.code)
+            print('API connection failed; check region, model authorization and secret.')
+            raise SystemExit(1)
+          except Exception as e:
+            print('Connection check failed:',type(e).__name__)
+            raise SystemExit(1)
+          PY
