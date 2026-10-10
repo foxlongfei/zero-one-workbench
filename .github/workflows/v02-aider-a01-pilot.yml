@@ -1,0 +1,68 @@
+name: V0.2 A01 open-source coding agent pilot
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: v02-a01-agent-pilot
+  cancel-in-progress: false
+jobs:
+  aider-a01:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Apache-2.0 open-source Aider
+        run: python -m pip install 'aider-chat==0.86.1'
+      - name: Create isolated branch and bounded instruction
+        run: |
+          git config user.name "v02-agent[bot]"
+          git config user.email "v02-agent[bot]@users.noreply.github.com"
+          git switch -c "agent/a01-pilot-${{ github.run_id }}"
+          cat > /tmp/a01-task.txt <<'TASK'
+          This is a narrow A01 pilot, NOT acceptance of A01. Modify ONLY portal/assets/v02-exercise-workbench.js.
+          Improve the existing push-up Exercise object user experience with one concrete, functional and testable improvement:
+          add a visible, accessible checklist of 3 common form errors and corresponding corrections,
+          sourced as original project guidance (not a clinical diagnosis). Keep existing animation and other features.
+          Keep all claims honest: 2D original diagram, not a licensed motion library or full 3D model.
+          No new dependencies, no external URLs, no changing any other files.
+          TASK
+      - name: Aider performs one bounded code edit
+        id: edit
+        env:
+          OPENAI_API_BASE: https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+          OPENAI_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          AIDER_ANALYTICS: 'false'
+        run: |
+          test -n "$OPENAI_API_KEY" || { echo 'Missing Q secret'; exit 1; }
+          timeout 150s aider --model openai/qwen3.8-flash --message-file /tmp/a01-task.txt \
+            --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
+            --map-tokens 0 --max-reflections 0 --no-show-model-warnings \
+            portal/assets/v02-exercise-workbench.js
+      - name: Validate scope and actual product change
+        run: |
+          test "$(git diff --name-only | wc -l)" -eq 1
+          test "$(git diff --name-only)" = "portal/assets/v02-exercise-workbench.js"
+          git diff --quiet && { echo 'No product change'; exit 1; }
+          node --check portal/assets/v02-exercise-workbench.js
+          node scripts/v02-verify.mjs
+          git diff --check
+      - name: Open draft PR, never auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add portal/assets/v02-exercise-workbench.js
+          git commit -m "feat(a01): bounded Aider prototype improvement"
+          git push origin "HEAD:agent/a01-pilot-${{ github.run_id }}"
+          gh pr create --draft --base main --head "agent/a01-pilot-${{ github.run_id }}" \
+            --title "A01: Aider Qwen pilot — form checklist (unverified)" \
+            --body "A01 remains IN_PROGRESS. One bounded open-source Aider edit using Qwen API. No automatic merge. Check real interaction, sources, test logs, and review before acceptance. Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
