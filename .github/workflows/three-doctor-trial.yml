@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: three-doctor-bounded-trial
+  cancel-in-progress: false
 jobs:
   independent-review:
     runs-on: ubuntu-24.04
@@ -30,7 +33,7 @@ jobs:
           for role,url,model,keyname in models:
             key=os.environ.get(keyname,'')
             if not key: raise SystemExit(role+' secret missing')
-            data=json.dumps({'model':model,'messages':[{'role':'user','content':task}],'max_tokens':220,'stream':False}).encode()
+            data=json.dumps({'model':model,'messages':[{'role':'user','content':task}],'max_tokens':120,'stream':False}).encode()
             req=urllib.request.Request(url,data=data,headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'},method='POST')
             try:
               with urllib.request.urlopen(req,timeout=45) as response: result=json.load(response)
