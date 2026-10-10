@@ -17,9 +17,12 @@
       <label>材料说明<textarea id="r-material" rows="3" placeholder="户型图/照片/测量记录及文件名"></textarea></label>
       <label>材料来源<select id="r-source"><option value="">来源未填</option><option value="USER_MEASURED">用户测量</option><option value="USER_REPORTED">用户描述</option><option value="DRAWING_OR_ARCHIVE">图纸/档案</option><option value="FIELD_OBSERVED">现场观察</option></select></label>
       <label>当前置信度<select id="r-confidence"><option value="">未评估</option><option value="LOW">LOW</option><option value="MEDIUM">MEDIUM</option><option value="HIGH">HIGH</option></select></label>
+      <label>材料许可/授权<input id="r-material-license" placeholder="例如 USER_AUTHORIZED / CC BY 4.0"></label>
+      <label>实际材料文件<input id="r-material-file" type="file" accept=".json,.dxf,.svg,.png,.jpg,.jpeg,.pdf,application/json,image/*,application/pdf"></label>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
       <button class="btn" id="r-save">保存补充并检查</button>
+      <button class="btn" id="r-ingest-material">绑定材料文件与SHA-256</button>
       <button class="btn" id="r-load-sample">加载K3可追溯参考材料</button>
       <button class="btn" id="r-export">导出连续档案JSON</button>
       <label class="btn">导入JSON<input type="file" accept=".json,application/json" id="r-import" style="display:none"></label>
@@ -27,6 +30,7 @@
     </div>
     <div id="r-result" class="result" aria-live="polite"></div>
     <div id="r-next-question" class="result" aria-live="polite"></div>
+    <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
     <details><summary>同一住宅补充记录</summary><ol id="r-history"></ol></details>`;
   const main = document.querySelector('main');
@@ -43,12 +47,14 @@
   let caseId = `residence-${Date.now().toString(36)}`;
   let revisions = [];
   let evidence = {};
+  let materialFiles = [];
 
   function hydrate(record) {
     if (!record || record.schema !== 'zero-one.residence.v0.2') return false;
     caseId = String(record.id || caseId);
     revisions = Array.isArray(record.revisions) ? record.revisions.slice(-20) : [];
     evidence = record.evidence && typeof record.evidence === 'object' ? record.evidence : {};
+    materialFiles = Array.isArray(record.materialFiles) ? record.materialFiles.slice(-20) : [];
     keys.forEach(key => { fields[key].value = String(record.fields?.[key] || record[key] || ''); });
     return true;
   }
@@ -66,6 +72,7 @@
       updatedAt: new Date().toISOString(),
       fields: fieldSnapshot(),
       evidence,
+      materialFiles,
       revisions,
       boundaries: {
         modelRun: 'NOT_STARTED',
@@ -90,6 +97,14 @@
     root.querySelector('#r-evidence').innerHTML = rows.length
       ? rows.map(([key, item]) => `<li data-field="${key}"><b>${labels[key]}</b>｜${item.source || 'SOURCE_MISSING'}｜${item.confidence || 'CONFIDENCE_MISSING'}｜${item.capturedAt}</li>`).join('')
       : '<li>尚无已保存的字段证据。</li>';
+  }
+
+  function renderMaterialManifest() {
+    root.querySelector('#r-material-manifest').innerHTML = materialFiles.length
+      ? materialFiles.map(item => `<li data-material-sha="${item.sha256}"><b>${item.name}</b>｜${item.bytes} bytes｜SHA-256 <code>${item.sha256}</code>｜${item.source}｜${item.license}｜case <code>${item.caseId}</code></li>`).join('')
+      : '<li>尚未绑定实际材料文件；文件内容不上传，档案只保存名称、大小、类型、SHA-256、来源、许可与案例ID。</li>';
+    root.dataset.materialCount = String(materialFiles.length);
+    root.dataset.lastMaterialSha = materialFiles.at(-1)?.sha256 || '';
   }
 
   function captureEvidence(snapshot, at) {
@@ -120,8 +135,29 @@
     root.dataset.nextField = missing[0] || '';
     renderHistory();
     renderEvidence();
+    renderMaterialManifest();
     return directionValid;
   }
+
+  root.querySelector('#r-ingest-material').onclick = async () => {
+    const file = root.querySelector('#r-material-file').files[0];
+    const source = fields.source.value;
+    const license = root.querySelector('#r-material-license').value.trim();
+    if (!file || !source || !license) {
+      root.querySelector('#r-result').textContent = '材料绑定失败：必须选择实际文件，并填写材料来源与许可/授权。';
+      return;
+    }
+    const bytes = await file.arrayBuffer();
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    const sha256 = [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('');
+    const capturedAt = new Date().toISOString();
+    materialFiles.push({caseId, name: file.name, bytes: file.size, mediaType: file.type || 'application/octet-stream', sha256, source, license, capturedAt});
+    materialFiles = materialFiles.slice(-20);
+    fields.material.value = `${file.name}｜SHA-256 ${sha256}`;
+    captureEvidence(fieldSnapshot(), capturedAt);
+    renderMaterialManifest();
+    root.querySelector('#r-result').textContent = `材料已绑定住宅ID ${caseId}：${file.name}｜SHA-256 ${sha256}。尚未运行空间/环境模型，不输出判断。`;
+  };
 
   root.querySelector('#r-save').onclick = () => {
     if (!check()) return;
@@ -179,6 +215,7 @@
     caseId = `residence-${Date.now().toString(36)}`;
     revisions = [];
     evidence = {};
+    materialFiles = [];
     keys.forEach(key => { fields[key].value = ''; });
     check();
   };

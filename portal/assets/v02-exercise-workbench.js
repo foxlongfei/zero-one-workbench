@@ -72,6 +72,22 @@
       legacyStatus: '旧UUID 9d756e84…当前API返回0条；仅保留为历史迁移证据，不再作为可导入记录。',
       limitation: '已导入当前API记录级说明、肌群和图片许可元数据；中文步骤、自查与二维动画仍是项目原创教学层。',
     },
+    upstreamVariant: {
+      name: '宽距俯卧撑',
+      exerciseName: 'Wide Push-Up',
+      exerciseId: 1964,
+      exerciseUuid: '1842e1be-ac67-4f34-a527-4ca2b72d8e11',
+      translationUuid: 'ff601a10-ec6f-4d6e-8e1f-43a411282caa',
+      apiEvidenceUrl: 'https://wger.de/api/v2/exerciseinfo/?name__search=push%20up&limit=100',
+      snapshotUrl: 'data/v02-wger-wide-pushup.json',
+      recordLicense: 'CC-BY-SA 4',
+      recordLicenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
+      recordAuthor: 'Anon#2',
+      officialDescription: 'A push-up variation with a wider hand placement to increase the emphasis on the outer chest muscles and shoulders.',
+      integrationStatus: 'LICENSED_VARIANT_IMPORTED',
+      mediaStatus: 'NO_MEDIA_IN_CURRENT_RECORD',
+      limitation: '当前上游记录无图片或视频；页面只导入记录级说明、肌群、步骤和许可，不复制或伪造媒体。',
+    },
   };
 
   let timer = null;
@@ -116,8 +132,12 @@
         记录许可：<a href="${data.upstream.recordLicenseUrl}">${data.upstream.recordLicense}</a>｜作者 ${data.upstream.recordAuthor}｜<a href="${data.upstream.apiEvidenceUrl}">当前API</a>｜<a href="${data.upstream.snapshotUrl}">本仓快照</a><br>
         接入状态：<code>${data.upstream.integrationStatus}</code><br>${data.upstream.limitation}</p></section>
       <figure id="v02-upstream-media"><img src="${data.upstream.officialImageUrl}" alt="wger Push-Up动作图片，CC-BY-SA 4，作者Settebello" style="max-width:260px;width:100%;height:auto"><figcaption>${data.upstream.officialDescription}<br>来源：wger record 1551；图片与说明 CC-BY-SA 4，作者 Settebello。</figcaption></figure>
+      <section id="v02-upstream-variant"><h4>常见变式｜第二条成熟开放记录</h4><p><b>${data.upstreamVariant.name}</b>｜${data.upstreamVariant.exerciseName}｜record ${data.upstreamVariant.exerciseId}｜UUID <code>${data.upstreamVariant.exerciseUuid}</code><br>
+        记录许可：<a href="${data.upstreamVariant.recordLicenseUrl}">${data.upstreamVariant.recordLicense}</a>｜作者 ${data.upstreamVariant.recordAuthor}｜<a href="${data.upstreamVariant.apiEvidenceUrl}">当前API</a>｜<a href="${data.upstreamVariant.snapshotUrl}">本仓快照</a><br>
+        <button class="btn ghost" id="v02-load-wide" type="button">切换到宽距变式证据</button> <span id="v02-variant-state">尚未选择</span><br>
+        接入状态：<code>${data.upstreamVariant.integrationStatus}</code>｜媒体状态：<code>${data.upstreamVariant.mediaStatus}</code><br>${data.upstreamVariant.limitation}</p></section>
       <p class="muted">${data.upstream.legacyStatus}</p>
-      <p class="status">状态：A01已接入一条记录级许可明确的成熟动作库样板；仍需第二动作样板、公开Pages操作与完整A01报告，不能标完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
+      <p class="status">状态：A01已接入标准俯卧撑与宽距俯卧撑两条记录级许可明确的成熟动作库样板；仍需公开Pages操作与完整A01报告，不能标完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
     out.querySelector('#v02-play').onclick = () => {
       clearInterval(timer);
       timer = setInterval(() => { phase = (phase + 2 * speed) % 101; draw(); }, 55);
@@ -125,9 +145,15 @@
     out.querySelector('#v02-stop').onclick = () => clearInterval(timer);
     out.querySelector('#v02-speed').onchange = event => { speed = Number(event.target.value); root.dataset.speed = String(speed); };
     out.querySelector('#v02-phase').oninput = event => { phase = Number(event.target.value); draw(); };
+    out.querySelector('#v02-load-wide').onclick = () => {
+      root.dataset.selectedExerciseId = `exercise:wger:${data.upstreamVariant.exerciseId}:wide-push-up`;
+      root.dataset.variantStatus = data.upstreamVariant.integrationStatus;
+      out.querySelector('#v02-variant-state').textContent = `${data.upstreamVariant.exerciseName} 已选择｜${data.upstreamVariant.recordLicense}｜作者 ${data.upstreamVariant.recordAuthor}｜无上游媒体`;
+    };
     root.dataset.exerciseId = data.id;
     root.dataset.provenance = data.provenance.evidenceStatus;
     root.dataset.upstreamStatus = data.upstream.integrationStatus;
+    root.dataset.variantCount = '2';
     draw();
   }
 

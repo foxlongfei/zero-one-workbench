@@ -1,0 +1,34 @@
+{
+  "schema": "zero-one.v02.upstream-exercise-snapshot.v1",
+  "observedAt": "2026-10-10T22:31:42Z",
+  "source": "https://wger.de/api/v2/exerciseinfo/?name__search=push%20up&limit=100",
+  "project": "wger Workout Manager",
+  "exercise": {
+    "id": 1964,
+    "uuid": "1842e1be-ac67-4f34-a527-4ca2b72d8e11",
+    "name": "Wide Push-Up",
+    "translationId": 3119,
+    "translationUuid": "ff601a10-ec6f-4d6e-8e1f-43a411282caa",
+    "language": 2,
+    "lastUpdate": "2026-05-06T08:42:01.116465+02:00",
+    "license": {
+      "id": 2,
+      "name": "Creative Commons Attribution Share Alike 4",
+      "shortName": "CC-BY-SA 4",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "author": "Anon#2"
+    },
+    "description": "A push-up variation with a wider hand placement to increase the emphasis on the outer chest muscles and shoulders.",
+    "equipment": "none (bodyweight exercise)",
+    "primaryMuscles": ["Pectoralis major"],
+    "secondaryMuscles": ["Anterior deltoid", "Rectus abdominis", "Triceps brachii"],
+    "instructions": [
+      "Place hands wider than shoulder-width apart on the floor.",
+      "Descend until your chest nearly touches the floor, keeping your core tight.",
+      "Drive through your palms to return to the start position.",
+      "Keep a straight line from head to heels and do not let the lower back sag."
+    ],
+    "images": [],
+    "mediaStatus": "NO_MEDIA_IN_CURRENT_RECORD"
+  }
+}
