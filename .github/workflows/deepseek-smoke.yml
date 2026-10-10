@@ -1,0 +1,36 @@
+name: DeepSeek API smoke test
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Verify DeepSeek API connectivity
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          key = os.environ.get("DEEPSEEK_API_KEY", "")
+          if not key:
+              print("Missing DEEPSEEK_API_KEY repository secret")
+              raise SystemExit(1)
+          body = json.dumps({"model":"deepseek-chat","messages":[{"role":"user","content":"Say OK."}],"max_tokens":16,"stream":False}).encode()
+          req = urllib.request.Request("https://api.deepseek.com/chat/completions", data=body, headers={"Authorization":"Bearer "+key,"Content-Type":"application/json"}, method="POST")
+          try:
+              with urllib.request.urlopen(req, timeout=35) as resp:
+                  result = json.load(resp)
+              assert result.get("choices"), "Missing model response"
+              print("DeepSeek API connection: PASS")
+              print("Model:",result.get("model","unknown"))
+              print("Usage:",json.dumps(result.get("usage",{})))
+          except urllib.error.HTTPError as e:
+              print("DeepSeek API HTTP error:",e.code)
+              raise SystemExit(1)
+          except Exception as e:
+              print("DeepSeek connection failed:",type(e).__name__)
+              raise SystemExit(1)
+          PY
