@@ -2,6 +2,7 @@
   const root = document.createElement('section');
   root.className = 'card';
   root.id = 'v02-residence';
+  root.setAttribute('data-dirty', 'false');
   root.innerHTML = `
     <h2>V0.2｜住宅整体工作台（B01开发中）</h2>
     <p class="muted">同一 Residence/Case ID 持续记录材料、来源、置信度、未知项和补充历史；数据只保存在当前浏览器，可导出 JSON。不代表已完成空间或堪舆判断。</p>
@@ -28,6 +29,7 @@
       <label class="btn">导入JSON<input type="file" accept=".json,application/json" id="r-import" style="display:none"></label>
       <button class="btn ghost" id="r-new">新建另一住宅</button>
     </div>
+    <div id="r-dirty-status" class="result" role="status" aria-live="polite" aria-atomic="true" data-dirty="false">尚无未保存修改。</div>
     <div id="r-result" class="result" aria-live="polite"></div>
     <div id="r-next-question" class="result" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
@@ -44,10 +46,34 @@
   const keys = fieldDefs.map(item => item[0]);
   const labels = Object.fromEntries(fieldDefs);
   const fields = Object.fromEntries(keys.map(key => [key, root.querySelector(`#r-${key}`)]));
+  const dirtyStatus = root.querySelector('#r-dirty-status');
+  const materialLicenseInput = root.querySelector('#r-material-license');
   let caseId = `residence-${Date.now().toString(36)}`;
   let revisions = [];
   let evidence = {};
   let materialFiles = [];
+  let dirty = false;
+
+  function setDirty(next, reason) {
+    dirty = Boolean(next);
+    root.dataset.dirty = dirty ? 'true' : 'false';
+    dirtyStatus.dataset.dirty = dirty ? 'true' : 'false';
+    dirtyStatus.style.color = dirty ? '#b45309' : '';
+    dirtyStatus.style.fontWeight = dirty ? '600' : '';
+    dirtyStatus.style.borderLeft = dirty ? '4px solid #b45309' : '4px solid transparent';
+    dirtyStatus.style.paddingLeft = '8px';
+    dirtyStatus.textContent = dirty
+      ? `● 有未保存的修改${reason ? `（${reason}）` : ''}；保存成功后此提示会清除。`
+      : '尚无未保存修改。';
+  }
+
+  const markDirty = () => setDirty(true);
+  keys.forEach(key => {
+    fields[key].addEventListener('input', markDirty);
+    fields[key].addEventListener('change', markDirty);
+  });
+  materialLicenseInput.addEventListener('input', markDirty);
+  materialLicenseInput.addEventListener('change', markDirty);
 
   function hydrate(record) {
     if (!record || record.schema !== 'zero-one.residence.v0.2') return false;
@@ -59,7 +85,7 @@
     return true;
   }
 
-  try { hydrate(JSON.parse(localStorage.getItem('v02-residence') || 'null')); } catch (_) {}
+  try { if (hydrate(JSON.parse(localStorage.getItem('v02-residence') || 'null'))) setDirty(false); } catch (_) {}
 
   function fieldSnapshot() {
     return Object.fromEntries(keys.map(key => [key, fields[key].value.trim()]));
@@ -156,6 +182,7 @@
     fields.material.value = `${file.name}｜SHA-256 ${sha256}`;
     captureEvidence(fieldSnapshot(), capturedAt);
     renderMaterialManifest();
+    setDirty(true, '材料绑定待保存');
     root.querySelector('#r-result').textContent = `材料已绑定住宅ID ${caseId}：${file.name}｜SHA-256 ${sha256}。尚未运行空间/环境模型，不输出判断。`;
   };
 
@@ -169,8 +196,10 @@
     record.revisions = revisions;
     try {
       localStorage.setItem('v02-residence', JSON.stringify(record));
+      setDirty(false);
       check();
     } catch (error) {
+      setDirty(true, '浏览器保存失败');
       root.querySelector('#r-result').textContent += ` 浏览器保存失败：${error.message}`;
     }
   };
@@ -183,6 +212,7 @@
       if (!hydrate(record)) throw Error('参考材料格式不符');
       root.dataset.sampleStatus = record.sampleStatus || 'STATUS_MISSING';
       root.dataset.sourceArtifact = record.sourceArtifact || '';
+      setDirty(true, '已加载参考材料，尚未保存');
       check();
       root.querySelector('#r-result').textContent += ' 已加载K3可追溯参考模型；它不是用户真实住宅，楼层与周边现场材料仍缺失。';
     } catch (error) {
@@ -205,6 +235,7 @@
     try {
       const record = JSON.parse(await event.target.files[0].text());
       if (!hydrate(record)) throw Error('文件格式不符');
+      setDirty(true, '已导入文件，尚未保存');
       check();
     } catch (error) {
       root.querySelector('#r-result').textContent = `导入失败：${error.message}`;
@@ -217,6 +248,7 @@
     evidence = {};
     materialFiles = [];
     keys.forEach(key => { fields[key].value = ''; });
+    setDirty(true, '新建住宅尚未保存');
     check();
   };
 
