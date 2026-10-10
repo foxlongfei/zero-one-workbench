@@ -1,0 +1,77 @@
+name: V0.2 B01 DeepSeek Aider second pilot
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/v02-aider-deepseek-b01-round2.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: v02-b01-deepseek-round2
+  cancel-in-progress: false
+jobs:
+  aider-deepseek-b01:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify DeepSeek secret is configured
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          test -n "$DEEPSEEK_API_KEY" || { echo "::error::DEEPSEEK_API_KEY missing"; exit 1; }
+      - name: Install pinned Aider
+        run: python -m pip install 'aider-chat==0.86.1'
+      - name: Prepare bounded B01 assignment
+        run: |
+          git config user.name "v02-agent[bot]"
+          git config user.email "v02-agent[bot]@users.noreply.github.com"
+          git switch -c "agent/b01-deepseek-round2-${{ github.run_id }}"
+          cat > /tmp/b01-task.txt <<'TASK'
+          Second autonomous DeepSeek+Aider pilot, distinct from A01 first pilot.
+          Modify ONLY portal/assets/v02-residence-workbench.js.
+          Improve the existing B01 Residence/Case interface by adding an accessible,
+          user-visible unsaved-changes indicator for edits to the residence fields.
+          Mark edits as pending, clear the indicator after successful localStorage save,
+          and update appropriately after import, reference sample load, and new case.
+          Do not falsely mark changes saved after localStorage failure. Preserve Case ID,
+          revision history, material provenance, sample status, and all existing functions.
+          No new dependencies or network services; no claiming B01 acceptance.
+          TASK
+      - name: Execute Aider with DeepSeek
+        env:
+          OPENAI_API_BASE: https://api.deepseek.com
+          OPENAI_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          AIDER_ANALYTICS: 'false'
+          AIDER_CHECK_UPDATE: 'false'
+        run: |
+          timeout 150s aider --model openai/deepseek-flash --message-file /tmp/b01-task.txt \
+            --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
+            --map-tokens 0 --no-check-update --no-show-model-warnings \
+            portal/assets/v02-residence-workbench.js
+      - name: Verify bounded changes and existing product checks
+        run: |
+          test "$(git diff --name-only | wc -l)" -eq 1
+          test "$(git diff --name-only)" = "portal/assets/v02-residence-workbench.js"
+          git diff --quiet && { echo "::error::No B01 product change"; exit 1; }
+          node --check portal/assets/v02-residence-workbench.js
+          node scripts/v02-verify.mjs
+          git diff --check
+      - name: Publish independent draft PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add portal/assets/v02-residence-workbench.js
+          git commit -m "experiment(b01): DeepSeek round 2 unsaved-change indicator"
+          git push origin "HEAD:agent/b01-deepseek-round2-${{ github.run_id }}"
+          gh pr create --draft --base main --head "agent/b01-deepseek-round2-${{ github.run_id }}" \
+            --title "B01: Aider DeepSeek round 2 (not accepted)" \
+            --body "Second independent DeepSeek+Aider experiment. B01 unsaved-changes indicator; bounded product edit, static checks and browser PR checks required. No auto-merge. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
