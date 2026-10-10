@@ -1,0 +1,47 @@
+name: Three-doctor bounded discussion trial
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Independent Q and D responses (one request each)
+        env:
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json,os,urllib.request,urllib.error,pathlib
+          issue='A01: 用户要完整俯卧撑动作对象和可操作的全身演示；B01: 用户要同一住宅ID贯穿材料和分析。当前仅有二维自制示意及住宅表单，尚未验收。优先成熟开源、许可可追溯、完整交付。'
+          task='请独立审查下面的既有V0.2施工目标，提出一个最有价值、成本最低、可验证的下一步。必须指出未验证的许可和运行风险。不要宣称已执行。限180字。\n'+issue
+          models=[
+            ('Q','https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions','qwen3.8-flash','DASHSCOPE_API_KEY'),
+            ('D','https://api.deepseek.com/chat/completions','deepseek-chat','DEEPSEEK_API_KEY')]
+          reports=[]
+          for role,url,model,keyname in models:
+            key=os.environ.get(keyname,'')
+            if not key: raise SystemExit(role+' secret missing')
+            data=json.dumps({'model':model,'messages':[{'role':'user','content':task}],'max_tokens':220,'stream':False}).encode()
+            req=urllib.request.Request(url,data=data,headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'},method='POST')
+            try:
+              with urllib.request.urlopen(req,timeout=45) as response: result=json.load(response)
+            except urllib.error.HTTPError as e:
+              print(role,'HTTP failure:',e.code);raise SystemExit(1)
+            answer=result['choices'][0]['message'].get('content','')
+            reports.append({'role':role,'model':result.get('model',model),'answer':answer,'usage':result.get('usage',{})})
+            print(role,'returned; tokens:',result.get('usage',{}).get('total_tokens','unknown'))
+          pathlib.Path('artifacts/v02').mkdir(parents=True,exist_ok=True)
+          pathlib.Path('artifacts/v02/three-doctor-trial.json').write_text(json.dumps({'scope':'Two independent API responses, not product development or C synthesis','results':reports},ensure_ascii=False,indent=2),encoding='utf8')
+          print('Two independent responses recorded; C synthesis and product acceptance pending.')
+          PY
+      - name: Upload trial evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: three-doctor-trial-${{ github.run_id }}
+          path: artifacts/v02/three-doctor-trial.json
+          retention-days: 7
