@@ -60,6 +60,9 @@ const record = (track, name, passed, evidence) => {
   record('B01', 'active first question', (await page.locator('#r-next-question').innerText()).includes('住宅名称'), await page.locator('#r-next-question').innerText());
 
   await page.locator('#r-load-sample').click();
+  await page.waitForFunction(() => (
+    document.querySelector('#v02-residence')?.dataset.sampleStatus === 'REFERENCE_MODEL_NOT_USER_RESIDENCE'
+  ));
   record('B01', 'traceable reference sample loaded', await page.locator('#v02-residence').getAttribute('data-sample-status') === 'REFERENCE_MODEL_NOT_USER_RESIDENCE', await page.locator('#v02-residence').getAttribute('data-source-artifact'));
   record('B01', 'reference sample boundary visible', (await page.locator('#r-result').innerText()).includes('不是用户真实住宅'), await page.locator('#r-result').innerText());
   await page.locator('#r-new').click();
