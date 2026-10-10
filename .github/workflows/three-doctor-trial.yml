@@ -6,7 +6,7 @@ permissions:
 jobs:
   independent-review:
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
       - name: Independent Q and D responses (one request each)
@@ -22,6 +22,11 @@ jobs:
             ('Q','https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions','qwen3.8-flash','DASHSCOPE_API_KEY'),
             ('D','https://api.deepseek.com/chat/completions','deepseek-chat','DEEPSEEK_API_KEY')]
           reports=[]
+          pathlib.Path('artifacts/v02').mkdir(parents=True,exist_ok=True)
+          output=pathlib.Path('artifacts/v02/three-doctor-trial.json')
+          def save():
+            output.write_text(json.dumps({'scope':'Bounded independent API review, NOT completed product work','results':reports},ensure_ascii=False,indent=2),encoding='utf8')
+          save()
           for role,url,model,keyname in models:
             key=os.environ.get(keyname,'')
             if not key: raise SystemExit(role+' secret missing')
@@ -30,13 +35,21 @@ jobs:
             try:
               with urllib.request.urlopen(req,timeout=45) as response: result=json.load(response)
             except urllib.error.HTTPError as e:
-              print(role,'HTTP failure:',e.code);raise SystemExit(1)
+              reports.append({'role':role,'model':model,'status':'HTTP_ERROR','http_status':e.code})
+              save()
+              print(role,'HTTP failure:',e.code)
+              continue
+            except Exception as e:
+              reports.append({'role':role,'model':model,'status':'REQUEST_FAILED','error_type':type(e).__name__})
+              save()
+              print(role,'request failed:',type(e).__name__)
+              continue
             answer=result['choices'][0]['message'].get('content','')
-            reports.append({'role':role,'model':result.get('model',model),'answer':answer,'usage':result.get('usage',{})})
+            reports.append({'role':role,'model':result.get('model',model),'status':'SUCCESS','answer':answer,'usage':result.get('usage',{})})
+            save()
             print(role,'returned; tokens:',result.get('usage',{}).get('total_tokens','unknown'))
-          pathlib.Path('artifacts/v02').mkdir(parents=True,exist_ok=True)
-          pathlib.Path('artifacts/v02/three-doctor-trial.json').write_text(json.dumps({'scope':'Two independent API responses, not product development or C synthesis','results':reports},ensure_ascii=False,indent=2),encoding='utf8')
-          print('Two independent responses recorded; C synthesis and product acceptance pending.')
+          print('Recorded model outcomes:',[(r['role'],r['status']) for r in reports])
+          if any(r['status']!='SUCCESS' for r in reports): raise SystemExit(1)
           PY
       - name: Upload trial evidence
         if: always()
