@@ -53,6 +53,9 @@
   let revisions = [];
   let evidence = {};
   let materialFiles = [];
+  const emptyBoundaries = () => ({modelRun: 'NOT_STARTED', geometryContinuity: 'NOT_PROVEN', crossLayerEquivalence: 'BLOCK'});
+  let boundaries = emptyBoundaries();
+  let analysisChain = null;
 
   function hydrate(record) {
     if (!record || record.schema !== 'zero-one.residence.v0.2') return false;
@@ -60,6 +63,8 @@
     revisions = Array.isArray(record.revisions) ? record.revisions.slice(-20) : [];
     evidence = record.evidence && typeof record.evidence === 'object' ? record.evidence : {};
     materialFiles = Array.isArray(record.materialFiles) ? record.materialFiles.slice(-20) : [];
+    boundaries = record.boundaries && typeof record.boundaries === 'object' ? {...record.boundaries} : emptyBoundaries();
+    analysisChain = record.analysisChain && typeof record.analysisChain === 'object' ? {...record.analysisChain} : null;
     keys.forEach(key => { fields[key].value = String(record.fields?.[key] || record[key] || ''); });
     return true;
   }
@@ -79,11 +84,8 @@
       evidence,
       materialFiles,
       revisions,
-      boundaries: {
-        modelRun: 'NOT_STARTED',
-        geometryContinuity: 'NOT_PROVEN',
-        crossLayerEquivalence: 'BLOCK',
-      },
+      boundaries,
+      analysisChain,
     };
   }
 
@@ -161,7 +163,10 @@
     const record = collect();
     const missing = missingFields(record);
     const directionValid = record.fields.dir === '' || (Number.isFinite(+record.fields.dir) && +record.fields.dir >= 0 && +record.fields.dir < 360);
-    root.querySelector('#r-result').textContent = `住宅ID：${record.id}｜已知字段：${keys.length - missing.length}/${keys.length}｜待补充：${missing.map(key => labels[key]).join('、') || '无'}${directionValid ? '' : '｜朝向必须在0至360度之间'}。后续计算尚未与此住宅ID绑定；不输出未经计算的环境或吉凶结论。`;
+    const analysisState = analysisChain?.caseId === record.id
+      ? `同案分析已绑定：depthmapX ${analysisChain.depthmapX.pointCount} 点；Radiance ${analysisChain.radiance.sensorCount} 点。`
+      : '后续计算尚未与此住宅ID绑定。';
+    root.querySelector('#r-result').textContent = `住宅ID：${record.id}｜已知字段：${keys.length - missing.length}/${keys.length}｜待补充：${missing.map(key => labels[key]).join('、') || '无'}${directionValid ? '' : '｜朝向必须在0至360度之间'}。${analysisState}不输出未经计算的环境或吉凶结论。`;
     root.querySelector('#r-next-question').textContent = missing.length
       ? `先生下一问：请补充“${labels[missing[0]]}”，并说明它来自测量、描述、图纸还是现场观察。`
       : '材料字段已齐；B01仍需真实住宅材料验收，且B02引擎尚未准入。';
@@ -256,6 +261,14 @@
       if (!traceResponse.ok) throw Error(`geometry trace HTTP ${traceResponse.status}`);
       const trace = await traceResponse.json();
       renderRadianceMap(trace, radiance);
+      boundaries = {...record.boundaries};
+      analysisChain = {
+        caseId: record.id,
+        geometryTrace: record.analysisArtifacts.geometryTrace,
+        depthmapX: {engine: run.engine.version, pointCount: run.output.pointCount, outputSha256: run.output.sha256, connectivity: run.output.connectivity},
+        radiance: {engine: radiance.engine.version, sensorCount: radiance.analysis.sensorCount, modelSha256: radiance.model.sha256, summary: radiance.analysis.summary, assumptions: radiance.model.assumptions},
+        artifacts: {...record.analysisArtifacts},
+      };
       root.dataset.depthmapPointCount = String(run.output.pointCount);
       root.dataset.depthmapOutputSha = run.output.sha256;
       root.dataset.radianceSensorCount = String(radiance.analysis.sensorCount);
@@ -292,6 +305,8 @@
     revisions = [];
     evidence = {};
     materialFiles = [];
+    boundaries = emptyBoundaries();
+    analysisChain = null;
     keys.forEach(key => { fields[key].value = ''; });
     check();
   };

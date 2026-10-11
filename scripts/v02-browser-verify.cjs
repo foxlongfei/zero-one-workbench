@@ -41,6 +41,7 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#v02-catalog-select').selectOption('1554');
   await page.locator('#v02-catalog-open').click();
   record('A01', 'licensed catalog selection is traceable', await page.locator('#v02-exercise').getAttribute('data-selected-exercise-id') === 'exercise:wger:1554:clap-push-up' && await page.locator('#v02-exercise').getAttribute('data-selected-record-license') === 'CC-BY-SA 4' && (await page.locator('#v02-catalog-state').innerText()).includes('7e6f3da44a68a285'), await page.locator('#v02-catalog-state').innerText());
+  record('A01', 'selected record changes the visible detail object', (await page.locator('#v02-selected-record').innerText()).includes('Clap Push-UP') && (await page.locator('#v02-selected-record').innerText()).includes('exercise:wger:1554:clap-push-up') && await page.locator('#v02-selected-record img').evaluate(image => image.complete && image.naturalWidth === 1024), await page.locator('#v02-selected-record').innerText());
   await page.locator('#v02-load-wide').click();
   record('A01', 'second variant selection works', await page.locator('#v02-exercise').getAttribute('data-variant-status') === 'LICENSED_VARIANT_IMPORTED' && (await page.locator('#v02-variant-state').innerText()).includes('无上游媒体'), await page.locator('#v02-variant-state').innerText());
   await page.locator('#v02-load-clap').click();
@@ -81,6 +82,12 @@ const record = (track, name, passed, evidence) => {
   record('B01', 'same-case depthmapX result visible', await page.locator('#v02-residence').getAttribute('data-engine-geometry') === 'MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW' && await page.locator('#v02-residence').getAttribute('data-depthmap-status') === 'DEPTHMAPX_0_9_1_VGA_708_POINTS' && await page.locator('#v02-residence').getAttribute('data-depthmap-point-count') === '708', await page.locator('#r-result').innerText());
   record('B01', 'same-case Radiance result visible', await page.locator('#v02-residence').getAttribute('data-radiance-status') === 'RADIANCE_6_0_2_CLEAR_SKY_80_SENSORS' && await page.locator('#v02-residence').getAttribute('data-radiance-sensor-count') === '80' && await page.locator('#v02-residence').getAttribute('data-cross-layer-equivalence') === 'SAME_CASE_ID_AND_PLAN_TRACE_WITH_EXPLICIT_VERTICAL_ASSUMPTIONS' && (await page.locator('#r-result').innerText()).includes('显式假设'), await page.locator('#r-result').innerText());
   record('B01', 'Radiance sensors render on calibrated same-case geometry', await page.locator('#r-radiance-map [data-radiance-sensor]').count() === 80 && await page.locator('#r-radiance-map [data-radiance-window]').count() === 6 && await page.locator('#v02-residence').getAttribute('data-geometry-trace-case') === 'residence:habs-dc-97:frederick-douglass-house' && (await page.locator('#r-radiance-legend').innerText()).includes('不是原图像素级配准'), '80 sensors + 6 assumed south windows on trace-calibrated geometry');
+  const exportDownload = page.waitForEvent('download');
+  await page.locator('#r-export').click();
+  const archiveExport = await exportDownload;
+  const archiveExportPath = await archiveExport.path();
+  const archiveDossier = JSON.parse(fs.readFileSync(archiveExportPath, 'utf8'));
+  record('B01', 'continuous dossier exports same-case engine evidence', archiveDossier.id === 'residence:habs-dc-97:frederick-douglass-house' && archiveDossier.boundaries.modelRun === 'DEPTHMAPX_VGA_RUN_FOR_THIS_TRACE' && archiveDossier.analysisChain.caseId === archiveDossier.id && archiveDossier.analysisChain.depthmapX.pointCount === 708 && archiveDossier.analysisChain.radiance.sensorCount === 80, `${archiveDossier.id}｜depthmapX ${archiveDossier.analysisChain.depthmapX.pointCount}｜Radiance ${archiveDossier.analysisChain.radiance.sensorCount}`);
   await page.locator('#r-engine-overlay').screenshot({ path: path.join(artifactDir, 'residence-b01-radiance-map.png') });
   await page.locator('#r-new').click();
   residenceId = await page.locator('#v02-residence').getAttribute('data-residence-id');

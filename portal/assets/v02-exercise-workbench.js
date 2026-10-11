@@ -115,9 +115,9 @@
   const out = root.querySelector('#v02-ex-content');
   const phaseName = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1])?.name || '动作周期';
   const catalog = [
-    {id: data.upstream.exerciseId, exerciseId: data.id, name: data.name, author: data.upstream.recordAuthor, license: data.upstream.recordLicense, status: data.upstream.integrationStatus, media: '许可图片已固化'},
-    {id: data.upstreamVariant.exerciseId, exerciseId: 'exercise:wger:1964:wide-push-up', name: data.upstreamVariant.name, author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, status: data.upstreamVariant.integrationStatus, media: '当前记录无上游媒体'},
-    {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, status: data.licensedMediaVariant.integrationStatus, media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`},
+    {id: data.upstream.exerciseId, exerciseId: data.id, name: data.name, upstreamName: data.upstream.exerciseName, author: data.upstream.recordAuthor, license: data.upstream.recordLicense, status: data.upstream.integrationStatus, description: data.upstream.officialDescription, media: '许可图片已固化', image: data.upstream.officialImageUrl},
+    {id: data.upstreamVariant.exerciseId, exerciseId: 'exercise:wger:1964:wide-push-up', name: data.upstreamVariant.name, upstreamName: data.upstreamVariant.exerciseName, author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, status: data.upstreamVariant.integrationStatus, description: data.upstreamVariant.officialDescription, media: '当前记录无上游媒体', image: ''},
+    {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, upstreamName: data.licensedMediaVariant.exerciseName, author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, status: data.licensedMediaVariant.integrationStatus, description: 'The clap push-up is an explosive upper body movement that builds power and fast-twitch muscle strength. It adds a plyometric challenge to the traditional push-up by requiring the hands to leave the ground mid-rep.', media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`, image: data.licensedMediaVariant.imageUrl},
   ];
 
   function selectCatalogRecord(recordId) {
@@ -128,6 +128,7 @@
     root.dataset.selectedRecordMedia = record.media;
     out.querySelector('#v02-catalog-select').value = String(record.id);
     out.querySelector('#v02-catalog-state').textContent = `${record.name}｜wger record ${record.id}｜${record.license}｜作者 ${record.author}｜${record.media}`;
+    out.querySelector('#v02-selected-record').innerHTML = `<h5>${record.name}｜${record.upstreamName}</h5><p>${record.description}</p>${record.image ? `<img src="${record.image}" alt="${record.upstreamName}，${record.license}，作者${record.author}" style="max-width:260px;width:100%;height:auto">` : '<p><b>媒体边界：</b>当前上游记录没有可导入媒体，页面不伪造图片或视频。</p>'}<p><b>对象身份：</b><code>${record.exerciseId}</code>｜<b>接入状态：</b><code>${record.status}</code></p><p class="muted">此处切换的是记录级来源详情；上方二维播放仍是标准俯卧撑项目教学示意，不冒充所选变式动画。</p>`;
   }
 
   function draw() {
@@ -166,6 +167,7 @@
         <p><label for="v02-catalog-select">动作记录</label> <select id="v02-catalog-select">${catalog.map(item => `<option value="${item.id}">${item.name}｜record ${item.id}</option>`).join('')}</select>
         <button class="btn ghost" id="v02-catalog-open" type="button">载入所选证据</button></p>
         <p id="v02-catalog-state" class="status" aria-live="polite"></p>
+        <article id="v02-selected-record" class="result" aria-live="polite"></article>
         <table><thead><tr><th>record</th><th>动作</th><th>许可/作者</th><th>媒体证据</th></tr></thead><tbody>${catalog.map(item => `<tr data-wger-record="${item.id}"><td>${item.id}</td><td>${item.name}</td><td>${item.license}｜${item.author}</td><td>${item.media}</td></tr>`).join('')}</tbody></table>
       </section>
       <section id="v02-upstream"><h4>成熟开放动作记录｜已导入</h4><p><b>${data.upstream.project}</b>｜${data.upstream.exerciseName}｜record ${data.upstream.exerciseId}｜UUID <code>${data.upstream.exerciseUuid}</code><br>
