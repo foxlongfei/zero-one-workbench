@@ -120,6 +120,16 @@
     {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, upstreamName: data.licensedMediaVariant.exerciseName, author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, status: data.licensedMediaVariant.integrationStatus, description: 'The clap push-up is an explosive upper body movement that builds power and fast-twitch muscle strength. It adds a plyometric challenge to the traditional push-up by requiring the hands to leave the ground mid-rep.', media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`, image: data.licensedMediaVariant.imageUrl},
   ];
 
+  function renderDossierPreview() {
+    const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
+    const preview = out.querySelector('#v02-ex-dossier-preview');
+    if (!record || !preview) return;
+    const note = out.querySelector('#v02-ex-notes')?.value || '';
+    preview.innerHTML = `<h4>当前动作档案预览</h4><p><b>Exercise ID：</b><code>${record.exerciseId}</code><br><b>上游记录：</b>wger ${record.id}｜${record.license}｜作者 ${record.author}<br><b>训练状态：</b>${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×<br><b>当前笔记：</b>${note || '未填写'}<br><b>边界：</b>LOCAL_BROWSER_ONLY｜${data.provenance.evidenceStatus}</p>`;
+    root.dataset.dossierReady = 'true';
+    root.dataset.dossierExerciseId = record.exerciseId;
+  }
+
   function selectCatalogRecord(recordId) {
     const record = catalog.find(item => item.id === Number(recordId));
     if (!record) return;
@@ -139,6 +149,7 @@
         notesStatus.textContent = '本地存储不可用';
       }
     }
+    renderDossierPreview();
   }
 
   function draw() {
@@ -156,6 +167,7 @@
     out.querySelector('#v02-phase-name').textContent = phaseName(phase);
     root.dataset.phase = String(Math.round(phase));
     root.dataset.phaseName = phaseName(phase);
+    renderDossierPreview();
   }
 
   function render() {
@@ -179,6 +191,7 @@
         <button class="btn ghost" id="v02-ex-export" type="button">导出当前动作档案</button>
         <span id="v02-ex-notes-status" class="muted" aria-live="polite"></span>
       </section>
+      <section id="v02-ex-dossier-preview" class="result" aria-live="polite"></section>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-licensed-catalog"><h4>可操作许可动作目录｜3 条真实 wger 记录</h4>
         <p><label for="v02-catalog-select">动作记录</label> <select id="v02-catalog-select">${catalog.map(item => `<option value="${item.id}">${item.name}｜record ${item.id}</option>`).join('')}</select>
@@ -207,7 +220,7 @@
       timer = setInterval(() => { phase = (phase + 2 * speed) % 101; draw(); }, 55);
     };
     out.querySelector('#v02-stop').onclick = () => clearInterval(timer);
-    out.querySelector('#v02-speed').onchange = event => { speed = Number(event.target.value); root.dataset.speed = String(speed); };
+    out.querySelector('#v02-speed').onchange = event => { speed = Number(event.target.value); root.dataset.speed = String(speed); renderDossierPreview(); };
     out.querySelector('#v02-phase').oninput = event => { phase = Number(event.target.value); draw(); };
     out.querySelector('#v02-ex-notes-save').onclick = () => {
       const notesStatus = out.querySelector('#v02-ex-notes-status');
@@ -218,6 +231,7 @@
         notesStatus.textContent = '无法保存：本地存储不可用';
       }
     };
+    out.querySelector('#v02-ex-notes').oninput = renderDossierPreview;
     out.querySelector('#v02-ex-export').onclick = () => {
       const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
       const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({

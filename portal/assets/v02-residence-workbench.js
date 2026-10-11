@@ -30,6 +30,7 @@
       <button class="btn ghost" id="r-new">新建另一住宅</button>
     </div>
     <div id="r-result" class="result" aria-live="polite"></div>
+    <div id="r-import-receipt" class="result" role="status" aria-live="polite">导入回执：尚未导入档案。</div>
     <figure id="r-archive-preview" hidden><img alt="Frederick Douglass House HABS 首层平面图" style="max-width:100%;height:auto"><figcaption></figcaption>
       <section id="r-engine-overlay" hidden><h3>同案校准几何分析图｜Radiance 传感点</h3><svg id="r-radiance-map" viewBox="0 0 760 520" role="img" aria-label="HABS同案校准几何与Radiance照度传感点" style="width:100%;max-width:760px;background:#f2f5f0;border-radius:12px"></svg>
         <p id="r-radiance-legend" class="muted"></p></section>
@@ -336,10 +337,17 @@
       if (validationError) throw Error(validationError);
       if (!hydrate(record)) throw Error('文件格式不符');
       check();
+      const imported = collect();
       root.dataset.importStatus = 'VALIDATED_AND_IMPORTED';
+      root.dataset.importedCaseId = imported.id;
+      root.dataset.importedDepthmapPoints = String(imported.analysisChain?.depthmapX?.pointCount || 0);
+      root.dataset.importedRadianceSensors = String(imported.analysisChain?.radiance?.sensorCount || 0);
+      const known = keys.length - missingFields(imported).length;
+      root.querySelector('#r-import-receipt').textContent = `导入成功：${imported.id}｜已知 ${known}/${keys.length}｜材料 ${imported.materialFiles.length} 项｜depthmapX ${root.dataset.importedDepthmapPoints} 点｜Radiance ${root.dataset.importedRadianceSensors} 点；沿用原档案边界，不代表新一轮模型已运行。`;
     } catch (error) {
       root.dataset.importStatus = 'REJECTED_WITHOUT_HYDRATION';
       root.querySelector('#r-result').textContent = `导入失败：${error.message}`;
+      root.querySelector('#r-import-receipt').textContent = `导入拒绝：${error.message}；当前 Residence/Case 未被覆盖。`;
     }
   };
 
@@ -350,6 +358,11 @@
     materialFiles = [];
     boundaries = emptyBoundaries();
     analysisChain = null;
+    delete root.dataset.importStatus;
+    delete root.dataset.importedCaseId;
+    delete root.dataset.importedDepthmapPoints;
+    delete root.dataset.importedRadianceSensors;
+    root.querySelector('#r-import-receipt').textContent = '导入回执：尚未导入档案。';
     keys.forEach(key => { fields[key].value = ''; });
     check();
   };
