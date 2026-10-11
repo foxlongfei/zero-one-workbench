@@ -28,8 +28,9 @@ jobs:
           curl -fsSL "https://github.com/LBNL-ETA/Radiance/releases/download/rad6R0P2/Radiance_c1700d56_Linux.zip" -o /tmp/radiance.zip
           echo "04ee53cafbb64b943a53616b3d0ee379dd7ef80379c83aa7a145e547d9809c28  /tmp/radiance.zip" | sha256sum --check
           unzip -q /tmp/radiance.zip -d /tmp/radiance-outer
-          tar --no-same-owner -xzf "$(find /tmp/radiance-outer -type f -name '*.tar.gz' -print -quit)" -C /tmp
-          RAD_ROOT="$(find /tmp -type f -name rtrace -path '*/radiance/bin/*' -printf '%h/..\n' -quit)"
+          mkdir -p /tmp/radiance-install
+          tar --no-same-owner -xzf "$(find /tmp/radiance-outer -type f -name '*.tar.gz' -print -quit)" -C /tmp/radiance-install
+          RAD_ROOT="$(find /tmp/radiance-install -type f -name rtrace -path '*/radiance/bin/*' -printf '%h/..\n' -quit)"
           test -n "$RAD_ROOT"
           echo "$RAD_ROOT/bin" >> "$GITHUB_PATH"
           echo "RAYPATH=.:$RAD_ROOT/lib" >> "$GITHUB_ENV"
