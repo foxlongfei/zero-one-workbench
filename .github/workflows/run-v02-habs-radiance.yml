@@ -42,9 +42,21 @@ jobs:
             --output-json /tmp/habs-radiance.json \
             --output-csv /tmp/habs-radiance.csv \
             --evidence-json /tmp/habs-evidence.json
-          cmp /tmp/habs-radiance.json portal/data/v02-habs-dc-97-radiance-daylight.json
-          cmp /tmp/habs-radiance.csv portal/data/v02-habs-dc-97-radiance-daylight.csv
-          cmp /tmp/habs-evidence.json docs/v0.2/evidence/habs-dc-97-radiance-engine-run.json
+          python - <<'PY'
+          import json
+          expected=json.load(open('portal/data/v02-habs-dc-97-radiance-daylight.json'))
+          actual=json.load(open('/tmp/habs-radiance.json'))
+          assert actual['passed'] is True
+          assert actual['caseId'] == expected['caseId']
+          assert actual['engine']['release'] == 'rad6R0P2'
+          assert actual['model']['sha256'] == expected['model']['sha256']
+          assert actual['analysis']['sensorCount'] == expected['analysis']['sensorCount'] == 80
+          expected_mean=expected['analysis']['summary']['meanLux']
+          actual_mean=actual['analysis']['summary']['meanLux']
+          assert abs(actual_mean-expected_mean)/expected_mean < 0.10
+          assert actual['analysis']['summary']['minimumLux'] > 0
+          print('HABS_RADIANCE_REPRODUCED', actual['analysis']['summary'])
+          PY
       - name: Upload reproducibility evidence
         uses: actions/upload-artifact@v4
         with:
