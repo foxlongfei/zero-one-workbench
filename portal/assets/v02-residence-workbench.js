@@ -30,6 +30,7 @@
       <button class="btn ghost" id="r-new">新建另一住宅</button>
     </div>
     <div id="r-result" class="result" aria-live="polite"></div>
+    <figure id="r-archive-preview" hidden><img alt="Frederick Douglass House HABS 首层平面图" style="max-width:100%;height:auto"><figcaption></figcaption></figure>
     <div id="r-next-question" class="result" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
@@ -202,7 +203,12 @@
       root.dataset.sourceArtifact = record.sourceArtifact || '';
       root.dataset.archiveLicense = record.license || '';
       root.dataset.engineGeometry = record.boundaries?.geometryContinuity || '';
-      root.querySelector('#r-result').textContent += ' 已加载HABS真实历史住宅测绘档案；它不是用户住宅。图纸尚未矢量化，也未送入depthmapX或Radiance，不输出空间、环境或吉凶结论。';
+      root.dataset.materialSha = record.repositoryAssetSha256 || '';
+      const preview = root.querySelector('#r-archive-preview');
+      preview.hidden = false;
+      preview.querySelector('img').src = record.repositoryAsset.replace('../assets/', 'assets/');
+      preview.querySelector('figcaption').textContent = `${record.sourceArtifact}｜${record.license}｜SHA-256 ${record.repositoryAssetSha256}`;
+      root.querySelector('#r-result').textContent += ' 已加载HABS真实历史住宅首层平面图；它不是用户住宅。图纸已识别并固化，但尚未矢量化，也未送入depthmapX或Radiance，不输出空间、环境或吉凶结论。';
     } catch (error) {
       root.querySelector('#r-result').textContent = `HABS档案加载失败：${error.message}`;
     }

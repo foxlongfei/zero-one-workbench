@@ -29,7 +29,9 @@ manifest.assets.push(await download(
   'wger-clap-push-up-1554.png',
 ));
 
-for (let sheet = 1; sheet <= 8; sheet += 1) {
+// Sheet 2 was identified from the first evidence capture as the measured first-floor plan.
+// Re-fetch only the exact product inputs to avoid hammering Wikimedia's original-file edge.
+for (const sheet of [2]) {
   const title = `File:Frederick Douglass House, 1411 W Street, Southeast, Washington, District of Columbia, DC HABS DC,WASH,166- (sheet ${sheet} of 8).png`;
   const query = new URL('https://commons.wikimedia.org/w/api.php');
   query.searchParams.set('action', 'query');

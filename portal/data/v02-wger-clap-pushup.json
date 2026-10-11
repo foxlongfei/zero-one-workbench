@@ -37,6 +37,11 @@
       "author": "Settebello",
       "isAiGenerated": false
     },
-    "mediaStatus": "LICENSED_MEDIA_LINKED_NOT_VENDORED"
+    "repositoryAsset": "../assets/vendor/wger-clap-push-up-1554.png",
+    "repositoryAssetBytes": 2275146,
+    "repositoryAssetWidth": 1024,
+    "repositoryAssetHeight": 1024,
+    "repositoryAssetSha256": "7e6f3da44a68a285da8d987ad2ebc47f636bf17555e911d7dce0e1bb9be8ad47",
+    "mediaStatus": "LICENSED_MEDIA_VENDORED"
   }
 }

@@ -99,11 +99,13 @@
       recordLicense: 'CC-BY-SA 4',
       recordLicenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
       recordAuthor: 'Settebello',
-      imageUrl: 'https://wger.de/media/exercise-images/1554/49207a62-8799-4b47-8c0b-7bde02926f3d.png',
+      imageUrl: 'assets/vendor/wger-clap-push-up-1554.png',
+      upstreamImageUrl: 'https://wger.de/media/exercise-images/1554/49207a62-8799-4b47-8c0b-7bde02926f3d.png',
       imageUuid: '49207a62-8799-4b47-8c0b-7bde02926f3d',
-      integrationStatus: 'LICENSED_VARIANT_AND_MEDIA_LINKED',
-      mediaStatus: 'LICENSED_MEDIA_LINKED_NOT_VENDORED',
-      limitation: '已核验同一 wger record 1554 的记录与图片许可链；图片保持上游链接，未宣称已固化到仓库。',
+      imageSha256: '7e6f3da44a68a285da8d987ad2ebc47f636bf17555e911d7dce0e1bb9be8ad47',
+      integrationStatus: 'LICENSED_VARIANT_AND_MEDIA_VENDORED',
+      mediaStatus: 'LICENSED_MEDIA_VENDORED',
+      limitation: '同一 wger record 1554 的 CC-BY-SA 4 图片已固化到仓库并记录 SHA-256；保留作者、许可与上游链接。',
     },
   };
 
@@ -154,11 +156,12 @@
         <button class="btn ghost" id="v02-load-wide" type="button">切换到宽距变式证据</button> <span id="v02-variant-state">尚未选择</span><br>
         接入状态：<code>${data.upstreamVariant.integrationStatus}</code>｜媒体状态：<code>${data.upstreamVariant.mediaStatus}</code><br>${data.upstreamVariant.limitation}</p></section>
       <section id="v02-licensed-media-variant"><h4>许可记录 + 同记录媒体｜击掌变式</h4><p><b>${data.licensedMediaVariant.name}</b>｜${data.licensedMediaVariant.exerciseName}｜record ${data.licensedMediaVariant.exerciseId}｜UUID <code>${data.licensedMediaVariant.exerciseUuid}</code><br>
-        记录与图片许可：<a href="${data.licensedMediaVariant.recordLicenseUrl}">${data.licensedMediaVariant.recordLicense}</a>｜作者 ${data.licensedMediaVariant.recordAuthor}｜图片 UUID <code>${data.licensedMediaVariant.imageUuid}</code>｜<a href="${data.licensedMediaVariant.imageUrl}">上游许可图片</a>｜<a href="${data.licensedMediaVariant.apiEvidenceUrl}">当前API</a>｜<a href="${data.licensedMediaVariant.snapshotUrl}">本仓快照</a><br>
+        记录与图片许可：<a href="${data.licensedMediaVariant.recordLicenseUrl}">${data.licensedMediaVariant.recordLicense}</a>｜作者 ${data.licensedMediaVariant.recordAuthor}｜图片 UUID <code>${data.licensedMediaVariant.imageUuid}</code>｜<a href="${data.licensedMediaVariant.upstreamImageUrl}">上游原图</a>｜<a href="${data.licensedMediaVariant.apiEvidenceUrl}">当前API</a>｜<a href="${data.licensedMediaVariant.snapshotUrl}">本仓快照</a><br>
+        <img src="${data.licensedMediaVariant.imageUrl}" alt="wger Clap Push-Up，CC-BY-SA 4，作者Settebello" style="max-width:260px;width:100%;height:auto"><br>仓库资产 SHA-256：<code>${data.licensedMediaVariant.imageSha256}</code><br>
         <button class="btn ghost" id="v02-load-clap" type="button">切换到击掌变式证据</button> <span id="v02-clap-state">尚未选择</span><br>
         接入状态：<code>${data.licensedMediaVariant.integrationStatus}</code>｜媒体状态：<code>${data.licensedMediaVariant.mediaStatus}</code><br>${data.licensedMediaVariant.limitation}</p></section>
       <p class="muted">${data.upstream.legacyStatus}</p>
-      <p class="status">状态：A01已接入标准、宽距和击掌俯卧撑三条许可明确的成熟动作库记录；击掌变式包含同记录许可图片链。媒体尚未固化到仓库，仍不能标完成。完整动态人体属于A02，不在本项冒充完成。</p>`;
+      <p class="status">状态：A01已接入标准、宽距和击掌俯卧撑三条许可明确的成熟动作库记录；击掌变式同记录图片已固化并记录哈希。仍需 Pages 门与完整报告，不能标完成。</p>`;
     out.querySelector('#v02-play').onclick = () => {
       clearInterval(timer);
       timer = setInterval(() => { phase = (phase + 2 * speed) % 101; draw(); }, 55);
