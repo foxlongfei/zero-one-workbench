@@ -38,7 +38,20 @@ const record = (track, name, passed, evidence) => {
   record('A01', 'upstream links visible', await page.locator('#v02-upstream a').count() === 3, 'record license, live API and repository snapshot links');
   record('A01', 'licensed media visible', await page.locator('#v02-upstream-media img').evaluate(image => image.complete && image.naturalWidth > 0), 'wger image loaded with visible attribution');
   record('A01', 'second licensed variant visible', await page.locator('#v02-exercise').getAttribute('data-variant-count') === '2' && (await page.locator('#v02-upstream-variant').innerText()).includes('record 1964'), 'wger Wide Push-Up record 1964');
+  if (await page.locator('#v02-ex-notes').count()) {
+    await page.locator('#v02-ex-notes').fill('A01-normal-test');
+    await page.locator('#v02-ex-notes-save').click();
+    record('A01', 'notes save confirmation', (await page.locator('#v02-ex-notes-status').innerText()).includes('已保存'), 'normal exercise saved');
+  }
   await page.locator('#v02-load-wide').click();
+  if (await page.locator('#v02-ex-notes').count()) {
+    record('A01', 'variant notes isolated', (await page.locator('#v02-ex-notes').inputValue()) !== 'A01-normal-test', 'wide variant must not inherit normal notes');
+    await page.locator('#v02-ex-notes').fill('A01-wide-test');
+    await page.locator('#v02-ex-notes-save').click();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.locator('#v02-load-wide').click();
+    record('A01', 'variant notes persist after reload', (await page.locator('#v02-ex-notes').inputValue()) === 'A01-wide-test', 'wide notes reloaded from localStorage');
+  }
   record('A01', 'second variant selection works', await page.locator('#v02-exercise').getAttribute('data-variant-status') === 'LICENSED_VARIANT_IMPORTED' && (await page.locator('#v02-variant-state').innerText()).includes('无上游媒体'), await page.locator('#v02-variant-state').innerText());
   record('A01', 'muscle and joint object visible', await page.locator('#v02-joints li').count() === 4 && (await page.locator('#v02-ex-content').innerText()).includes('稳定：'), '4 joint rows plus stabilizer role');
 
@@ -81,6 +94,9 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#r-ingest-material').click();
   await page.waitForFunction(() => document.querySelector('#v02-residence')?.dataset.materialCount === '1');
   record('B01', 'actual material hashed and bound', await page.locator('#v02-residence').getAttribute('data-last-material-sha') === '8e54d1682d7212ba95a9bed996ba3139357ea738efb4563488d9e1e8156133a3', await page.locator('#r-material-manifest').innerText());
+  if (await page.locator('#r-provenance-summary').count()) {
+    record('B01', 'provenance summary after upload', await page.locator('#r-provenance-summary').getAttribute('data-material-source-count') === '1' && (await page.locator('#r-provenance-summary').innerText()).includes('共 1 项'), await page.locator('#r-provenance-summary').innerText());
+  }
   record('B01', 'material boundary remains explicit', (await page.locator('#r-result').innerText()).includes('尚未运行空间/环境模型'), await page.locator('#r-result').innerText());
   await page.locator('#r-save').click();
   record('B01', 'same ID after save', await page.locator('#v02-residence').getAttribute('data-residence-id') === residenceId, residenceId);
@@ -92,6 +108,9 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#v02-residence').waitFor();
   record('B01', 'same ID after reload', await page.locator('#v02-residence').getAttribute('data-residence-id') === residenceId, residenceId);
   record('B01', 'evidence survives reload', await page.locator('#r-evidence li[data-field]').count() === 3, '3 evidence rows persisted');
+  if (await page.locator('#r-provenance-summary').count()) {
+    record('B01', 'provenance summary survives reload', (await page.locator('#r-provenance-summary').innerText()).includes('共 1 项'), await page.locator('#r-provenance-summary').innerText());
+  }
   record('B01', 'material manifest survives reload', await page.locator('#v02-residence').getAttribute('data-material-count') === '1', await page.locator('#r-material-manifest').innerText());
   record('B01', 'boundary remains explicit', (await page.locator('#r-result').innerText()).includes('不输出未经计算'), await page.locator('#r-result').innerText());
   await page.screenshot({ path: path.join(artifactDir, 'residence-b01.png'), fullPage: true });
