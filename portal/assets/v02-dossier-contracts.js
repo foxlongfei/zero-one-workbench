@@ -7,18 +7,31 @@
       ['exerciseId', typeof dossier?.exerciseId === 'string' && dossier.exerciseId.startsWith('exercise:wger:')],
       ['record.wgerId', Number.isInteger(dossier?.record?.wgerId) && dossier.record.wgerId > 0],
       ['record.name', Boolean(dossier?.record?.name)],
+      ['record.source', Boolean(dossier?.record?.source)],
+      ['record.version', Boolean(dossier?.record?.version)],
       ['record.author', Boolean(dossier?.record?.author)],
       ['record.license', Boolean(dossier?.record?.license)],
+      ['definition.aliases', Array.isArray(dossier?.definition?.aliases) && dossier.definition.aliases.length > 0],
+      ['definition.category', Boolean(dossier?.definition?.category)],
+      ['definition.equipment', Boolean(dossier?.definition?.equipment)],
+      ['definition.difficulty', Boolean(dossier?.definition?.difficulty)],
+      ['definition.steps', Array.isArray(dossier?.definition?.steps) && dossier.definition.steps.length > 0],
+      ['definition.variants', Array.isArray(dossier?.definition?.variants) && dossier.definition.variants.length > 0],
+      ['definition.muscles.primary', Array.isArray(dossier?.definition?.muscles?.primary) && dossier.definition.muscles.primary.length > 0],
+      ['definition.muscles.secondary', Array.isArray(dossier?.definition?.muscles?.secondary) && dossier.definition.muscles.secondary.length > 0],
+      ['definition.muscles.stabilizers', Array.isArray(dossier?.definition?.muscles?.stabilizers) && dossier.definition.muscles.stabilizers.length > 0],
+      ['definition.joints', Array.isArray(dossier?.definition?.joints) && dossier.definition.joints.length > 0],
+      ['definition.dynamics.controls', Array.isArray(dossier?.definition?.dynamics?.controls) && dossier.definition.dynamics.controls.length >= 4],
       ['training.phase', Number.isFinite(dossier?.training?.phase)],
       ['training.speed', Number.isFinite(dossier?.training?.speed) && dossier.training.speed > 0],
       ['boundaries.noteStorage', dossier?.boundaries?.noteStorage === 'LOCAL_BROWSER_ONLY'],
       ['boundaries.guidance', Boolean(dossier?.boundaries?.guidance)],
     ];
     const missing = checks.filter(([, passed]) => !passed).map(([field]) => field);
-    return Object.freeze({status: missing.length ? 'INCOMPLETE' : 'COMPLETE', passed: checks.length - missing.length, total: checks.length, missing});
+    return Object.freeze({status: missing.length ? 'INCOMPLETE' : 'FIELDS_COMPLETE_WITH_BOUNDARIES', passed: checks.length - missing.length, total: checks.length, missing});
   }
 
-  function buildExerciseDossier({record, note, phase, phaseName, speed, guidance, exportedAt}) {
+  function buildExerciseDossier({record, definition, note, phase, phaseName, speed, guidance, exportedAt}) {
     if (!record || typeof record.exerciseId !== 'string' || !record.exerciseId) {
       throw new TypeError('Exercise record requires a stable exerciseId');
     }
@@ -29,10 +42,32 @@
         wgerId: record.id,
         name: record.name,
         upstreamName: record.upstreamName,
+        source: record.source,
+        sourceUrl: record.sourceUrl,
+        version: record.version,
         author: record.author,
         license: record.license,
         status: record.status,
         media: record.media,
+      },
+      definition: {
+        aliases: Array.isArray(definition?.aliases) ? [...definition.aliases] : [],
+        category: String(definition?.category || ''),
+        equipment: String(definition?.equipment || ''),
+        difficulty: String(definition?.difficulty || ''),
+        steps: Array.isArray(definition?.steps) ? [...definition.steps] : [],
+        variants: Array.isArray(definition?.variants) ? definition.variants.map(item => ({...item})) : [],
+        muscles: {
+          primary: Array.isArray(definition?.muscles?.primary) ? [...definition.muscles.primary] : [],
+          secondary: Array.isArray(definition?.muscles?.secondary) ? [...definition.muscles.secondary] : [],
+          stabilizers: Array.isArray(definition?.muscles?.stabilizers) ? [...definition.muscles.stabilizers] : [],
+        },
+        joints: Array.isArray(definition?.joints) ? definition.joints.map(item => ({...item})) : [],
+        dynamics: {
+          capability: String(definition?.dynamics?.capability || ''),
+          controls: Array.isArray(definition?.dynamics?.controls) ? [...definition.dynamics.controls] : [],
+          phases: Array.isArray(definition?.dynamics?.phases) ? definition.dynamics.phases.map(item => ({...item, range: Array.isArray(item.range) ? [...item.range] : []})) : [],
+        },
       },
       training: {
         note: String(note || ''),
@@ -63,6 +98,14 @@
     if (record.analysisChain && record.analysisChain.caseId !== record.id) return 'analysisChain.caseId 与 Residence/Case ID 不一致';
     if (record.analysisChain?.depthmapX && record.analysisChain.depthmapX.caseId != null && record.analysisChain.depthmapX.caseId !== record.id) return 'depthmapX.caseId 与 Residence/Case ID 不一致';
     if (record.analysisChain?.radiance && record.analysisChain.radiance.caseId != null && record.analysisChain.radiance.caseId !== record.id) return 'radiance.caseId 与 Residence/Case ID 不一致';
+    if (record.analysisChain) {
+      const depthmapX = record.analysisChain.depthmapX;
+      const radiance = record.analysisChain.radiance;
+      if (!depthmapX || typeof depthmapX !== 'object') return 'analysisChain 缺少 depthmapX 证据';
+      if (!radiance || typeof radiance !== 'object') return 'analysisChain 缺少 Radiance 证据';
+      if (!depthmapX.engine || !Number.isInteger(depthmapX.pointCount) || depthmapX.pointCount <= 0 || !/^[a-f0-9]{64}$/i.test(depthmapX.outputSha256 || '')) return 'depthmapX 证据字段无效';
+      if (!radiance.engine || !Number.isInteger(radiance.sensorCount) || radiance.sensorCount <= 0 || !/^[a-f0-9]{64}$/i.test(radiance.modelSha256 || '')) return 'Radiance 证据字段无效';
+    }
     return '';
   }
 

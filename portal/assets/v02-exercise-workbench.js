@@ -114,10 +114,25 @@
   let speed = 1;
   const out = root.querySelector('#v02-ex-content');
   const phaseName = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1])?.name || '动作周期';
+  const definition = {
+    aliases: data.aliases,
+    category: data.category,
+    equipment: data.equipment,
+    difficulty: data.difficulty,
+    steps: data.steps,
+    variants: data.variants,
+    muscles: data.muscles,
+    joints: data.joints,
+    dynamics: {
+      capability: 'PROJECT_2D_TEACHING_ILLUSTRATION',
+      controls: ['PLAY', 'PAUSE', 'SPEED', 'PHASE_SCRUB'],
+      phases: data.phases,
+    },
+  };
   const catalog = [
-    {id: data.upstream.exerciseId, exerciseId: data.id, name: data.name, upstreamName: data.upstream.exerciseName, author: data.upstream.recordAuthor, license: data.upstream.recordLicense, status: data.upstream.integrationStatus, description: data.upstream.officialDescription, media: '许可图片已固化', image: data.upstream.officialImageUrl},
-    {id: data.upstreamVariant.exerciseId, exerciseId: 'exercise:wger:1964:wide-push-up', name: data.upstreamVariant.name, upstreamName: data.upstreamVariant.exerciseName, author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, status: data.upstreamVariant.integrationStatus, description: data.upstreamVariant.officialDescription, media: '当前记录无上游媒体', image: ''},
-    {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, upstreamName: data.licensedMediaVariant.exerciseName, author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, status: data.licensedMediaVariant.integrationStatus, description: 'The clap push-up is an explosive upper body movement that builds power and fast-twitch muscle strength. It adds a plyometric challenge to the traditional push-up by requiring the hands to leave the ground mid-rep.', media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`, image: data.licensedMediaVariant.imageUrl},
+    {id: data.upstream.exerciseId, exerciseId: data.id, name: data.name, upstreamName: data.upstream.exerciseName, source: data.upstream.project, sourceUrl: data.upstream.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.upstream.recordAuthor, license: data.upstream.recordLicense, status: data.upstream.integrationStatus, description: data.upstream.officialDescription, media: '许可图片已固化', image: data.upstream.officialImageUrl},
+    {id: data.upstreamVariant.exerciseId, exerciseId: 'exercise:wger:1964:wide-push-up', name: data.upstreamVariant.name, upstreamName: data.upstreamVariant.exerciseName, source: data.upstream.project, sourceUrl: data.upstreamVariant.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, status: data.upstreamVariant.integrationStatus, description: data.upstreamVariant.officialDescription, media: '当前记录无上游媒体', image: ''},
+    {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, upstreamName: data.licensedMediaVariant.exerciseName, source: data.upstream.project, sourceUrl: data.licensedMediaVariant.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, status: data.licensedMediaVariant.integrationStatus, description: 'The clap push-up is an explosive upper body movement that builds power and fast-twitch muscle strength. It adds a plyometric challenge to the traditional push-up by requiring the hands to leave the ground mid-rep.', media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`, image: data.licensedMediaVariant.imageUrl},
   ];
 
   function renderDossierPreview() {
@@ -125,7 +140,7 @@
     const preview = out.querySelector('#v02-ex-dossier-preview');
     if (!record || !preview) return;
     const note = out.querySelector('#v02-ex-notes')?.value || '';
-    const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({record, note, phase, phaseName: phaseName(phase), speed, guidance: data.provenance.evidenceStatus});
+    const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({record, definition, note, phase, phaseName: phaseName(phase), speed, guidance: data.provenance.evidenceStatus});
     preview.replaceChildren();
     const heading = document.createElement('h4');
     heading.textContent = '当前动作档案预览';
@@ -256,6 +271,7 @@
       const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
       const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({
         record,
+        definition,
         note: out.querySelector('#v02-ex-notes').value,
         phase,
         phaseName: phaseName(phase),
