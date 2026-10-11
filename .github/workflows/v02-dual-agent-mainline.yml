@@ -1,0 +1,108 @@
+name: V0.2 dual-agent mainline sprint
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/v02-dual-agent-mainline.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: v02-dual-agent-mainline
+  cancel-in-progress: false
+jobs:
+  mainline:
+    name: ${{ matrix.agent }} / ${{ matrix.track }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - agent: Qwen
+            track: A01
+            file: portal/assets/v02-exercise-workbench.js
+            model: openai/qwen3.8-flash
+            base: https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+          - agent: DeepSeek
+            track: B01
+            file: portal/assets/v02-residence-workbench.js
+            model: openai/deepseek-flash
+            base: https://api.deepseek.com
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Set task and check credential
+        env:
+          QWEN_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          DEEPSEEK_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TRACK: ${{ matrix.track }}
+        run: |
+          if [ "$TRACK" = A01 ]; then
+            test -n "$QWEN_KEY" || { echo "::error::Qwen secret missing"; exit 1; }
+            cat > /tmp/task.txt <<'TASK'
+          Mainline A01 increment, NOT A01 acceptance. Edit ONLY portal/assets/v02-exercise-workbench.js.
+          Add a visible, accessible short training session notes input with a local-only save and reload
+          feature keyed to the current exercise. Clearly label notes as user observations, not clinical
+          evaluation or verified upstream data. Preserve existing animation, exercise sources, licensed
+          upstream records, checklist and all provenance disclosures. Do not add dependencies or network calls.
+          TASK
+          else
+            test -n "$DEEPSEEK_KEY" || { echo "::error::DeepSeek secret missing"; exit 1; }
+            cat > /tmp/task.txt <<'TASK'
+          Mainline B01 increment, NOT B01 acceptance. Edit ONLY portal/assets/v02-residence-workbench.js.
+          Add an accessible, visible summary of actual attached material provenance (count, sources and
+          whether any material is missing an authorization/license) based on existing materialFiles.
+          Do not invent physical observations or imply that file metadata proves residence geometry.
+          Preserve Case ID, revisions, SHA-256, import/export, evidence ledger and missing-field prompts.
+          No new dependencies, no external services or network calls.
+          TASK
+          fi
+      - name: Install pinned Aider
+        run: python -m pip install 'aider-chat==0.86.1'
+      - name: Execute independent bounded agent
+        env:
+          QWEN_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          DEEPSEEK_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TRACK: ${{ matrix.track }}
+          OPENAI_API_BASE: ${{ matrix.base }}
+          AIDER_ANALYTICS: 'false'
+          AIDER_CHECK_UPDATE: 'false'
+        run: |
+          if [ "$TRACK" = A01 ]; then export OPENAI_API_KEY="$QWEN_KEY"; else export OPENAI_API_KEY="$DEEPSEEK_KEY"; fi
+          git config user.name "v02-agent[bot]"
+          git config user.email "v02-agent[bot]@users.noreply.github.com"
+          git switch -c "agent/mainline-${{ matrix.track }}-${{ github.run_id }}"
+          timeout 150s aider --model "${{ matrix.model }}" --message-file /tmp/task.txt \
+            --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
+            --map-tokens 0 --no-check-update --no-show-model-warnings "${{ matrix.file }}"
+      - name: Scope, syntax and integration gate
+        run: |
+          test "$(git diff --name-only | wc -l)" -eq 1
+          test "$(git diff --name-only)" = "${{ matrix.file }}"
+          git diff --quiet && { echo "::error::No product code change"; exit 1; }
+          node --check "${{ matrix.file }}"
+          node scripts/v02-verify.mjs
+          git diff --check
+      - name: Save evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mainline-${{ matrix.track }}-${{ github.run_id }}
+          path: artifacts/v02/verification.json
+          if-no-files-found: ignore
+      - name: Submit isolated draft PR for browser checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add "${{ matrix.file }}"
+          git commit -m "feat(${{ matrix.track }}): bounded ${{ matrix.agent }} mainline increment"
+          git push origin "HEAD:agent/mainline-${{ matrix.track }}-${{ github.run_id }}"
+          gh pr create --draft --base main --head "agent/mainline-${{ matrix.track }}-${{ github.run_id }}" \
+            --title "${{ matrix.track }}: ${{ matrix.agent }} mainline increment (review required)" \
+            --body "Mainline agent sprint. Independent code scope and baseline, static gate, browser PR verification required; no automatic merge or product acceptance. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
