@@ -127,6 +127,12 @@
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>
       <p><b>常见调整：</b>${data.variants.map(x => `${x.name}（${x.relation}）`).join('、')}</p>
       <fieldset id="v02-form-checklist"><legend>常见错误自查（项目原创教学提示，非医学诊断）</legend><ul>${data.formErrors.map((item, i) => `<li><input type="checkbox" id="v02-form-${i}"><label for="v02-form-${i}"><b>错误：</b>${item.error}；<b>纠正：</b>${item.correction}</label></li>`).join('')}</ul></fieldset>
+      <section id="v02-ex-notes-section">
+        <label for="v02-ex-notes">训练笔记</label> <span class="muted">用户笔记</span>
+        <textarea id="v02-ex-notes" rows="3" placeholder="记录训练感受、次数或问题（仅保存在本机）" style="width:100%;max-width:620px"></textarea>
+        <button class="btn ghost" id="v02-ex-notes-save" type="button">保存笔记</button>
+        <span id="v02-ex-notes-status" class="muted" aria-live="polite"></span>
+      </section>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-upstream"><h4>成熟开放动作记录｜已导入</h4><p><b>${data.upstream.project}</b>｜${data.upstream.exerciseName}｜record ${data.upstream.exerciseId}｜UUID <code>${data.upstream.exerciseUuid}</code><br>
         记录许可：<a href="${data.upstream.recordLicenseUrl}">${data.upstream.recordLicense}</a>｜作者 ${data.upstream.recordAuthor}｜<a href="${data.upstream.apiEvidenceUrl}">当前API</a>｜<a href="${data.upstream.snapshotUrl}">本仓快照</a><br>
@@ -145,11 +151,44 @@
     out.querySelector('#v02-stop').onclick = () => clearInterval(timer);
     out.querySelector('#v02-speed').onchange = event => { speed = Number(event.target.value); root.dataset.speed = String(speed); };
     out.querySelector('#v02-phase').oninput = event => { phase = Number(event.target.value); draw(); };
+
+    const notesKey = `zero-one.exercise.notes:${root.dataset.selectedExerciseId || data.id}`;
+    const notesInput = out.querySelector('#v02-ex-notes');
+    const notesSave = out.querySelector('#v02-ex-notes-save');
+    const notesStatus = out.querySelector('#v02-ex-notes-status');
+
+    try {
+      notesInput.value = localStorage.getItem(notesKey) || '';
+    } catch (error) {
+      notesStatus.textContent = '本地存储不可用';
+    }
+
+    notesSave.onclick = () => {
+      const currentNotesKey = `zero-one.exercise.notes:${root.dataset.selectedExerciseId || data.id}`;
+      try {
+        localStorage.setItem(currentNotesKey, notesInput.value);
+        notesStatus.textContent = '已保存';
+      } catch (error) {
+        notesStatus.textContent = '无法保存';
+      }
+    };
+
     out.querySelector('#v02-load-wide').onclick = () => {
       root.dataset.selectedExerciseId = `exercise:wger:${data.upstreamVariant.exerciseId}:wide-push-up`;
       root.dataset.variantStatus = data.upstreamVariant.integrationStatus;
       out.querySelector('#v02-variant-state').textContent = `${data.upstreamVariant.exerciseName} 已选择｜${data.upstreamVariant.recordLicense}｜作者 ${data.upstreamVariant.recordAuthor}｜无上游媒体`;
+
+      const variantNotesKey = `zero-one.exercise.notes:${root.dataset.selectedExerciseId}`;
+      const variantNotesInput = out.querySelector('#v02-ex-notes');
+      const variantNotesStatus = out.querySelector('#v02-ex-notes-status');
+      try {
+        variantNotesInput.value = localStorage.getItem(variantNotesKey) || '';
+        variantNotesStatus.textContent = '';
+      } catch (error) {
+        variantNotesStatus.textContent = '本地存储不可用';
+      }
     };
+
     root.dataset.exerciseId = data.id;
     root.dataset.provenance = data.provenance.evidenceStatus;
     root.dataset.upstreamStatus = data.upstream.integrationStatus;
