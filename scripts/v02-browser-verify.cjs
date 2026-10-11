@@ -38,6 +38,9 @@ const record = (track, name, passed, evidence) => {
   record('A01', 'upstream links visible', await page.locator('#v02-upstream a').count() === 3, 'record license, live API and repository snapshot links');
   record('A01', 'licensed media visible', await page.locator('#v02-upstream-media img').evaluate(image => image.complete && image.naturalWidth > 0), 'wger image loaded with visible attribution');
   record('A01', 'three licensed records visible', await page.locator('#v02-exercise').getAttribute('data-variant-count') === '3' && (await page.locator('#v02-upstream-variant').innerText()).includes('record 1964') && (await page.locator('#v02-licensed-media-variant').innerText()).includes('record 1554'), 'wger Push-Up 1551, Wide 1964, Clap 1554');
+  await page.locator('#v02-catalog-select').selectOption('1554');
+  await page.locator('#v02-catalog-open').click();
+  record('A01', 'licensed catalog selection is traceable', await page.locator('#v02-exercise').getAttribute('data-selected-exercise-id') === 'exercise:wger:1554:clap-push-up' && await page.locator('#v02-exercise').getAttribute('data-selected-record-license') === 'CC-BY-SA 4' && (await page.locator('#v02-catalog-state').innerText()).includes('7e6f3da44a68a285'), await page.locator('#v02-catalog-state').innerText());
   await page.locator('#v02-load-wide').click();
   record('A01', 'second variant selection works', await page.locator('#v02-exercise').getAttribute('data-variant-status') === 'LICENSED_VARIANT_IMPORTED' && (await page.locator('#v02-variant-state').innerText()).includes('无上游媒体'), await page.locator('#v02-variant-state').innerText());
   await page.locator('#v02-load-clap').click();
@@ -77,6 +80,8 @@ const record = (track, name, passed, evidence) => {
   record('B01', 'archive preview decodes', await page.locator('#r-archive-preview img').evaluate(image => image.complete && image.naturalWidth === 9652 && image.naturalHeight === 7584), '9652x7584 PNG decoded');
   record('B01', 'same-case depthmapX result visible', await page.locator('#v02-residence').getAttribute('data-engine-geometry') === 'MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW' && await page.locator('#v02-residence').getAttribute('data-depthmap-status') === 'DEPTHMAPX_0_9_1_VGA_708_POINTS' && await page.locator('#v02-residence').getAttribute('data-depthmap-point-count') === '708', await page.locator('#r-result').innerText());
   record('B01', 'same-case Radiance result visible', await page.locator('#v02-residence').getAttribute('data-radiance-status') === 'RADIANCE_6_0_2_CLEAR_SKY_80_SENSORS' && await page.locator('#v02-residence').getAttribute('data-radiance-sensor-count') === '80' && await page.locator('#v02-residence').getAttribute('data-cross-layer-equivalence') === 'SAME_CASE_ID_AND_PLAN_TRACE_WITH_EXPLICIT_VERTICAL_ASSUMPTIONS' && (await page.locator('#r-result').innerText()).includes('显式假设'), await page.locator('#r-result').innerText());
+  record('B01', 'Radiance sensors render on calibrated same-case geometry', await page.locator('#r-radiance-map [data-radiance-sensor]').count() === 80 && await page.locator('#r-radiance-map [data-radiance-window]').count() === 6 && await page.locator('#v02-residence').getAttribute('data-geometry-trace-case') === 'residence:habs-dc-97:frederick-douglass-house' && (await page.locator('#r-radiance-legend').innerText()).includes('不是原图像素级配准'), '80 sensors + 6 assumed south windows on trace-calibrated geometry');
+  await page.locator('#r-engine-overlay').screenshot({ path: path.join(artifactDir, 'residence-b01-radiance-map.png') });
   await page.locator('#r-new').click();
   residenceId = await page.locator('#v02-residence').getAttribute('data-residence-id');
 

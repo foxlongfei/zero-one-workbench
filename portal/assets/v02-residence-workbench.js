@@ -30,7 +30,10 @@
       <button class="btn ghost" id="r-new">新建另一住宅</button>
     </div>
     <div id="r-result" class="result" aria-live="polite"></div>
-    <figure id="r-archive-preview" hidden><img alt="Frederick Douglass House HABS 首层平面图" style="max-width:100%;height:auto"><figcaption></figcaption></figure>
+    <figure id="r-archive-preview" hidden><img alt="Frederick Douglass House HABS 首层平面图" style="max-width:100%;height:auto"><figcaption></figcaption>
+      <section id="r-engine-overlay" hidden><h3>同案校准几何分析图｜Radiance 传感点</h3><svg id="r-radiance-map" viewBox="0 0 760 520" role="img" aria-label="HABS同案校准几何与Radiance照度传感点" style="width:100%;max-width:760px;background:#f2f5f0;border-radius:12px"></svg>
+        <p id="r-radiance-legend" class="muted"></p></section>
+    </figure>
     <div id="r-next-question" class="result" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
@@ -121,6 +124,37 @@
         };
       }
     }
+  }
+
+  function renderRadianceMap(trace, radiance) {
+    if (trace.caseId !== radiance.caseId) throw Error('geometry trace and Radiance case mismatch');
+    const [originX, originY] = trace.calibration.originPixel;
+    const xScale = trace.calibration.x.metresPerPixel;
+    const yScale = trace.calibration.y.metresPerPixel;
+    const widthM = trace.calibration.x.metres;
+    const depthM = trace.calibration.y.metres;
+    const point = ([x, y]) => [40 + ((x - originX) * xScale / widthM) * 680, 480 - ((originY - y) * yScale / depthM) * 440];
+    const polygon = trace.exteriorPolylinePixels.map(item => point(item).map(value => value.toFixed(1)).join(',')).join(' ');
+    const min = radiance.analysis.summary.minimumLux;
+    const max = radiance.analysis.summary.maximumLux;
+    const sensor = item => {
+      const x = 40 + (item.xM / widthM) * 680;
+      const y = 480 - (item.yM / depthM) * 440;
+      const ratio = Math.max(0, Math.min(1, (item.illuminanceLux - min) / (max - min || 1)));
+      const hue = Math.round(220 - ratio * 220);
+      return `<circle data-radiance-sensor="${item.id}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="hsl(${hue} 82% 48%)"><title>${item.id}｜${item.illuminanceLux} lux</title></circle>`;
+    };
+    const windowLine = item => {
+      const x1 = 40 + (item.startM / widthM) * 680;
+      const x2 = 40 + (item.endM / widthM) * 680;
+      return `<line data-radiance-window="${item.id}" x1="${x1.toFixed(1)}" y1="480" x2="${x2.toFixed(1)}" y2="480" stroke="#2b82c9" stroke-width="8"><title>${item.id}｜南向窗位人工估计</title></line>`;
+    };
+    root.querySelector('#r-radiance-map').innerHTML = `<polygon points="${polygon}" fill="#fff" stroke="#1b5137" stroke-width="4"/>${radiance.model.windows.map(windowLine).join('')}${radiance.analysis.sensors.map(sensor).join('')}<path d="M720 70V25m0 0-10 18m10-18 10 18" stroke="#24442d" stroke-width="3" fill="none"/><text x="706" y="90" fill="#24442d">北*</text><text x="40" y="510" fill="#24442d">蓝：${min} lux</text><text x="650" y="510" text-anchor="end" fill="#24442d">红：${max} lux</text>`;
+    root.querySelector('#r-engine-overlay').hidden = false;
+    root.querySelector('#r-radiance-legend').textContent = `80 个同案传感点；圆点悬停可读照度。轮廓来自 HABS 人工矢量描线与标注尺度校准；南窗位置、北向、层高与窗高均为待第二人 CAD/现场复核的显式假设，不是原图像素级配准。`;
+    root.dataset.radianceMapPoints = String(radiance.analysis.sensors.length);
+    root.dataset.radianceMapWindows = String(radiance.model.windows.length);
+    root.dataset.geometryTraceCase = trace.caseId;
   }
 
   function check() {
@@ -218,6 +252,10 @@
       if (!radianceResponse.ok) throw Error(`Radiance run HTTP ${radianceResponse.status}`);
       const radiance = await radianceResponse.json();
       if (radiance.caseId !== record.id || radiance.passed !== true) throw Error('Radiance same-case evidence mismatch');
+      const traceResponse = await fetch('../research/depthmap/habs-dc-97-first-floor-trace.json');
+      if (!traceResponse.ok) throw Error(`geometry trace HTTP ${traceResponse.status}`);
+      const trace = await traceResponse.json();
+      renderRadianceMap(trace, radiance);
       root.dataset.depthmapPointCount = String(run.output.pointCount);
       root.dataset.depthmapOutputSha = run.output.sha256;
       root.dataset.radianceSensorCount = String(radiance.analysis.sensorCount);

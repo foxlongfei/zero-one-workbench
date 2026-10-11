@@ -114,6 +114,21 @@
   let speed = 1;
   const out = root.querySelector('#v02-ex-content');
   const phaseName = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1])?.name || '动作周期';
+  const catalog = [
+    {id: data.upstream.exerciseId, exerciseId: data.id, name: data.name, author: data.upstream.recordAuthor, license: data.upstream.recordLicense, status: data.upstream.integrationStatus, media: '许可图片已固化'},
+    {id: data.upstreamVariant.exerciseId, exerciseId: 'exercise:wger:1964:wide-push-up', name: data.upstreamVariant.name, author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, status: data.upstreamVariant.integrationStatus, media: '当前记录无上游媒体'},
+    {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, status: data.licensedMediaVariant.integrationStatus, media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`},
+  ];
+
+  function selectCatalogRecord(recordId) {
+    const record = catalog.find(item => item.id === Number(recordId));
+    if (!record) return;
+    root.dataset.selectedExerciseId = record.exerciseId;
+    root.dataset.selectedRecordLicense = record.license;
+    root.dataset.selectedRecordMedia = record.media;
+    out.querySelector('#v02-catalog-select').value = String(record.id);
+    out.querySelector('#v02-catalog-state').textContent = `${record.name}｜wger record ${record.id}｜${record.license}｜作者 ${record.author}｜${record.media}`;
+  }
 
   function draw() {
     const s = Math.sin(phase * Math.PI / 100);
@@ -147,6 +162,12 @@
       <p><b>常见调整：</b>${data.variants.map(x => `${x.name}（${x.relation}）`).join('、')}</p>
       <fieldset id="v02-form-checklist"><legend>常见错误自查（项目原创教学提示，非医学诊断）</legend><ul>${data.formErrors.map((item, i) => `<li><input type="checkbox" id="v02-form-${i}"><label for="v02-form-${i}"><b>错误：</b>${item.error}；<b>纠正：</b>${item.correction}</label></li>`).join('')}</ul></fieldset>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
+      <section id="v02-licensed-catalog"><h4>可操作许可动作目录｜3 条真实 wger 记录</h4>
+        <p><label for="v02-catalog-select">动作记录</label> <select id="v02-catalog-select">${catalog.map(item => `<option value="${item.id}">${item.name}｜record ${item.id}</option>`).join('')}</select>
+        <button class="btn ghost" id="v02-catalog-open" type="button">载入所选证据</button></p>
+        <p id="v02-catalog-state" class="status" aria-live="polite"></p>
+        <table><thead><tr><th>record</th><th>动作</th><th>许可/作者</th><th>媒体证据</th></tr></thead><tbody>${catalog.map(item => `<tr data-wger-record="${item.id}"><td>${item.id}</td><td>${item.name}</td><td>${item.license}｜${item.author}</td><td>${item.media}</td></tr>`).join('')}</tbody></table>
+      </section>
       <section id="v02-upstream"><h4>成熟开放动作记录｜已导入</h4><p><b>${data.upstream.project}</b>｜${data.upstream.exerciseName}｜record ${data.upstream.exerciseId}｜UUID <code>${data.upstream.exerciseUuid}</code><br>
         记录许可：<a href="${data.upstream.recordLicenseUrl}">${data.upstream.recordLicense}</a>｜作者 ${data.upstream.recordAuthor}｜<a href="${data.upstream.apiEvidenceUrl}">当前API</a>｜<a href="${data.upstream.snapshotUrl}">本仓快照</a><br>
         接入状态：<code>${data.upstream.integrationStatus}</code><br>${data.upstream.limitation}</p></section>
@@ -169,13 +190,14 @@
     out.querySelector('#v02-stop').onclick = () => clearInterval(timer);
     out.querySelector('#v02-speed').onchange = event => { speed = Number(event.target.value); root.dataset.speed = String(speed); };
     out.querySelector('#v02-phase').oninput = event => { phase = Number(event.target.value); draw(); };
+    out.querySelector('#v02-catalog-open').onclick = () => selectCatalogRecord(out.querySelector('#v02-catalog-select').value);
     out.querySelector('#v02-load-wide').onclick = () => {
-      root.dataset.selectedExerciseId = `exercise:wger:${data.upstreamVariant.exerciseId}:wide-push-up`;
+      selectCatalogRecord(data.upstreamVariant.exerciseId);
       root.dataset.variantStatus = data.upstreamVariant.integrationStatus;
       out.querySelector('#v02-variant-state').textContent = `${data.upstreamVariant.exerciseName} 已选择｜${data.upstreamVariant.recordLicense}｜作者 ${data.upstreamVariant.recordAuthor}｜无上游媒体`;
     };
     out.querySelector('#v02-load-clap').onclick = () => {
-      root.dataset.selectedExerciseId = `exercise:wger:${data.licensedMediaVariant.exerciseId}:clap-push-up`;
+      selectCatalogRecord(data.licensedMediaVariant.exerciseId);
       root.dataset.mediaVariantStatus = data.licensedMediaVariant.integrationStatus;
       out.querySelector('#v02-clap-state').textContent = `${data.licensedMediaVariant.exerciseName} 已选择｜记录与图片 ${data.licensedMediaVariant.recordLicense}｜作者 ${data.licensedMediaVariant.recordAuthor}`;
     };
@@ -183,6 +205,7 @@
     root.dataset.provenance = data.provenance.evidenceStatus;
     root.dataset.upstreamStatus = data.upstream.integrationStatus;
     root.dataset.variantCount = '3';
+    selectCatalogRecord(data.upstream.exerciseId);
     draw();
   }
 
