@@ -7,6 +7,7 @@ on:
       - 'research/depthmap/habs-dc-97-first-floor.dxf'
       - 'scripts/build-habs-depthmap-input.mjs'
       - 'scripts/summarize-habs-depthmap.mjs'
+      - 'scripts/verify-png-integrity.mjs'
       - '.github/workflows/depthmap-prototype.yml'
   workflow_dispatch:
 permissions:
@@ -27,7 +28,7 @@ jobs:
           cp artifacts/v02-browser/upstream/habs-dc-97-sheet-2-of-8.png portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png
           printf '%s  %s\n' '7e6f3da44a68a285da8d987ad2ebc47f636bf17555e911d7dce0e1bb9be8ad47' 'portal/assets/vendor/wger-clap-push-up-1554.png' | sha256sum --check
           printf '%s  %s\n' '9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315' 'portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png' | sha256sum --check
-          identify portal/assets/vendor/wger-clap-push-up-1554.png portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png
+          node scripts/verify-png-integrity.mjs portal/assets/vendor/wger-clap-push-up-1554.png portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png
       - name: Download depthmapX CLI v0.9.1
         run: |
           curl -L -o depthmapXcli https://github.com/SpaceGroupUCL/depthmapX/releases/download/v0.9.1/depthmapXcli_linux64
