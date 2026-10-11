@@ -31,18 +31,18 @@ async function refresh(){
  const runs=data.workflow_runs||[],open=prs||[];
  const counts={};for(const r of runs){const s=status(r);counts[s]=(counts[s]||0)+1}
  el('metrics').innerHTML=['success','failure','action_required','cancelled','in_progress','queued'].map(k=>'<div class="metric"><strong class="'+(k==='failure'?'bad':k==='success'?'ok':'wait')+'">'+(counts[k]||0)+'</strong>'+esc(k)+'</div>').join('');
- const candidates=open.filter(p=>p.draft||p.mergeable_state==='blocked');
  const prChecks=await Promise.all(open.slice(0,15).map(async p=>{try{const checks=await get('/commits/'+encodeURIComponent(p.head.sha)+'/check-runs?per_page=100');return {p,checks:checks.check_runs||[]}}catch(e){return {p,checks:[],error:e.message}}}));
  const approvals=prChecks.filter(x=>x.p.draft||x.checks.some(c=>['action_required','failure','timed_out'].includes(c.conclusion)||c.status!=='completed'));
- el('approvals').innerHTML=approvals.length?'<div class="scroll"><table><thead><tr><th>PR</th><th>检查 / 需要处理</th><th>操作</th></tr></thead><tbody>'+approvals.map(({p,checks,error})=>{
+ const approvalRuns=runs.filter(r=>status(r)==='action_required');
+ el('approvals').innerHTML=(approvalRuns.length?'<p class="wait"><b>需要在GitHub检查是否批准：</b> '+approvalRuns.map(r=>runLink(r)).join(' · ')+'</p>':'')+(approvals.length?'<div class="scroll"><table><thead><tr><th>PR</th><th>检查 / 需要处理</th><th>操作</th></tr></thead><tbody>'+approvals.map(({p,checks,error})=>{
  const blocked=checks.filter(c=>c.conclusion==='action_required');
  const failed=checks.filter(c=>['failure','timed_out'].includes(c.conclusion));
  const pending=checks.filter(c=>c.status!=='completed');
  const reason=[p.draft?'草稿PR（待审查）':'',blocked.length?'待授权检查 '+blocked.length+' 项':'',failed.length?'失败检查 '+failed.length+' 项':'',pending.length?'运行中 '+pending.length+' 项':'',error?'检查读取失败':''].filter(Boolean).join('；')||'需核查';
  return '<tr><td>'+href(p.html_url,'#'+p.number+' '+p.title)+'</td><td>'+esc(reason)+(blocked.length?'<br>'+blocked.slice(0,3).map(c=>href(c.html_url,c.name)).join(' · '):'')+'</td><td>'+href(p.html_url+'/checks','打开 Checks / 审批 ↗')+'</td></tr>'
- }).join('')+'</tbody></table></div>':'当前打开PR中未发现草稿或失败/待授权检查；这不代表不存在其他待审批工作流。';
+ }).join('')+'</tbody></table></div>':'当前打开PR中未发现草稿或失败/待授权检查；这不代表不存在其他待审批工作流。');
  const findRun=(re)=>runs.find(r=>re.test(r.name))||null;
- const rows=[['Q博士 / A01',findRun(/dual-agent|open-source coding agent pilot|Qwen/i),'代码 → PR浏览器验证 → 人工审查'],['D博士 / B01',findRun(/DeepSeek|dual-agent/i),'代码 → PR浏览器验证 → 人工审查']];
+ const rows=[['Q博士 / A01',findRun(/dual-agent|open-source coding agent pilot|Qwen/i),'核查Qwen任务步骤 → PR浏览器验证 → 人工审查'],['D博士 / B01',findRun(/DeepSeek/i),'核查DeepSeek任务步骤 → PR浏览器验证 → 人工审查']];
  el('tracks').innerHTML=rows.map(([name,r,next])=>'<tr><td>'+esc(name)+'</td><td>'+(r?runLink(r):'最近30次无记录')+'</td><td>'+(r?badge(status(r)):'未知')+'</td><td>'+esc(next)+'；'+href(root+'/issues/3','主线验收')+'</td></tr>').join('');
  const priority={action_required:0,failure:1,timed_out:1,in_progress:2,queued:2,cancelled:3,success:4};
  const sorted=runs.slice().sort((a,b)=>(priority[status(a)]??3)-(priority[status(b)]??3)||new Date(b.created_at)-new Date(a.created_at));
