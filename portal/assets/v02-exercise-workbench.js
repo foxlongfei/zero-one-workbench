@@ -122,6 +122,10 @@
     difficulty: data.difficulty,
     steps: data.steps,
     variants: data.variants,
+    sourceVariants: [
+      {exerciseId: 'exercise:wger:1964:wide-push-up', wgerId: data.upstreamVariant.exerciseId, name: data.upstreamVariant.name, relation: 'LICENSED_WGER_VARIANT_OF_STANDARD_PUSH_UP', source: data.upstream.project, sourceUrl: data.upstreamVariant.snapshotUrl, author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, mediaStatus: data.upstreamVariant.mediaStatus},
+      {exerciseId: 'exercise:wger:1554:clap-push-up', wgerId: data.licensedMediaVariant.exerciseId, name: data.licensedMediaVariant.name, relation: 'LICENSED_WGER_PLYOMETRIC_VARIANT_OF_STANDARD_PUSH_UP', source: data.upstream.project, sourceUrl: data.licensedMediaVariant.snapshotUrl, author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, mediaStatus: data.licensedMediaVariant.mediaStatus},
+    ],
     muscles: data.muscles,
     joints: data.joints,
     dynamics: {
@@ -151,6 +155,7 @@
       ['Exercise ID', record.exerciseId],
       ['上游记录', `wger ${record.id}｜${record.license}｜作者 ${record.author}`],
       ['教学映射', `${record.variantRelation}｜${definition.guidanceScope}｜${definition.dynamics.scope}`],
+      ['有来源变式', definition.sourceVariants.map(item => `${item.name} / wger ${item.wgerId} / ${item.license}`).join('；')],
       ['媒体证据', `${record.mediaEvidence.status}｜${record.mediaEvidence.sha256 ? `SHA-256 ${record.mediaEvidence.sha256}` : 'NO_UPSTREAM_MEDIA'}`],
       ['训练状态', `${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×`],
       ['当前笔记', note || '未填写'],

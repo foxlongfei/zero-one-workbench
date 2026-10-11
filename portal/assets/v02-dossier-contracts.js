@@ -20,6 +20,7 @@
       ['definition.difficulty', Boolean(dossier?.definition?.difficulty)],
       ['definition.steps', Array.isArray(dossier?.definition?.steps) && dossier.definition.steps.length > 0],
       ['definition.variants', Array.isArray(dossier?.definition?.variants) && dossier.definition.variants.length > 0],
+      ['definition.sourceVariants', Array.isArray(dossier?.definition?.sourceVariants) && dossier.definition.sourceVariants.length >= 2 && dossier.definition.sourceVariants.every(item => typeof item.exerciseId === 'string' && item.exerciseId.startsWith('exercise:wger:') && Number.isInteger(item.wgerId) && item.wgerId > 0 && item.source && item.license)],
       ['definition.muscles.primary', Array.isArray(dossier?.definition?.muscles?.primary) && dossier.definition.muscles.primary.length > 0],
       ['definition.muscles.secondary', Array.isArray(dossier?.definition?.muscles?.secondary) && dossier.definition.muscles.secondary.length > 0],
       ['definition.muscles.stabilizers', Array.isArray(dossier?.definition?.muscles?.stabilizers) && dossier.definition.muscles.stabilizers.length > 0],
@@ -64,6 +65,7 @@
         difficulty: String(definition?.difficulty || ''),
         steps: Array.isArray(definition?.steps) ? [...definition.steps] : [],
         variants: Array.isArray(definition?.variants) ? definition.variants.map(item => ({...item})) : [],
+        sourceVariants: Array.isArray(definition?.sourceVariants) ? definition.sourceVariants.map(item => ({...item})) : [],
         muscles: {
           primary: Array.isArray(definition?.muscles?.primary) ? [...definition.muscles.primary] : [],
           secondary: Array.isArray(definition?.muscles?.secondary) ? [...definition.muscles.secondary] : [],
@@ -100,14 +102,9 @@
     if (!record.fields || typeof record.fields !== 'object' || Array.isArray(record.fields)) return 'fields 必须是对象';
     if (record.evidence != null && (typeof record.evidence !== 'object' || Array.isArray(record.evidence))) return 'evidence 必须是对象';
     if (record.materialFiles != null && !Array.isArray(record.materialFiles)) return 'materialFiles 必须是数组';
-    if (Array.isArray(record.materialFiles)) {
-      for (let index = 0; index < record.materialFiles.length; index += 1) {
-        const item = record.materialFiles[index];
-        if (!item || typeof item !== 'object') return `materialFiles[${index}] 必须是对象`;
-        if (item.caseId !== record.id) return `materialFiles[${index}].caseId 与 Residence/Case ID 不一致`;
-        if (!item.name || !item.source || !item.license || !Number.isInteger(item.bytes) || item.bytes <= 0 || !/^[a-f0-9]{64}$/i.test(item.sha256 || '')) return `materialFiles[${index}] 证据字段无效`;
-      }
-    }
+    const materialAssessment = assessResidenceMaterialChain(record);
+    if (materialAssessment.errors.length) return materialAssessment.errors[0];
+    if (record.materialChain != null && (record.materialChain.status !== materialAssessment.status || record.materialChain.caseId !== materialAssessment.caseId || record.materialChain.materialCount !== materialAssessment.materialCount)) return 'materialChain 与材料清单不一致';
     if (record.revisions != null && !Array.isArray(record.revisions)) return 'revisions 必须是数组';
     if (record.boundaries != null && (typeof record.boundaries !== 'object' || Array.isArray(record.boundaries))) return 'boundaries 必须是对象';
     if (record.analysisChain != null && (typeof record.analysisChain !== 'object' || Array.isArray(record.analysisChain))) return 'analysisChain 必须是对象或 null';
@@ -125,6 +122,23 @@
     return '';
   }
 
+  function assessResidenceMaterialChain(record) {
+    const files = Array.isArray(record?.materialFiles) ? record.materialFiles : [];
+    const errors = [];
+    files.forEach((item, index) => {
+      if (!item || typeof item !== 'object') errors.push(`materialFiles[${index}] 必须是对象`);
+      else if (item.caseId !== record?.id) errors.push(`materialFiles[${index}].caseId 与 Residence/Case ID 不一致`);
+      else if (!item.name || !item.source || !item.license || !Number.isInteger(item.bytes) || item.bytes <= 0 || !/^[a-f0-9]{64}$/i.test(item.sha256 || '')) errors.push(`materialFiles[${index}] 证据字段无效`);
+    });
+    return Object.freeze({
+      status: errors.length ? 'INVALID_MATERIAL_CHAIN' : files.length ? 'VALID_SAME_CASE_MATERIAL_CHAIN' : 'NO_MATERIAL_CHAIN',
+      errors,
+      caseId: String(record?.id || ''),
+      materialCount: files.length,
+      sha256Count: files.filter(item => /^[a-f0-9]{64}$/i.test(item?.sha256 || '')).length,
+    });
+  }
+
   function assessResidenceAnalysisChain(record) {
     if (!record?.analysisChain) return Object.freeze({status: 'NO_ANALYSIS_CHAIN', errors: []});
     const validationError = validateResidenceImport(record);
@@ -138,7 +152,7 @@
     });
   }
 
-  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateResidenceImport, assessResidenceAnalysisChain});
+  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateResidenceImport, assessResidenceMaterialChain, assessResidenceAnalysisChain});
   root.ZeroOneDossierContracts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis === 'object' ? globalThis : this);
