@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>零一空间｜工程运行监控台</title><link rel="stylesheet" href="assets/style.css">
+<style>
+body{background:#f4f1e9;color:#20251f;font:15px/1.6 system-ui,sans-serif}.wrap{max-width:1150px;margin:auto;padding:22px}.card{background:#fffdf8;border:1px solid #d7d0c2;border-radius:14px;padding:18px;margin:14px 0}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.metric{min-width:145px;flex:1;padding:12px;background:#f2efe6;border-radius:10px}.metric strong{display:block;font-size:25px}.muted{color:#61695e}.bad{color:#9b3028}.ok{color:#256744}.wait{color:#8c5b16}a{color:#225e66}table{width:100%;border-collapse:collapse}th,td{padding:10px;text-align:left;border-bottom:1px solid #e0dbd1;vertical-align:top}th{background:#f5f1e9}.scroll{overflow:auto}button{padding:9px 16px;border-radius:9px;background:#344a40;color:white;border:0;cursor:pointer}button:disabled{opacity:.5}.tag{border-radius:20px;padding:2px 9px;background:#eee8db;white-space:nowrap}#error{white-space:pre-wrap}time{white-space:nowrap}@media(max-width:700px){.wrap{padding:10px}th,td{padding:6px;font-size:13px}}
+</style></head><body><main class="wrap">
+<h1>零一空间｜工程运行监控台</h1>
+<p class="muted">统一入口：自动施工、人工审批、运行故障、任务台账。数据从公开 GitHub API 读取；只读、不代替 GitHub 批准按钮。主线以 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/3">V0.2 Issue #3</a> 为准。</p>
+<nav class="card row"><a href="https://github.com/foxlongfei/zero-one-workbench/actions">全部工作流 ↗</a><a href="https://github.com/foxlongfei/zero-one-workbench/pulls">代码审查 / PR ↗</a><a href="https://github.com/foxlongfei/zero-one-workbench/issues/3">主线任务 #3 ↗</a><a href="index.html">项目入口</a><button id="refresh" type="button">刷新数据</button><span id="updated" class="muted" aria-live="polite">等待读取</span></nav>
+<p id="error" role="alert" class="bad"></p>
+<section class="row" id="metrics" aria-label="近30次工作流概览"></section>
+<section class="card"><h2>需要人工处理</h2><p class="muted">仅列出当前打开的PR及其检查结果。<b>action_required</b> 通常表示需要在 GitHub 审批工作流，但必须进入对应页面确认；不能从本页直接批准或合并。</p><div id="approvals" aria-live="polite">读取中…</div></section>
+<section class="card"><h2>主线施工台账</h2><p class="muted">展示最近运行证据，不将“工作流成功”自动判定为“A01/B01验收完成”。跨日任务以 Issue #3 的验收为准。</p><div class="scroll"><table><thead><tr><th>责任线</th><th>最近施工</th><th>结果</th><th>下一道关口</th></tr></thead><tbody id="tracks"></tbody></table></div></section>
+<section class="card"><h2>最近30次运行｜失败优先</h2><p class="muted">同一提交可能触发多个工作流；旧失败记录不会因新运行成功而消失。显示时间为浏览器本地时间。</p><div class="scroll"><table><thead><tr><th>时间</th><th>工作流 / 分支</th><th>状态</th><th>详情</th></tr></thead><tbody id="runs"></tbody></table></div></section>
+<section class="card"><h2>监控与质量规则</h2><p>红灯先看失败步骤；待批准先核对来源和权限；成功需同时确认代码改动、测试、浏览器验收及人工审查。任何自动PR都不得自动合并。此页面是实时视图，不是不可变审计档案；持久化证据应保存在Actions产物和Issue/PR记录中。</p><p class="muted">API不通或超限时显示读取失败，不会用旧数据冒充当前状态。公开API可能存在延迟；本页不使用GitHub令牌，不读取私有仓库。</p></section>
+</main><script>
+(()=>{'use strict';
+const owner='foxlongfei',repo='zero-one-workbench',root='https://github.com/'+owner+'/'+repo,api='https://api.github.com/repos/'+owner+'/'+repo;
+const el=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const href=(url,label)=>'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+'</a>';
+const status=x=>x.status!=='completed'?x.status:(x.conclusion||'unknown');
+const badge=s=>'<span class="tag '+(s==='success'?'ok':s==='failure'?'bad':'wait')+'">'+esc(s)+'</span>';
+const date=x=>new Date(x).toLocaleString('zh-CN');
+const get=async path=>{const response=await fetch(api+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});if(!response.ok)throw Error(path+'：HTTP '+response.status);return response.json()};
+const runLink=r=>href(r.html_url||root+'/actions/runs/'+r.id,'查看 #'+r.id);
+async function refresh(){
+ el('refresh').disabled=true;el('error').textContent='';el('updated').textContent='读取中…';
+ try{
+ const [data,prs]=await Promise.all([get('/actions/runs?per_page=30'),get('/pulls?state=open&per_page=50')]);
+ const runs=data.workflow_runs||[],open=prs||[];
+ const counts={};for(const r of runs){const s=status(r);counts[s]=(counts[s]||0)+1}
+ el('metrics').innerHTML=['success','failure','action_required','cancelled','in_progress','queued'].map(k=>'<div class="metric"><strong class="'+(k==='failure'?'bad':k==='success'?'ok':'wait')+'">'+(counts[k]||0)+'</strong>'+esc(k)+'</div>').join('');
+ const candidates=open.filter(p=>p.draft||p.mergeable_state==='blocked');
+ const prChecks=await Promise.all(open.slice(0,15).map(async p=>{try{const checks=await get('/commits/'+encodeURIComponent(p.head.sha)+'/check-runs?per_page=100');return {p,checks:checks.check_runs||[]}}catch(e){return {p,checks:[],error:e.message}}}));
+ const approvals=prChecks.filter(x=>x.p.draft||x.checks.some(c=>['action_required','failure','timed_out'].includes(c.conclusion)||c.status!=='completed'));
+ el('approvals').innerHTML=approvals.length?'<div class="scroll"><table><thead><tr><th>PR</th><th>检查 / 需要处理</th><th>操作</th></tr></thead><tbody>'+approvals.map(({p,checks,error})=>{
+ const blocked=checks.filter(c=>c.conclusion==='action_required');
+ const failed=checks.filter(c=>['failure','timed_out'].includes(c.conclusion));
+ const pending=checks.filter(c=>c.status!=='completed');
+ const reason=[p.draft?'草稿PR（待审查）':'',blocked.length?'待授权检查 '+blocked.length+' 项':'',failed.length?'失败检查 '+failed.length+' 项':'',pending.length?'运行中 '+pending.length+' 项':'',error?'检查读取失败':''].filter(Boolean).join('；')||'需核查';
+ return '<tr><td>'+href(p.html_url,'#'+p.number+' '+p.title)+'</td><td>'+esc(reason)+(blocked.length?'<br>'+blocked.slice(0,3).map(c=>href(c.html_url,c.name)).join(' · '):'')+'</td><td>'+href(p.html_url+'/checks','打开 Checks / 审批 ↗')+'</td></tr>'
+ }).join('')+'</tbody></table></div>':'当前打开PR中未发现草稿或失败/待授权检查；这不代表不存在其他待审批工作流。';
+ const findRun=(re)=>runs.find(r=>re.test(r.name))||null;
+ const rows=[['Q博士 / A01',findRun(/dual-agent|open-source coding agent pilot|Qwen/i),'代码 → PR浏览器验证 → 人工审查'],['D博士 / B01',findRun(/DeepSeek|dual-agent/i),'代码 → PR浏览器验证 → 人工审查']];
+ el('tracks').innerHTML=rows.map(([name,r,next])=>'<tr><td>'+esc(name)+'</td><td>'+(r?runLink(r):'最近30次无记录')+'</td><td>'+(r?badge(status(r)):'未知')+'</td><td>'+esc(next)+'；'+href(root+'/issues/3','主线验收')+'</td></tr>').join('');
+ const priority={action_required:0,failure:1,timed_out:1,in_progress:2,queued:2,cancelled:3,success:4};
+ const sorted=runs.slice().sort((a,b)=>(priority[status(a)]??3)-(priority[status(b)]??3)||new Date(b.created_at)-new Date(a.created_at));
+ el('runs').innerHTML=sorted.map(r=>'<tr><td><time>'+esc(date(r.created_at))+'</time></td><td>'+esc(r.name)+'<br><small class="muted">'+esc(r.head_branch||'')+'</small></td><td>'+badge(status(r))+'</td><td>'+runLink(r)+'</td></tr>').join('');
+ el('updated').textContent='已更新：'+date(new Date())+'｜最近 '+runs.length+' 次运行，开放PR '+open.length+' 个';
+ }catch(e){el('error').textContent='数据读取失败：'+e.message+'。请使用上方GitHub原始页面核对。';el('updated').textContent='读取失败';}
+ finally{el('refresh').disabled=false}
+}
+el('refresh').addEventListener('click',refresh);refresh();
+})();
+</script></body></html>
