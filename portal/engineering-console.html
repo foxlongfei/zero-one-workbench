@@ -11,6 +11,8 @@ body{background:#f4f1e9;color:#20251f;font:15px/1.6 system-ui,sans-serif}.wrap{m
 <section class="row" id="metrics" aria-label="近30次工作流概览"></section>
 <section class="card"><h2>需要人工处理</h2><p class="muted">仅列出当前打开的PR及其检查结果。<b>action_required</b> 通常表示需要在 GitHub 审批工作流，但必须进入对应页面确认；不能从本页直接批准或合并。</p><div id="approvals" aria-live="polite">读取中…</div></section>
 <section class="card"><h2>主线施工台账</h2><p class="muted">展示最近运行证据，不将“工作流成功”自动判定为“A01/B01验收完成”。跨日任务以 Issue #3 的验收为准。</p><div class="scroll"><table><thead><tr><th>责任线</th><th>最近施工</th><th>结果</th><th>下一道关口</th></tr></thead><tbody id="tracks"></tbody></table></div></section>
+<section class="card"><h2>可体验成果｜交付门</h2><p class="muted">只有合并、页面可打开、交互验证通过的功能才算正式交付。未验收的代码放在候选区，不能算可体验成果。</p>
+<div id="deliverables" aria-live="polite">读取中…</div></section>
 <section class="card"><h2>最近30次运行｜失败优先</h2><p class="muted">同一提交可能触发多个工作流；旧失败记录不会因新运行成功而消失。显示时间为浏览器本地时间。</p><div class="scroll"><table><thead><tr><th>时间</th><th>工作流 / 分支</th><th>状态</th><th>详情</th></tr></thead><tbody id="runs"></tbody></table></div></section>
 <section class="card"><h2>监控与质量规则</h2><p>红灯先看失败步骤；待批准先核对来源和权限；成功需同时确认代码改动、测试、浏览器验收及人工审查。任何自动PR都不得自动合并。此页面是实时视图，不是不可变审计档案；持久化证据应保存在Actions产物和Issue/PR记录中。</p><p class="muted">API不通或超限时显示读取失败，不会用旧数据冒充当前状态。公开API可能存在延迟；本页不使用GitHub令牌，不读取私有仓库。</p></section>
 </main><script>
@@ -27,7 +29,7 @@ const runLink=r=>href(r.html_url||root+'/actions/runs/'+r.id,'查看 #'+r.id);
 async function refresh(){
  el('refresh').disabled=true;el('error').textContent='';el('updated').textContent='读取中…';
  try{
- const [data,prs]=await Promise.all([get('/actions/runs?per_page=30'),get('/pulls?state=open&per_page=50')]);
+ const [data,prs,allPrs]=await Promise.all([get('/actions/runs?per_page=30'),get('/pulls?state=open&per_page=50'),get('/pulls?state=all&per_page=30')]);
  const runs=data.workflow_runs||[],open=prs||[];
  const counts={};for(const r of runs){const s=status(r);counts[s]=(counts[s]||0)+1}
  el('metrics').innerHTML=['success','failure','action_required','cancelled','in_progress','queued'].map(k=>'<div class="metric"><strong class="'+(k==='failure'?'bad':k==='success'?'ok':'wait')+'">'+(counts[k]||0)+'</strong>'+esc(k)+'</div>').join('');
@@ -41,6 +43,8 @@ async function refresh(){
  const reason=[p.draft?'草稿PR（待审查）':'',blocked.length?'待授权检查 '+blocked.length+' 项':'',failed.length?'失败检查 '+failed.length+' 项':'',pending.length?'运行中 '+pending.length+' 项':'',error?'检查读取失败':''].filter(Boolean).join('；')||'需核查';
  return '<tr><td>'+href(p.html_url,'#'+p.number+' '+p.title)+'</td><td>'+esc(reason)+(blocked.length?'<br>'+blocked.slice(0,3).map(c=>href(c.html_url,c.name)).join(' · '):'')+'</td><td>'+href(p.html_url+'/checks','打开 Checks / 审批 ↗')+'</td></tr>'
  }).join('')+'</tbody></table></div>':'当前打开PR中未发现草稿或失败/待授权检查；这不代表不存在其他待审批工作流。');
+ const releaseCandidates=[{n:4,title:'A01｜俯卧撑动作自查',page:'movement.html',feature:'俯卧撑自查',note:'已合并；公开交互仍需独立验收'},{n:8,title:'A01｜训练笔记',page:'movement.html',feature:'训练笔记',note:'PR待验收；正式页面尚未交付'},{n:7,title:'B01｜材料来源摘要',page:'k02-board.html',feature:'材料来源摘要',note:'PR待验收；正式页面尚未交付'}];
+ el('deliverables').innerHTML='<div class="scroll"><table><thead><tr><th>功能</th><th>代码状态</th><th>页面入口</th><th>验收结论</th></tr></thead><tbody>'+releaseCandidates.map(c=>{const p=allPrs.find(x=>x.number===c.n);const merged=Boolean(p&&p.merged_at);const codeState=merged?'已合并':'待合并 / 未验收';return '<tr><td>'+esc(c.title)+'</td><td>'+badge(merged?'success':'pending')+' '+esc(codeState)+' · '+href(root+'/pull/'+c.n,'PR #'+c.n)+'</td><td>'+href(c.page,'打开页面 →')+'</td><td>'+esc(c.note)+'</td></tr>'}).join('')+'</tbody></table></div>';
  const findRun=(re)=>runs.find(r=>re.test(r.name))||null;
  const rows=[['Q博士 / A01',findRun(/dual-agent|open-source coding agent pilot|Qwen/i),'核查Qwen任务步骤 → PR浏览器验证 → 人工审查'],['D博士 / B01',findRun(/DeepSeek/i),'核查DeepSeek任务步骤 → PR浏览器验证 → 人工审查']];
  el('tracks').innerHTML=rows.map(([name,r,next])=>'<tr><td>'+esc(name)+'</td><td>'+(r?runLink(r):'最近30次无记录')+'</td><td>'+(r?badge(status(r)):'未知')+'</td><td>'+esc(next)+'；'+href(root+'/issues/3','主线验收')+'</td></tr>').join('');
