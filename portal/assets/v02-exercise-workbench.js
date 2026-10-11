@@ -129,6 +129,16 @@
     out.querySelector('#v02-catalog-select').value = String(record.id);
     out.querySelector('#v02-catalog-state').textContent = `${record.name}｜wger record ${record.id}｜${record.license}｜作者 ${record.author}｜${record.media}`;
     out.querySelector('#v02-selected-record').innerHTML = `<h5>${record.name}｜${record.upstreamName}</h5><p>${record.description}</p>${record.image ? `<img src="${record.image}" alt="${record.upstreamName}，${record.license}，作者${record.author}" style="max-width:260px;width:100%;height:auto">` : '<p><b>媒体边界：</b>当前上游记录没有可导入媒体，页面不伪造图片或视频。</p>'}<p><b>对象身份：</b><code>${record.exerciseId}</code>｜<b>接入状态：</b><code>${record.status}</code></p><p class="muted">此处切换的是记录级来源详情；上方二维播放仍是标准俯卧撑项目教学示意，不冒充所选变式动画。</p>`;
+    const notesInput = out.querySelector('#v02-ex-notes');
+    const notesStatus = out.querySelector('#v02-ex-notes-status');
+    if (notesInput && notesStatus) {
+      try {
+        notesInput.value = localStorage.getItem(`zero-one.exercise.notes:${record.exerciseId}`) || '';
+        notesStatus.textContent = '';
+      } catch (_) {
+        notesStatus.textContent = '本地存储不可用';
+      }
+    }
   }
 
   function draw() {
@@ -162,6 +172,11 @@
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>
       <p><b>常见调整：</b>${data.variants.map(x => `${x.name}（${x.relation}）`).join('、')}</p>
       <fieldset id="v02-form-checklist"><legend>常见错误自查（项目原创教学提示，非医学诊断）</legend><ul>${data.formErrors.map((item, i) => `<li><input type="checkbox" id="v02-form-${i}"><label for="v02-form-${i}"><b>错误：</b>${item.error}；<b>纠正：</b>${item.correction}</label></li>`).join('')}</ul></fieldset>
+      <section id="v02-ex-notes-section"><h4>所选动作训练笔记</h4>
+        <p class="muted">笔记按当前 Exercise ID 隔离，只保存在本机浏览器；不会上传，也不改变动作标准或许可证据。</p>
+        <textarea id="v02-ex-notes" rows="3" aria-label="所选动作训练笔记" placeholder="记录次数、感受或待改进点" style="width:100%;max-width:620px"></textarea><br>
+        <button class="btn ghost" id="v02-ex-notes-save" type="button">保存当前动作笔记</button> <span id="v02-ex-notes-status" class="muted" aria-live="polite"></span>
+      </section>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-licensed-catalog"><h4>可操作许可动作目录｜3 条真实 wger 记录</h4>
         <p><label for="v02-catalog-select">动作记录</label> <select id="v02-catalog-select">${catalog.map(item => `<option value="${item.id}">${item.name}｜record ${item.id}</option>`).join('')}</select>
@@ -192,6 +207,15 @@
     out.querySelector('#v02-stop').onclick = () => clearInterval(timer);
     out.querySelector('#v02-speed').onchange = event => { speed = Number(event.target.value); root.dataset.speed = String(speed); };
     out.querySelector('#v02-phase').oninput = event => { phase = Number(event.target.value); draw(); };
+    out.querySelector('#v02-ex-notes-save').onclick = () => {
+      const notesStatus = out.querySelector('#v02-ex-notes-status');
+      try {
+        localStorage.setItem(`zero-one.exercise.notes:${root.dataset.selectedExerciseId}`, out.querySelector('#v02-ex-notes').value);
+        notesStatus.textContent = `已保存到 ${root.dataset.selectedExerciseId}`;
+      } catch (_) {
+        notesStatus.textContent = '无法保存：本地存储不可用';
+      }
+    };
     out.querySelector('#v02-catalog-open').onclick = () => selectCatalogRecord(out.querySelector('#v02-catalog-select').value);
     out.querySelector('#v02-load-wide').onclick = () => {
       selectCatalogRecord(data.upstreamVariant.exerciseId);

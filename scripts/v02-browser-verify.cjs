@@ -47,6 +47,15 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#v02-load-clap').click();
   record('A01', 'licensed-media variant selection works', await page.locator('#v02-exercise').getAttribute('data-media-variant-status') === 'LICENSED_VARIANT_AND_MEDIA_VENDORED' && (await page.locator('#v02-clap-state').innerText()).includes('记录与图片 CC-BY-SA 4'), await page.locator('#v02-clap-state').innerText());
   record('A01', 'vendored licensed image loads', await page.locator('#v02-licensed-media-variant img').evaluate(image => image.complete && image.naturalWidth === 1024) && (await page.locator('#v02-licensed-media-variant').innerText()).includes('7e6f3da44a68a285'), 'local CC-BY-SA image with SHA-256');
+  await page.locator('#v02-ex-notes').fill('击掌：3×5，落地保持肩胛稳定');
+  await page.locator('#v02-ex-notes-save').click();
+  await page.locator('#v02-load-wide').click();
+  const wideNotesEmpty = await page.locator('#v02-ex-notes').inputValue() === '';
+  await page.locator('#v02-load-clap').click();
+  const clapNotes = await page.locator('#v02-ex-notes').inputValue();
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('#v02-load-clap').click();
+  record('A01', 'notes are isolated by selected Exercise ID and survive reload', wideNotesEmpty && clapNotes.includes('3×5') && (await page.locator('#v02-ex-notes').inputValue()).includes('3×5'), `wide empty=${wideNotesEmpty}｜clap=${await page.locator('#v02-ex-notes').inputValue()}`);
   record('A01', 'muscle and joint object visible', await page.locator('#v02-joints li').count() === 4 && (await page.locator('#v02-ex-content').innerText()).includes('稳定：'), '4 joint rows plus stabilizer role');
 
   await page.locator('#v02-speed').selectOption('0.5');
@@ -88,6 +97,7 @@ const record = (track, name, passed, evidence) => {
   const archiveExportPath = await archiveExport.path();
   const archiveDossier = JSON.parse(fs.readFileSync(archiveExportPath, 'utf8'));
   record('B01', 'continuous dossier exports same-case engine evidence', archiveDossier.id === 'residence:habs-dc-97:frederick-douglass-house' && archiveDossier.boundaries.modelRun === 'DEPTHMAPX_VGA_RUN_FOR_THIS_TRACE' && archiveDossier.analysisChain.caseId === archiveDossier.id && archiveDossier.analysisChain.depthmapX.pointCount === 708 && archiveDossier.analysisChain.radiance.sensorCount === 80, `${archiveDossier.id}｜depthmapX ${archiveDossier.analysisChain.depthmapX.pointCount}｜Radiance ${archiveDossier.analysisChain.radiance.sensorCount}`);
+  record('B01', 'HABS export includes item-level material provenance boundary', archiveDossier.materialProvenance.status === 'RECORDED' && archiveDossier.materialProvenance.total === 3 && archiveDossier.materialProvenance.sourceCounts.PUBLIC_ARCHIVE_US_NPS_HABS === 1 && archiveDossier.materialProvenance.sourceCounts.PROJECT_TRACE_OF_PUBLIC_ARCHIVE === 2 && archiveDossier.materialProvenance.missingLicenseCount === 0 && archiveDossier.materialProvenance.boundary === 'MATERIAL_METADATA_DOES_NOT_PROVE_GEOMETRY_OR_ENVIRONMENT', JSON.stringify(archiveDossier.materialProvenance));
   await page.locator('#r-engine-overlay').screenshot({ path: path.join(artifactDir, 'residence-b01-radiance-map.png') });
   await page.locator('#r-new').click();
   residenceId = await page.locator('#v02-residence').getAttribute('data-residence-id');
@@ -102,6 +112,7 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#r-ingest-material').click();
   await page.waitForFunction(() => document.querySelector('#v02-residence')?.dataset.materialCount === '1');
   record('B01', 'actual material hashed and bound', await page.locator('#v02-residence').getAttribute('data-last-material-sha') === '8e54d1682d7212ba95a9bed996ba3139357ea738efb4563488d9e1e8156133a3', await page.locator('#r-material-manifest').innerText());
+  record('B01', 'material provenance summary updates after bind', await page.locator('#v02-residence').getAttribute('data-material-provenance') === 'RECORDED' && await page.locator('#v02-residence').getAttribute('data-material-source-count') === '1' && await page.locator('#v02-residence').getAttribute('data-material-missing-license-count') === '0' && (await page.locator('#r-provenance-summary').innerText()).includes('DRAWING_OR_ARCHIVE × 1'), await page.locator('#r-provenance-summary').innerText());
   record('B01', 'material boundary remains explicit', (await page.locator('#r-result').innerText()).includes('尚未运行空间/环境模型'), await page.locator('#r-result').innerText());
   await page.locator('#r-save').click();
   record('B01', 'same ID after save', await page.locator('#v02-residence').getAttribute('data-residence-id') === residenceId, residenceId);
@@ -114,6 +125,7 @@ const record = (track, name, passed, evidence) => {
   record('B01', 'same ID after reload', await page.locator('#v02-residence').getAttribute('data-residence-id') === residenceId, residenceId);
   record('B01', 'evidence survives reload', await page.locator('#r-evidence li[data-field]').count() === 3, '3 evidence rows persisted');
   record('B01', 'material manifest survives reload', await page.locator('#v02-residence').getAttribute('data-material-count') === '1', await page.locator('#r-material-manifest').innerText());
+  record('B01', 'material provenance summary survives reload', await page.locator('#v02-residence').getAttribute('data-material-provenance') === 'RECORDED' && (await page.locator('#r-provenance-summary').innerText()).includes('全部材料均有许可'), await page.locator('#r-provenance-summary').innerText());
   record('B01', 'boundary remains explicit', (await page.locator('#r-result').innerText()).includes('不输出未经计算'), await page.locator('#r-result').innerText());
   await page.screenshot({ path: path.join(artifactDir, 'residence-b01.png'), fullPage: true });
 

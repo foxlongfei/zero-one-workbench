@@ -35,6 +35,7 @@
         <p id="r-radiance-legend" class="muted"></p></section>
     </figure>
     <div id="r-next-question" class="result" aria-live="polite"></div>
+    <div id="r-provenance-summary" class="result" role="status" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
     <details><summary>同一住宅补充记录</summary><ol id="r-history"></ol></details>`;
@@ -83,6 +84,7 @@
       fields: fieldSnapshot(),
       evidence,
       materialFiles,
+      materialProvenance: summarizeMaterialProvenance(),
       revisions,
       boundaries,
       analysisChain,
@@ -106,12 +108,45 @@
       : '<li>尚无已保存的字段证据。</li>';
   }
 
+  function summarizeMaterialProvenance() {
+    const sourceCounts = {};
+    let missingLicenseCount = 0;
+    for (const item of materialFiles) {
+      const source = String(item.source || '').trim() || 'SOURCE_MISSING';
+      sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+      if (!String(item.license || '').trim()) missingLicenseCount += 1;
+    }
+    return {
+      status: materialFiles.length ? 'RECORDED' : 'NONE',
+      total: materialFiles.length,
+      sourceCounts,
+      missingLicenseCount,
+      boundary: 'MATERIAL_METADATA_DOES_NOT_PROVE_GEOMETRY_OR_ENVIRONMENT',
+    };
+  }
+
+  function renderMaterialProvenanceSummary() {
+    const summary = summarizeMaterialProvenance();
+    const node = root.querySelector('#r-provenance-summary');
+    root.dataset.materialProvenance = summary.status;
+    root.dataset.materialSourceCount = String(Object.keys(summary.sourceCounts).length);
+    root.dataset.materialMissingLicenseCount = String(summary.missingLicenseCount);
+    if (!summary.total) {
+      node.textContent = '材料来源摘要：尚无实际材料文件。文件来源、许可与 SHA-256 仅为档案记录，不构成空间、几何或环境事实。';
+      return;
+    }
+    const breakdown = Object.entries(summary.sourceCounts).map(([source, count]) => `${source} × ${count}`).join('、');
+    const licenseState = summary.missingLicenseCount ? `${summary.missingLicenseCount} 项缺少许可/授权` : '全部材料均有许可/授权记录';
+    node.textContent = `材料来源摘要：共 ${summary.total} 项；${breakdown}；${licenseState}。这些元数据不证明住宅几何、朝向、布局或环境事实。`;
+  }
+
   function renderMaterialManifest() {
     root.querySelector('#r-material-manifest').innerHTML = materialFiles.length
       ? materialFiles.map(item => `<li data-material-sha="${item.sha256}"><b>${item.name}</b>｜${item.bytes} bytes｜SHA-256 <code>${item.sha256}</code>｜${item.source}｜${item.license}｜case <code>${item.caseId}</code></li>`).join('')
       : '<li>尚未绑定实际材料文件；文件内容不上传，档案只保存名称、大小、类型、SHA-256、来源、许可与案例ID。</li>';
     root.dataset.materialCount = String(materialFiles.length);
     root.dataset.lastMaterialSha = materialFiles.at(-1)?.sha256 || '';
+    renderMaterialProvenanceSummary();
   }
 
   function captureEvidence(snapshot, at) {
