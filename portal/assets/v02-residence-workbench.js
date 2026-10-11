@@ -30,6 +30,7 @@
     </div>
     <div id="r-result" class="result" aria-live="polite"></div>
     <div id="r-next-question" class="result" aria-live="polite"></div>
+    <div id="r-provenance-summary" class="result" role="status" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
     <details><summary>同一住宅补充记录</summary><ol id="r-history"></ol></details>`;
@@ -107,6 +108,35 @@
     root.dataset.lastMaterialSha = materialFiles.at(-1)?.sha256 || '';
   }
 
+  function renderProvenanceSummary() {
+    const node = root.querySelector('#r-provenance-summary');
+    const total = materialFiles.length;
+    if (!total) {
+      node.dataset.materialProvenance = 'NONE';
+      node.dataset.materialSourceCount = '0';
+      node.dataset.materialMissingLicenseCount = '0';
+      node.textContent = '已绑定材料来源摘要：尚无实际材料文件。文件来源、许可与 SHA-256 仅为档案记录，不构成空间、几何或环境事实。';
+      return;
+    }
+    const sourceCounts = {};
+    let missingLicense = 0;
+    for (const item of materialFiles) {
+      const key = (item.source && String(item.source).trim()) || 'SOURCE_MISSING';
+      sourceCounts[key] = (sourceCounts[key] || 0) + 1;
+      if (!item.license || !String(item.license).trim()) missingLicense += 1;
+    }
+    const breakdown = Object.entries(sourceCounts)
+      .map(([key, count]) => `${key} × ${count}`)
+      .join('、');
+    const licenseLine = missingLicense
+      ? `其中 ${missingLicense} 项缺少许可/授权。`
+      : '全部材料均已填写许可/授权。';
+    node.dataset.materialProvenance = 'RECORDED';
+    node.dataset.materialSourceCount = String(Object.keys(sourceCounts).length);
+    node.dataset.materialMissingLicenseCount = String(missingLicense);
+    node.textContent = `已绑定材料来源摘要：共 ${total} 项实际材料文件；来源分布：${breakdown}。${licenseLine}文件来源、许可与 SHA-256 仅为档案记录，不能证明住宅几何、朝向、布局或周边环境事实。`;
+  }
+
   function captureEvidence(snapshot, at) {
     for (const [key, value] of Object.entries(snapshot)) {
       if (!value || key === 'source' || key === 'confidence') continue;
@@ -136,6 +166,7 @@
     renderHistory();
     renderEvidence();
     renderMaterialManifest();
+    renderProvenanceSummary();
     return directionValid;
   }
 
@@ -156,6 +187,7 @@
     fields.material.value = `${file.name}｜SHA-256 ${sha256}`;
     captureEvidence(fieldSnapshot(), capturedAt);
     renderMaterialManifest();
+    renderProvenanceSummary();
     root.querySelector('#r-result').textContent = `材料已绑定住宅ID ${caseId}：${file.name}｜SHA-256 ${sha256}。尚未运行空间/环境模型，不输出判断。`;
   };
 
