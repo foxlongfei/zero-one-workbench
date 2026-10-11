@@ -43,6 +43,14 @@ const record = (track, name, passed, evidence) => {
   record('A01', 'licensed catalog selection is traceable', await page.locator('#v02-exercise').getAttribute('data-selected-exercise-id') === 'exercise:wger:1554:clap-push-up' && await page.locator('#v02-exercise').getAttribute('data-selected-record-license') === 'CC-BY-SA 4' && (await page.locator('#v02-catalog-state').innerText()).includes('7e6f3da44a68a285'), await page.locator('#v02-catalog-state').innerText());
   record('A01', 'selected record changes the visible detail object', (await page.locator('#v02-selected-record').innerText()).includes('Clap Push-UP') && (await page.locator('#v02-selected-record').innerText()).includes('exercise:wger:1554:clap-push-up') && await page.locator('#v02-selected-record img').evaluate(image => image.complete && image.naturalWidth === 1024), await page.locator('#v02-selected-record').innerText());
   await page.locator('#v02-load-wide').click();
+  if (await page.locator('#v02-ex-notes').count()) {
+    record('A01', 'variant notes isolated', (await page.locator('#v02-ex-notes').inputValue()) !== 'A01-normal-test', 'wide variant must not inherit normal notes');
+    await page.locator('#v02-ex-notes').fill('A01-wide-test');
+    await page.locator('#v02-ex-notes-save').click();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.locator('#v02-load-wide').click();
+    record('A01', 'variant notes persist after reload', (await page.locator('#v02-ex-notes').inputValue()) === 'A01-wide-test', 'wide notes reloaded from localStorage');
+  }
   record('A01', 'second variant selection works', await page.locator('#v02-exercise').getAttribute('data-variant-status') === 'LICENSED_VARIANT_IMPORTED' && (await page.locator('#v02-variant-state').innerText()).includes('无上游媒体'), await page.locator('#v02-variant-state').innerText());
   await page.locator('#v02-load-clap').click();
   record('A01', 'licensed-media variant selection works', await page.locator('#v02-exercise').getAttribute('data-media-variant-status') === 'LICENSED_VARIANT_AND_MEDIA_VENDORED' && (await page.locator('#v02-clap-state').innerText()).includes('记录与图片 CC-BY-SA 4'), await page.locator('#v02-clap-state').innerText());
@@ -128,6 +136,9 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#v02-residence').waitFor();
   record('B01', 'same ID after reload', await page.locator('#v02-residence').getAttribute('data-residence-id') === residenceId, residenceId);
   record('B01', 'evidence survives reload', await page.locator('#r-evidence li[data-field]').count() === 3, '3 evidence rows persisted');
+  if (await page.locator('#r-provenance-summary').count()) {
+    record('B01', 'provenance summary survives reload', (await page.locator('#r-provenance-summary').innerText()).includes('共 1 项'), await page.locator('#r-provenance-summary').innerText());
+  }
   record('B01', 'material manifest survives reload', await page.locator('#v02-residence').getAttribute('data-material-count') === '1', await page.locator('#r-material-manifest').innerText());
   record('B01', 'material provenance summary survives reload', await page.locator('#v02-residence').getAttribute('data-material-provenance') === 'RECORDED' && (await page.locator('#r-provenance-summary').innerText()).includes('全部材料均有许可'), await page.locator('#r-provenance-summary').innerText());
   record('B01', 'boundary remains explicit', (await page.locator('#r-result').innerText()).includes('不输出未经计算'), await page.locator('#r-result').innerText());
