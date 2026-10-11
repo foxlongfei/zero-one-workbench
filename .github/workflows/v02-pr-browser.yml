@@ -33,6 +33,8 @@ jobs:
           node-version: 22
       - name: Static checks
         run: node scripts/v02-verify.mjs
+      - name: Fetch licensed and public-domain upstream evidence
+        run: node scripts/v02-fetch-upstream-assets.mjs
       - name: Install Chromium verifier
         run: |
           npm install --no-save --no-package-lock playwright@1.55.0
