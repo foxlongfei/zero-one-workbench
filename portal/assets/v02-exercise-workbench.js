@@ -175,7 +175,9 @@
       <section id="v02-ex-notes-section"><h4>所选动作训练笔记</h4>
         <p class="muted">笔记按当前 Exercise ID 隔离，只保存在本机浏览器；不会上传，也不改变动作标准或许可证据。</p>
         <textarea id="v02-ex-notes" rows="3" aria-label="所选动作训练笔记" placeholder="记录次数、感受或待改进点" style="width:100%;max-width:620px"></textarea><br>
-        <button class="btn ghost" id="v02-ex-notes-save" type="button">保存当前动作笔记</button> <span id="v02-ex-notes-status" class="muted" aria-live="polite"></span>
+        <button class="btn ghost" id="v02-ex-notes-save" type="button">保存当前动作笔记</button>
+        <button class="btn ghost" id="v02-ex-export" type="button">导出当前动作档案</button>
+        <span id="v02-ex-notes-status" class="muted" aria-live="polite"></span>
       </section>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-licensed-catalog"><h4>可操作许可动作目录｜3 条真实 wger 记录</h4>
@@ -215,6 +217,42 @@
       } catch (_) {
         notesStatus.textContent = '无法保存：本地存储不可用';
       }
+    };
+    out.querySelector('#v02-ex-export').onclick = () => {
+      const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
+      const dossier = {
+        schema: 'zero-one.exercise.dossier.v0.2',
+        exerciseId: record.exerciseId,
+        record: {
+          wgerId: record.id,
+          name: record.name,
+          upstreamName: record.upstreamName,
+          author: record.author,
+          license: record.license,
+          status: record.status,
+          media: record.media,
+        },
+        training: {
+          note: out.querySelector('#v02-ex-notes').value,
+          phase: Math.round(phase),
+          phaseName: phaseName(phase),
+          speed,
+        },
+        boundaries: {
+          noteStorage: 'LOCAL_BROWSER_ONLY',
+          guidance: data.provenance.evidenceStatus,
+          animation: 'PROJECT_2D_TEACHING_ILLUSTRATION_NOT_VARIANT_KINEMATICS',
+        },
+        exportedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([`${JSON.stringify(dossier, null, 2)}\n`], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `${record.exerciseId.replaceAll(':', '-')}.json`;
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 500);
+      out.querySelector('#v02-ex-notes-status').textContent = `已导出 ${record.exerciseId}`;
     };
     out.querySelector('#v02-catalog-open').onclick = () => selectCatalogRecord(out.querySelector('#v02-catalog-select').value);
     out.querySelector('#v02-load-wide').onclick = () => {

@@ -70,6 +70,18 @@
     return true;
   }
 
+  function validateImportedRecord(record) {
+    if (!record || record.schema !== 'zero-one.residence.v0.2') return 'schema 不匹配';
+    if (typeof record.id !== 'string' || !record.id.startsWith('residence')) return 'Residence/Case ID 无效';
+    if (!record.fields || typeof record.fields !== 'object' || Array.isArray(record.fields)) return 'fields 必须是对象';
+    if (record.evidence != null && (typeof record.evidence !== 'object' || Array.isArray(record.evidence))) return 'evidence 必须是对象';
+    if (record.materialFiles != null && !Array.isArray(record.materialFiles)) return 'materialFiles 必须是数组';
+    if (record.revisions != null && !Array.isArray(record.revisions)) return 'revisions 必须是数组';
+    if (record.boundaries != null && (typeof record.boundaries !== 'object' || Array.isArray(record.boundaries))) return 'boundaries 必须是对象';
+    if (record.analysisChain != null && (typeof record.analysisChain !== 'object' || Array.isArray(record.analysisChain))) return 'analysisChain 必须是对象或 null';
+    return '';
+  }
+
   try { hydrate(JSON.parse(localStorage.getItem('v02-residence') || 'null')); } catch (_) {}
 
   function fieldSnapshot() {
@@ -328,9 +340,13 @@
   root.querySelector('#r-import').onchange = async event => {
     try {
       const record = JSON.parse(await event.target.files[0].text());
+      const validationError = validateImportedRecord(record);
+      if (validationError) throw Error(validationError);
       if (!hydrate(record)) throw Error('文件格式不符');
       check();
+      root.dataset.importStatus = 'VALIDATED_AND_IMPORTED';
     } catch (error) {
+      root.dataset.importStatus = 'REJECTED_WITHOUT_HYDRATION';
       root.querySelector('#r-result').textContent = `导入失败：${error.message}`;
     }
   };

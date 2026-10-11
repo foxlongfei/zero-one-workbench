@@ -56,6 +56,10 @@ const record = (track, name, passed, evidence) => {
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('#v02-load-clap').click();
   record('A01', 'notes are isolated by selected Exercise ID and survive reload', wideNotesEmpty && clapNotes.includes('3×5') && (await page.locator('#v02-ex-notes').inputValue()).includes('3×5'), `wide empty=${wideNotesEmpty}｜clap=${await page.locator('#v02-ex-notes').inputValue()}`);
+  const exerciseExportDownload = page.waitForEvent('download');
+  await page.locator('#v02-ex-export').click();
+  const exerciseExport = JSON.parse(fs.readFileSync(await (await exerciseExportDownload).path(), 'utf8'));
+  record('A01', 'selected Exercise dossier exports identity, note and boundaries', exerciseExport.schema === 'zero-one.exercise.dossier.v0.2' && exerciseExport.exerciseId === 'exercise:wger:1554:clap-push-up' && exerciseExport.training.note.includes('3×5') && exerciseExport.boundaries.noteStorage === 'LOCAL_BROWSER_ONLY', `${exerciseExport.exerciseId}｜${exerciseExport.boundaries.noteStorage}`);
   record('A01', 'muscle and joint object visible', await page.locator('#v02-joints li').count() === 4 && (await page.locator('#v02-ex-content').innerText()).includes('稳定：'), '4 joint rows plus stabilizer role');
 
   await page.locator('#v02-speed').selectOption('0.5');
@@ -132,6 +136,9 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#r-new').click();
   record('B01', 'new residence gets different ID', await page.locator('#v02-residence').getAttribute('data-residence-id') !== residenceId, await page.locator('#v02-residence').getAttribute('data-residence-id'));
   record('B01', 'new residence clears evidence', await page.locator('#r-evidence li[data-field]').count() === 0, 'evidence ledger empty');
+  const rejectedId = await page.locator('#v02-residence').getAttribute('data-residence-id');
+  await page.locator('#r-import').setInputFiles({name: 'invalid-residence.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({schema: 'zero-one.residence.v0.2', id: 'bad-id', fields: {name: '不应载入'}}))});
+  record('B01', 'invalid imported dossier is rejected before hydration', await page.locator('#v02-residence').getAttribute('data-import-status') === 'REJECTED_WITHOUT_HYDRATION' && await page.locator('#v02-residence').getAttribute('data-residence-id') === rejectedId && (await page.locator('#r-result').innerText()).includes('Residence/Case ID 无效'), await page.locator('#r-result').innerText());
 
   const report = {
     schema: 'zero-one.v02.browser-verification.v1',
