@@ -220,31 +220,14 @@
     };
     out.querySelector('#v02-ex-export').onclick = () => {
       const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
-      const dossier = {
-        schema: 'zero-one.exercise.dossier.v0.2',
-        exerciseId: record.exerciseId,
-        record: {
-          wgerId: record.id,
-          name: record.name,
-          upstreamName: record.upstreamName,
-          author: record.author,
-          license: record.license,
-          status: record.status,
-          media: record.media,
-        },
-        training: {
-          note: out.querySelector('#v02-ex-notes').value,
-          phase: Math.round(phase),
-          phaseName: phaseName(phase),
-          speed,
-        },
-        boundaries: {
-          noteStorage: 'LOCAL_BROWSER_ONLY',
-          guidance: data.provenance.evidenceStatus,
-          animation: 'PROJECT_2D_TEACHING_ILLUSTRATION_NOT_VARIANT_KINEMATICS',
-        },
-        exportedAt: new Date().toISOString(),
-      };
+      const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({
+        record,
+        note: out.querySelector('#v02-ex-notes').value,
+        phase,
+        phaseName: phaseName(phase),
+        speed,
+        guidance: data.provenance.evidenceStatus,
+      });
       const blob = new Blob([`${JSON.stringify(dossier, null, 2)}\n`], {type: 'application/json'});
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement('a');
