@@ -204,6 +204,8 @@
       root.dataset.archiveLicense = record.license || '';
       root.dataset.engineGeometry = record.boundaries?.geometryContinuity || '';
       root.dataset.depthmapStatus = record.boundaries?.depthmapX || '';
+      root.dataset.radianceStatus = record.boundaries?.radiance || '';
+      root.dataset.crossLayerEquivalence = record.boundaries?.crossLayerEquivalence || '';
       root.dataset.materialSha = record.repositoryAssetSha256 || '';
       const preview = root.querySelector('#r-archive-preview');
       preview.hidden = false;
@@ -212,9 +214,15 @@
       const runResponse = await fetch(`data/${record.analysisArtifacts.depthmapRun}`);
       if (!runResponse.ok) throw Error(`depthmapX run HTTP ${runResponse.status}`);
       const run = await runResponse.json();
+      const radianceResponse = await fetch(`data/${record.analysisArtifacts.radianceRun}`);
+      if (!radianceResponse.ok) throw Error(`Radiance run HTTP ${radianceResponse.status}`);
+      const radiance = await radianceResponse.json();
+      if (radiance.caseId !== record.id || radiance.passed !== true) throw Error('Radiance same-case evidence mismatch');
       root.dataset.depthmapPointCount = String(run.output.pointCount);
       root.dataset.depthmapOutputSha = run.output.sha256;
-      root.querySelector('#r-result').innerHTML += ` 已加载HABS真实历史住宅首层平面图；它不是用户住宅。首版墙线已按图纸标注尺度矢量化并由 depthmapX ${run.engine.version} 实跑 VGA：<b>${run.output.pointCount} 个点</b>，Connectivity ${run.output.connectivity.minimum}–${run.output.connectivity.maximum}，平均 ${run.output.connectivity.mean}。<a href="data/${record.analysisArtifacts.depthmapRun}">运行证据</a>｜<a href="data/${record.analysisArtifacts.depthmapCsv}">VGA CSV</a>。人工描线仍需第二人 CAD 复核；Radiance 尚未运行；不输出环境或吉凶结论。`;
+      root.dataset.radianceSensorCount = String(radiance.analysis.sensorCount);
+      root.dataset.radianceModelSha = radiance.model.sha256;
+      root.querySelector('#r-result').innerHTML += ` 已加载HABS真实历史住宅首层平面图；它不是用户住宅。首版墙线已按图纸标注尺度矢量化并由 depthmapX ${run.engine.version} 实跑 VGA：<b>${run.output.pointCount} 个点</b>，Connectivity ${run.output.connectivity.minimum}–${run.output.connectivity.maximum}，平均 ${run.output.connectivity.mean}。同一 Case/描线再由 ${radiance.engine.version} 实跑 Washington DC 夏至晴空工作面分析：<b>${radiance.analysis.sensorCount} 个传感点</b>，平均 ${radiance.analysis.summary.meanLux} lux，范围 ${radiance.analysis.summary.minimumLux}–${radiance.analysis.summary.maximumLux} lux。<a href="data/${record.analysisArtifacts.depthmapRun}">depthmapX 证据</a>｜<a href="data/${record.analysisArtifacts.depthmapCsv}">VGA CSV</a>｜<a href="data/${record.analysisArtifacts.radianceRun}">Radiance 证据</a>｜<a href="data/${record.analysisArtifacts.radianceCsv}">照度 CSV</a>。人工描线仍需第二人 CAD 复核；窗位、朝向和高度是待现场复核的显式假设；不输出吉凶结论。`;
     } catch (error) {
       root.querySelector('#r-result').textContent = `HABS档案加载失败：${error.message}`;
     }

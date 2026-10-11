@@ -1,0 +1,908 @@
+{
+  "schema": "zero-one.habs-radiance-daylight.v0.1",
+  "caseId": "residence:habs-dc-97:frederick-douglass-house",
+  "calculationId": "HABS_DC_97_FIRST_FLOOR_SUMMER_CLEAR_V0_1",
+  "passed": true,
+  "engine": {
+    "name": "Radiance",
+    "version": "RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)",
+    "release": "rad6R0P2",
+    "commands": [
+      "gensky",
+      "oconv",
+      "rtrace"
+    ],
+    "binariesExecuted": true
+  },
+  "source": {
+    "tracePath": "research/depthmap/habs-dc-97-first-floor-trace.json",
+    "traceSha256": "75e98361334fd54141c3cd4c7912707b8ef36f69050eb79c354164d764599605",
+    "archiveSheet": "HABS DC,WASH,166- sheet 2 of 8 — FIRST FLOOR PLAN",
+    "geometryBoundary": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW"
+  },
+  "model": {
+    "path": "models/v02-habs-dc-97/habs-dc-97-first-floor.rad",
+    "sha256": "26ddd728ee3ff2a4c35f3bdc1b15299f2fc9756768d0fa1ef195c6b614eba647",
+    "units": "m",
+    "heightM": 3.0,
+    "orientation": "local x east; local y north",
+    "windows": [
+      {
+        "id": "S1",
+        "startM": 0.8,
+        "endM": 2.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S2",
+        "startM": 3.8,
+        "endM": 5.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S3",
+        "startM": 6.8,
+        "endM": 8.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S4",
+        "startM": 9.8,
+        "endM": 11.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S5",
+        "startM": 12.8,
+        "endM": 14.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S6",
+        "startM": 15.8,
+        "endM": 17.8,
+        "orientation": "south"
+      }
+    ],
+    "assumptions": [
+      "PLAN_NORTH_FROM_TRACE_AXIS_REQUIRES_FIELD_CONFIRMATION",
+      "STOREY_HEIGHT_3_0M_REQUIRES_FIELD_CONFIRMATION",
+      "SOUTH_WINDOWS_MANUAL_ESTIMATE_REQUIRES_SECOND_PERSON_CAD_REVIEW",
+      "SILL_0_9M_AND_HEAD_2_1M_REQUIRE_FIELD_CONFIRMATION"
+    ]
+  },
+  "sky": {
+    "generator": "gensky",
+    "date": "2026-06-21",
+    "solarTimeHour": 12,
+    "type": "CIE clear with sun",
+    "latitudeDeg": 38.9072,
+    "longitudeDegWest": 77.0369,
+    "standardMeridianDegWest": 75,
+    "locationLabel": "Washington, DC"
+  },
+  "analysis": {
+    "method": "rtrace irradiance mode (-I+) on 0.8 m workplane",
+    "sensorCount": 80,
+    "unit": "lux",
+    "summary": {
+      "meanLux": 216.4,
+      "minimumLux": 0.2,
+      "maximumLux": 1215.8,
+      "uniformityMinOverMean": 0.001
+    },
+    "sensors": [
+      {
+        "id": "P001",
+        "xM": 0.75,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 4.359353,
+        "radianceG": 4.244381,
+        "radianceB": 4.102787,
+        "illuminanceLux": 763.6
+      },
+      {
+        "id": "P002",
+        "xM": 2.25,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 6.858707,
+        "radianceG": 6.748774,
+        "radianceB": 6.615734,
+        "illuminanceLux": 1211.7
+      },
+      {
+        "id": "P003",
+        "xM": 3.75,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 4.909301,
+        "radianceG": 4.786889,
+        "radianceB": 4.637663,
+        "illuminanceLux": 860.9
+      },
+      {
+        "id": "P004",
+        "xM": 5.25,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 6.914519,
+        "radianceG": 6.765061,
+        "radianceB": 6.572097,
+        "illuminanceLux": 1215.8
+      },
+      {
+        "id": "P005",
+        "xM": 6.75,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 4.362585,
+        "radianceG": 4.262915,
+        "radianceB": 4.132089,
+        "illuminanceLux": 766.3
+      },
+      {
+        "id": "P006",
+        "xM": 8.25,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 5.744136,
+        "radianceG": 5.591607,
+        "radianceB": 5.388588,
+        "illuminanceLux": 1005.8
+      },
+      {
+        "id": "P007",
+        "xM": 9.75,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 4.457702,
+        "radianceG": 4.358764,
+        "radianceB": 4.231881,
+        "illuminanceLux": 783.4
+      },
+      {
+        "id": "P008",
+        "xM": 11.25,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 5.572258,
+        "radianceG": 5.407506,
+        "radianceB": 5.19036,
+        "illuminanceLux": 973.2
+      },
+      {
+        "id": "P009",
+        "xM": 12.75,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 4.375299,
+        "radianceG": 4.276781,
+        "radianceB": 4.148647,
+        "illuminanceLux": 768.7
+      },
+      {
+        "id": "P010",
+        "xM": 14.25,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 4.218639,
+        "radianceG": 4.097544,
+        "radianceB": 3.937883,
+        "illuminanceLux": 737.3
+      },
+      {
+        "id": "P011",
+        "xM": 15.75,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 4.568102,
+        "radianceG": 4.469015,
+        "radianceB": 4.345163,
+        "illuminanceLux": 803.2
+      },
+      {
+        "id": "P012",
+        "xM": 17.25,
+        "yM": 0.75,
+        "zM": 0.8,
+        "radianceR": 6.612741,
+        "radianceG": 6.523988,
+        "radianceB": 6.414575,
+        "illuminanceLux": 1170.7
+      },
+      {
+        "id": "P013",
+        "xM": 0.75,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.853044,
+        "radianceG": 1.747666,
+        "radianceB": 1.615888,
+        "illuminanceLux": 316.3
+      },
+      {
+        "id": "P014",
+        "xM": 2.25,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 2.156717,
+        "radianceG": 2.047156,
+        "radianceB": 1.91237,
+        "illuminanceLux": 370.1
+      },
+      {
+        "id": "P015",
+        "xM": 3.75,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 2.200419,
+        "radianceG": 2.089002,
+        "radianceB": 1.951844,
+        "illuminanceLux": 377.6
+      },
+      {
+        "id": "P016",
+        "xM": 5.25,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 2.15574,
+        "radianceG": 2.046978,
+        "radianceB": 1.909452,
+        "illuminanceLux": 370.0
+      },
+      {
+        "id": "P017",
+        "xM": 6.75,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.400496,
+        "radianceG": 1.325635,
+        "radianceB": 1.230262,
+        "illuminanceLux": 239.7
+      },
+      {
+        "id": "P018",
+        "xM": 8.25,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.429791,
+        "radianceG": 1.350891,
+        "radianceB": 1.248361,
+        "illuminanceLux": 244.4
+      },
+      {
+        "id": "P019",
+        "xM": 9.75,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.53568,
+        "radianceG": 1.457572,
+        "radianceB": 1.358813,
+        "illuminanceLux": 263.5
+      },
+      {
+        "id": "P020",
+        "xM": 11.25,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.679247,
+        "radianceG": 1.595869,
+        "radianceB": 1.491122,
+        "illuminanceLux": 288.4
+      },
+      {
+        "id": "P021",
+        "xM": 12.75,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.610012,
+        "radianceG": 1.524926,
+        "radianceB": 1.416212,
+        "illuminanceLux": 275.7
+      },
+      {
+        "id": "P022",
+        "xM": 14.25,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.951592,
+        "radianceG": 1.863401,
+        "radianceB": 1.752496,
+        "illuminanceLux": 336.4
+      },
+      {
+        "id": "P023",
+        "xM": 15.75,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.908685,
+        "radianceG": 1.815598,
+        "radianceB": 1.698315,
+        "illuminanceLux": 328.0
+      },
+      {
+        "id": "P024",
+        "xM": 17.25,
+        "yM": 2.25,
+        "zM": 0.8,
+        "radianceR": 1.795724,
+        "radianceG": 1.704255,
+        "radianceB": 1.588997,
+        "illuminanceLux": 308.1
+      },
+      {
+        "id": "P025",
+        "xM": 0.75,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 1.008355,
+        "radianceG": 0.924655,
+        "radianceB": 0.817685,
+        "illuminanceLux": 168.2
+      },
+      {
+        "id": "P026",
+        "xM": 2.25,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 1.106244,
+        "radianceG": 1.015817,
+        "radianceB": 0.901621,
+        "illuminanceLux": 184.8
+      },
+      {
+        "id": "P027",
+        "xM": 3.75,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 1.198255,
+        "radianceG": 1.11003,
+        "radianceB": 0.998403,
+        "illuminanceLux": 201.6
+      },
+      {
+        "id": "P028",
+        "xM": 5.25,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 1.111948,
+        "radianceG": 1.034877,
+        "radianceB": 0.93665,
+        "illuminanceLux": 187.8
+      },
+      {
+        "id": "P029",
+        "xM": 6.75,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 0.665752,
+        "radianceG": 0.614858,
+        "radianceB": 0.550479,
+        "illuminanceLux": 111.7
+      },
+      {
+        "id": "P030",
+        "xM": 8.25,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 0.650655,
+        "radianceG": 0.605894,
+        "radianceB": 0.549064,
+        "illuminanceLux": 109.9
+      },
+      {
+        "id": "P031",
+        "xM": 9.75,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 0.726909,
+        "radianceG": 0.67802,
+        "radianceB": 0.616189,
+        "illuminanceLux": 123.0
+      },
+      {
+        "id": "P032",
+        "xM": 11.25,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 0.628141,
+        "radianceG": 0.583696,
+        "radianceB": 0.526794,
+        "illuminanceLux": 105.9
+      },
+      {
+        "id": "P033",
+        "xM": 12.75,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 0.969473,
+        "radianceG": 0.893628,
+        "radianceB": 0.793046,
+        "illuminanceLux": 162.4
+      },
+      {
+        "id": "P034",
+        "xM": 14.25,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 0.919153,
+        "radianceG": 0.841765,
+        "radianceB": 0.736992,
+        "illuminanceLux": 153.1
+      },
+      {
+        "id": "P035",
+        "xM": 15.75,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 1.154012,
+        "radianceG": 1.067383,
+        "radianceB": 0.95362,
+        "illuminanceLux": 193.8
+      },
+      {
+        "id": "P036",
+        "xM": 17.25,
+        "yM": 3.75,
+        "zM": 0.8,
+        "radianceR": 1.135697,
+        "radianceG": 1.04894,
+        "radianceB": 0.933972,
+        "illuminanceLux": 190.5
+      },
+      {
+        "id": "P037",
+        "xM": 0.75,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.00791,
+        "radianceG": 0.006874,
+        "radianceB": 0.005529,
+        "illuminanceLux": 1.3
+      },
+      {
+        "id": "P038",
+        "xM": 2.25,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.017363,
+        "radianceG": 0.015163,
+        "radianceB": 0.012335,
+        "illuminanceLux": 2.8
+      },
+      {
+        "id": "P039",
+        "xM": 3.75,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.049122,
+        "radianceG": 0.043325,
+        "radianceB": 0.035775,
+        "illuminanceLux": 7.9
+      },
+      {
+        "id": "P040",
+        "xM": 5.25,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.314209,
+        "radianceG": 0.284855,
+        "radianceB": 0.247919,
+        "illuminanceLux": 52.0
+      },
+      {
+        "id": "P041",
+        "xM": 6.75,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.32797,
+        "radianceG": 0.298269,
+        "radianceB": 0.260258,
+        "illuminanceLux": 54.4
+      },
+      {
+        "id": "P042",
+        "xM": 8.25,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.335346,
+        "radianceG": 0.307277,
+        "radianceB": 0.270632,
+        "illuminanceLux": 55.9
+      },
+      {
+        "id": "P043",
+        "xM": 9.75,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.358845,
+        "radianceG": 0.329311,
+        "radianceB": 0.291399,
+        "illuminanceLux": 59.9
+      },
+      {
+        "id": "P044",
+        "xM": 11.25,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.366943,
+        "radianceG": 0.340486,
+        "radianceB": 0.305894,
+        "illuminanceLux": 61.8
+      },
+      {
+        "id": "P045",
+        "xM": 12.75,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.074113,
+        "radianceG": 0.065807,
+        "radianceB": 0.055063,
+        "illuminanceLux": 12.0
+      },
+      {
+        "id": "P046",
+        "xM": 14.25,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.050842,
+        "radianceG": 0.048972,
+        "radianceB": 0.046648,
+        "illuminanceLux": 8.8
+      },
+      {
+        "id": "P047",
+        "xM": 15.75,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.019643,
+        "radianceG": 0.01737,
+        "radianceB": 0.014495,
+        "illuminanceLux": 3.2
+      },
+      {
+        "id": "P048",
+        "xM": 17.25,
+        "yM": 5.25,
+        "zM": 0.8,
+        "radianceR": 0.008613,
+        "radianceG": 0.007525,
+        "radianceB": 0.006143,
+        "illuminanceLux": 1.4
+      },
+      {
+        "id": "P049",
+        "xM": 0.75,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.007834,
+        "radianceG": 0.006795,
+        "radianceB": 0.005451,
+        "illuminanceLux": 1.2
+      },
+      {
+        "id": "P050",
+        "xM": 2.25,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.01825,
+        "radianceG": 0.015932,
+        "radianceB": 0.012933,
+        "illuminanceLux": 2.9
+      },
+      {
+        "id": "P051",
+        "xM": 3.75,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.078337,
+        "radianceG": 0.069719,
+        "radianceB": 0.058428,
+        "illuminanceLux": 12.8
+      },
+      {
+        "id": "P052",
+        "xM": 5.25,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.194645,
+        "radianceG": 0.179536,
+        "radianceB": 0.160049,
+        "illuminanceLux": 32.6
+      },
+      {
+        "id": "P053",
+        "xM": 6.75,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.317929,
+        "radianceG": 0.290669,
+        "radianceB": 0.253819,
+        "illuminanceLux": 52.9
+      },
+      {
+        "id": "P054",
+        "xM": 8.25,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.193181,
+        "radianceG": 0.17454,
+        "radianceB": 0.14948,
+        "illuminanceLux": 31.8
+      },
+      {
+        "id": "P055",
+        "xM": 9.75,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.29599,
+        "radianceG": 0.269614,
+        "radianceB": 0.233509,
+        "illuminanceLux": 49.1
+      },
+      {
+        "id": "P056",
+        "xM": 11.25,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.295455,
+        "radianceG": 0.271505,
+        "radianceB": 0.238602,
+        "illuminanceLux": 49.4
+      },
+      {
+        "id": "P057",
+        "xM": 12.75,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.082798,
+        "radianceG": 0.075003,
+        "radianceB": 0.064486,
+        "illuminanceLux": 13.7
+      },
+      {
+        "id": "P058",
+        "xM": 14.25,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.006316,
+        "radianceG": 0.005548,
+        "radianceB": 0.004575,
+        "illuminanceLux": 1.0
+      },
+      {
+        "id": "P059",
+        "xM": 15.75,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.037851,
+        "radianceG": 0.035595,
+        "radianceB": 0.032625,
+        "illuminanceLux": 6.4
+      },
+      {
+        "id": "P060",
+        "xM": 17.25,
+        "yM": 6.75,
+        "zM": 0.8,
+        "radianceR": 0.012845,
+        "radianceG": 0.01173,
+        "radianceB": 0.010283,
+        "illuminanceLux": 2.1
+      },
+      {
+        "id": "P061",
+        "xM": 0.75,
+        "yM": 8.25,
+        "zM": 0.8,
+        "radianceR": 0.001528,
+        "radianceG": 0.001353,
+        "radianceB": 0.001121,
+        "illuminanceLux": 0.2
+      },
+      {
+        "id": "P062",
+        "xM": 2.25,
+        "yM": 8.25,
+        "zM": 0.8,
+        "radianceR": 0.003614,
+        "radianceG": 0.00321,
+        "radianceB": 0.002685,
+        "illuminanceLux": 0.6
+      },
+      {
+        "id": "P063",
+        "xM": 3.75,
+        "yM": 8.25,
+        "zM": 0.8,
+        "radianceR": 0.013067,
+        "radianceG": 0.011618,
+        "radianceB": 0.00977,
+        "illuminanceLux": 2.1
+      },
+      {
+        "id": "P064",
+        "xM": 5.25,
+        "yM": 8.25,
+        "zM": 0.8,
+        "radianceR": 0.076563,
+        "radianceG": 0.073979,
+        "radianceB": 0.070725,
+        "illuminanceLux": 13.3
+      },
+      {
+        "id": "P065",
+        "xM": 6.75,
+        "yM": 8.25,
+        "zM": 0.8,
+        "radianceR": 0.017961,
+        "radianceG": 0.015985,
+        "radianceB": 0.013418,
+        "illuminanceLux": 2.9
+      },
+      {
+        "id": "P066",
+        "xM": 8.25,
+        "yM": 8.25,
+        "zM": 0.8,
+        "radianceR": 0.024482,
+        "radianceG": 0.02181,
+        "radianceB": 0.018372,
+        "illuminanceLux": 4.0
+      },
+      {
+        "id": "P067",
+        "xM": 9.75,
+        "yM": 8.25,
+        "zM": 0.8,
+        "radianceR": 0.007483,
+        "radianceG": 0.006656,
+        "radianceB": 0.005563,
+        "illuminanceLux": 1.2
+      },
+      {
+        "id": "P068",
+        "xM": 0.75,
+        "yM": 9.75,
+        "zM": 0.8,
+        "radianceR": 0.001908,
+        "radianceG": 0.001682,
+        "radianceB": 0.001386,
+        "illuminanceLux": 0.3
+      },
+      {
+        "id": "P069",
+        "xM": 2.25,
+        "yM": 9.75,
+        "zM": 0.8,
+        "radianceR": 0.003594,
+        "radianceG": 0.0032,
+        "radianceB": 0.002682,
+        "illuminanceLux": 0.6
+      },
+      {
+        "id": "P070",
+        "xM": 3.75,
+        "yM": 9.75,
+        "zM": 0.8,
+        "radianceR": 0.011013,
+        "radianceG": 0.009867,
+        "radianceB": 0.008377,
+        "illuminanceLux": 1.8
+      },
+      {
+        "id": "P071",
+        "xM": 5.25,
+        "yM": 9.75,
+        "zM": 0.8,
+        "radianceR": 0.031578,
+        "radianceG": 0.030075,
+        "radianceB": 0.028163,
+        "illuminanceLux": 5.4
+      },
+      {
+        "id": "P072",
+        "xM": 6.75,
+        "yM": 9.75,
+        "zM": 0.8,
+        "radianceR": 0.015557,
+        "radianceG": 0.013912,
+        "radianceB": 0.011762,
+        "illuminanceLux": 2.5
+      },
+      {
+        "id": "P073",
+        "xM": 8.25,
+        "yM": 9.75,
+        "zM": 0.8,
+        "radianceR": 0.018112,
+        "radianceG": 0.016198,
+        "radianceB": 0.013679,
+        "illuminanceLux": 3.0
+      },
+      {
+        "id": "P074",
+        "xM": 9.75,
+        "yM": 9.75,
+        "zM": 0.8,
+        "radianceR": 0.009995,
+        "radianceG": 0.008944,
+        "radianceB": 0.007527,
+        "illuminanceLux": 1.6
+      },
+      {
+        "id": "P075",
+        "xM": 0.75,
+        "yM": 11.25,
+        "zM": 0.8,
+        "radianceR": 0.002214,
+        "radianceG": 0.001956,
+        "radianceB": 0.001616,
+        "illuminanceLux": 0.4
+      },
+      {
+        "id": "P076",
+        "xM": 2.25,
+        "yM": 11.25,
+        "zM": 0.8,
+        "radianceR": 0.00507,
+        "radianceG": 0.004489,
+        "radianceB": 0.003727,
+        "illuminanceLux": 0.8
+      },
+      {
+        "id": "P077",
+        "xM": 3.75,
+        "yM": 11.25,
+        "zM": 0.8,
+        "radianceR": 0.020625,
+        "radianceG": 0.019629,
+        "radianceB": 0.018294,
+        "illuminanceLux": 3.5
+      },
+      {
+        "id": "P078",
+        "xM": 5.25,
+        "yM": 11.25,
+        "zM": 0.8,
+        "radianceR": 0.055065,
+        "radianceG": 0.054109,
+        "radianceB": 0.052791,
+        "illuminanceLux": 9.7
+      },
+      {
+        "id": "P079",
+        "xM": 6.75,
+        "yM": 11.25,
+        "zM": 0.8,
+        "radianceR": 0.025502,
+        "radianceG": 0.023546,
+        "radianceB": 0.020867,
+        "illuminanceLux": 4.3
+      },
+      {
+        "id": "P080",
+        "xM": 8.25,
+        "yM": 11.25,
+        "zM": 0.8,
+        "radianceR": 0.039992,
+        "radianceG": 0.037605,
+        "radianceB": 0.034232,
+        "illuminanceLux": 6.8
+      }
+    ]
+  },
+  "checks": {
+    "sameCaseId": true,
+    "sceneCompiledByOconv": true,
+    "allIlluminanceFiniteAndPositive": true,
+    "sensorCount": 80
+  },
+  "limitations": [
+    "Point-in-time clear-sky study, not annual climate-based daylight autonomy.",
+    "Window positions and vertical dimensions are explicit analysis assumptions, not HABS measurements.",
+    "Manual plan trace requires independent CAD review before design use."
+  ]
+}

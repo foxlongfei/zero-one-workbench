@@ -41,7 +41,9 @@
   "analysisArtifacts": {
     "geometryTrace": "../../research/depthmap/habs-dc-97-first-floor-trace.json",
     "depthmapRun": "v02-habs-dc-97-depthmap-run.json",
-    "depthmapCsv": "v02-habs-dc-97-depthmap-vga.csv"
+    "depthmapCsv": "v02-habs-dc-97-depthmap-vga.csv",
+    "radianceRun": "v02-habs-dc-97-radiance-daylight.json",
+    "radianceCsv": "v02-habs-dc-97-radiance-daylight.csv"
   },
   "revisions": [],
   "boundaries": {
@@ -50,7 +52,8 @@
     "modelRun": "DEPTHMAPX_VGA_RUN_FOR_THIS_TRACE",
     "geometryContinuity": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW",
     "depthmapX": "DEPTHMAPX_0_9_1_VGA_708_POINTS",
-    "radiance": "NOT_RUN_FOR_THIS_CASE",
-    "crossLayerEquivalence": "BLOCK"
+    "radiance": "RADIANCE_6_0_2_CLEAR_SKY_80_SENSORS",
+    "crossLayerEquivalence": "SAME_CASE_ID_AND_PLAN_TRACE_WITH_EXPLICIT_VERTICAL_ASSUMPTIONS",
+    "radianceGeometry": "WINDOWS_AND_HEIGHT_REQUIRE_FIELD_CONFIRMATION"
   }
 }

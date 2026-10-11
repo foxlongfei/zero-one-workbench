@@ -1,0 +1,102 @@
+{
+  "schema": "zero-one.habs-radiance-daylight.v0.1",
+  "caseId": "residence:habs-dc-97:frederick-douglass-house",
+  "calculationId": "HABS_DC_97_FIRST_FLOOR_SUMMER_CLEAR_V0_1",
+  "passed": true,
+  "engine": {
+    "name": "Radiance",
+    "version": "RADIANCE 6.0.2 2026-02-02 LBNL (6.0.c1700d56cc)",
+    "release": "rad6R0P2",
+    "commands": [
+      "gensky",
+      "oconv",
+      "rtrace"
+    ],
+    "binariesExecuted": true
+  },
+  "source": {
+    "tracePath": "research/depthmap/habs-dc-97-first-floor-trace.json",
+    "traceSha256": "75e98361334fd54141c3cd4c7912707b8ef36f69050eb79c354164d764599605",
+    "archiveSheet": "HABS DC,WASH,166- sheet 2 of 8 — FIRST FLOOR PLAN",
+    "geometryBoundary": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW"
+  },
+  "model": {
+    "path": "models/v02-habs-dc-97/habs-dc-97-first-floor.rad",
+    "sha256": "26ddd728ee3ff2a4c35f3bdc1b15299f2fc9756768d0fa1ef195c6b614eba647",
+    "units": "m",
+    "heightM": 3.0,
+    "orientation": "local x east; local y north",
+    "windows": [
+      {
+        "id": "S1",
+        "startM": 0.8,
+        "endM": 2.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S2",
+        "startM": 3.8,
+        "endM": 5.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S3",
+        "startM": 6.8,
+        "endM": 8.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S4",
+        "startM": 9.8,
+        "endM": 11.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S5",
+        "startM": 12.8,
+        "endM": 14.8,
+        "orientation": "south"
+      },
+      {
+        "id": "S6",
+        "startM": 15.8,
+        "endM": 17.8,
+        "orientation": "south"
+      }
+    ],
+    "assumptions": [
+      "PLAN_NORTH_FROM_TRACE_AXIS_REQUIRES_FIELD_CONFIRMATION",
+      "STOREY_HEIGHT_3_0M_REQUIRES_FIELD_CONFIRMATION",
+      "SOUTH_WINDOWS_MANUAL_ESTIMATE_REQUIRES_SECOND_PERSON_CAD_REVIEW",
+      "SILL_0_9M_AND_HEAD_2_1M_REQUIRE_FIELD_CONFIRMATION"
+    ]
+  },
+  "sky": {
+    "generator": "gensky",
+    "date": "2026-06-21",
+    "solarTimeHour": 12,
+    "type": "CIE clear with sun",
+    "latitudeDeg": 38.9072,
+    "longitudeDegWest": 77.0369,
+    "standardMeridianDegWest": 75,
+    "locationLabel": "Washington, DC"
+  },
+  "checks": {
+    "sameCaseId": true,
+    "sceneCompiledByOconv": true,
+    "allIlluminanceFiniteAndPositive": true,
+    "sensorCount": 80
+  },
+  "limitations": [
+    "Point-in-time clear-sky study, not annual climate-based daylight autonomy.",
+    "Window positions and vertical dimensions are explicit analysis assumptions, not HABS measurements.",
+    "Manual plan trace requires independent CAD review before design use."
+  ],
+  "resultPath": "portal/data/v02-habs-dc-97-radiance-daylight.json",
+  "summary": {
+    "meanLux": 216.4,
+    "minimumLux": 0.2,
+    "maximumLux": 1215.8,
+    "uniformityMinOverMean": 0.001
+  }
+}

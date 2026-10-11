@@ -62,7 +62,6 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git pull --rebase origin "$GITHUB_REF_NAME"
           git add portal/assets/vendor/wger-clap-push-up-1554.png portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png portal/data/depthmap-vga.csv portal/data/depthmap-run.json portal/data/v02-habs-dc-97-depthmap-vga.csv portal/data/v02-habs-dc-97-depthmap-run.json research/depthmap/habs-dc-97-first-floor.dxf research/depthmap/habs-dc-97-first-floor-input-build.json
           git commit -m 'data: publish real depthmapX VGA result' || exit 0
-          git push
+          git push origin "HEAD:$GITHUB_REF_NAME"
