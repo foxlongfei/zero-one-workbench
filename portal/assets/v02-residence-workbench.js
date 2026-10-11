@@ -342,15 +342,17 @@
       root.dataset.importStatus = 'VALIDATED_AND_IMPORTED';
       root.dataset.importedCaseId = imported.id;
       root.dataset.importedAnalysisIntegrity = integrity.status;
+      root.dataset.importedMaterialIntegrity = 'VALID_SAME_CASE_MATERIAL_CHAIN';
       root.dataset.importedDepthmapPoints = String(imported.analysisChain?.depthmapX?.pointCount || 0);
       root.dataset.importedRadianceSensors = String(imported.analysisChain?.radiance?.sensorCount || 0);
       const known = keys.length - missingFields(imported).length;
       const depthHash = imported.analysisChain?.depthmapX?.outputSha256?.slice(0, 12) || 'NONE';
       const radianceHash = imported.analysisChain?.radiance?.modelSha256?.slice(0, 12) || 'NONE';
-      root.querySelector('#r-import-receipt').textContent = `导入成功：${imported.id}｜${integrity.status}｜已知 ${known}/${keys.length}｜材料 ${imported.materialFiles.length} 项｜depthmapX ${root.dataset.importedDepthmapPoints} 点 / ${depthHash}…｜Radiance ${root.dataset.importedRadianceSensors} 点 / ${radianceHash}…；同案链状态只证明档案契约与证据标识一致，不代表新一轮模型已运行。`;
+      root.querySelector('#r-import-receipt').textContent = `导入成功：${imported.id}｜${integrity.status}｜VALID_SAME_CASE_MATERIAL_CHAIN｜已知 ${known}/${keys.length}｜材料 ${imported.materialFiles.length} 项｜depthmapX ${root.dataset.importedDepthmapPoints} 点 / ${depthHash}…｜Radiance ${root.dataset.importedRadianceSensors} 点 / ${radianceHash}…；同案链状态只证明档案契约与证据标识一致，不代表新一轮模型已运行。`;
     } catch (error) {
       root.dataset.importStatus = 'REJECTED_WITHOUT_HYDRATION';
       root.dataset.importedAnalysisIntegrity = 'INVALID_ANALYSIS_CHAIN';
+      root.dataset.importedMaterialIntegrity = 'INVALID_MATERIAL_CHAIN';
       root.querySelector('#r-result').textContent = `导入失败：${error.message}`;
       root.querySelector('#r-import-receipt').textContent = `导入拒绝：${error.message}；当前 Residence/Case 未被覆盖。`;
     }

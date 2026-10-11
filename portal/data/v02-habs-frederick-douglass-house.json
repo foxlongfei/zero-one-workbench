@@ -34,9 +34,9 @@
     "material": {"value": "HABS DC,WASH,166- sheet 2/8；FIRST FLOOR PLAN；真实历史住宅测绘档案", "source": "https://www.loc.gov/pictures/item/dc0092.sheet.00002a", "confidence": "HIGH", "capturedAt": "2026-10-11T02:31:00Z"}
   },
   "materialFiles": [
-    {"name":"habs-dc-97-sheet-2-first-floor-plan.png","bytes":2127568,"mime":"image/png","source":"PUBLIC_ARCHIVE_US_NPS_HABS","license":"PUBLIC_DOMAIN_US_NPS","sha256":"9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315","capturedAt":"2026-10-11T02:31:00Z"},
-    {"name":"habs-dc-97-first-floor-trace.json","mime":"application/json","source":"PROJECT_TRACE_OF_PUBLIC_ARCHIVE","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor-trace.json","capturedAt":"2026-10-11T03:36:00Z"},
-    {"name":"habs-dc-97-first-floor.dxf","mime":"image/vnd.dxf","source":"PROJECT_TRACE_OF_PUBLIC_ARCHIVE","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor.dxf","sha256":"bf8e5b0db0bfdb876a4bd205a4238d7de860ded5a67fee9841beadace4d4aaa7","capturedAt":"2026-10-11T03:36:00Z"}
+    {"caseId":"residence:habs-dc-97:frederick-douglass-house","name":"habs-dc-97-sheet-2-first-floor-plan.png","bytes":2127568,"mime":"image/png","source":"PUBLIC_ARCHIVE_US_NPS_HABS","license":"PUBLIC_DOMAIN_US_NPS","sha256":"9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315","capturedAt":"2026-10-11T02:31:00Z"},
+    {"caseId":"residence:habs-dc-97:frederick-douglass-house","name":"habs-dc-97-first-floor-trace.json","bytes":3244,"mime":"application/json","source":"PROJECT_TRACE_OF_PUBLIC_ARCHIVE","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor-trace.json","sha256":"75e98361334fd54141c3cd4c7912707b8ef36f69050eb79c354164d764599605","capturedAt":"2026-10-11T03:36:00Z"},
+    {"caseId":"residence:habs-dc-97:frederick-douglass-house","name":"habs-dc-97-first-floor.dxf","bytes":2293,"mime":"image/vnd.dxf","source":"PROJECT_TRACE_OF_PUBLIC_ARCHIVE","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor.dxf","sha256":"bf8e5b0db0bfdb876a4bd205a4238d7de860ded5a67fee9841beadace4d4aaa7","capturedAt":"2026-10-11T03:36:00Z"}
   ],
   "analysisArtifacts": {
     "geometryTrace": "../../research/depthmap/habs-dc-97-first-floor-trace.json",
