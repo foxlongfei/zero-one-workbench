@@ -14,7 +14,7 @@ jobs:
   mainline:
     name: ${{ matrix.agent }} / ${{ matrix.track }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -24,14 +24,9 @@ jobs:
             file: portal/assets/v02-exercise-workbench.js
             model: openai/qwen3.8-flash
             base: https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
-          - agent: DeepSeek
-            track: B01
-            file: portal/assets/v02-residence-workbench.js
-            model: openai/deepseek-flash
-            base: https://api.deepseek.com
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - uses: actions/setup-node@v4
@@ -46,11 +41,11 @@ jobs:
           if [ "$TRACK" = A01 ]; then
             test -n "$QWEN_KEY" || { echo "::error::Qwen secret missing"; exit 1; }
             cat > /tmp/task.txt <<'TASK'
-          Mainline A01 increment, NOT A01 acceptance. Edit ONLY portal/assets/v02-exercise-workbench.js.
-          Add a visible, accessible short training session notes input with a local-only save and reload
-          feature keyed to the current exercise. Clearly label notes as user observations, not clinical
-          evaluation or verified upstream data. Preserve existing animation, exercise sources, licensed
-          upstream records, checklist and all provenance disclosures. Do not add dependencies or network calls.
+          A01 correction pass, NOT A01 acceptance. Edit ONLY portal/assets/v02-exercise-workbench.js.
+          Add one small accessible textarea labeled 训练笔记 for the active exercise, with a save
+          button writing its text to localStorage under an exercise-specific key.
+          Reload the saved text when the exercise UI initializes. Label it as user notes.
+          Preserve all current features. Do not add other functions, dependencies or requests.
           TASK
           else
             test -n "$DEEPSEEK_KEY" || { echo "::error::DeepSeek secret missing"; exit 1; }
@@ -78,7 +73,7 @@ jobs:
           git config user.name "v02-agent[bot]"
           git config user.email "v02-agent[bot]@users.noreply.github.com"
           git switch -c "agent/mainline-${{ matrix.track }}-${{ github.run_id }}"
-          timeout 150s aider --model "${{ matrix.model }}" --message-file /tmp/task.txt \
+          timeout 240s aider --model "${{ matrix.model }}" --message-file /tmp/task.txt \
             --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
             --map-tokens 0 --no-check-update --no-show-model-warnings "${{ matrix.file }}"
       - name: Scope, syntax and integration gate
