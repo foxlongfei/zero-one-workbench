@@ -125,9 +125,29 @@
     const preview = out.querySelector('#v02-ex-dossier-preview');
     if (!record || !preview) return;
     const note = out.querySelector('#v02-ex-notes')?.value || '';
-    preview.innerHTML = `<h4>当前动作档案预览</h4><p><b>Exercise ID：</b><code>${record.exerciseId}</code><br><b>上游记录：</b>wger ${record.id}｜${record.license}｜作者 ${record.author}<br><b>训练状态：</b>${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×<br><b>当前笔记：</b>${note || '未填写'}<br><b>边界：</b>LOCAL_BROWSER_ONLY｜${data.provenance.evidenceStatus}</p>`;
+    const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({record, note, phase, phaseName: phaseName(phase), speed, guidance: data.provenance.evidenceStatus});
+    preview.replaceChildren();
+    const heading = document.createElement('h4');
+    heading.textContent = '当前动作档案预览';
+    const summary = document.createElement('p');
+    const rows = [
+      ['Exercise ID', record.exerciseId],
+      ['上游记录', `wger ${record.id}｜${record.license}｜作者 ${record.author}`],
+      ['训练状态', `${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×`],
+      ['当前笔记', note || '未填写'],
+      ['对象完整度', `${dossier.completeness.status}｜${dossier.completeness.passed}/${dossier.completeness.total}`],
+      ['边界', `LOCAL_BROWSER_ONLY｜${data.provenance.evidenceStatus}`],
+    ];
+    rows.forEach(([label, value], index) => {
+      if (index) summary.append(document.createElement('br'));
+      const strong = document.createElement('b');
+      strong.textContent = `${label}：`;
+      summary.append(strong, document.createTextNode(value));
+    });
+    preview.append(heading, summary);
     root.dataset.dossierReady = 'true';
     root.dataset.dossierExerciseId = record.exerciseId;
+    root.dataset.dossierCompleteness = dossier.completeness.status;
   }
 
   function selectCatalogRecord(recordId) {
