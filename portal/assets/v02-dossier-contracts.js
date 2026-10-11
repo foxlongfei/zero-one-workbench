@@ -11,6 +11,8 @@
       ['record.version', Boolean(dossier?.record?.version)],
       ['record.author', Boolean(dossier?.record?.author)],
       ['record.license', Boolean(dossier?.record?.license)],
+      ['record.variantRelation', Boolean(dossier?.record?.variantRelation)],
+      ['definition.guidanceScope', Boolean(dossier?.definition?.guidanceScope)],
       ['definition.aliases', Array.isArray(dossier?.definition?.aliases) && dossier.definition.aliases.length > 0],
       ['definition.category', Boolean(dossier?.definition?.category)],
       ['definition.equipment', Boolean(dossier?.definition?.equipment)],
@@ -22,6 +24,7 @@
       ['definition.muscles.stabilizers', Array.isArray(dossier?.definition?.muscles?.stabilizers) && dossier.definition.muscles.stabilizers.length > 0],
       ['definition.joints', Array.isArray(dossier?.definition?.joints) && dossier.definition.joints.length > 0],
       ['definition.dynamics.controls', Array.isArray(dossier?.definition?.dynamics?.controls) && dossier.definition.dynamics.controls.length >= 4],
+      ['definition.dynamics.scope', Boolean(dossier?.definition?.dynamics?.scope)],
       ['training.phase', Number.isFinite(dossier?.training?.phase)],
       ['training.speed', Number.isFinite(dossier?.training?.speed) && dossier.training.speed > 0],
       ['boundaries.noteStorage', dossier?.boundaries?.noteStorage === 'LOCAL_BROWSER_ONLY'],
@@ -47,10 +50,12 @@
         version: record.version,
         author: record.author,
         license: record.license,
+        variantRelation: record.variantRelation,
         status: record.status,
         media: record.media,
       },
       definition: {
+        guidanceScope: String(definition?.guidanceScope || ''),
         aliases: Array.isArray(definition?.aliases) ? [...definition.aliases] : [],
         category: String(definition?.category || ''),
         equipment: String(definition?.equipment || ''),
@@ -65,6 +70,7 @@
         joints: Array.isArray(definition?.joints) ? definition.joints.map(item => ({...item})) : [],
         dynamics: {
           capability: String(definition?.dynamics?.capability || ''),
+          scope: String(definition?.dynamics?.scope || ''),
           controls: Array.isArray(definition?.dynamics?.controls) ? [...definition.dynamics.controls] : [],
           phases: Array.isArray(definition?.dynamics?.phases) ? definition.dynamics.phases.map(item => ({...item, range: Array.isArray(item.range) ? [...item.range] : []})) : [],
         },
@@ -109,7 +115,20 @@
     return '';
   }
 
-  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateResidenceImport});
+  function assessResidenceAnalysisChain(record) {
+    if (!record?.analysisChain) return Object.freeze({status: 'NO_ANALYSIS_CHAIN', errors: []});
+    const validationError = validateResidenceImport(record);
+    const errors = validationError ? [validationError] : [];
+    return Object.freeze({
+      status: errors.length ? 'INVALID_ANALYSIS_CHAIN' : 'VALID_SAME_CASE_ENGINE_CHAIN',
+      errors,
+      caseId: String(record.id || ''),
+      depthmapPointCount: Number(record.analysisChain?.depthmapX?.pointCount || 0),
+      radianceSensorCount: Number(record.analysisChain?.radiance?.sensorCount || 0),
+    });
+  }
+
+  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateResidenceImport, assessResidenceAnalysisChain});
   root.ZeroOneDossierContracts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis === 'object' ? globalThis : this);

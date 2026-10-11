@@ -115,6 +115,7 @@
   const out = root.querySelector('#v02-ex-content');
   const phaseName = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1])?.name || '动作周期';
   const definition = {
+    guidanceScope: 'PROJECT_STANDARD_PUSH_UP_GUIDANCE_SHARED_ACROSS_VARIANTS',
     aliases: data.aliases,
     category: data.category,
     equipment: data.equipment,
@@ -125,14 +126,15 @@
     joints: data.joints,
     dynamics: {
       capability: 'PROJECT_2D_TEACHING_ILLUSTRATION',
+      scope: 'STANDARD_PUSH_UP_ONLY_NOT_SELECTED_VARIANT_KINEMATICS',
       controls: ['PLAY', 'PAUSE', 'SPEED', 'PHASE_SCRUB'],
       phases: data.phases,
     },
   };
   const catalog = [
-    {id: data.upstream.exerciseId, exerciseId: data.id, name: data.name, upstreamName: data.upstream.exerciseName, source: data.upstream.project, sourceUrl: data.upstream.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.upstream.recordAuthor, license: data.upstream.recordLicense, status: data.upstream.integrationStatus, description: data.upstream.officialDescription, media: '许可图片已固化', image: data.upstream.officialImageUrl},
-    {id: data.upstreamVariant.exerciseId, exerciseId: 'exercise:wger:1964:wide-push-up', name: data.upstreamVariant.name, upstreamName: data.upstreamVariant.exerciseName, source: data.upstream.project, sourceUrl: data.upstreamVariant.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, status: data.upstreamVariant.integrationStatus, description: data.upstreamVariant.officialDescription, media: '当前记录无上游媒体', image: ''},
-    {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, upstreamName: data.licensedMediaVariant.exerciseName, source: data.upstream.project, sourceUrl: data.licensedMediaVariant.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, status: data.licensedMediaVariant.integrationStatus, description: 'The clap push-up is an explosive upper body movement that builds power and fast-twitch muscle strength. It adds a plyometric challenge to the traditional push-up by requiring the hands to leave the ground mid-rep.', media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`, image: data.licensedMediaVariant.imageUrl},
+    {id: data.upstream.exerciseId, exerciseId: data.id, name: data.name, upstreamName: data.upstream.exerciseName, source: data.upstream.project, sourceUrl: data.upstream.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.upstream.recordAuthor, license: data.upstream.recordLicense, variantRelation: 'STANDARD_PUSH_UP_RECORD', status: data.upstream.integrationStatus, description: data.upstream.officialDescription, media: '许可图片已固化', image: data.upstream.officialImageUrl},
+    {id: data.upstreamVariant.exerciseId, exerciseId: 'exercise:wger:1964:wide-push-up', name: data.upstreamVariant.name, upstreamName: data.upstreamVariant.exerciseName, source: data.upstream.project, sourceUrl: data.upstreamVariant.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.upstreamVariant.recordAuthor, license: data.upstreamVariant.recordLicense, variantRelation: 'LICENSED_WGER_VARIANT_OF_STANDARD_PUSH_UP', status: data.upstreamVariant.integrationStatus, description: data.upstreamVariant.officialDescription, media: '当前记录无上游媒体', image: ''},
+    {id: data.licensedMediaVariant.exerciseId, exerciseId: 'exercise:wger:1554:clap-push-up', name: data.licensedMediaVariant.name, upstreamName: data.licensedMediaVariant.exerciseName, source: data.upstream.project, sourceUrl: data.licensedMediaVariant.snapshotUrl, version: 'wger API snapshot 2026-10-10', author: data.licensedMediaVariant.recordAuthor, license: data.licensedMediaVariant.recordLicense, variantRelation: 'LICENSED_WGER_PLYOMETRIC_VARIANT_OF_STANDARD_PUSH_UP', status: data.licensedMediaVariant.integrationStatus, description: 'The clap push-up is an explosive upper body movement that builds power and fast-twitch muscle strength. It adds a plyometric challenge to the traditional push-up by requiring the hands to leave the ground mid-rep.', media: `许可图片已固化｜SHA-256 ${data.licensedMediaVariant.imageSha256}`, image: data.licensedMediaVariant.imageUrl},
   ];
 
   function renderDossierPreview() {
@@ -148,6 +150,7 @@
     const rows = [
       ['Exercise ID', record.exerciseId],
       ['上游记录', `wger ${record.id}｜${record.license}｜作者 ${record.author}`],
+      ['教学映射', `${record.variantRelation}｜${definition.guidanceScope}｜${definition.dynamics.scope}`],
       ['训练状态', `${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×`],
       ['当前笔记', note || '未填写'],
       ['对象完整度', `${dossier.completeness.status}｜${dossier.completeness.passed}/${dossier.completeness.total}`],
