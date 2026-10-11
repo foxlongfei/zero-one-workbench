@@ -58,12 +58,12 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#v02-ex-notes').fill('击掌：3×5，落地保持肩胛稳定');
   await page.locator('#v02-ex-notes-save').click();
   await page.locator('#v02-load-wide').click();
-  const wideNotesEmpty = await page.locator('#v02-ex-notes').inputValue() === '';
+  const wideNotes = await page.locator('#v02-ex-notes').inputValue();
   await page.locator('#v02-load-clap').click();
   const clapNotes = await page.locator('#v02-ex-notes').inputValue();
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.locator('#v02-load-clap').click();
-  record('A01', 'notes are isolated by selected Exercise ID and survive reload', wideNotesEmpty && clapNotes.includes('3×5') && (await page.locator('#v02-ex-notes').inputValue()).includes('3×5'), `wide empty=${wideNotesEmpty}｜clap=${await page.locator('#v02-ex-notes').inputValue()}`);
+  record('A01', 'notes are isolated by selected Exercise ID and survive reload', wideNotes === 'A01-wide-test' && !wideNotes.includes('3×5') && clapNotes.includes('3×5') && (await page.locator('#v02-ex-notes').inputValue()).includes('3×5'), `wide=${wideNotes}｜clap=${await page.locator('#v02-ex-notes').inputValue()}`);
   const exerciseExportDownload = page.waitForEvent('download');
   await page.locator('#v02-ex-export').click();
   const exerciseExport = JSON.parse(fs.readFileSync(await (await exerciseExportDownload).path(), 'utf8'));
