@@ -1,0 +1,70 @@
+{
+  "schema": "zero-one.habs-plan-trace.v0.1",
+  "caseId": "residence:habs-dc-97:frederick-douglass-house",
+  "source": {
+    "path": "portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png",
+    "sha256": "9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315",
+    "pixelWidth": 9652,
+    "pixelHeight": 7584,
+    "license": "PUBLIC_DOMAIN_US_NPS",
+    "sheet": "HABS DC,WASH,166- sheet 2 of 8 — FIRST FLOOR PLAN"
+  },
+  "method": "Manual centerline trace over the measured HABS sheet. Coordinates are auditable image pixels; this is a first-pass analysis geometry, not a replacement for the archival drawing or a survey-grade CAD model.",
+  "calibration": {
+    "x": {
+      "pixelA": [3016, 4424],
+      "pixelB": [7842, 4424],
+      "printedDistance": "62'-2 1/2\"",
+      "metres": 18.9611,
+      "metresPerPixel": 0.0039289
+    },
+    "y": {
+      "pixelA": [3016, 4424],
+      "pixelB": [3016, 1219],
+      "printedDistance": "42'-7 7/8\"",
+      "metres": 13.0024,
+      "metresPerPixel": 0.0040569
+    },
+    "originPixel": [3016, 4424],
+    "axis": "local x east; local y north"
+  },
+  "manualValidationPoints": [
+    {"id": "SW", "pixel": [3016, 4424], "localMetres": [0, 0], "meaning": "south-west exterior corner"},
+    {"id": "SE", "pixel": [7842, 4424], "localMetres": [18.9611, 0], "meaning": "south-east exterior corner"},
+    {"id": "NW_BAY", "pixel": [3016, 1219], "localMetres": [0, 13.0024], "meaning": "north-west bay exterior corner"},
+    {"id": "EAST_WING_NW", "pixel": [4464, 2703], "localMetres": [5.689, 6.981], "meaning": "east wing north-west junction"}
+  ],
+  "exteriorPolylinePixels": [
+    [3016,4424],[7842,4424],[7842,2703],[5703,2703],[5703,1930],[5500,1860],[5300,1650],[4987,1548],[4464,1548],[4464,1219],[3861,1219],[3861,1548],[3559,1548],[3559,1219],[3016,1219],[3016,4424]
+  ],
+  "wallSegmentsPixels": [
+    {"id":"W01","a":[4464,1548],"b":[4464,2070]},
+    {"id":"W02","a":[4464,2260],"b":[4464,2703]},
+    {"id":"W03","a":[3016,2703],"b":[4220,2703]},
+    {"id":"W04","a":[4420,2703],"b":[4830,2703]},
+    {"id":"W05","a":[5050,2703],"b":[5900,2703]},
+    {"id":"W06","a":[6140,2703],"b":[7842,2703]},
+    {"id":"W07","a":[4464,3120],"b":[4464,3560]},
+    {"id":"W08","a":[4464,3750],"b":[4464,4424]},
+    {"id":"W09","a":[5150,2703],"b":[5150,3330]},
+    {"id":"W10","a":[5150,3520],"b":[5150,4424]},
+    {"id":"W11","a":[3016,3225],"b":[4220,3225]},
+    {"id":"W12","a":[4420,3225],"b":[4464,3225]},
+    {"id":"W13","a":[5900,2703],"b":[5900,3170]},
+    {"id":"W14","a":[5900,3380],"b":[5900,3770]},
+    {"id":"W15","a":[5900,3960],"b":[5900,4424]},
+    {"id":"W16","a":[6630,2703],"b":[6630,3220]},
+    {"id":"W17","a":[6630,3420],"b":[6630,3770]},
+    {"id":"W18","a":[6630,3970],"b":[6630,4424]},
+    {"id":"W19","a":[5900,3420],"b":[6420,3420]},
+    {"id":"W20","a":[6630,3420],"b":[7842,3420]}
+  ],
+  "doorGaps": [
+    {"id":"D01","wall":"W01/W02","pixelSpan":[2070,2260]},
+    {"id":"D02","wall":"W03/W04","pixelSpan":[4220,4420]},
+    {"id":"D03","wall":"W04/W05","pixelSpan":[4830,5050]},
+    {"id":"D04","wall":"W05/W06","pixelSpan":[5900,6140]}
+  ],
+  "depthmapSeedLocalMetres": [2.0, 2.0],
+  "qualityBoundary": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW"
+}

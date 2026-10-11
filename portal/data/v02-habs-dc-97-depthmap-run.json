@@ -1,0 +1,34 @@
+{
+  "schema": "zero-one.v02.habs-depthmap-run.v0.1",
+  "caseId": "residence:habs-dc-97:frederick-douglass-house",
+  "engine": {
+    "name": "depthmapX",
+    "version": "0.9.1",
+    "mode": "VGA visibility local",
+    "gridMetres": 0.5,
+    "fillSeed": [
+      2,
+      2
+    ],
+    "binariesExecuted": true
+  },
+  "input": {
+    "path": "research/depthmap/habs-dc-97-first-floor.dxf",
+    "sha256": "bf8e5b0db0bfdb876a4bd205a4238d7de860ded5a67fee9841beadace4d4aaa7",
+    "trace": "research/depthmap/habs-dc-97-first-floor-trace.json",
+    "sourceImageSha256": "9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315"
+  },
+  "output": {
+    "path": "portal/data/v02-habs-dc-97-depthmap-vga.csv",
+    "sha256": "6c243a0c33d58f4c6a89450deef80551be8770648cc29aa11069cd5b46ae5aa4",
+    "pointCount": 708,
+    "connectivity": {
+      "minimum": 37,
+      "maximum": 265,
+      "mean": 128.28
+    }
+  },
+  "commit": "LOCAL_VERIFIED_BEFORE_COMMIT",
+  "passed": true,
+  "boundary": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW; RADIANCE_NOT_RUN_FOR_THIS_CASE"
+}

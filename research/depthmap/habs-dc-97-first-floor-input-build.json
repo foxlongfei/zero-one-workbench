@@ -1,0 +1,44 @@
+{
+  "schema": "zero-one.habs-depthmap-input-build.v0.1",
+  "caseId": "residence:habs-dc-97:frederick-douglass-house",
+  "sourceTrace": "research/depthmap/habs-dc-97-first-floor-trace.json",
+  "sourceImageSha256": "9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315",
+  "output": "research/depthmap/habs-dc-97-first-floor.dxf",
+  "outputSha256": "bf8e5b0db0bfdb876a4bd205a4238d7de860ded5a67fee9841beadace4d4aaa7",
+  "lineCount": 35,
+  "calibration": {
+    "x": {
+      "pixelA": [
+        3016,
+        4424
+      ],
+      "pixelB": [
+        7842,
+        4424
+      ],
+      "printedDistance": "62'-2 1/2\"",
+      "metres": 18.9611,
+      "metresPerPixel": 0.0039289
+    },
+    "y": {
+      "pixelA": [
+        3016,
+        4424
+      ],
+      "pixelB": [
+        3016,
+        1219
+      ],
+      "printedDistance": "42'-7 7/8\"",
+      "metres": 13.0024,
+      "metresPerPixel": 0.0040569
+    },
+    "originPixel": [
+      3016,
+      4424
+    ],
+    "axis": "local x east; local y north"
+  },
+  "validationPointCount": 4,
+  "qualityBoundary": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW"
+}

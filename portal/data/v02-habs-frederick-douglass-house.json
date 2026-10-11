@@ -20,8 +20,8 @@
     "place": "Washington, District of Columbia, USA",
     "dir": "",
     "floor": "",
-    "rooms": "HABS sheet 2/8 明确标注 FIRST FLOOR PLAN；房间拓扑尚未矢量化",
-    "size": "sheet 19 × 24 in（B size）；建筑尺度待从图纸读取",
+    "rooms": "HABS sheet 2/8 FIRST FLOOR PLAN；首版人工复核墙线已转换为35条DXF线段，门洞作为墙线间隙保留",
+    "size": "图纸总尺寸标注 62'-2 1/2\" × 42'-7 7/8\"；分别校准为18.9611 m × 13.0024 m",
     "needs": "公开历史住宅空间分析样板；不代表现住户需求",
     "surround": "",
     "material": "HABS DC,WASH,166- sheet 2/8；FIRST FLOOR PLAN；真实历史住宅测绘档案",
@@ -33,14 +33,23 @@
     "place": {"value": "Washington, District of Columbia, USA", "source": "Library of Congress accession HABS DC,WASH,166-", "confidence": "HIGH", "capturedAt": "2026-10-10T23:32:00Z"},
     "material": {"value": "HABS DC,WASH,166- sheet 2/8；FIRST FLOOR PLAN；真实历史住宅测绘档案", "source": "https://www.loc.gov/pictures/item/dc0092.sheet.00002a", "confidence": "HIGH", "capturedAt": "2026-10-11T02:31:00Z"}
   },
-  "materialFiles": [{"name":"habs-dc-97-sheet-2-first-floor-plan.png","bytes":2127568,"mime":"image/png","license":"PUBLIC_DOMAIN_US_NPS","sha256":"9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315","capturedAt":"2026-10-11T02:31:00Z"}],
+  "materialFiles": [
+    {"name":"habs-dc-97-sheet-2-first-floor-plan.png","bytes":2127568,"mime":"image/png","license":"PUBLIC_DOMAIN_US_NPS","sha256":"9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315","capturedAt":"2026-10-11T02:31:00Z"},
+    {"name":"habs-dc-97-first-floor-trace.json","mime":"application/json","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor-trace.json","capturedAt":"2026-10-11T03:36:00Z"},
+    {"name":"habs-dc-97-first-floor.dxf","mime":"image/vnd.dxf","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor.dxf","sha256":"bf8e5b0db0bfdb876a4bd205a4238d7de860ded5a67fee9841beadace4d4aaa7","capturedAt":"2026-10-11T03:36:00Z"}
+  ],
+  "analysisArtifacts": {
+    "geometryTrace": "../../research/depthmap/habs-dc-97-first-floor-trace.json",
+    "depthmapRun": "v02-habs-dc-97-depthmap-run.json",
+    "depthmapCsv": "v02-habs-dc-97-depthmap-vga.csv"
+  },
   "revisions": [],
   "boundaries": {
     "actualResidence": "HISTORIC_REAL_RESIDENCE_ARCHIVE",
     "userResidence": "NOT_USER_HOME",
-    "modelRun": "NOT_STARTED",
-    "geometryContinuity": "MEASURED_FIRST_FLOOR_PLAN_IDENTIFIED_NOT_YET_VECTORIZED",
-    "depthmapX": "NOT_RUN_FOR_THIS_CASE",
+    "modelRun": "DEPTHMAPX_VGA_RUN_FOR_THIS_TRACE",
+    "geometryContinuity": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW",
+    "depthmapX": "DEPTHMAPX_0_9_1_VGA_708_POINTS",
     "radiance": "NOT_RUN_FOR_THIS_CASE",
     "crossLayerEquivalence": "BLOCK"
   }

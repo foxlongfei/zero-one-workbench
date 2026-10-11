@@ -3,6 +3,10 @@ on:
   push:
     paths:
       - 'research/depthmap/prototype-house.dxf'
+      - 'research/depthmap/habs-dc-97-first-floor-trace.json'
+      - 'research/depthmap/habs-dc-97-first-floor.dxf'
+      - 'scripts/build-habs-depthmap-input.mjs'
+      - 'scripts/summarize-habs-depthmap.mjs'
       - '.github/workflows/depthmap-prototype.yml'
   workflow_dispatch:
 permissions:
@@ -12,6 +16,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Restore and byte-verify licensed source assets
+        run: |
+          set -euxo pipefail
+          node scripts/v02-fetch-upstream-assets.mjs
+          cp artifacts/v02-browser/upstream/wger-clap-push-up-1554.png portal/assets/vendor/wger-clap-push-up-1554.png
+          cp artifacts/v02-browser/upstream/habs-dc-97-sheet-2-of-8.png portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png
+          printf '%s  %s\n' '7e6f3da44a68a285da8d987ad2ebc47f636bf17555e911d7dce0e1bb9be8ad47' 'portal/assets/vendor/wger-clap-push-up-1554.png' | sha256sum --check
+          printf '%s  %s\n' '9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315' 'portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png' | sha256sum --check
+          identify portal/assets/vendor/wger-clap-push-up-1554.png portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png
       - name: Download depthmapX CLI v0.9.1
         run: |
           curl -L -o depthmapXcli https://github.com/SpaceGroupUCL/depthmapX/releases/download/v0.9.1/depthmapXcli_linux64
@@ -28,11 +44,24 @@ jobs:
           test -s portal/data/depthmap-vga.csv
           head -5 portal/data/depthmap-vga.csv
           printf '{"engine":"depthmapX","version":"0.9.1","mode":"VGA visibility local","grid":0.5,"fill_seed":"2,2","visibility_graph":true,"source":"research/depthmap/prototype-house.dxf","commit":"%s"}\n' "$GITHUB_SHA" > portal/data/depthmap-run.json
+      - name: Run Frederick Douglass House trace through depthmapX
+        run: |
+          set -euxo pipefail
+          node scripts/build-habs-depthmap-input.mjs
+          mkdir -p research/depthmap/out/habs portal/data
+          ./depthmapXcli -m IMPORT -f research/depthmap/habs-dc-97-first-floor.dxf -o research/depthmap/out/habs/imported.graph
+          ./depthmapXcli -m VISPREP -f research/depthmap/out/habs/imported.graph -o research/depthmap/out/habs/prepared.graph -pg 0.5 -pp 2,2 -pm
+          ./depthmapXcli -m VGA -f research/depthmap/out/habs/prepared.graph -o research/depthmap/out/habs/vga.graph -vm visibility -vl
+          ./depthmapXcli -m EXPORT -f research/depthmap/out/habs/vga.graph -o portal/data/v02-habs-dc-97-depthmap-vga.csv -em pointmap-data-csv
+          test -s portal/data/v02-habs-dc-97-depthmap-vga.csv
+          sha256sum research/depthmap/habs-dc-97-first-floor.dxf portal/data/v02-habs-dc-97-depthmap-vga.csv
+          node scripts/summarize-habs-depthmap.mjs
+          node scripts/v02-verify.mjs
       - name: Publish analysis result
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git pull --rebase origin main
-          git add portal/data/depthmap-vga.csv portal/data/depthmap-run.json
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git add portal/assets/vendor/wger-clap-push-up-1554.png portal/assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png portal/data/depthmap-vga.csv portal/data/depthmap-run.json portal/data/v02-habs-dc-97-depthmap-vga.csv portal/data/v02-habs-dc-97-depthmap-run.json research/depthmap/habs-dc-97-first-floor.dxf research/depthmap/habs-dc-97-first-floor-input-build.json
           git commit -m 'data: publish real depthmapX VGA result' || exit 0
           git push

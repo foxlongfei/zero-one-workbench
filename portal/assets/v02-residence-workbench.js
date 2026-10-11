@@ -203,12 +203,18 @@
       root.dataset.sourceArtifact = record.sourceArtifact || '';
       root.dataset.archiveLicense = record.license || '';
       root.dataset.engineGeometry = record.boundaries?.geometryContinuity || '';
+      root.dataset.depthmapStatus = record.boundaries?.depthmapX || '';
       root.dataset.materialSha = record.repositoryAssetSha256 || '';
       const preview = root.querySelector('#r-archive-preview');
       preview.hidden = false;
       preview.querySelector('img').src = record.repositoryAsset.replace('../assets/', 'assets/');
       preview.querySelector('figcaption').textContent = `${record.sourceArtifact}｜${record.license}｜SHA-256 ${record.repositoryAssetSha256}`;
-      root.querySelector('#r-result').textContent += ' 已加载HABS真实历史住宅首层平面图；它不是用户住宅。图纸已识别并固化，但尚未矢量化，也未送入depthmapX或Radiance，不输出空间、环境或吉凶结论。';
+      const runResponse = await fetch(`data/${record.analysisArtifacts.depthmapRun}`);
+      if (!runResponse.ok) throw Error(`depthmapX run HTTP ${runResponse.status}`);
+      const run = await runResponse.json();
+      root.dataset.depthmapPointCount = String(run.output.pointCount);
+      root.dataset.depthmapOutputSha = run.output.sha256;
+      root.querySelector('#r-result').innerHTML += ` 已加载HABS真实历史住宅首层平面图；它不是用户住宅。首版墙线已按图纸标注尺度矢量化并由 depthmapX ${run.engine.version} 实跑 VGA：<b>${run.output.pointCount} 个点</b>，Connectivity ${run.output.connectivity.minimum}–${run.output.connectivity.maximum}，平均 ${run.output.connectivity.mean}。<a href="data/${record.analysisArtifacts.depthmapRun}">运行证据</a>｜<a href="data/${record.analysisArtifacts.depthmapCsv}">VGA CSV</a>。人工描线仍需第二人 CAD 复核；Radiance 尚未运行；不输出环境或吉凶结论。`;
     } catch (error) {
       root.querySelector('#r-result').textContent = `HABS档案加载失败：${error.message}`;
     }
