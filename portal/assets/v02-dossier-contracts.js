@@ -27,6 +27,7 @@
       ['definition.joints', Array.isArray(dossier?.definition?.joints) && dossier.definition.joints.length > 0],
       ['definition.dynamics.controls', Array.isArray(dossier?.definition?.dynamics?.controls) && dossier.definition.dynamics.controls.length >= 4],
       ['definition.dynamics.scope', Boolean(dossier?.definition?.dynamics?.scope)],
+      ['definition.dynamics.timeline', Array.isArray(dossier?.definition?.dynamics?.phases) && dossier.definition.dynamics.phases.length === 5 && dossier.definition.dynamics.phases.every((item, index, phases) => typeof item.phaseId === 'string' && item.phaseId.startsWith('push-up:') && Array.isArray(item.range) && item.range.length === 2 && item.range[0] === (index ? phases[index - 1].range[1] + 1 : 0) && item.range[1] >= item.range[0] && item.range[1] <= 100 && Array.isArray(item.jointActions) && item.jointActions.length > 0 && Boolean(item.bodyAlignment)) && dossier.definition.dynamics.phases.at(-1).range[1] === 100],
       ['training.phase', Number.isFinite(dossier?.training?.phase)],
       ['training.speed', Number.isFinite(dossier?.training?.speed) && dossier.training.speed > 0],
       ['boundaries.noteStorage', dossier?.boundaries?.noteStorage === 'LOCAL_BROWSER_ONLY'],
@@ -105,6 +106,8 @@
     const materialAssessment = assessResidenceMaterialChain(record);
     if (materialAssessment.errors.length) return materialAssessment.errors[0];
     if (record.materialChain != null && (record.materialChain.status !== materialAssessment.status || record.materialChain.caseId !== materialAssessment.caseId || record.materialChain.materialCount !== materialAssessment.materialCount)) return 'materialChain 与材料清单不一致';
+    const clarificationAssessment = assessResidenceClarification(record);
+    if (record.clarificationState != null && (record.clarificationState.status !== clarificationAssessment.status || record.clarificationState.knownCount !== clarificationAssessment.knownCount || record.clarificationState.totalFields !== clarificationAssessment.totalFields || record.clarificationState.nextField !== clarificationAssessment.nextField || JSON.stringify(record.clarificationState.missingFields) !== JSON.stringify(clarificationAssessment.missingFields))) return 'clarificationState 与住宅字段不一致';
     if (record.revisions != null && !Array.isArray(record.revisions)) return 'revisions 必须是数组';
     if (record.boundaries != null && (typeof record.boundaries !== 'object' || Array.isArray(record.boundaries))) return 'boundaries 必须是对象';
     if (record.analysisChain != null && (typeof record.analysisChain !== 'object' || Array.isArray(record.analysisChain))) return 'analysisChain 必须是对象或 null';
@@ -139,6 +142,26 @@
     });
   }
 
+  function assessResidenceClarification(record) {
+    const fieldDefs = [
+      ['name', '住宅名称'], ['place', '所在地区'], ['dir', '朝向'], ['floor', '楼层'],
+      ['rooms', '房间与布局'], ['size', '面积与尺度'], ['needs', '居住者需求'],
+      ['surround', '周边环境'], ['material', '材料说明'], ['source', '材料来源'], ['confidence', '当前置信度'],
+    ];
+    const fields = record?.fields && typeof record.fields === 'object' ? record.fields : {};
+    const missingFields = fieldDefs.map(([key]) => key).filter(key => !String(fields[key] || '').trim());
+    const nextField = missingFields[0] || '';
+    const nextLabel = fieldDefs.find(([key]) => key === nextField)?.[1] || '';
+    return Object.freeze({
+      status: missingFields.length ? 'ACTIVE_CLARIFICATION_REQUIRED' : 'FIELDS_COMPLETE_PENDING_REAL_RESIDENCE_ACCEPTANCE',
+      knownCount: fieldDefs.length - missingFields.length,
+      totalFields: fieldDefs.length,
+      missingFields,
+      nextField,
+      question: missingFields.length ? `请补充“${nextLabel}”，并说明它来自测量、描述、图纸还是现场观察。` : '材料字段已齐；仍需真实住宅材料验收。',
+    });
+  }
+
   function assessResidenceAnalysisChain(record) {
     if (!record?.analysisChain) return Object.freeze({status: 'NO_ANALYSIS_CHAIN', errors: []});
     const validationError = validateResidenceImport(record);
@@ -152,7 +175,7 @@
     });
   }
 
-  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateResidenceImport, assessResidenceMaterialChain, assessResidenceAnalysisChain});
+  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
   root.ZeroOneDossierContracts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis === 'object' ? globalThis : this);
