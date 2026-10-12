@@ -36,6 +36,7 @@
         <p id="r-radiance-legend" class="muted"></p></section>
     </figure>
     <div id="r-next-question" class="result" aria-live="polite"></div>
+    <div id="r-clarification-queue" class="result" aria-live="polite"></div>
     <div id="r-provenance-summary" class="result" role="status" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
@@ -211,6 +212,28 @@
       : '后续计算尚未与此住宅ID绑定。';
     root.querySelector('#r-result').textContent = `住宅ID：${record.id}｜已知字段：${keys.length - missing.length}/${keys.length}｜待补充：${missing.map(key => labels[key]).join('、') || '无'}${directionValid ? '' : '｜朝向必须在0至360度之间'}。${analysisState}不输出未经计算的环境或吉凶结论。`;
     root.querySelector('#r-next-question').textContent = `先生下一问：${record.clarificationState.question}`;
+    const queue = root.querySelector('#r-clarification-queue');
+    queue.replaceChildren();
+    const queueHeading = document.createElement('b');
+    queueHeading.textContent = `补充队列｜${record.clarificationState.knownCount}/${record.clarificationState.totalFields} 已知`;
+    queue.append(queueHeading);
+    if (record.clarificationState.missingFields.length) {
+      const queueList = document.createElement('ol');
+      for (const key of record.clarificationState.missingFields) {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'chip';
+        button.dataset.clarificationField = key;
+        button.textContent = `补充：${labels[key]}`;
+        button.addEventListener('click', () => fields[key].focus());
+        item.append(button);
+        queueList.append(item);
+      }
+      queue.append(queueList);
+    } else {
+      queue.append(document.createTextNode('｜无待补字段；仍需真实住宅材料验收。'));
+    }
     root.dataset.clarificationStatus = record.clarificationState.status;
     root.dataset.residenceId = record.id;
     root.dataset.knownCount = String(keys.length - missing.length);

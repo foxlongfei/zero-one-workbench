@@ -114,6 +114,7 @@
   let speed = 1;
   const out = root.querySelector('#v02-ex-content');
   const phaseName = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1])?.name || '动作周期';
+  const phaseRecord = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1]) || data.phases[0];
   const definition = {
     guidanceScope: 'PROJECT_STANDARD_PUSH_UP_GUIDANCE_SHARED_ACROSS_VARIANTS',
     aliases: data.aliases,
@@ -210,6 +211,17 @@
     out.querySelector('#v02-svg').innerHTML = svg;
     out.querySelector('#v02-phase').value = phase;
     out.querySelector('#v02-phase-name').textContent = phaseName(phase);
+    const currentPhase = phaseRecord(phase);
+    const phaseDetail = out.querySelector('#v02-phase-detail');
+    phaseDetail.replaceChildren();
+    const phaseHeading = document.createElement('b');
+    phaseHeading.textContent = `${currentPhase.name}｜${currentPhase.phaseId}`;
+    const jointLine = document.createElement('p');
+    jointLine.textContent = `关节动作：${currentPhase.jointActions.join('；')}`;
+    const alignmentLine = document.createElement('p');
+    alignmentLine.textContent = `身体排列：${currentPhase.bodyAlignment}`;
+    phaseDetail.append(phaseHeading, jointLine, alignmentLine);
+    phaseDetail.dataset.phaseId = currentPhase.phaseId;
     root.dataset.phase = String(Math.round(phase));
     root.dataset.phaseName = phaseName(phase);
     renderDossierPreview();
@@ -224,6 +236,7 @@
       <div><button class="btn" id="v02-play">播放</button> <button class="btn ghost" id="v02-stop">暂停</button>
         <label>速度 <select id="v02-speed"><option value="0.5">0.5×慢放</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label>
         <label>动作阶段 <input type="range" id="v02-phase" min="0" max="100" value="0"></label> <strong id="v02-phase-name"></strong></div>
+      <section id="v02-phase-detail" class="result" aria-live="polite"></section>
       <h4>标准步骤</h4><ol>${data.steps.map(x => `<li>${x}</li>`).join('')}</ol>
       <h4>肌群角色</h4><p><b>主要：</b>${data.muscles.primary.join('、')}<br><b>辅助：</b>${data.muscles.secondary.join('、')}<br><b>稳定：</b>${data.muscles.stabilizers.join('、')}</p>
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>
