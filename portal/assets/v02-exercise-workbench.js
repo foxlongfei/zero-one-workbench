@@ -147,7 +147,7 @@
     const preview = out.querySelector('#v02-ex-dossier-preview');
     if (!record || !preview) return;
     const note = out.querySelector('#v02-ex-notes')?.value || '';
-    const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({record, definition, note, phase, phaseName: phaseName(phase), speed, guidance: data.provenance.evidenceStatus});
+    const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({record, definition, note, phase, phaseId: phaseRecord(phase).phaseId, phaseName: phaseName(phase), speed, guidance: data.provenance.evidenceStatus});
     preview.replaceChildren();
     const heading = document.createElement('h4');
     heading.textContent = '当前动作档案预览';
@@ -159,7 +159,7 @@
       ['有来源变式', definition.sourceVariants.map(item => `${item.name} / wger ${item.wgerId} / ${item.license}`).join('；')],
       ['媒体证据', `${record.mediaEvidence.status}｜${record.mediaEvidence.sha256 ? `SHA-256 ${record.mediaEvidence.sha256}` : 'NO_UPSTREAM_MEDIA'}`],
       ['动作时间线', `${definition.dynamics.phases.length}/5｜${definition.dynamics.phases.map(item => item.phaseId).join(' → ')}`],
-      ['训练状态', `${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×`],
+      ['训练状态', `${phaseRecord(phase).phaseId}｜${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×`],
       ['当前笔记', note || '未填写'],
       ['对象完整度', `${dossier.completeness.status}｜${dossier.completeness.passed}/${dossier.completeness.total}`],
       ['边界', `LOCAL_BROWSER_ONLY｜${data.provenance.evidenceStatus}`],
@@ -222,6 +222,10 @@
     alignmentLine.textContent = `身体排列：${currentPhase.bodyAlignment}`;
     phaseDetail.append(phaseHeading, jointLine, alignmentLine);
     phaseDetail.dataset.phaseId = currentPhase.phaseId;
+    out.querySelectorAll('#v02-phase-sequence [data-phase-target]').forEach(button => {
+      if (button.dataset.phaseTarget === currentPhase.phaseId) button.setAttribute('aria-current', 'step');
+      else button.removeAttribute('aria-current');
+    });
     root.dataset.phase = String(Math.round(phase));
     root.dataset.phaseName = phaseName(phase);
     renderDossierPreview();
@@ -237,6 +241,7 @@
         <label>速度 <select id="v02-speed"><option value="0.5">0.5×慢放</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label>
         <label>动作阶段 <input type="range" id="v02-phase" min="0" max="100" value="0"></label> <strong id="v02-phase-name"></strong></div>
       <section id="v02-phase-detail" class="result" aria-live="polite"></section>
+      <nav id="v02-phase-sequence" aria-label="俯卧撑动作阶段">${data.phases.map(item => `<button type="button" class="chip" data-phase-target="${item.phaseId}" data-phase-value="${Math.round((item.range[0] + item.range[1]) / 2)}">${item.name}</button>`).join(' ')}</nav>
       <h4>标准步骤</h4><ol>${data.steps.map(x => `<li>${x}</li>`).join('')}</ol>
       <h4>肌群角色</h4><p><b>主要：</b>${data.muscles.primary.join('、')}<br><b>辅助：</b>${data.muscles.secondary.join('、')}<br><b>稳定：</b>${data.muscles.stabilizers.join('、')}</p>
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>
@@ -280,6 +285,9 @@
     out.querySelector('#v02-stop').onclick = () => clearInterval(timer);
     out.querySelector('#v02-speed').onchange = event => { speed = Number(event.target.value); root.dataset.speed = String(speed); renderDossierPreview(); };
     out.querySelector('#v02-phase').oninput = event => { phase = Number(event.target.value); draw(); };
+    out.querySelectorAll('#v02-phase-sequence [data-phase-target]').forEach(button => {
+      button.onclick = () => { phase = Number(button.dataset.phaseValue); draw(); };
+    });
     out.querySelector('#v02-ex-notes-save').onclick = () => {
       const notesStatus = out.querySelector('#v02-ex-notes-status');
       try {
@@ -297,6 +305,7 @@
         definition,
         note: out.querySelector('#v02-ex-notes').value,
         phase,
+        phaseId: phaseRecord(phase).phaseId,
         phaseName: phaseName(phase),
         speed,
         guidance: data.provenance.evidenceStatus,

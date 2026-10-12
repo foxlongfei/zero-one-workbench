@@ -37,6 +37,7 @@
     </figure>
     <div id="r-next-question" class="result" aria-live="polite"></div>
     <div id="r-clarification-queue" class="result" aria-live="polite"></div>
+    <div id="r-evidence-coverage" class="result" aria-live="polite"></div>
     <div id="r-provenance-summary" class="result" role="status" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
@@ -235,6 +236,20 @@
       queue.append(document.createTextNode('｜无待补字段；仍需真实住宅材料验收。'));
     }
     root.dataset.clarificationStatus = record.clarificationState.status;
+    const evidenceCoverage = root.querySelector('#r-evidence-coverage');
+    evidenceCoverage.replaceChildren();
+    const evidenceHeading = document.createElement('b');
+    evidenceHeading.textContent = `字段证据覆盖｜${record.clarificationState.evidencedKnownCount}/${record.clarificationState.knownEvidenceRequiredCount}`;
+    evidenceCoverage.append(evidenceHeading);
+    if (record.clarificationState.unsupportedKnownFields.length) {
+      const gap = document.createElement('p');
+      gap.textContent = `已填写但待补来源/置信度：${record.clarificationState.unsupportedKnownFields.map(key => labels[key]).join('、')}`;
+      evidenceCoverage.append(gap);
+    } else {
+      evidenceCoverage.append(document.createTextNode('｜已填写的实质字段均有匹配来源与置信度记录。'));
+    }
+    root.dataset.evidencedKnownCount = String(record.clarificationState.evidencedKnownCount);
+    root.dataset.unsupportedKnownFields = record.clarificationState.unsupportedKnownFields.join('|');
     root.dataset.residenceId = record.id;
     root.dataset.knownCount = String(keys.length - missing.length);
     root.dataset.missingCount = String(missing.length);
