@@ -79,6 +79,7 @@
           scope: String(definition?.dynamics?.scope || ''),
           controls: Array.isArray(definition?.dynamics?.controls) ? [...definition.dynamics.controls] : [],
           phases: Array.isArray(definition?.dynamics?.phases) ? definition.dynamics.phases.map(item => ({...item, range: Array.isArray(item.range) ? [...item.range] : []})) : [],
+          keypointSequence: definition?.dynamics?.keypointSequence ? JSON.parse(JSON.stringify(definition.dynamics.keypointSequence)) : null,
         },
       },
       training: {

@@ -25,6 +25,24 @@
       {phaseId: 'push-up:concentric', name: '向心推起', range: [60, 89], jointActions: ['肘关节伸展', '肩关节水平内收', '肩胛前伸并稳定贴附'], bodyAlignment: '身体作为整体推离地面，避免腰部塌陷'},
       {phaseId: 'push-up:return', name: '回到支撑', range: [90, 100], jointActions: ['肘关节回到伸展', '肩胛胸廓重新稳定'], bodyAlignment: '恢复头—肩—髋—踝稳定排列'},
     ],
+    keypointSequence: {
+      schema: 'zero-one.standard-keypoints.v0.1',
+      source: 'PROJECT_AUTHORED_STANDARD_PUSH_UP_REFERENCE',
+      coordinateSystem: 'NORMALIZED_2D_SIDE_VIEW_X_RIGHT_Y_DOWN',
+      sampleRateHz: 1,
+      limitation: '五个标准相位的项目参考点，不是用户识别结果，也不是三维或医学级运动学。',
+      frames: [
+        ['push-up:support', 0.33, 0.30, 0.44, 0.59, 0.49, 0.84, 0.66, 0.32, 0.92, 0.78],
+        ['push-up:eccentric', 0.33, 0.45, 0.44, 0.67, 0.49, 0.84, 0.66, 0.47, 0.92, 0.78],
+        ['push-up:bottom', 0.33, 0.60, 0.44, 0.72, 0.49, 0.84, 0.66, 0.62, 0.92, 0.78],
+        ['push-up:concentric', 0.33, 0.45, 0.44, 0.67, 0.49, 0.84, 0.66, 0.47, 0.92, 0.78],
+        ['push-up:return', 0.33, 0.30, 0.44, 0.59, 0.49, 0.84, 0.66, 0.32, 0.92, 0.78],
+      ].map(([phaseId, shoulderX, shoulderY, elbowX, elbowY, wristX, wristY, hipX, hipY, ankleX, ankleY], index) => ({
+        frame: index,
+        phaseId,
+        points: {shoulder: [shoulderX, shoulderY], elbow: [elbowX, elbowY], wrist: [wristX, wristY], hip: [hipX, hipY], ankle: [ankleX, ankleY]},
+      })),
+    },
     steps: [
       '双手撑地，手位约在肩部附近，头、肩、髋、踝保持稳定排列',
       '屈肘控制身体整体下降，避免腰部明显塌陷或臀部先抬起',
@@ -134,6 +152,7 @@
       scope: 'STANDARD_PUSH_UP_ONLY_NOT_SELECTED_VARIANT_KINEMATICS',
       controls: ['PLAY', 'PAUSE', 'SPEED', 'PHASE_SCRUB'],
       phases: data.phases,
+      keypointSequence: data.keypointSequence,
     },
   };
   const catalog = [
@@ -159,6 +178,7 @@
       ['有来源变式', definition.sourceVariants.map(item => `${item.name} / wger ${item.wgerId} / ${item.license}`).join('；')],
       ['媒体证据', `${record.mediaEvidence.status}｜${record.mediaEvidence.sha256 ? `SHA-256 ${record.mediaEvidence.sha256}` : 'NO_UPSTREAM_MEDIA'}`],
       ['动作时间线', `${definition.dynamics.phases.length}/5｜${definition.dynamics.phases.map(item => item.phaseId).join(' → ')}`],
+      ['标准关键点序列', `${definition.dynamics.keypointSequence.frames.length}/5｜${definition.dynamics.keypointSequence.coordinateSystem}`],
       ['训练状态', `${phaseRecord(phase).phaseId}｜${phaseName(phase)}｜${Math.round(phase)}%｜${speed}×`],
       ['当前笔记', note || '未填写'],
       ['对象完整度', `${dossier.completeness.status}｜${dossier.completeness.passed}/${dossier.completeness.total}`],
@@ -222,6 +242,18 @@
     alignmentLine.textContent = `身体排列：${currentPhase.bodyAlignment}`;
     phaseDetail.append(phaseHeading, jointLine, alignmentLine);
     phaseDetail.dataset.phaseId = currentPhase.phaseId;
+    const keypointFrame = data.keypointSequence.frames.find(item => item.phaseId === currentPhase.phaseId);
+    const keypointPanel = out.querySelector('#v02-keypoint-sequence');
+    keypointPanel.replaceChildren();
+    const keypointHeading = document.createElement('b');
+    keypointHeading.textContent = `标准关键点帧 ${keypointFrame.frame + 1}/5｜${keypointFrame.phaseId}`;
+    const keypointLine = document.createElement('p');
+    keypointLine.textContent = Object.entries(keypointFrame.points).map(([name, point]) => `${name} (${point.join(', ')})`).join('；');
+    const keypointBoundary = document.createElement('p');
+    keypointBoundary.className = 'muted';
+    keypointBoundary.textContent = data.keypointSequence.limitation;
+    keypointPanel.append(keypointHeading, keypointLine, keypointBoundary);
+    keypointPanel.dataset.phaseId = keypointFrame.phaseId;
     out.querySelectorAll('#v02-phase-sequence [data-phase-target]').forEach(button => {
       if (button.dataset.phaseTarget === currentPhase.phaseId) button.setAttribute('aria-current', 'step');
       else button.removeAttribute('aria-current');
@@ -242,6 +274,7 @@
         <label>动作阶段 <input type="range" id="v02-phase" min="0" max="100" value="0"></label> <strong id="v02-phase-name"></strong></div>
       <section id="v02-phase-detail" class="result" aria-live="polite"></section>
       <nav id="v02-phase-sequence" aria-label="俯卧撑动作阶段">${data.phases.map(item => `<button type="button" class="chip" data-phase-target="${item.phaseId}" data-phase-value="${Math.round((item.range[0] + item.range[1]) / 2)}">${item.name}</button>`).join(' ')}</nav>
+      <section id="v02-keypoint-sequence" class="result" aria-live="polite"></section>
       <h4>标准步骤</h4><ol>${data.steps.map(x => `<li>${x}</li>`).join('')}</ol>
       <h4>肌群角色</h4><p><b>主要：</b>${data.muscles.primary.join('、')}<br><b>辅助：</b>${data.muscles.secondary.join('、')}<br><b>稳定：</b>${data.muscles.stabilizers.join('、')}</p>
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>

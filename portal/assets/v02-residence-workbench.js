@@ -38,6 +38,13 @@
     <div id="r-next-question" class="result" aria-live="polite"></div>
     <div id="r-clarification-queue" class="result" aria-live="polite"></div>
     <div id="r-evidence-coverage" class="result" aria-live="polite"></div>
+    <fieldset id="r-field-evidence"><legend>逐字段补证</legend>
+      <label>字段<select id="r-evidence-field"></select></label>
+      <label>独立来源<select id="r-evidence-source"><option value="">来源未填</option><option value="USER_MEASURED">用户测量</option><option value="USER_REPORTED">用户描述</option><option value="DRAWING_OR_ARCHIVE">图纸/档案</option><option value="FIELD_OBSERVED">现场观察</option></select></label>
+      <label>独立置信度<select id="r-evidence-confidence"><option value="">未评估</option><option value="LOW">LOW</option><option value="MEDIUM">MEDIUM</option><option value="HIGH">HIGH</option></select></label>
+      <button class="btn ghost" id="r-save-field-evidence" type="button">保存这一字段证据</button>
+      <span id="r-field-evidence-receipt" class="muted" aria-live="polite">尚未补证。</span>
+    </fieldset>
     <div id="r-provenance-summary" class="result" role="status" aria-live="polite"></div>
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
@@ -52,6 +59,7 @@
   ];
   const keys = fieldDefs.map(item => item[0]);
   const labels = Object.fromEntries(fieldDefs);
+  const evidenceKeys = fieldDefs.map(item => item[0]).filter(key => key !== 'source' && key !== 'confidence');
   const fields = Object.fromEntries(keys.map(key => [key, root.querySelector(`#r-${key}`)]));
   let caseId = `residence-${Date.now().toString(36)}`;
   let revisions = [];
@@ -159,19 +167,23 @@
     renderMaterialProvenanceSummary();
   }
 
-  function captureEvidence(snapshot, at) {
-    for (const [key, value] of Object.entries(snapshot)) {
-      if (!value || key === 'source' || key === 'confidence') continue;
-      if (!evidence[key] || evidence[key].value !== value) {
-        evidence[key] = {
-          value,
-          source: snapshot.source || 'SOURCE_MISSING',
-          confidence: snapshot.confidence || 'CONFIDENCE_MISSING',
-          capturedAt: at,
-        };
-      }
+  const evidenceField = root.querySelector('#r-evidence-field');
+  evidenceField.innerHTML = evidenceKeys.map(key => `<option value="${key}">${labels[key]}</option>`).join('');
+
+  root.querySelector('#r-save-field-evidence').onclick = () => {
+    const key = evidenceField.value;
+    const value = fields[key].value.trim();
+    const source = root.querySelector('#r-evidence-source').value;
+    const confidence = root.querySelector('#r-evidence-confidence').value;
+    const receipt = root.querySelector('#r-field-evidence-receipt');
+    if (!value || !source || !confidence) {
+      receipt.textContent = `补证失败：${labels[key]}必须先有值，并单独选择来源与置信度。`;
+      return;
     }
-  }
+    evidence[key] = {value, source, confidence, capturedAt: new Date().toISOString()};
+    receipt.textContent = `已补证：${labels[key]}｜${source}｜${confidence}`;
+    check();
+  };
 
   function renderRadianceMap(trace, radiance) {
     if (trace.caseId !== radiance.caseId) throw Error('geometry trace and Radiance case mismatch');
@@ -275,7 +287,7 @@
     materialFiles.push({caseId, name: file.name, bytes: file.size, mediaType: file.type || 'application/octet-stream', sha256, source, license, capturedAt});
     materialFiles = materialFiles.slice(-20);
     fields.material.value = `${file.name}｜SHA-256 ${sha256}`;
-    captureEvidence(fieldSnapshot(), capturedAt);
+    evidence.material = {value: fields.material.value.trim(), source, confidence: fields.confidence.value || 'CONFIDENCE_MISSING', capturedAt};
     renderMaterialManifest();
     root.querySelector('#r-result').textContent = `材料已绑定住宅ID ${caseId}：${file.name}｜SHA-256 ${sha256}。尚未运行空间/环境模型，不输出判断。`;
   };
@@ -283,7 +295,6 @@
   root.querySelector('#r-save').onclick = () => {
     if (!check()) return;
     const record = collect();
-    captureEvidence(record.fields, record.updatedAt);
     const missing = missingFields(record);
     revisions.push({at: record.updatedAt, known: keys.length - missing.length, missing});
     revisions = revisions.slice(-20);
