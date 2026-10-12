@@ -5,11 +5,12 @@
 body{background:#f4f1e9;color:#20251f;font:15px/1.6 system-ui,sans-serif}.wrap{max-width:1150px;margin:auto;padding:22px}.card{background:#fffdf8;border:1px solid #d7d0c2;border-radius:14px;padding:18px;margin:14px 0}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.metric{min-width:145px;flex:1;padding:12px;background:#f2efe6;border-radius:10px}.metric strong{display:block;font-size:25px}.muted{color:#61695e}.bad{color:#9b3028}.ok{color:#256744}.wait{color:#8c5b16}a{color:#225e66}table{width:100%;border-collapse:collapse}th,td{padding:10px;text-align:left;border-bottom:1px solid #e0dbd1;vertical-align:top}th{background:#f5f1e9}.scroll{overflow:auto}button{padding:9px 16px;border-radius:9px;background:#344a40;color:white;border:0;cursor:pointer}button:disabled{opacity:.5}.tag{border-radius:20px;padding:2px 9px;background:#eee8db;white-space:nowrap}#error{white-space:pre-wrap}time{white-space:nowrap}@media(max-width:700px){.wrap{padding:10px}th,td{padding:6px;font-size:13px}}
 </style></head><body><main class="wrap">
 <h1>零一空间｜工程运行监控台</h1>
-<p class="muted">统一入口：自动施工、人工审批、运行故障、任务台账。数据从公开 GitHub API 读取；只读、不代替 GitHub 批准按钮。主线以 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/3">V0.2 Issue #3</a> 为准。</p>
+<p class="muted">统一入口：自动施工、人工审批、运行故障、任务台账。数据从公开 GitHub API 读取；只读、不代替 GitHub 批准按钮。A01/B01既有主线仍以 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/3">V0.2 Issue #3</a> 为准；C01单独按RW-00—RW-04跟踪，不替换旧任务。</p>
 <nav class="card row"><a href="https://github.com/foxlongfei/zero-one-workbench/actions">全部工作流 ↗</a><a href="https://github.com/foxlongfei/zero-one-workbench/pulls">代码审查 / PR ↗</a><a href="https://github.com/foxlongfei/zero-one-workbench/issues/3">主线任务 #3 ↗</a><a href="index.html">项目入口</a><button id="refresh" type="button">刷新数据</button><span id="updated" class="muted" aria-live="polite">等待读取</span></nav>
 <p id="error" role="alert" class="bad"></p>
 <section class="row" id="metrics" aria-label="近30次工作流概览"></section>
 <section class="card"><h2>需要人工处理</h2><p class="muted">仅列出当前打开的PR及其检查结果。<b>action_required</b> 通常表示需要在 GitHub 审批工作流，但必须进入对应页面确认；不能从本页直接批准或合并。</p><div id="approvals" aria-live="polite">读取中…</div></section>
+<section class="card" id="three-projects"><h2>三项目统一施工单与任务台账</h2><p class="muted">项目编号、施工单、责任角色、状态与证据入口统一呈现。C01任务来自GitHub实时Issue；页面不能修改Issue。GitHub API不可用时明确显示读取失败。所有项目共用“代码→测试→浏览器→公开读回→人工验收”的发布门。</p><div class="scroll"><table><thead><tr><th>项目</th><th>施工单 / 台账</th><th>责任</th><th>执行状态</th><th>下一验收门</th></tr></thead><tbody id="projectLedger"><tr><td colspan="5">读取中…</td></tr></tbody></table></div></section>
 <section class="card"><h2>主线施工台账</h2><p class="muted">展示最近运行证据，不将“工作流成功”自动判定为“A01/B01验收完成”。跨日任务以 Issue #3 的验收为准。</p><div class="scroll"><table><thead><tr><th>责任线</th><th>最近施工</th><th>结果</th><th>下一道关口</th></tr></thead><tbody id="tracks"></tbody></table></div></section>
 <section class="card"><h2>可体验成果｜交付门</h2><p class="muted">只有合并、页面可打开、交互验证通过的功能才算正式交付。未验收的代码放在候选区，不能算可体验成果。</p>
 <div id="deliverables" aria-live="polite">读取中…</div></section>
@@ -29,8 +30,25 @@ const runLink=r=>href(r.html_url||root+'/actions/runs/'+r.id,'查看 #'+r.id);
 async function refresh(){
  el('refresh').disabled=true;el('error').textContent='';el('updated').textContent='读取中…';
  try{
- const [data,prs,allPrs]=await Promise.all([get('/actions/runs?per_page=30'),get('/pulls?state=open&per_page=50'),get('/pulls?state=all&per_page=30')]);
+ const [data,prs,allPrs,projectIssues]=await Promise.all([get('/actions/runs?per_page=30'),get('/pulls?state=open&per_page=50'),get('/pulls?state=all&per_page=30'),get('/issues?state=all&per_page=100')]);
  const runs=data.workflow_runs||[],open=prs||[];
+
+ const ledger=[
+ ['A01｜动起来','#3｜V0.2主线（A01）','Q博士 / C博士','沿用既有Issue验收','检查真实模型调用、浏览器、公开读回',3],
+ ['B01｜住宅研究','#3｜V0.2主线（B01）','D博士 / C博士','沿用既有Issue验收','检查真实模型调用、浏览器、公开读回',3],
+ ['C01｜陪你读书','RW-00｜许可与技术基线','C博士','已分配 / 未验收','文本/模型许可与发布门',10],
+ ['C01｜陪你读书','RW-01｜播放器及无障碍','Q博士','已分配 / 未调用Q模型','代码+真实浏览器播放',11],
+ ['C01｜陪你读书','RW-02｜TTS与音乐重编排','D博士','已分配 / 未调用D模型','三版本试听与成本',12],
+ ['C01｜陪你读书','RW-03｜集成与云端读回','C博士','等待前置任务','公开HTTPS播放与人工试听',13],
+ ['C01｜陪你读书','RW-04｜授权声音学习','D博士 / Q博士 / C博士','已分配 / 无授权样本','特征报告与可试听试样',15]
+ ];
+ const issueByNumber=new Map((projectIssues||[]).filter(i=>!i.pull_request).map(i=>[i.number,i]));
+ el('projectLedger').innerHTML=ledger.map(([project,title,owner,defaultState,next,n])=>{
+ const i=issueByNumber.get(n);
+ const state=i?(i.state==='closed'?'Issue已关闭（仍需验收证据）':defaultState):'Issue未在本次API结果中找到 / 状态待核查';
+ return '<tr><td>'+esc(project)+'</td><td>'+href(root+'/issues/'+n,title)+'</td><td>'+esc(owner)+'</td><td>'+badge(i?.state==='closed'?'pending':'queued')+' '+esc(state)+'</td><td>'+esc(next)+'</td></tr>'
+ }).join('');
+
  const counts={};for(const r of runs){const s=status(r);counts[s]=(counts[s]||0)+1}
  el('metrics').innerHTML=['success','failure','action_required','cancelled','in_progress','queued'].map(k=>'<div class="metric"><strong class="'+(k==='failure'?'bad':k==='success'?'ok':'wait')+'">'+(counts[k]||0)+'</strong>'+esc(k)+'</div>').join('');
  const prChecks=await Promise.all(open.slice(0,15).map(async p=>{try{const checks=await get('/commits/'+encodeURIComponent(p.head.sha)+'/check-runs?per_page=100');return {p,checks:checks.check_runs||[]}}catch(e){return {p,checks:[],error:e.message}}}));
