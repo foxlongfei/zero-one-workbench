@@ -136,6 +136,12 @@
       return {frame: index, phaseId: referenceFrame.phaseId, points};
     });
     const distances = frames.flatMap(frame => Object.values(frame.points).map(point => point.distance));
+    const largestDeviation = frames.reduce((largest, frame) => {
+      for (const [pointName, point] of Object.entries(frame.points)) {
+        if (!largest || point.distance > largest.distance) largest = {frame: frame.frame, phaseId: frame.phaseId, point: pointName, ...point};
+      }
+      return largest;
+    }, null);
     return Object.freeze({
       schema: 'zero-one.keypoint-comparison.v0.1',
       coordinateSystem: reference.coordinateSystem,
@@ -143,9 +149,36 @@
       pointCount: distances.length,
       meanDistance: distances.reduce((sum, value) => sum + value, 0) / distances.length,
       maxDistance: Math.max(...distances),
+      largestDeviation,
+      interpretation: `最大参考偏差位于 ${largestDeviation.phaseId} / ${largestDeviation.point}；应先复核阶段对齐、取景与标点，不据此判断动作质量。`,
       frames,
       boundary: 'NORMALIZED_2D_REFERENCE_COMPARISON_NOT_POSE_RECOGNITION_OR_DIAGNOSIS',
     });
+  }
+
+  function validateResidenceFieldRevisions(record) {
+    if (record?.fieldRevisions == null) return '';
+    if (!Array.isArray(record.fieldRevisions)) return 'fieldRevisions 必须是数组';
+    const allowed = new Set(['name', 'place', 'dir', 'floor', 'rooms', 'size', 'needs', 'surround', 'material', 'source', 'confidence']);
+    const lastByField = new Map();
+    const revisionIds = new Set();
+    let previousRevisionId = null;
+    for (let index = 0; index < record.fieldRevisions.length; index += 1) {
+      const revision = record.fieldRevisions[index];
+      if (!revision || revision.caseId !== record.id) return `fieldRevisions[${index}].caseId 与 Residence/Case ID 不一致`;
+      if (!revision.revisionId || revisionIds.has(revision.revisionId) || revision.parentRevisionId !== previousRevisionId || Number.isNaN(Date.parse(revision.at || ''))) return `fieldRevisions[${index}] 修订链无效`;
+      if (!Array.isArray(revision.changes) || !revision.changes.length) return `fieldRevisions[${index}].changes 不能为空`;
+      for (const change of revision.changes) {
+        if (!change || !allowed.has(change.field) || typeof change.before !== 'string' || typeof change.after !== 'string' || change.before === change.after) return `fieldRevisions[${index}] 字段变更无效`;
+        lastByField.set(change.field, change.after);
+      }
+      revisionIds.add(revision.revisionId);
+      previousRevisionId = revision.revisionId;
+    }
+    for (const [field, after] of lastByField) {
+      if (String(record.fields?.[field] || '') !== after) return `fieldRevisions.${field} 最终状态与住宅字段不一致`;
+    }
+    return '';
   }
 
   function validateResidenceEvidenceLedger(record) {
@@ -191,6 +224,8 @@
     if (evidenceError) return evidenceError;
     const evidenceRevisionError = validateResidenceEvidenceRevisions(record);
     if (evidenceRevisionError) return evidenceRevisionError;
+    const fieldRevisionError = validateResidenceFieldRevisions(record);
+    if (fieldRevisionError) return fieldRevisionError;
     if (record.materialFiles != null && !Array.isArray(record.materialFiles)) return 'materialFiles 必须是数组';
     const materialAssessment = assessResidenceMaterialChain(record);
     if (materialAssessment.errors.length) return materialAssessment.errors[0];
@@ -271,7 +306,7 @@
     });
   }
 
-  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateStandardKeypointSequence, compareStandardKeypointSequences, validateResidenceEvidenceLedger, validateResidenceEvidenceRevisions, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
+  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateStandardKeypointSequence, compareStandardKeypointSequences, validateResidenceEvidenceLedger, validateResidenceEvidenceRevisions, validateResidenceFieldRevisions, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
   root.ZeroOneDossierContracts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis === 'object' ? globalThis : this);

@@ -227,6 +227,9 @@
     heading.textContent = '导入序列与项目标准序列差异';
     const summary = document.createElement('p');
     summary.textContent = `五阶段 × 五点位｜平均二维位移 ${comparison.meanDistance.toFixed(4)}｜最大 ${comparison.maxDistance.toFixed(4)}`;
+    const interpretation = document.createElement('p');
+    interpretation.dataset.largestDeviation = `${comparison.largestDeviation.phaseId}:${comparison.largestDeviation.point}`;
+    interpretation.innerHTML = `<b>最大参考偏差：</b>${comparison.largestDeviation.phaseId} / ${comparison.largestDeviation.point}｜${comparison.largestDeviation.distance.toFixed(4)}。先复核阶段对齐、取景与标点；这不是动作质量判定。`;
     const table = document.createElement('table');
     table.innerHTML = '<thead><tr><th>阶段</th><th>shoulder</th><th>elbow</th><th>wrist</th><th>hip</th><th>ankle</th></tr></thead>';
     const body = document.createElement('tbody');
@@ -239,6 +242,11 @@
         const point = frame.points[name];
         const cell = document.createElement('td');
         cell.dataset.comparisonPoint = `${frame.phaseId}:${name}`;
+        if (frame.phaseId === comparison.largestDeviation.phaseId && name === comparison.largestDeviation.point) {
+          cell.dataset.largestDeviation = 'true';
+          cell.style.fontWeight = '700';
+          cell.style.outline = '2px solid #b65f2a';
+        }
         cell.textContent = `${point.distance.toFixed(4)} (Δx ${point.dx.toFixed(3)}, Δy ${point.dy.toFixed(3)})`;
         row.append(cell);
       });
@@ -248,9 +256,10 @@
     const boundary = document.createElement('p');
     boundary.className = 'muted';
     boundary.textContent = '仅比较同一归一化二维坐标系中的参考点位移；不是摄像头姿态识别、动作诊断或医学结论。';
-    panel.append(heading, summary, table, boundary);
+    panel.append(heading, summary, interpretation, table, boundary);
     root.dataset.keypointComparison = comparison.schema;
     root.dataset.keypointComparisonPoints = String(comparison.pointCount);
+    root.dataset.keypointLargestDeviation = `${comparison.largestDeviation.phaseId}:${comparison.largestDeviation.point}`;
   }
 
   function draw() {

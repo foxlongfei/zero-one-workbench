@@ -50,6 +50,7 @@
     <details open><summary>实际材料清单</summary><ul id="r-material-manifest"></ul></details>
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
     <details open><summary>证据修订历史</summary><ol id="r-evidence-revisions"></ol></details>
+    <details open><summary>住宅字段修订链</summary><div id="r-field-revision-receipt" class="muted" aria-live="polite">尚无字段保存或冲突回执。</div><ol id="r-field-revisions"></ol></details>
     <details><summary>同一住宅补充记录</summary><ol id="r-history"></ol></details>`;
   const main = document.querySelector('main');
   main.insertBefore(root, main.children[1] || null);
@@ -67,6 +68,8 @@
   let revisions = [];
   let evidence = {};
   let evidenceRevisions = [];
+  let fieldRevisions = [];
+  let savedFields = Object.fromEntries(keys.map(key => [key, '']));
   let materialFiles = [];
   const emptyBoundaries = () => ({modelRun: 'NOT_STARTED', geometryContinuity: 'NOT_PROVEN', crossLayerEquivalence: 'BLOCK'});
   let boundaries = emptyBoundaries();
@@ -78,10 +81,12 @@
     revisions = Array.isArray(record.revisions) ? record.revisions.slice(-20) : [];
     evidence = record.evidence && typeof record.evidence === 'object' ? record.evidence : {};
     evidenceRevisions = Array.isArray(record.evidenceRevisions) ? record.evidenceRevisions.slice(-50) : [];
+    fieldRevisions = Array.isArray(record.fieldRevisions) ? record.fieldRevisions.slice(-50) : [];
     materialFiles = Array.isArray(record.materialFiles) ? record.materialFiles.slice(-20) : [];
     boundaries = record.boundaries && typeof record.boundaries === 'object' ? {...record.boundaries} : emptyBoundaries();
     analysisChain = record.analysisChain && typeof record.analysisChain === 'object' ? {...record.analysisChain} : null;
     keys.forEach(key => { fields[key].value = String(record.fields?.[key] || record[key] || ''); });
+    savedFields = Object.fromEntries(keys.map(key => [key, fields[key].value.trim()]));
     return true;
   }
 
@@ -103,6 +108,7 @@
       fields: fieldSnapshot(),
       evidence,
       evidenceRevisions,
+      fieldRevisions,
       materialFiles,
       materialProvenance: summarizeMaterialProvenance(),
       revisions,
@@ -154,6 +160,25 @@
   function appendEvidenceRevision(field, action, before, after, at) {
     evidenceRevisions.push({caseId, field, action, before, after, at});
     evidenceRevisions = evidenceRevisions.slice(-50);
+  }
+
+  function renderFieldRevisions() {
+    const list = root.querySelector('#r-field-revisions');
+    list.replaceChildren();
+    if (!fieldRevisions.length) {
+      const item = document.createElement('li');
+      item.textContent = '尚无已接受的住宅字段修订。';
+      list.append(item);
+    } else {
+      fieldRevisions.forEach(revision => {
+        const item = document.createElement('li');
+        item.dataset.fieldRevision = revision.revisionId;
+        item.textContent = `${revision.at}｜${revision.revisionId}｜${revision.changes.map(change => `${labels[change.field]}：“${change.before || '空'}” → “${change.after || '空'}”`).join('；')}`;
+        list.append(item);
+      });
+    }
+    root.dataset.fieldRevisionCount = String(fieldRevisions.length);
+    root.dataset.fieldRevisionHead = fieldRevisions.at(-1)?.revisionId || '';
   }
 
   function summarizeMaterialProvenance() {
@@ -330,6 +355,7 @@
     renderHistory();
     renderEvidence();
     renderEvidenceRevisions();
+    renderFieldRevisions();
     syncEvidenceEditor(false);
     renderMaterialManifest();
     return directionValid;
@@ -360,6 +386,30 @@
   root.querySelector('#r-save').onclick = () => {
     if (!check()) return;
     const record = collect();
+    const currentFields = record.fields;
+    const changes = keys.filter(key => savedFields[key] !== currentFields[key]).map(key => ({field: key, before: savedFields[key], after: currentFields[key]}));
+    const conflicts = changes.filter(change => evidence[change.field] && evidence[change.field].value !== change.after);
+    const fieldReceipt = root.querySelector('#r-field-revision-receipt');
+    if (conflicts.length) {
+      root.dataset.fieldRevisionStatus = 'CONFLICT_REJECTED';
+      root.dataset.fieldRevisionConflicts = conflicts.map(change => change.field).join('|');
+      fieldReceipt.textContent = `保存拒绝：${conflicts.map(change => labels[change.field]).join('、')}的新值与已保存证据值冲突。请更新或撤销相应证据后重试；当前修订链未改变。`;
+      return;
+    }
+    if (changes.length) {
+      const at = record.updatedAt;
+      const parentRevisionId = fieldRevisions.at(-1)?.revisionId || null;
+      const revisionId = `field-revision-${at.replace(/\D/g, '')}-${fieldRevisions.length + 1}`;
+      fieldRevisions.push({caseId, revisionId, parentRevisionId, at, changes});
+      fieldRevisions = fieldRevisions.slice(-50);
+      savedFields = {...currentFields};
+      root.dataset.fieldRevisionStatus = 'SAVED';
+      root.dataset.fieldRevisionConflicts = '';
+      fieldReceipt.textContent = `字段修订已保存：${revisionId}｜${changes.map(change => labels[change.field]).join('、')}。`;
+    } else {
+      root.dataset.fieldRevisionStatus = 'NO_FIELD_CHANGE';
+      fieldReceipt.textContent = '字段未变化；未生成空修订。';
+    }
     const missing = missingFields(record);
     revisions.push({at: record.updatedAt, known: keys.length - missing.length, missing});
     revisions = revisions.slice(-20);
@@ -481,6 +531,8 @@
     revisions = [];
     evidence = {};
     evidenceRevisions = [];
+    fieldRevisions = [];
+    savedFields = Object.fromEntries(keys.map(key => [key, '']));
     materialFiles = [];
     boundaries = emptyBoundaries();
     analysisChain = null;
@@ -489,6 +541,7 @@
     delete root.dataset.importedDepthmapPoints;
     delete root.dataset.importedRadianceSensors;
     root.querySelector('#r-import-receipt').textContent = '导入回执：尚未导入档案。';
+    root.querySelector('#r-field-revision-receipt').textContent = '尚无字段保存或冲突回执。';
     keys.forEach(key => { fields[key].value = ''; });
     check();
   };
