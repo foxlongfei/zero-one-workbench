@@ -100,11 +100,45 @@
     return dossier;
   }
 
+  function validateStandardKeypointSequence(sequence, phases) {
+    const phaseList = Array.isArray(phases) ? phases : [];
+    const requiredPoints = ['shoulder', 'elbow', 'wrist', 'hip', 'ankle'];
+    if (!sequence || sequence.schema !== 'zero-one.standard-keypoints.v0.1') return '关键点 schema 不匹配';
+    if (sequence.coordinateSystem !== 'NORMALIZED_2D_SIDE_VIEW_X_RIGHT_Y_DOWN') return '关键点坐标系不匹配';
+    if (!Array.isArray(sequence.frames) || sequence.frames.length !== phaseList.length || phaseList.length !== 5) return '关键点帧必须与五个标准阶段一一对应';
+    for (let index = 0; index < phaseList.length; index += 1) {
+      const frame = sequence.frames[index];
+      if (!frame || frame.frame !== index || frame.phaseId !== phaseList[index].phaseId) return `关键点第 ${index + 1} 帧与标准阶段不一致`;
+      const pointNames = frame.points && typeof frame.points === 'object' ? Object.keys(frame.points).sort() : [];
+      if (JSON.stringify(pointNames) !== JSON.stringify([...requiredPoints].sort())) return `关键点第 ${index + 1} 帧点位集合不完整`;
+      for (const name of requiredPoints) {
+        const point = frame.points[name];
+        if (!Array.isArray(point) || point.length !== 2 || point.some(value => !Number.isFinite(value) || value < 0 || value > 1)) return `关键点第 ${index + 1} 帧 ${name} 坐标无效`;
+      }
+    }
+    return '';
+  }
+
+  function validateResidenceEvidenceLedger(record) {
+    const allowed = new Set(['name', 'place', 'dir', 'floor', 'rooms', 'size', 'needs', 'surround', 'material']);
+    const fields = record?.fields && typeof record.fields === 'object' ? record.fields : {};
+    const evidence = record?.evidence && typeof record.evidence === 'object' && !Array.isArray(record.evidence) ? record.evidence : {};
+    for (const [key, item] of Object.entries(evidence)) {
+      if (!allowed.has(key)) return `evidence.${key} 不是可补证字段`;
+      if (!String(fields[key] || '').trim()) return `evidence.${key} 对应字段为空`;
+      if (!item || typeof item !== 'object' || String(item.value || '').trim() !== String(fields[key]).trim()) return `evidence.${key}.value 与住宅字段不一致`;
+      if (!String(item.source || '').trim() || !String(item.confidence || '').trim() || Number.isNaN(Date.parse(item.capturedAt || ''))) return `evidence.${key} 证据字段不完整`;
+    }
+    return '';
+  }
+
   function validateResidenceImport(record) {
     if (!record || record.schema !== 'zero-one.residence.v0.2') return 'schema 不匹配';
     if (typeof record.id !== 'string' || !record.id.startsWith('residence')) return 'Residence/Case ID 无效';
     if (!record.fields || typeof record.fields !== 'object' || Array.isArray(record.fields)) return 'fields 必须是对象';
     if (record.evidence != null && (typeof record.evidence !== 'object' || Array.isArray(record.evidence))) return 'evidence 必须是对象';
+    const evidenceError = validateResidenceEvidenceLedger(record);
+    if (evidenceError) return evidenceError;
     if (record.materialFiles != null && !Array.isArray(record.materialFiles)) return 'materialFiles 必须是数组';
     const materialAssessment = assessResidenceMaterialChain(record);
     if (materialAssessment.errors.length) return materialAssessment.errors[0];
@@ -185,7 +219,7 @@
     });
   }
 
-  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
+  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateStandardKeypointSequence, validateResidenceEvidenceLedger, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
   root.ZeroOneDossierContracts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis === 'object' ? globalThis : this);

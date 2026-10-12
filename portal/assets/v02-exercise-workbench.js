@@ -275,6 +275,8 @@
       <section id="v02-phase-detail" class="result" aria-live="polite"></section>
       <nav id="v02-phase-sequence" aria-label="俯卧撑动作阶段">${data.phases.map(item => `<button type="button" class="chip" data-phase-target="${item.phaseId}" data-phase-value="${Math.round((item.range[0] + item.range[1]) / 2)}">${item.name}</button>`).join(' ')}</nav>
       <section id="v02-keypoint-sequence" class="result" aria-live="polite"></section>
+      <p><label class="btn ghost">导入标准关键点序列 JSON<input id="v02-keypoint-import" type="file" accept=".json,application/json" style="display:none"></label>
+        <span id="v02-keypoint-import-receipt" class="muted" role="status" aria-live="polite">尚未导入；当前使用仓库标准序列。</span></p>
       <h4>标准步骤</h4><ol>${data.steps.map(x => `<li>${x}</li>`).join('')}</ol>
       <h4>肌群角色</h4><p><b>主要：</b>${data.muscles.primary.join('、')}<br><b>辅助：</b>${data.muscles.secondary.join('、')}<br><b>稳定：</b>${data.muscles.stabilizers.join('、')}</p>
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>
@@ -321,6 +323,25 @@
     out.querySelectorAll('#v02-phase-sequence [data-phase-target]').forEach(button => {
       button.onclick = () => { phase = Number(button.dataset.phaseValue); draw(); };
     });
+    out.querySelector('#v02-keypoint-import').onchange = async event => {
+      const receipt = out.querySelector('#v02-keypoint-import-receipt');
+      try {
+        const imported = JSON.parse(await event.target.files[0].text());
+        const validationError = globalThis.ZeroOneDossierContracts.validateStandardKeypointSequence(imported, data.phases);
+        if (validationError) throw Error(validationError);
+        data.keypointSequence = JSON.parse(JSON.stringify(imported));
+        definition.dynamics.keypointSequence = JSON.parse(JSON.stringify(imported));
+        root.dataset.keypointImportStatus = 'VALIDATED_AND_APPLIED';
+        root.dataset.keypointImportFrames = String(imported.frames.length);
+        receipt.textContent = `导入成功：${imported.schema}｜${imported.frames.length} 帧｜五阶段逐帧匹配。`;
+        draw();
+      } catch (error) {
+        root.dataset.keypointImportStatus = 'REJECTED_WITHOUT_REPLACEMENT';
+        receipt.textContent = `导入拒绝：${error.message}；当前关键点序列未被覆盖。`;
+      } finally {
+        event.target.value = '';
+      }
+    };
     out.querySelector('#v02-ex-notes-save').onclick = () => {
       const notesStatus = out.querySelector('#v02-ex-notes-status');
       try {

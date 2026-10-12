@@ -43,6 +43,7 @@
       <label>独立来源<select id="r-evidence-source"><option value="">来源未填</option><option value="USER_MEASURED">用户测量</option><option value="USER_REPORTED">用户描述</option><option value="DRAWING_OR_ARCHIVE">图纸/档案</option><option value="FIELD_OBSERVED">现场观察</option></select></label>
       <label>独立置信度<select id="r-evidence-confidence"><option value="">未评估</option><option value="LOW">LOW</option><option value="MEDIUM">MEDIUM</option><option value="HIGH">HIGH</option></select></label>
       <button class="btn ghost" id="r-save-field-evidence" type="button">保存这一字段证据</button>
+      <button class="btn ghost" id="r-undo-field-evidence" type="button">撤销这一字段证据</button>
       <span id="r-field-evidence-receipt" class="muted" aria-live="polite">尚未补证。</span>
     </fieldset>
     <div id="r-provenance-summary" class="result" role="status" aria-live="polite"></div>
@@ -170,6 +171,18 @@
   const evidenceField = root.querySelector('#r-evidence-field');
   evidenceField.innerHTML = evidenceKeys.map(key => `<option value="${key}">${labels[key]}</option>`).join('');
 
+  function syncEvidenceEditor(announce = true) {
+    const key = evidenceField.value;
+    const item = evidence[key];
+    root.querySelector('#r-evidence-source').value = item?.source || '';
+    root.querySelector('#r-evidence-confidence').value = item?.confidence || '';
+    if (announce) root.querySelector('#r-field-evidence-receipt').textContent = item
+      ? `正在编辑：${labels[key]}｜${item.source}｜${item.confidence}`
+      : `${labels[key]}尚无独立证据。`;
+  }
+
+  evidenceField.onchange = () => syncEvidenceEditor(true);
+
   root.querySelector('#r-save-field-evidence').onclick = () => {
     const key = evidenceField.value;
     const value = fields[key].value.trim();
@@ -182,6 +195,19 @@
     }
     evidence[key] = {value, source, confidence, capturedAt: new Date().toISOString()};
     receipt.textContent = `已补证：${labels[key]}｜${source}｜${confidence}`;
+    check();
+  };
+
+  root.querySelector('#r-undo-field-evidence').onclick = () => {
+    const key = evidenceField.value;
+    const receipt = root.querySelector('#r-field-evidence-receipt');
+    if (!evidence[key]) {
+      receipt.textContent = `无需撤销：${labels[key]}尚无独立证据。`;
+      return;
+    }
+    delete evidence[key];
+    syncEvidenceEditor(false);
+    receipt.textContent = `已撤销：${labels[key]}字段值保留，证据记录已移除。`;
     check();
   };
 
@@ -268,6 +294,7 @@
     root.dataset.nextField = missing[0] || '';
     renderHistory();
     renderEvidence();
+    syncEvidenceEditor(false);
     renderMaterialManifest();
     return directionValid;
   }
