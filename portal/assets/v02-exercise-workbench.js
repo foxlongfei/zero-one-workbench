@@ -127,6 +127,7 @@
     },
   };
 
+  const canonicalKeypointSequence = JSON.parse(JSON.stringify(data.keypointSequence));
   let timer = null;
   let phase = 0;
   let speed = 1;
@@ -153,6 +154,7 @@
       controls: ['PLAY', 'PAUSE', 'SPEED', 'PHASE_SCRUB'],
       phases: data.phases,
       keypointSequence: data.keypointSequence,
+      keypointComparison: null,
     },
   };
   const catalog = [
@@ -218,6 +220,39 @@
     renderDossierPreview();
   }
 
+  function renderKeypointComparison(comparison) {
+    const panel = out.querySelector('#v02-keypoint-comparison');
+    panel.replaceChildren();
+    const heading = document.createElement('h4');
+    heading.textContent = '导入序列与项目标准序列差异';
+    const summary = document.createElement('p');
+    summary.textContent = `五阶段 × 五点位｜平均二维位移 ${comparison.meanDistance.toFixed(4)}｜最大 ${comparison.maxDistance.toFixed(4)}`;
+    const table = document.createElement('table');
+    table.innerHTML = '<thead><tr><th>阶段</th><th>shoulder</th><th>elbow</th><th>wrist</th><th>hip</th><th>ankle</th></tr></thead>';
+    const body = document.createElement('tbody');
+    comparison.frames.forEach(frame => {
+      const row = document.createElement('tr');
+      const phaseCell = document.createElement('td');
+      phaseCell.textContent = frame.phaseId;
+      row.append(phaseCell);
+      ['shoulder', 'elbow', 'wrist', 'hip', 'ankle'].forEach(name => {
+        const point = frame.points[name];
+        const cell = document.createElement('td');
+        cell.dataset.comparisonPoint = `${frame.phaseId}:${name}`;
+        cell.textContent = `${point.distance.toFixed(4)} (Δx ${point.dx.toFixed(3)}, Δy ${point.dy.toFixed(3)})`;
+        row.append(cell);
+      });
+      body.append(row);
+    });
+    table.append(body);
+    const boundary = document.createElement('p');
+    boundary.className = 'muted';
+    boundary.textContent = '仅比较同一归一化二维坐标系中的参考点位移；不是摄像头姿态识别、动作诊断或医学结论。';
+    panel.append(heading, summary, table, boundary);
+    root.dataset.keypointComparison = comparison.schema;
+    root.dataset.keypointComparisonPoints = String(comparison.pointCount);
+  }
+
   function draw() {
     const s = Math.sin(phase * Math.PI / 100);
     const dy = 40 * s;
@@ -277,6 +312,7 @@
       <section id="v02-keypoint-sequence" class="result" aria-live="polite"></section>
       <p><label class="btn ghost">导入标准关键点序列 JSON<input id="v02-keypoint-import" type="file" accept=".json,application/json" style="display:none"></label>
         <span id="v02-keypoint-import-receipt" class="muted" role="status" aria-live="polite">尚未导入；当前使用仓库标准序列。</span></p>
+      <section id="v02-keypoint-comparison" class="result" aria-live="polite"><p class="muted">导入合法的五阶段序列后，这里显示与项目标准序列的逐点二维差异。</p></section>
       <h4>标准步骤</h4><ol>${data.steps.map(x => `<li>${x}</li>`).join('')}</ol>
       <h4>肌群角色</h4><p><b>主要：</b>${data.muscles.primary.join('、')}<br><b>辅助：</b>${data.muscles.secondary.join('、')}<br><b>稳定：</b>${data.muscles.stabilizers.join('、')}</p>
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>
@@ -329,11 +365,14 @@
         const imported = JSON.parse(await event.target.files[0].text());
         const validationError = globalThis.ZeroOneDossierContracts.validateStandardKeypointSequence(imported, data.phases);
         if (validationError) throw Error(validationError);
+        const comparison = globalThis.ZeroOneDossierContracts.compareStandardKeypointSequences(canonicalKeypointSequence, imported, data.phases);
         data.keypointSequence = JSON.parse(JSON.stringify(imported));
         definition.dynamics.keypointSequence = JSON.parse(JSON.stringify(imported));
+        definition.dynamics.keypointComparison = JSON.parse(JSON.stringify(comparison));
         root.dataset.keypointImportStatus = 'VALIDATED_AND_APPLIED';
         root.dataset.keypointImportFrames = String(imported.frames.length);
-        receipt.textContent = `导入成功：${imported.schema}｜${imported.frames.length} 帧｜五阶段逐帧匹配。`;
+        receipt.textContent = `导入成功：${imported.schema}｜${imported.frames.length} 帧｜五阶段逐帧匹配｜25 点差异已计算。`;
+        renderKeypointComparison(comparison);
         draw();
       } catch (error) {
         root.dataset.keypointImportStatus = 'REJECTED_WITHOUT_REPLACEMENT';

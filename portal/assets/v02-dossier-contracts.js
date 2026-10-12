@@ -80,6 +80,7 @@
           controls: Array.isArray(definition?.dynamics?.controls) ? [...definition.dynamics.controls] : [],
           phases: Array.isArray(definition?.dynamics?.phases) ? definition.dynamics.phases.map(item => ({...item, range: Array.isArray(item.range) ? [...item.range] : []})) : [],
           keypointSequence: definition?.dynamics?.keypointSequence ? JSON.parse(JSON.stringify(definition.dynamics.keypointSequence)) : null,
+          keypointComparison: definition?.dynamics?.keypointComparison ? JSON.parse(JSON.stringify(definition.dynamics.keypointComparison)) : null,
         },
       },
       training: {
@@ -119,6 +120,34 @@
     return '';
   }
 
+  function compareStandardKeypointSequences(reference, candidate, phases) {
+    const referenceError = validateStandardKeypointSequence(reference, phases);
+    if (referenceError) throw new TypeError(`标准序列无效：${referenceError}`);
+    const candidateError = validateStandardKeypointSequence(candidate, phases);
+    if (candidateError) throw new TypeError(`导入序列无效：${candidateError}`);
+    const pointNames = ['shoulder', 'elbow', 'wrist', 'hip', 'ankle'];
+    const frames = reference.frames.map((referenceFrame, index) => {
+      const candidateFrame = candidate.frames[index];
+      const points = Object.fromEntries(pointNames.map(name => {
+        const dx = candidateFrame.points[name][0] - referenceFrame.points[name][0];
+        const dy = candidateFrame.points[name][1] - referenceFrame.points[name][1];
+        return [name, {dx, dy, distance: Math.hypot(dx, dy)}];
+      }));
+      return {frame: index, phaseId: referenceFrame.phaseId, points};
+    });
+    const distances = frames.flatMap(frame => Object.values(frame.points).map(point => point.distance));
+    return Object.freeze({
+      schema: 'zero-one.keypoint-comparison.v0.1',
+      coordinateSystem: reference.coordinateSystem,
+      frameCount: frames.length,
+      pointCount: distances.length,
+      meanDistance: distances.reduce((sum, value) => sum + value, 0) / distances.length,
+      maxDistance: Math.max(...distances),
+      frames,
+      boundary: 'NORMALIZED_2D_REFERENCE_COMPARISON_NOT_POSE_RECOGNITION_OR_DIAGNOSIS',
+    });
+  }
+
   function validateResidenceEvidenceLedger(record) {
     const allowed = new Set(['name', 'place', 'dir', 'floor', 'rooms', 'size', 'needs', 'surround', 'material']);
     const fields = record?.fields && typeof record.fields === 'object' ? record.fields : {};
@@ -132,6 +161,27 @@
     return '';
   }
 
+  function validateResidenceEvidenceRevisions(record) {
+    if (record?.evidenceRevisions == null) return '';
+    if (!Array.isArray(record.evidenceRevisions)) return 'evidenceRevisions 必须是数组';
+    const allowed = new Set(['name', 'place', 'dir', 'floor', 'rooms', 'size', 'needs', 'surround', 'material']);
+    const lastByField = new Map();
+    for (let index = 0; index < record.evidenceRevisions.length; index += 1) {
+      const revision = record.evidenceRevisions[index];
+      if (!revision || revision.caseId !== record.id) return `evidenceRevisions[${index}].caseId 与 Residence/Case ID 不一致`;
+      if (!allowed.has(revision.field) || !['SAVE', 'UNDO'].includes(revision.action) || Number.isNaN(Date.parse(revision.at || ''))) return `evidenceRevisions[${index}] 修订字段无效`;
+      if (revision.action === 'SAVE' && (!revision.after || !revision.after.value || !revision.after.source || !revision.after.confidence || Number.isNaN(Date.parse(revision.after.capturedAt || '')))) return `evidenceRevisions[${index}].after 证据无效`;
+      if (revision.action === 'UNDO' && (!revision.before || revision.after !== null)) return `evidenceRevisions[${index}] 撤销证据无效`;
+      lastByField.set(revision.field, revision);
+    }
+    for (const [field, revision] of lastByField) {
+      const current = record.evidence?.[field];
+      if (revision.action === 'UNDO' && current != null) return `evidenceRevisions.${field} 最终撤销状态与证据账本不一致`;
+      if (revision.action === 'SAVE' && JSON.stringify(current || null) !== JSON.stringify(revision.after)) return `evidenceRevisions.${field} 最终保存状态与证据账本不一致`;
+    }
+    return '';
+  }
+
   function validateResidenceImport(record) {
     if (!record || record.schema !== 'zero-one.residence.v0.2') return 'schema 不匹配';
     if (typeof record.id !== 'string' || !record.id.startsWith('residence')) return 'Residence/Case ID 无效';
@@ -139,6 +189,8 @@
     if (record.evidence != null && (typeof record.evidence !== 'object' || Array.isArray(record.evidence))) return 'evidence 必须是对象';
     const evidenceError = validateResidenceEvidenceLedger(record);
     if (evidenceError) return evidenceError;
+    const evidenceRevisionError = validateResidenceEvidenceRevisions(record);
+    if (evidenceRevisionError) return evidenceRevisionError;
     if (record.materialFiles != null && !Array.isArray(record.materialFiles)) return 'materialFiles 必须是数组';
     const materialAssessment = assessResidenceMaterialChain(record);
     if (materialAssessment.errors.length) return materialAssessment.errors[0];
@@ -219,7 +271,7 @@
     });
   }
 
-  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateStandardKeypointSequence, validateResidenceEvidenceLedger, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
+  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateStandardKeypointSequence, compareStandardKeypointSequences, validateResidenceEvidenceLedger, validateResidenceEvidenceRevisions, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
   root.ZeroOneDossierContracts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis === 'object' ? globalThis : this);

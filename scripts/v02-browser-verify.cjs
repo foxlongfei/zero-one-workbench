@@ -86,11 +86,15 @@ const record = (track, name, passed, evidence) => {
   const importedKeypoints = JSON.parse(JSON.stringify(exerciseExport.definition.dynamics.keypointSequence));
   importedKeypoints.frames[0].points.shoulder[0] = 0.29;
   await page.locator('#v02-keypoint-import').setInputFiles({name: 'valid-keypoints.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(importedKeypoints))});
-  record('A01', 'valid five-phase keypoint sequence is applied', await page.locator('#v02-exercise').getAttribute('data-keypoint-import-status') === 'VALIDATED_AND_APPLIED' && await page.locator('#v02-exercise').getAttribute('data-keypoint-import-frames') === '5' && (await page.locator('#v02-keypoint-import-receipt').innerText()).includes('五阶段逐帧匹配'), await page.locator('#v02-keypoint-import-receipt').innerText());
+  record('A01', 'valid five-phase keypoint sequence is applied and compared point-by-point', await page.locator('#v02-exercise').getAttribute('data-keypoint-import-status') === 'VALIDATED_AND_APPLIED' && await page.locator('#v02-exercise').getAttribute('data-keypoint-import-frames') === '5' && await page.locator('#v02-exercise').getAttribute('data-keypoint-comparison-points') === '25' && await page.locator('#v02-keypoint-comparison [data-comparison-point]').count() === 25 && (await page.locator('#v02-keypoint-comparison').innerText()).includes('不是摄像头姿态识别'), await page.locator('#v02-keypoint-comparison').innerText());
   const rejectedKeypoints = JSON.parse(JSON.stringify(importedKeypoints));
   rejectedKeypoints.frames[3].phaseId = 'push-up:wrong-phase';
   await page.locator('#v02-keypoint-import').setInputFiles({name: 'invalid-keypoints.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(rejectedKeypoints))});
   record('A01', 'phase-mismatched keypoint sequence is rejected without replacement', await page.locator('#v02-exercise').getAttribute('data-keypoint-import-status') === 'REJECTED_WITHOUT_REPLACEMENT' && (await page.locator('#v02-keypoint-import-receipt').innerText()).includes('当前关键点序列未被覆盖') && (await page.locator('#v02-keypoint-sequence').innerText()).includes('标准关键点帧 4/5'), await page.locator('#v02-keypoint-import-receipt').innerText());
+  const comparedExportDownload = page.waitForEvent('download');
+  await page.locator('#v02-ex-export').click();
+  const comparedExport = JSON.parse(fs.readFileSync(await (await comparedExportDownload).path(), 'utf8'));
+  record('A01', 'comparison survives invalid replacement attempt and is exported', comparedExport.definition.dynamics.keypointComparison.schema === 'zero-one.keypoint-comparison.v0.1' && comparedExport.definition.dynamics.keypointComparison.pointCount === 25 && comparedExport.definition.dynamics.keypointComparison.frames[0].points.shoulder.distance > 0 && comparedExport.definition.dynamics.keypointComparison.boundary.includes('NOT_POSE_RECOGNITION'), JSON.stringify(comparedExport.definition.dynamics.keypointComparison));
   await page.locator('#v02-form-0').check();
   record('A01', 'form self-check', await page.locator('#v02-form-0').isChecked(), 'first form error checked');
   await page.locator('#v02-play').click();
@@ -154,7 +158,7 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#r-save-field-evidence').click();
   record('B01', 'field evidence can be edited in place', (await page.locator('#r-field-evidence-receipt').innerText()).includes('住宅名称｜USER_REPORTED｜HIGH'), await page.locator('#r-field-evidence-receipt').innerText());
   await page.locator('#r-undo-field-evidence').click();
-  record('B01', 'field evidence undo preserves field value and exposes coverage gap', await page.locator('#r-name').inputValue() === '东明居' && await page.locator('#r-evidence li[data-field="name"]').count() === 0 && (await page.locator('#r-evidence-coverage').innerText()).includes('住宅名称'), await page.locator('#r-field-evidence-receipt').innerText());
+  record('B01', 'field evidence undo preserves field value and records revision', await page.locator('#r-name').inputValue() === '东明居' && await page.locator('#r-evidence li[data-field="name"]').count() === 0 && (await page.locator('#r-evidence-coverage').innerText()).includes('住宅名称') && await page.locator('#r-evidence-revisions li[data-evidence-revision="name"]').count() === 3 && (await page.locator('#r-evidence-revisions').innerText()).includes('UNDO｜住宅名称'), await page.locator('#r-evidence-revisions').innerText());
   await page.locator('#r-evidence-source').selectOption('USER_REPORTED');
   await page.locator('#r-evidence-confidence').selectOption('MEDIUM');
   await page.locator('#r-save-field-evidence').click();
@@ -182,13 +186,25 @@ const record = (track, name, passed, evidence) => {
   }
   record('B01', 'material manifest survives reload', await page.locator('#v02-residence').getAttribute('data-material-count') === '1', await page.locator('#r-material-manifest').innerText());
   record('B01', 'material provenance summary survives reload', await page.locator('#v02-residence').getAttribute('data-material-provenance') === 'RECORDED' && (await page.locator('#r-provenance-summary').innerText()).includes('全部材料均有许可'), await page.locator('#r-provenance-summary').innerText());
+  const evidenceRevisionDownload = page.waitForEvent('download');
+  await page.locator('#r-export').click();
+  const evidenceRevisionDossier = JSON.parse(fs.readFileSync(await (await evidenceRevisionDownload).path(), 'utf8'));
+  record('B01', 'evidence revision history is exported', evidenceRevisionDossier.evidenceRevisions.length === 6 && evidenceRevisionDossier.evidenceRevisions.every(item => item.caseId === residenceId) && evidenceRevisionDossier.evidenceRevisions.filter(item => item.field === 'name').map(item => item.action).join('|') === 'SAVE|SAVE|UNDO|SAVE', JSON.stringify(evidenceRevisionDossier.evidenceRevisions));
   record('B01', 'boundary remains explicit', (await page.locator('#r-result').innerText()).includes('不输出未经计算'), await page.locator('#r-result').innerText());
   await page.screenshot({ path: path.join(artifactDir, 'residence-b01.png'), fullPage: true });
 
   await page.locator('#r-new').click();
   record('B01', 'new residence gets different ID', await page.locator('#v02-residence').getAttribute('data-residence-id') !== residenceId, await page.locator('#v02-residence').getAttribute('data-residence-id'));
   record('B01', 'new residence clears evidence', await page.locator('#r-evidence li[data-field]').count() === 0, 'evidence ledger empty');
+  await page.locator('#r-import').setInputFiles({name: 'evidence-revision-roundtrip.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(evidenceRevisionDossier))});
+  await page.waitForFunction(() => document.querySelector('#v02-residence')?.dataset.importStatus === 'VALIDATED_AND_IMPORTED');
+  record('B01', 'evidence revision history survives validated import', await page.locator('#v02-residence').getAttribute('data-residence-id') === residenceId && await page.locator('#r-evidence-revisions li[data-evidence-revision]').count() === 6 && (await page.locator('#r-evidence-revisions').innerText()).includes('UNDO｜住宅名称'), await page.locator('#r-evidence-revisions').innerText());
+  await page.locator('#r-new').click();
   const rejectedId = await page.locator('#v02-residence').getAttribute('data-residence-id');
+  const mismatchedRevisionDossier = {...evidenceRevisionDossier, evidenceRevisions: evidenceRevisionDossier.evidenceRevisions.map((item, index) => index ? item : {...item, caseId: 'residence:case:other'})};
+  await page.locator('#r-import').setInputFiles({name: 'mismatched-evidence-revision.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(mismatchedRevisionDossier))});
+  await page.waitForFunction(() => document.querySelector('#v02-residence')?.dataset.importStatus === 'REJECTED_WITHOUT_HYDRATION');
+  record('B01', 'mismatched evidence revision is rejected without replacing current Case', await page.locator('#v02-residence').getAttribute('data-residence-id') === rejectedId && (await page.locator('#r-import-receipt').innerText()).includes('evidenceRevisions[0].caseId'), await page.locator('#r-import-receipt').innerText());
   await page.locator('#r-import').setInputFiles({name: 'invalid-residence.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({schema: 'zero-one.residence.v0.2', id: 'bad-id', fields: {name: '不应载入'}}))});
   await page.waitForFunction(() => document.querySelector('#v02-residence')?.dataset.importStatus === 'REJECTED_WITHOUT_HYDRATION');
   record('B01', 'invalid imported dossier is rejected before hydration', await page.locator('#v02-residence').getAttribute('data-import-status') === 'REJECTED_WITHOUT_HYDRATION' && await page.locator('#v02-residence').getAttribute('data-residence-id') === rejectedId && (await page.locator('#r-result').innerText()).includes('Residence/Case ID 无效') && (await page.locator('#r-import-receipt').innerText()).includes('未被覆盖'), await page.locator('#r-import-receipt').innerText());
