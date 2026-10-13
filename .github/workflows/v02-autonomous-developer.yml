@@ -109,16 +109,16 @@ jobs:
         run: |
           mkdir -p /tmp/v02-patch
           git add -A
-          git diff --cached --binary > "/tmp/v02-patch/$PROJECT-\${{ matrix.provider }}.patch"
-          if [[ ! -s "/tmp/v02-patch/$PROJECT-\${{ matrix.provider }}.patch" ]]; then
+          git diff --cached --binary > "/tmp/v02-patch/$PROJECT-${{ matrix.provider }}.patch"
+          if [[ ! -s "/tmp/v02-patch/$PROJECT-${{ matrix.provider }}.patch" ]]; then
             echo "::error::Agent produced no code changes."
             exit 1
           fi
       - uses: actions/upload-artifact@v4
         if: steps.select.outputs.selected == 'true'
         with:
-          name: v02-agent-${{ matrix.project }}-patch
-          path: /tmp/v02-patch/${{ matrix.project }}.patch
+          name: v02-agent-${{ matrix.project }}-${{ matrix.provider }}-patch
+          path: /tmp/v02-patch/${{ matrix.project }}-${{ matrix.provider }}.patch
           retention-days: 14
   propose:
     needs: develop
