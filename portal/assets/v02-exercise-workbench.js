@@ -50,6 +50,12 @@
       {error: '腰部明显塌陷或臀部过高', correction: '收紧腹部和臀部，让躯干保持平板；必要时改为跪姿或上斜'},
       {error: '手位过宽或耸肩', correction: '手位约在肩部附近，肩胛稳定下沉，避免耸肩'},
     ],
+    formChecklist: {
+      id: 'a01:push-up:form-selfcheck',
+      title: '常见错误自查',
+      source: 'PROJECT_ORIGINAL_TEACHING_GUIDANCE',
+      note: '本项目原创教学提示，用于自我观察动作质量；不是医学诊断，不是第三方动作库内容，也不能替代现场教练指导或临床评估。',
+    },
     provenance: {
       source: '本项目原创教学说明与几何示意；未经动作专家审核',
       license: '仓库内项目内容；未声明可复用的第三方动作库许可证',
@@ -115,6 +121,7 @@
 
   function render() {
     clearInterval(timer);
+    const checklistTotal = data.formErrors.length;
     out.innerHTML = `
       <h3>${data.name} <small>(${data.id})</small></h3>
       <p><b>分类：</b>${data.category}｜<b>器械：</b>${data.equipment}｜<b>难度：</b>${data.difficulty}</p>
@@ -126,7 +133,12 @@
       <h4>肌群角色</h4><p><b>主要：</b>${data.muscles.primary.join('、')}<br><b>辅助：</b>${data.muscles.secondary.join('、')}<br><b>稳定：</b>${data.muscles.stabilizers.join('、')}</p>
       <h4>关节 / 骨骼运动</h4><ul id="v02-joints">${data.joints.map(item => `<li><b>${item.joint}</b>：下降 ${item.down}；推起 ${item.up}</li>`).join('')}</ul>
       <p><b>常见调整：</b>${data.variants.map(x => `${x.name}（${x.relation}）`).join('、')}</p>
-      <fieldset id="v02-form-checklist"><legend>常见错误自查（项目原创教学提示，非医学诊断）</legend><ul>${data.formErrors.map((item, i) => `<li><input type="checkbox" id="v02-form-${i}"><label for="v02-form-${i}"><b>错误：</b>${item.error}；<b>纠正：</b>${item.correction}</label></li>`).join('')}</ul></fieldset>
+      <fieldset id="v02-form-checklist" data-checklist-id="${data.formChecklist.id}" data-checklist-source="${data.formChecklist.source}" aria-describedby="v02-form-checklist-note">
+        <legend>${data.formChecklist.title}（${checklistTotal} 项）（项目原创教学提示，非医学诊断）</legend>
+        <p id="v02-form-checklist-note" class="muted">${data.formChecklist.note}</p>
+        <ul id="v02-form-list">${data.formErrors.map((item, i) => `<li><input type="checkbox" id="v02-form-${i}" data-form-check-index="${i}"><label for="v02-form-${i}"><b>错误：</b>${item.error}；<b>纠正：</b>${item.correction}</label></li>`).join('')}</ul>
+        <p><button class="btn ghost" id="v02-form-reset" type="button">重置自查</button> <span id="v02-form-progress" role="status" aria-live="polite"></span></p>
+      </fieldset>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-upstream"><h4>成熟开放动作记录｜已导入</h4><p><b>${data.upstream.project}</b>｜${data.upstream.exerciseName}｜record ${data.upstream.exerciseId}｜UUID <code>${data.upstream.exerciseUuid}</code><br>
         记录许可：<a href="${data.upstream.recordLicenseUrl}">${data.upstream.recordLicense}</a>｜作者 ${data.upstream.recordAuthor}｜<a href="${data.upstream.apiEvidenceUrl}">当前API</a>｜<a href="${data.upstream.snapshotUrl}">本仓快照</a><br>
@@ -150,6 +162,34 @@
       root.dataset.variantStatus = data.upstreamVariant.integrationStatus;
       out.querySelector('#v02-variant-state').textContent = `${data.upstreamVariant.exerciseName} 已选择｜${data.upstreamVariant.recordLicense}｜作者 ${data.upstreamVariant.recordAuthor}｜无上游媒体`;
     };
+
+    const checklist = out.querySelector('#v02-form-checklist');
+    const boxes = Array.from(checklist.querySelectorAll('input[data-form-check-index]'));
+    const progress = checklist.querySelector('#v02-form-progress');
+
+    function syncChecklist() {
+      const checked = boxes.filter(box => box.checked).length;
+      const done = checked === boxes.length;
+      progress.textContent = done
+        ? `已自查 ${checked} / ${boxes.length} 项：三项都已核对，动画与说明仍为项目原创二维示意。`
+        : `已自查 ${checked} / ${boxes.length} 项：逐项勾选，核对常见错误与对应纠正。`;
+      checklist.dataset.checkedCount = String(checked);
+      root.dataset.formChecklistTotal = String(boxes.length);
+      root.dataset.formCheckedCount = String(checked);
+      root.dataset.formChecklistSource = data.formChecklist.source;
+      root.dataset.formChecklistStatus = checked === 0 ? 'NOT_STARTED' : done ? 'COMPLETE' : 'IN_PROGRESS';
+    }
+
+    boxes.forEach(box => box.addEventListener('change', syncChecklist));
+
+    checklist.querySelector('#v02-form-reset').onclick = () => {
+      boxes.forEach(box => { box.checked = false; });
+      syncChecklist();
+      if (boxes[0]) boxes[0].focus();
+    };
+
+    syncChecklist();
+
     root.dataset.exerciseId = data.id;
     root.dataset.provenance = data.provenance.evidenceStatus;
     root.dataset.upstreamStatus = data.upstream.integrationStatus;
