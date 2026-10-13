@@ -329,6 +329,27 @@
     }
   }
 
+  function validateTrainingRecord(record) {
+    const expectedPhases = data.phases.map(item => item.phaseId);
+    if (!record || record.schema !== 'zero-one.exercise.follow.session.v0.2') return 'schema 不匹配';
+    if (!/^follow-[0-9]+$/.test(record.sessionId || '')) return 'Session ID 无效';
+    if (record.exerciseId !== data.id || record.sourceRecordId !== data.upstream.exerciseId) return 'Exercise 来源不一致';
+    if (JSON.stringify(record.phaseIds) !== JSON.stringify(expectedPhases) || JSON.stringify(record.completedPhaseIds) !== JSON.stringify(expectedPhases)) return '五阶段完成链不一致';
+    if (!['轻松', '合适', '偏吃力', '疼痛或麻木'].includes(record.feedback)) return '反馈值无效';
+    if (record.boundary !== 'PROJECT_2D_TEACHING_ILLUSTRATION_NOT_CAMERA_RECOGNITION_OR_MEDICAL_ADVICE') return '边界声明不一致';
+    return '';
+  }
+
+  function downloadTrainingRecord(record) {
+    const blob = new Blob([`${JSON.stringify(record, null, 2)}\n`], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `${record.sessionId}.json`;
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+  }
+
   function renderTrainingHistory() {
     const box = out.querySelector('#v02-follow-history');
     if (!box) return;
@@ -349,7 +370,13 @@
       repeat.dataset.repeatFollowSession = record.sessionId;
       repeat.textContent = '按本次 Exercise 再练一次';
       repeat.onclick = () => startTrainingSession(record.sessionId);
-      row.append(' ', repeat);
+      const exportButton = document.createElement('button');
+      exportButton.type = 'button';
+      exportButton.className = 'chip';
+      exportButton.dataset.exportFollowSession = record.sessionId;
+      exportButton.textContent = '导出本次记录';
+      exportButton.onclick = () => downloadTrainingRecord(record);
+      row.append(' ', repeat, ' ', exportButton);
       box.append(row);
     });
   }
@@ -443,6 +470,8 @@
         <div id="v02-follow-feedback" hidden><b>本次感受</b> ${['轻松', '合适', '偏吃力', '疼痛或麻木'].map(value => `<button class="chip" type="button" data-follow-feedback="${value}">${value}</button>`).join(' ')}</div>
         <p id="v02-follow-receipt" class="status" aria-live="polite"></p>
         <h5>最近完成记录</h5><div id="v02-follow-history" aria-live="polite"></div>
+        <p><label class="btn ghost">导入跟练记录 JSON<input id="v02-follow-import" type="file" accept=".json,application/json" style="display:none"></label>
+        <span id="v02-follow-history-status" class="muted" role="status" aria-live="polite"></span></p>
       </section>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-licensed-catalog"><h4>可操作许可动作目录｜3 条真实 wger 记录</h4>
@@ -560,6 +589,26 @@
         renderTrainingHistory();
       };
     });
+    out.querySelector('#v02-follow-import').onchange = async event => {
+      const status = out.querySelector('#v02-follow-history-status');
+      try {
+        const imported = JSON.parse(await event.target.files[0].text());
+        const error = validateTrainingRecord(imported);
+        if (error) throw new Error(error);
+        const history = trainingHistory();
+        const existing = history.find(item => item.sessionId === imported.sessionId);
+        if (existing && JSON.stringify(existing) !== JSON.stringify(imported)) throw new Error('同一 Session ID 的内容冲突');
+        if (!existing) localStorage.setItem(TRAINING_HISTORY, JSON.stringify([imported, ...history].slice(0, 20)));
+        root.dataset.followImportStatus = existing ? 'ALREADY_PRESENT' : 'PASS';
+        status.textContent = existing ? `无需重复导入：${imported.sessionId} 已存在且内容一致。` : `导入成功：${imported.sessionId}｜${imported.exerciseId}｜5/5｜可继续复练。`;
+        renderTrainingHistory();
+      } catch (error) {
+        root.dataset.followImportStatus = 'REJECTED_WITHOUT_OVERWRITE';
+        status.textContent = `导入拒绝：${error.message}；现有跟练记录未被覆盖。`;
+      } finally {
+        event.target.value = '';
+      }
+    };
     out.querySelector('#v02-ex-export').onclick = () => {
       const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
       const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({
