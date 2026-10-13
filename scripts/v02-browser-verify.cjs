@@ -254,7 +254,12 @@ const record = (track, name, passed, evidence) => {
   await page.goto(`${baseUrl}/portal/movement.html?sha=${process.env.GITHUB_SHA || 'local'}&artifact=1`, { waitUntil: 'domcontentloaded' });
   await page.locator('#v02-load-keypoint-artifact').click();
   await page.waitForFunction(() => document.querySelector('#v02-exercise')?.dataset.keypointImportStatus === 'PROVENANCE_VALIDATED_AND_APPLIED');
-  record('A01', 'licensed-image keypoint artifact provenance is validated and compared', await page.locator('#v02-exercise').getAttribute('data-keypoint-artifact-id') === 'kp:wger:1554:clap-image-manual-v0.1' && (await page.locator('#v02-exercise').getAttribute('data-keypoint-source-sha'))?.startsWith('7e6f3da44a68') && (await page.locator('#v02-keypoint-import-receipt').innerText()).includes('静态图片标注不等于视频追踪'), await page.locator('#v02-keypoint-import-receipt').innerText());
+  const artifactId = await page.locator('#v02-exercise').getAttribute('data-keypoint-artifact-id');
+  const artifactSourceSha = await page.locator('#v02-exercise').getAttribute('data-keypoint-source-sha');
+  const artifactReceipt = await page.locator('#v02-keypoint-import-receipt').innerText();
+  record('A01', 'licensed-image keypoint artifact ID is bound to the comparison', artifactId === 'kp:wger:1554:clap-image-manual-v0.1', `artifactId=${artifactId}`);
+  record('A01', 'licensed-image keypoint artifact source SHA is bound to the comparison', artifactSourceSha === '7e6f3da44a68a285da8d987ad2ebc47f636bf17555e911d7dce0e1bb9be8ad47', `sourceSha256=${artifactSourceSha}`);
+  record('A01', 'licensed-image keypoint artifact boundary remains explicit', artifactReceipt.includes('静态图片标注不等于视频追踪'), artifactReceipt);
 
   await page.goto(`${baseUrl}/portal/k02-board.html?sha=${process.env.GITHUB_SHA || 'local'}&correction=1`, { waitUntil: 'domcontentloaded' });
   await page.locator('#r-place').fill('上海市徐汇区');
