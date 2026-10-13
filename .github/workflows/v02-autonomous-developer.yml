@@ -148,7 +148,7 @@ jobs:
            for provider in Q D; do
             patch="/tmp/agent-patches/$project-$provider.patch"
             [[ -s "$patch" ]] || continue
-            branch="agent/v02-${project,,}-$RUN_ID"
+            branch="agent/v02-${project,,}-${provider,,}-$RUN_ID"
             git checkout -B "$branch" origin/main
             git apply --index "$patch"
             git commit -m "feat($project): $provider autonomous V0.2 prototype increment"
