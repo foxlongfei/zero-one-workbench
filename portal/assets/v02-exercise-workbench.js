@@ -377,8 +377,10 @@
       if (validationError) throw Error(validationError);
       const provenanceError = globalThis.ZeroOneDossierContracts.validateKeypointArtifactProvenance(imported);
       if (provenanceError) throw Error(provenanceError);
-      const comparison = globalThis.ZeroOneDossierContracts.compareStandardKeypointSequences(canonicalKeypointSequence, imported, data.phases);
-      comparison.provenance = JSON.parse(JSON.stringify(imported.provenance));
+      const comparison = {
+        ...globalThis.ZeroOneDossierContracts.compareStandardKeypointSequences(canonicalKeypointSequence, imported, data.phases),
+        provenance: JSON.parse(JSON.stringify(imported.provenance)),
+      };
       data.keypointSequence = JSON.parse(JSON.stringify(imported));
       definition.dynamics.keypointSequence = JSON.parse(JSON.stringify(imported));
       definition.dynamics.keypointComparison = JSON.parse(JSON.stringify(comparison));
