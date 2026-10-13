@@ -287,6 +287,8 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#lost-time').fill('2026-10-13T08:00');
   await page.locator('#save-case').click();
   record('B-ENTRY', 'lost-item materials save without fabricated prediction', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'MATERIALS_RECORDED_NO_PREDICTION' && (await page.locator('#case-id').innerText()) === lostCaseId && (await page.locator('#next-question').innerText()).includes('当前不输出预测'), await page.locator('#next-question').innerText());
+  const lostCase = await page.evaluate(() => JSON.parse(localStorage.getItem('advisor-cases-v01') || '[]').find(item => item.type === 'lost'));
+  record('B-ENTRY', 'selected method contract is saved with explicit boundary', lostCase?.methodContract?.status === 'MATERIAL_ORGANIZATION_ONLY' && lostCase?.methodContract?.boundary.includes('不推断物品位置'), JSON.stringify(lostCase?.methodContract));
   await page.locator('[data-type="residence"]').click();
   const residenceCaseId = await page.locator('#case-id').innerText();
   await page.locator('#client').fill('住宅访客');
@@ -296,6 +298,8 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#save-case').click();
   record('B-ENTRY', 'residence case shares the contract but receives a distinct ID', residenceCaseId.startsWith('case-') && residenceCaseId !== lostCaseId && await page.locator('#advisor-entry').getAttribute('data-saved-case-count') === '2' && (await page.locator('#case-history').innerText()).includes('失物') && (await page.locator('#case-history').innerText()).includes('住宅'), await page.locator('#case-history').innerText());
   record('B-ENTRY', 'residence remains a linked submodule', await page.locator('#residence-link').getAttribute('href') === 'housing-v02-experience.html', await page.locator('#residence-link').getAttribute('href'));
+  await page.locator('.restore-case').first().click();
+  record('B-ENTRY', 'saved case restores into the same continuous Case ID', await page.locator('#advisor-entry').getAttribute('data-restored-case') === 'true' && (await page.locator('#case-id').innerText()) === lostCaseId && await page.locator('#lost-item').inputValue() === '钥匙' && (await page.locator('#type-status').innerText()).includes(lostCaseId), await page.locator('#type-status').innerText());
   await page.locator('[data-type="marriage"]').click();
   record('B-ENTRY', 'unimplemented category is explicit and cannot emit a result', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'UNAVAILABLE_EXPLICIT' && (await page.locator('#type-status').innerText()).includes('NOT_AVAILABLE') && (await page.locator('#type-status').innerText()).includes('不能生成结论'), await page.locator('#type-status').innerText());
   await page.screenshot({ path: path.join(artifactDir, 'advisor-b-entry.png'), fullPage: true });
@@ -316,10 +320,14 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#build').click();
   await page.locator('#complete-action').click();
   record('A-TEACH', 'continuous lesson advances', (await page.locator('#done-squat').innerText()) === '已完成' && (await page.locator('#active-name').innerText()).includes('开合跳'), 'completing squat advances to jumping jack');
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('#restore').click();
+  record('A-TEACH', 'unfinished session restores after reload', (await page.locator('#plan-status').innerText()).includes('已恢复未完成训练') && (await page.locator('#done-squat').innerText()) === '已完成' && (await page.locator('#active-name').innerText()).includes('开合跳'), await page.locator('#plan-status').innerText());
   await page.locator('#complete-action').click();
   await page.locator('#finish').click();
   const teachRecord = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.movement.teach.sessions.v0.2') || '[]')[0]);
-  record('A-TEACH', 'session record saved', teachRecord?.schema === 'zero-one.movement.teach.session.v0.2' && teachRecord?.exercise_ids?.length === 2 && teachRecord?.completed_exercise_ids?.length === 2, teachRecord?.session_id || 'missing record');
+  record('A-TEACH', 'session record saved', teachRecord?.schema === 'zero-one.movement.teach.session.v0.2' && teachRecord?.exercise_ids?.length === 2 && teachRecord?.completed_exercise_ids?.length === 2 && teachRecord?.resumed_from_draft === true, teachRecord?.session_id || 'missing record');
+  record('A-TEACH', 'finished session clears resumable draft', await page.evaluate(() => localStorage.getItem('zero-one.movement.teach.draft.v0.2') === null), 'draft removed after finish');
   record('A-TEACH', 'licensed asset provenance in record', teachRecord?.demo_assets?.every(asset => asset.author === 'Wensceslao' && asset.license === 'CC BY-SA 4.0' && asset.sha1?.length === 40), 'both demo assets retain author, license, version, source and SHA-1');
 
   const report = {

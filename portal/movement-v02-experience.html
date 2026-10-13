@@ -30,7 +30,7 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
 <label>环境<select id="environment"><option value="home">居家 · 无器械</option><option value="office">办公室 · 小空间</option><option value="outdoor">户外 · 平整地面</option></select></label>
 <label>每项时长<input id="duration" type="number" min="10" max="180" step="5" value="30"></label>
 </div>
-<div class="controls"><button class="primary" id="build">生成并开始</button><button id="restore">恢复最近一次记录</button></div>
+<div class="controls"><button class="primary" id="build">生成并开始</button><button id="restore">恢复未完成训练／最近记录</button></div>
 <p class="status" id="plan-status" role="status">尚未开始。完整流程：深蹲 → 开合跳 → 保存训练记录。</p>
 </section>
 
@@ -66,10 +66,10 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
 </main>
 <script>
 (() => {
- const STORE='zero-one.movement.teach.sessions.v0.2';
+ const STORE='zero-one.movement.teach.sessions.v0.2', DRAFT_STORE='zero-one.movement.teach.draft.v0.2';
  const ids={squat:'commons:squats-wbs:2020-05-20',jump:'commons:jumpingjacks-wbs:2020-05-20'};
  const names={[ids.squat]:'徒手深蹲',[ids.jump]:'开合跳'};
- let active=ids.squat, remaining=30, tick=null, startedAt=null, completed=new Set(), currentRecord=null;
+ let active=ids.squat, remaining=30, tick=null, startedAt=null, completed=new Set(), currentRecord=null, resumedFromDraft=false;
  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
  function fmt(n){return '00:'+String(Math.max(0,n)).padStart(2,'0')}
  function render(){
@@ -79,23 +79,35 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
    $('#done-jump').textContent=completed.has(ids.jump)?'已完成':'待完成';
    $('#finish').disabled=completed.size<2;
  }
- function select(id){active=id; remaining=Number($('#duration').value)||30; if(tick){clearInterval(tick);tick=null} $('#timer-toggle').textContent='开始计时'; render()}
- function startPlan(){startedAt=new Date().toISOString();completed.clear();select(ids.squat);$('#timer-toggle').disabled=false;$('#complete-action').disabled=false;$('#plan-status').textContent='训练已开始：先完成徒手深蹲，再切换开合跳。';}
+ function saveDraft(){
+  if(!startedAt)return;
+  localStorage.setItem(DRAFT_STORE,JSON.stringify({schema:'zero-one.movement.teach.draft.v0.2',goal:$('#goal').value,environment:$('#environment').value,duration_seconds:Number($('#duration').value),active_exercise_id:active,remaining_seconds:remaining,completed_exercise_ids:[...completed],started_at:startedAt,updated_at:new Date().toISOString()}));
+ }
+ function select(id){active=id; remaining=Number($('#duration').value)||30; if(tick){clearInterval(tick);tick=null} $('#timer-toggle').textContent='开始计时'; render();saveDraft()}
+ function startPlan(){startedAt=new Date().toISOString();resumedFromDraft=false;completed.clear();select(ids.squat);$('#timer-toggle').disabled=false;$('#complete-action').disabled=false;$('#plan-status').textContent='训练已开始：先完成徒手深蹲，再切换开合跳。';saveDraft()}
  function toggleTimer(){
-  if(tick){clearInterval(tick);tick=null;$('#timer-toggle').textContent='继续计时';return}
+  if(tick){clearInterval(tick);tick=null;$('#timer-toggle').textContent='继续计时';saveDraft();return}
   $('#timer-toggle').textContent='暂停计时';
   tick=setInterval(()=>{remaining-=1;render();if(remaining<=0){clearInterval(tick);tick=null;$('#timer-toggle').textContent='计时完成'}},1000);
  }
- function completeAction(){completed.add(active);if(active===ids.squat&&!completed.has(ids.jump))select(ids.jump);render()}
+ function completeAction(){completed.add(active);if(active===ids.squat&&!completed.has(ids.jump))select(ids.jump);render();saveDraft()}
  function finish(){
-  const endedAt=new Date().toISOString(), record={schema:'zero-one.movement.teach.session.v0.2',session_id:'teach-'+Date.now(),goal:$('#goal').value,environment:$('#environment').value,duration_seconds:Number($('#duration').value),exercise_ids:[ids.squat,ids.jump],completed_exercise_ids:[...completed],started_at:startedAt,ended_at:endedAt,demo_assets:[
+  const endedAt=new Date().toISOString(), record={schema:'zero-one.movement.teach.session.v0.2',session_id:'teach-'+Date.now(),goal:$('#goal').value,environment:$('#environment').value,duration_seconds:Number($('#duration').value),exercise_ids:[ids.squat,ids.jump],completed_exercise_ids:[...completed],started_at:startedAt,ended_at:endedAt,resumed_from_draft:resumedFromDraft,demo_assets:[
    {exercise_id:ids.squat,file:'Squats wbs.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Squats_wbs.gif',sha1:'55768725657d2890c9cfd984aaffe3377ed53ade'},
    {exercise_id:ids.jump,file:'Jumpingjacks wbs.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif',sha1:'734a8482608bb763c0135969ff31857bffbbdbaa'}]};
-  const all=JSON.parse(localStorage.getItem(STORE)||'[]');all.unshift(record);localStorage.setItem(STORE,JSON.stringify(all.slice(0,20)));currentRecord=record;
+  const all=JSON.parse(localStorage.getItem(STORE)||'[]');all.unshift(record);localStorage.setItem(STORE,JSON.stringify(all.slice(0,20)));localStorage.removeItem(DRAFT_STORE);currentRecord=record;
   $('#feedback-copy').textContent='已完成 2/2 项。建议下次先保持动作受控，再逐步增加每项时长；如出现疼痛请停止并寻求专业意见。';
   $('#record-id').textContent='训练记录：'+record.session_id;$('#feedback').dataset.visible='true';$('#plan-status').textContent='本次训练已保存到浏览器。';
  }
- function restore(){const all=JSON.parse(localStorage.getItem(STORE)||'[]');if(!all.length){$('#plan-status').textContent='没有可恢复的训练记录。';return}currentRecord=all[0];$('#feedback-copy').textContent='最近一次已完成 '+currentRecord.completed_exercise_ids.length+'/2 项。';$('#record-id').textContent='训练记录：'+currentRecord.session_id;$('#feedback').dataset.visible='true'}
+ function restore(){
+  const draft=JSON.parse(localStorage.getItem(DRAFT_STORE)||'null');
+  if(draft?.schema==='zero-one.movement.teach.draft.v0.2'){
+   $('#goal').value=draft.goal;$('#environment').value=draft.environment;$('#duration').value=String(draft.duration_seconds);
+   startedAt=draft.started_at;active=draft.active_exercise_id;remaining=draft.remaining_seconds;completed=new Set(draft.completed_exercise_ids||[]);resumedFromDraft=true;
+   $('#timer-toggle').disabled=false;$('#complete-action').disabled=false;$('#plan-status').textContent='已恢复未完成训练：继续 '+names[active]+'。';$('#feedback').dataset.visible='false';render();return;
+  }
+  const all=JSON.parse(localStorage.getItem(STORE)||'[]');if(!all.length){$('#plan-status').textContent='没有可恢复的训练记录。';return}currentRecord=all[0];$('#feedback-copy').textContent='最近一次已完成 '+currentRecord.completed_exercise_ids.length+'/2 项。';$('#record-id').textContent='训练记录：'+currentRecord.session_id;$('#feedback').dataset.visible='true'
+ }
  function exportRecord(){if(!currentRecord)return;const blob=new Blob([JSON.stringify(currentRecord,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=currentRecord.session_id+'.json';a.click();URL.revokeObjectURL(a.href)}
  function toggleDemo(key,button){
   const img=$('#'+key+'-demo'),canvas=$('#'+key+'-still');
