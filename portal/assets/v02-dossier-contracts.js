@@ -120,6 +120,18 @@
     return '';
   }
 
+  function validateKeypointArtifactProvenance(sequence) {
+    const provenance = sequence?.provenance;
+    if (!provenance || provenance.schema !== 'zero-one.keypoint-provenance.v0.1') return '关键点产物缺少 provenance';
+    if (!['IMAGE', 'VIDEO'].includes(provenance.mediaType)) return 'provenance.mediaType 必须是 IMAGE 或 VIDEO';
+    if (!String(provenance.sourceAsset || '').trim()) return 'provenance.sourceAsset 缺失';
+    if (!/^[a-f0-9]{64}$/i.test(provenance.sourceSha256 || '')) return 'provenance.sourceSha256 无效';
+    if (!String(provenance.license || '').trim() || !String(provenance.annotator || '').trim()) return 'provenance 许可或标注方法缺失';
+    if (Number.isNaN(Date.parse(provenance.derivedAt || ''))) return 'provenance.derivedAt 无效';
+    if (!Array.isArray(provenance.phaseBindings) || provenance.phaseBindings.length !== 5 || provenance.phaseBindings.some((item, index) => item.phaseId !== sequence.frames?.[index]?.phaseId || !Number.isInteger(item.sourceFrameIndex) || item.sourceFrameIndex < 0)) return 'provenance.phaseBindings 与五阶段不一致';
+    return '';
+  }
+
   function compareStandardKeypointSequences(reference, candidate, phases) {
     const referenceError = validateStandardKeypointSequence(reference, phases);
     if (referenceError) throw new TypeError(`标准序列无效：${referenceError}`);
@@ -181,6 +193,30 @@
     return '';
   }
 
+  function validateResidenceCorrectionTransactions(record) {
+    if (record?.correctionTransactions == null) return '';
+    if (!Array.isArray(record.correctionTransactions)) return 'correctionTransactions 必须是数组';
+    const allowed = new Set(['name', 'place', 'dir', 'floor', 'rooms', 'size', 'needs', 'surround', 'material']);
+    const ids = new Set();
+    let previousId = null;
+    for (let index = 0; index < record.correctionTransactions.length; index += 1) {
+      const transaction = record.correctionTransactions[index];
+      if (!transaction || transaction.caseId !== record.id || !transaction.transactionId || ids.has(transaction.transactionId) || transaction.parentTransactionId !== previousId || Number.isNaN(Date.parse(transaction.at || ''))) return `correctionTransactions[${index}] 事务链无效`;
+      if (!allowed.has(transaction.field) || !transaction.before || !transaction.after) return `correctionTransactions[${index}] 字段或状态缺失`;
+      if (typeof transaction.before.value !== 'string' || typeof transaction.after.value !== 'string' || !transaction.after.value.trim() || transaction.before.value === transaction.after.value) return `correctionTransactions[${index}] 字段值无效`;
+      const afterEvidence = transaction.after.evidence;
+      if (!afterEvidence || afterEvidence.value !== transaction.after.value || !afterEvidence.source || !afterEvidence.confidence || Number.isNaN(Date.parse(afterEvidence.capturedAt || ''))) return `correctionTransactions[${index}] 联合证据无效`;
+      ids.add(transaction.transactionId);
+      previousId = transaction.transactionId;
+    }
+    const lastByField = new Map(record.correctionTransactions.map(item => [item.field, item]));
+    for (const [field, transaction] of lastByField) {
+      if (String(record.fields?.[field] || '') !== transaction.after.value) return `correctionTransactions.${field} 最终字段状态不一致`;
+      if (JSON.stringify(record.evidence?.[field] || null) !== JSON.stringify(transaction.after.evidence)) return `correctionTransactions.${field} 最终证据状态不一致`;
+    }
+    return '';
+  }
+
   function validateResidenceEvidenceLedger(record) {
     const allowed = new Set(['name', 'place', 'dir', 'floor', 'rooms', 'size', 'needs', 'surround', 'material']);
     const fields = record?.fields && typeof record.fields === 'object' ? record.fields : {};
@@ -226,6 +262,8 @@
     if (evidenceRevisionError) return evidenceRevisionError;
     const fieldRevisionError = validateResidenceFieldRevisions(record);
     if (fieldRevisionError) return fieldRevisionError;
+    const correctionError = validateResidenceCorrectionTransactions(record);
+    if (correctionError) return correctionError;
     if (record.materialFiles != null && !Array.isArray(record.materialFiles)) return 'materialFiles 必须是数组';
     const materialAssessment = assessResidenceMaterialChain(record);
     if (materialAssessment.errors.length) return materialAssessment.errors[0];
@@ -306,7 +344,7 @@
     });
   }
 
-  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateStandardKeypointSequence, compareStandardKeypointSequences, validateResidenceEvidenceLedger, validateResidenceEvidenceRevisions, validateResidenceFieldRevisions, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
+  const api = Object.freeze({assessExerciseDossier, buildExerciseDossier, validateStandardKeypointSequence, validateKeypointArtifactProvenance, compareStandardKeypointSequences, validateResidenceEvidenceLedger, validateResidenceEvidenceRevisions, validateResidenceFieldRevisions, validateResidenceCorrectionTransactions, validateResidenceImport, assessResidenceMaterialChain, assessResidenceClarification, assessResidenceAnalysisChain});
   root.ZeroOneDossierContracts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis === 'object' ? globalThis : this);

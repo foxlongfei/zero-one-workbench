@@ -240,6 +240,23 @@ const record = (track, name, passed, evidence) => {
   await page.waitForFunction(() => document.querySelector('#v02-residence')?.dataset.importStatus === 'VALIDATED_AND_IMPORTED');
   record('B01', 'valid dossier round-trip restores same Case, engine and material chains', await page.locator('#v02-residence').getAttribute('data-import-status') === 'VALIDATED_AND_IMPORTED' && await page.locator('#v02-residence').getAttribute('data-residence-id') === archiveDossier.id && await page.locator('#v02-residence').getAttribute('data-imported-case-id') === archiveDossier.id && await page.locator('#v02-residence').getAttribute('data-imported-analysis-integrity') === 'VALID_SAME_CASE_ENGINE_CHAIN' && await page.locator('#v02-residence').getAttribute('data-imported-material-integrity') === 'VALID_SAME_CASE_MATERIAL_CHAIN' && await page.locator('#v02-residence').getAttribute('data-imported-depthmap-points') === '708' && await page.locator('#v02-residence').getAttribute('data-imported-radiance-sensors') === '80' && (await page.locator('#r-import-receipt').innerText()).includes('材料 3 项') && (await page.locator('#r-import-receipt').innerText()).includes('VALID_SAME_CASE_ENGINE_CHAIN') && (await page.locator('#r-import-receipt').innerText()).includes('VALID_SAME_CASE_MATERIAL_CHAIN 3/3 SHA-256') && (await page.locator('#r-import-receipt').innerText()).includes(archiveDossier.analysisChain.depthmapX.outputSha256.slice(0, 12)) && (await page.locator('#r-import-receipt').innerText()).includes(archiveDossier.analysisChain.radiance.modelSha256.slice(0, 12)), await page.locator('#r-import-receipt').innerText());
 
+  await page.goto(`${baseUrl}/portal/movement.html?sha=${process.env.GITHUB_SHA || 'local'}&artifact=1`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#v02-load-keypoint-artifact').click();
+  await page.waitForFunction(() => document.querySelector('#v02-exercise')?.dataset.keypointImportStatus === 'PROVENANCE_VALIDATED_AND_APPLIED');
+  record('A01', 'licensed-image keypoint artifact provenance is validated and compared', await page.locator('#v02-exercise').getAttribute('data-keypoint-artifact-id') === 'kp:wger:1554:clap-image-manual-v0.1' && (await page.locator('#v02-exercise').getAttribute('data-keypoint-source-sha'))?.startsWith('7e6f3da44a68') && (await page.locator('#v02-keypoint-import-receipt').innerText()).includes('静态图片标注不等于视频追踪'), await page.locator('#v02-keypoint-import-receipt').innerText());
+
+  await page.goto(`${baseUrl}/portal/k02-board.html?sha=${process.env.GITHUB_SHA || 'local'}&correction=1`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#r-place').fill('上海市徐汇区');
+  await page.locator('#r-evidence-field').selectOption('place');
+  await page.locator('#r-evidence-source').selectOption('USER_REPORTED');
+  await page.locator('#r-evidence-confidence').selectOption('HIGH');
+  await page.locator('#r-correct-field-evidence').click();
+  record('B01', 'field value and evidence correction commits as one auditable transaction', await page.locator('#v02-residence').getAttribute('data-correction-status') === 'ATOMIC_FIELD_EVIDENCE_CORRECTION_SAVED' && await page.locator('#v02-residence').getAttribute('data-correction-transaction-count') === '1' && await page.locator('#r-correction-transactions li[data-correction-transaction]').count() === 1 && (await page.locator('#r-field-evidence-receipt').innerText()).includes('同一事务提交'), await page.locator('#r-field-evidence-receipt').innerText());
+  const correctionDownload = page.waitForEvent('download');
+  await page.locator('#r-export').click();
+  const correctionDossier = JSON.parse(fs.readFileSync(await (await correctionDownload).path(), 'utf8'));
+  record('B01', 'atomic correction transaction exports field and evidence final state', correctionDossier.correctionTransactions.length === 1 && correctionDossier.fields.place === '上海市徐汇区' && correctionDossier.evidence.place.value === '上海市徐汇区' && correctionDossier.correctionTransactions[0].after.evidence.value === '上海市徐汇区', JSON.stringify(correctionDossier.correctionTransactions));
+
   const report = {
     schema: 'zero-one.v02.browser-verification.v1',
     timestamp: new Date().toISOString(),

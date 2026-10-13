@@ -226,7 +226,7 @@
     const heading = document.createElement('h4');
     heading.textContent = '导入序列与项目标准序列差异';
     const summary = document.createElement('p');
-    summary.textContent = `五阶段 × 五点位｜平均二维位移 ${comparison.meanDistance.toFixed(4)}｜最大 ${comparison.maxDistance.toFixed(4)}`;
+    summary.textContent = `五阶段 × 五点位｜平均二维位移 ${comparison.meanDistance.toFixed(4)}｜最大 ${comparison.maxDistance.toFixed(4)}｜来源 ${comparison.provenance?.artifactId || 'UNSPECIFIED'}`;
     const interpretation = document.createElement('p');
     interpretation.dataset.largestDeviation = `${comparison.largestDeviation.phaseId}:${comparison.largestDeviation.point}`;
     interpretation.innerHTML = `<b>最大参考偏差：</b>${comparison.largestDeviation.phaseId} / ${comparison.largestDeviation.point}｜${comparison.largestDeviation.distance.toFixed(4)}。先复核阶段对齐、取景与标点；这不是动作质量判定。`;
@@ -260,6 +260,8 @@
     root.dataset.keypointComparison = comparison.schema;
     root.dataset.keypointComparisonPoints = String(comparison.pointCount);
     root.dataset.keypointLargestDeviation = `${comparison.largestDeviation.phaseId}:${comparison.largestDeviation.point}`;
+    root.dataset.keypointArtifactId = comparison.provenance?.artifactId || '';
+    root.dataset.keypointSourceSha = comparison.provenance?.sourceSha256 || '';
   }
 
   function draw() {
@@ -319,7 +321,8 @@
       <section id="v02-phase-detail" class="result" aria-live="polite"></section>
       <nav id="v02-phase-sequence" aria-label="俯卧撑动作阶段">${data.phases.map(item => `<button type="button" class="chip" data-phase-target="${item.phaseId}" data-phase-value="${Math.round((item.range[0] + item.range[1]) / 2)}">${item.name}</button>`).join(' ')}</nav>
       <section id="v02-keypoint-sequence" class="result" aria-live="polite"></section>
-      <p><label class="btn ghost">导入标准关键点序列 JSON<input id="v02-keypoint-import" type="file" accept=".json,application/json" style="display:none"></label>
+      <p><label class="btn ghost">导入来源关键点产物 JSON<input id="v02-keypoint-import" type="file" accept=".json,application/json" style="display:none"></label>
+        <button class="btn ghost" id="v02-load-keypoint-artifact" type="button">载入许可图片标注样板</button>
         <span id="v02-keypoint-import-receipt" class="muted" role="status" aria-live="polite">尚未导入；当前使用仓库标准序列。</span></p>
       <section id="v02-keypoint-comparison" class="result" aria-live="polite"><p class="muted">导入合法的五阶段序列后，这里显示与项目标准序列的逐点二维差异。</p></section>
       <h4>标准步骤</h4><ol>${data.steps.map(x => `<li>${x}</li>`).join('')}</ol>
@@ -368,21 +371,41 @@
     out.querySelectorAll('#v02-phase-sequence [data-phase-target]').forEach(button => {
       button.onclick = () => { phase = Number(button.dataset.phaseValue); draw(); };
     });
+    async function applyKeypointArtifact(imported) {
+      const receipt = out.querySelector('#v02-keypoint-import-receipt');
+      const validationError = globalThis.ZeroOneDossierContracts.validateStandardKeypointSequence(imported, data.phases);
+      if (validationError) throw Error(validationError);
+      const provenanceError = globalThis.ZeroOneDossierContracts.validateKeypointArtifactProvenance(imported);
+      if (provenanceError) throw Error(provenanceError);
+      const comparison = globalThis.ZeroOneDossierContracts.compareStandardKeypointSequences(canonicalKeypointSequence, imported, data.phases);
+      comparison.provenance = JSON.parse(JSON.stringify(imported.provenance));
+      data.keypointSequence = JSON.parse(JSON.stringify(imported));
+      definition.dynamics.keypointSequence = JSON.parse(JSON.stringify(imported));
+      definition.dynamics.keypointComparison = JSON.parse(JSON.stringify(comparison));
+      root.dataset.keypointImportStatus = 'PROVENANCE_VALIDATED_AND_APPLIED';
+      root.dataset.keypointImportFrames = String(imported.frames.length);
+      receipt.textContent = `导入成功：${imported.provenance.artifactId}｜${imported.provenance.mediaType}｜SHA-256 ${imported.provenance.sourceSha256.slice(0, 16)}…｜五阶段比较已计算；静态图片标注不等于视频追踪。`;
+      renderKeypointComparison(comparison);
+      draw();
+    }
+
+    out.querySelector('#v02-load-keypoint-artifact').onclick = async () => {
+      const receipt = out.querySelector('#v02-keypoint-import-receipt');
+      try {
+        const response = await fetch('data/v02-wger-clap-keypoint-artifact.json');
+        if (!response.ok) throw Error(`HTTP ${response.status}`);
+        await applyKeypointArtifact(await response.json());
+      } catch (error) {
+        root.dataset.keypointImportStatus = 'REJECTED_WITHOUT_REPLACEMENT';
+        receipt.textContent = `样板载入拒绝：${error.message}；当前关键点序列未被覆盖。`;
+      }
+    };
+
     out.querySelector('#v02-keypoint-import').onchange = async event => {
       const receipt = out.querySelector('#v02-keypoint-import-receipt');
       try {
         const imported = JSON.parse(await event.target.files[0].text());
-        const validationError = globalThis.ZeroOneDossierContracts.validateStandardKeypointSequence(imported, data.phases);
-        if (validationError) throw Error(validationError);
-        const comparison = globalThis.ZeroOneDossierContracts.compareStandardKeypointSequences(canonicalKeypointSequence, imported, data.phases);
-        data.keypointSequence = JSON.parse(JSON.stringify(imported));
-        definition.dynamics.keypointSequence = JSON.parse(JSON.stringify(imported));
-        definition.dynamics.keypointComparison = JSON.parse(JSON.stringify(comparison));
-        root.dataset.keypointImportStatus = 'VALIDATED_AND_APPLIED';
-        root.dataset.keypointImportFrames = String(imported.frames.length);
-        receipt.textContent = `导入成功：${imported.schema}｜${imported.frames.length} 帧｜五阶段逐帧匹配｜25 点差异已计算。`;
-        renderKeypointComparison(comparison);
-        draw();
+        await applyKeypointArtifact(imported);
       } catch (error) {
         root.dataset.keypointImportStatus = 'REJECTED_WITHOUT_REPLACEMENT';
         receipt.textContent = `导入拒绝：${error.message}；当前关键点序列未被覆盖。`;

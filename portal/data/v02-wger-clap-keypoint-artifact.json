@@ -1,0 +1,173 @@
+{
+  "schema": "zero-one.standard-keypoints.v0.1",
+  "coordinateSystem": "NORMALIZED_2D_SIDE_VIEW_X_RIGHT_Y_DOWN",
+  "source": "WGER_CLAP_PUSH_UP_LICENSED_IMAGE_MANUAL_LANDMARK_ARTIFACT",
+  "sampleRateHz": 1,
+  "limitation": "单张许可图片的人工二维标点被显式映射到五个比较槽位；不是视频时序追踪、自动姿态识别、动作质量判断或医学诊断。",
+  "provenance": {
+    "schema": "zero-one.keypoint-provenance.v0.1",
+    "artifactId": "kp:wger:1554:clap-image-manual-v0.1",
+    "mediaType": "IMAGE",
+    "sourceAsset": "assets/vendor/wger-clap-push-up-1554.png",
+    "sourceSha256": "7e6f3da44a68a285da8d987ad2ebc47f636bf17555e911d7dce0e1bb9be8ad47",
+    "sourceRecord": "wger exercise 1554 / image 49207a62-8799-4b47-8c0b-7bde02926f3d",
+    "license": "CC-BY-SA 4.0 / author Settebello",
+    "annotator": "PROJECT_MANUAL_2D_LANDMARK_ANNOTATION",
+    "derivedAt": "2026-10-13T05:23:00.000Z",
+    "temporalScope": "SINGLE_LICENSED_IMAGE_REUSED_AS_PHASE_PROXY_NOT_VIDEO_TRACKING",
+    "phaseBindings": [
+      {
+        "phaseId": "push-up:support",
+        "sourceFrameIndex": 0
+      },
+      {
+        "phaseId": "push-up:eccentric",
+        "sourceFrameIndex": 1
+      },
+      {
+        "phaseId": "push-up:bottom",
+        "sourceFrameIndex": 2
+      },
+      {
+        "phaseId": "push-up:concentric",
+        "sourceFrameIndex": 3
+      },
+      {
+        "phaseId": "push-up:return",
+        "sourceFrameIndex": 4
+      }
+    ]
+  },
+  "frames": [
+    {
+      "frame": 0,
+      "phaseId": "push-up:support",
+      "points": {
+        "shoulder": [
+          0.31,
+          0.29
+        ],
+        "elbow": [
+          0.43,
+          0.58
+        ],
+        "wrist": [
+          0.5,
+          0.83
+        ],
+        "hip": [
+          0.65,
+          0.31
+        ],
+        "ankle": [
+          0.91,
+          0.77
+        ]
+      }
+    },
+    {
+      "frame": 1,
+      "phaseId": "push-up:eccentric",
+      "points": {
+        "shoulder": [
+          0.32,
+          0.44
+        ],
+        "elbow": [
+          0.45,
+          0.66
+        ],
+        "wrist": [
+          0.5,
+          0.83
+        ],
+        "hip": [
+          0.66,
+          0.46
+        ],
+        "ankle": [
+          0.91,
+          0.77
+        ]
+      }
+    },
+    {
+      "frame": 2,
+      "phaseId": "push-up:bottom",
+      "points": {
+        "shoulder": [
+          0.32,
+          0.59
+        ],
+        "elbow": [
+          0.45,
+          0.71
+        ],
+        "wrist": [
+          0.5,
+          0.83
+        ],
+        "hip": [
+          0.66,
+          0.61
+        ],
+        "ankle": [
+          0.91,
+          0.77
+        ]
+      }
+    },
+    {
+      "frame": 3,
+      "phaseId": "push-up:concentric",
+      "points": {
+        "shoulder": [
+          0.32,
+          0.44
+        ],
+        "elbow": [
+          0.45,
+          0.66
+        ],
+        "wrist": [
+          0.5,
+          0.83
+        ],
+        "hip": [
+          0.66,
+          0.46
+        ],
+        "ankle": [
+          0.91,
+          0.77
+        ]
+      }
+    },
+    {
+      "frame": 4,
+      "phaseId": "push-up:return",
+      "points": {
+        "shoulder": [
+          0.31,
+          0.29
+        ],
+        "elbow": [
+          0.43,
+          0.58
+        ],
+        "wrist": [
+          0.5,
+          0.83
+        ],
+        "hip": [
+          0.65,
+          0.31
+        ],
+        "ankle": [
+          0.91,
+          0.77
+        ]
+      }
+    }
+  ]
+}

@@ -43,6 +43,7 @@
       <label>独立来源<select id="r-evidence-source"><option value="">来源未填</option><option value="USER_MEASURED">用户测量</option><option value="USER_REPORTED">用户描述</option><option value="DRAWING_OR_ARCHIVE">图纸/档案</option><option value="FIELD_OBSERVED">现场观察</option></select></label>
       <label>独立置信度<select id="r-evidence-confidence"><option value="">未评估</option><option value="LOW">LOW</option><option value="MEDIUM">MEDIUM</option><option value="HIGH">HIGH</option></select></label>
       <button class="btn ghost" id="r-save-field-evidence" type="button">保存这一字段证据</button>
+      <button class="btn ghost" id="r-correct-field-evidence" type="button">联合更正字段值＋证据</button>
       <button class="btn ghost" id="r-undo-field-evidence" type="button">撤销这一字段证据</button>
       <span id="r-field-evidence-receipt" class="muted" aria-live="polite">尚未补证。</span>
     </fieldset>
@@ -51,6 +52,7 @@
     <details open><summary>字段证据账本</summary><ul id="r-evidence"></ul></details>
     <details open><summary>证据修订历史</summary><ol id="r-evidence-revisions"></ol></details>
     <details open><summary>住宅字段修订链</summary><div id="r-field-revision-receipt" class="muted" aria-live="polite">尚无字段保存或冲突回执。</div><ol id="r-field-revisions"></ol></details>
+    <details open><summary>字段＋证据联合更正事务</summary><ol id="r-correction-transactions"></ol></details>
     <details><summary>同一住宅补充记录</summary><ol id="r-history"></ol></details>`;
   const main = document.querySelector('main');
   main.insertBefore(root, main.children[1] || null);
@@ -69,6 +71,7 @@
   let evidence = {};
   let evidenceRevisions = [];
   let fieldRevisions = [];
+  let correctionTransactions = [];
   let savedFields = Object.fromEntries(keys.map(key => [key, '']));
   let materialFiles = [];
   const emptyBoundaries = () => ({modelRun: 'NOT_STARTED', geometryContinuity: 'NOT_PROVEN', crossLayerEquivalence: 'BLOCK'});
@@ -82,6 +85,7 @@
     evidence = record.evidence && typeof record.evidence === 'object' ? record.evidence : {};
     evidenceRevisions = Array.isArray(record.evidenceRevisions) ? record.evidenceRevisions.slice(-50) : [];
     fieldRevisions = Array.isArray(record.fieldRevisions) ? record.fieldRevisions.slice(-50) : [];
+    correctionTransactions = Array.isArray(record.correctionTransactions) ? record.correctionTransactions.slice(-50) : [];
     materialFiles = Array.isArray(record.materialFiles) ? record.materialFiles.slice(-20) : [];
     boundaries = record.boundaries && typeof record.boundaries === 'object' ? {...record.boundaries} : emptyBoundaries();
     analysisChain = record.analysisChain && typeof record.analysisChain === 'object' ? {...record.analysisChain} : null;
@@ -109,6 +113,7 @@
       evidence,
       evidenceRevisions,
       fieldRevisions,
+      correctionTransactions,
       materialFiles,
       materialProvenance: summarizeMaterialProvenance(),
       revisions,
@@ -179,6 +184,25 @@
     }
     root.dataset.fieldRevisionCount = String(fieldRevisions.length);
     root.dataset.fieldRevisionHead = fieldRevisions.at(-1)?.revisionId || '';
+  }
+
+  function renderCorrectionTransactions() {
+    const list = root.querySelector('#r-correction-transactions');
+    list.replaceChildren();
+    if (!correctionTransactions.length) {
+      const item = document.createElement('li');
+      item.textContent = '尚无联合更正事务。';
+      list.append(item);
+    } else {
+      correctionTransactions.forEach(transaction => {
+        const item = document.createElement('li');
+        item.dataset.correctionTransaction = transaction.transactionId;
+        item.textContent = `${transaction.at}｜${transaction.transactionId}｜${labels[transaction.field]}：“${transaction.before.value || '空'}” → “${transaction.after.value}”｜${transaction.after.evidence.source}/${transaction.after.evidence.confidence}`;
+        list.append(item);
+      });
+    }
+    root.dataset.correctionTransactionCount = String(correctionTransactions.length);
+    root.dataset.correctionTransactionHead = correctionTransactions.at(-1)?.transactionId || '';
   }
 
   function summarizeMaterialProvenance() {
@@ -252,6 +276,37 @@
     evidence[key] = {value, source, confidence, capturedAt};
     appendEvidenceRevision(key, 'SAVE', before, {...evidence[key]}, capturedAt);
     receipt.textContent = `已补证：${labels[key]}｜${source}｜${confidence}`;
+    check();
+  };
+
+  root.querySelector('#r-correct-field-evidence').onclick = () => {
+    const key = evidenceField.value;
+    const afterValue = fields[key].value.trim();
+    const source = root.querySelector('#r-evidence-source').value;
+    const confidence = root.querySelector('#r-evidence-confidence').value;
+    const receipt = root.querySelector('#r-field-evidence-receipt');
+    const beforeValue = String(savedFields[key] || '');
+    if (!afterValue || afterValue === beforeValue || !source || !confidence) {
+      receipt.textContent = `联合更正失败：${labels[key]}必须填写不同的新值，并选择来源与置信度。`;
+      return;
+    }
+    const at = new Date().toISOString();
+    const beforeEvidence = evidence[key] ? {...evidence[key]} : null;
+    const afterEvidence = {value: afterValue, source, confidence, capturedAt: at};
+    const transactionId = `correction-${at.replace(/\D/g, '')}-${correctionTransactions.length + 1}`;
+    const parentTransactionId = correctionTransactions.at(-1)?.transactionId || null;
+    const parentRevisionId = fieldRevisions.at(-1)?.revisionId || null;
+    const revisionId = `field-revision-${at.replace(/\D/g, '')}-${fieldRevisions.length + 1}`;
+    evidence[key] = afterEvidence;
+    appendEvidenceRevision(key, 'SAVE', beforeEvidence, {...afterEvidence}, at);
+    fieldRevisions.push({caseId, revisionId, parentRevisionId, at, changes: [{field: key, before: beforeValue, after: afterValue}], correctionTransactionId: transactionId});
+    correctionTransactions.push({caseId, transactionId, parentTransactionId, at, field: key, before: {value: beforeValue, evidence: beforeEvidence}, after: {value: afterValue, evidence: {...afterEvidence}}, fieldRevisionId: revisionId});
+    fieldRevisions = fieldRevisions.slice(-50);
+    correctionTransactions = correctionTransactions.slice(-50);
+    savedFields[key] = afterValue;
+    root.dataset.correctionStatus = 'ATOMIC_FIELD_EVIDENCE_CORRECTION_SAVED';
+    receipt.textContent = `联合更正已保存：${transactionId}｜字段值与证据作为同一事务提交。`;
+    try { localStorage.setItem('v02-residence', JSON.stringify(collect())); } catch (_) {}
     check();
   };
 
@@ -356,6 +411,7 @@
     renderEvidence();
     renderEvidenceRevisions();
     renderFieldRevisions();
+    renderCorrectionTransactions();
     syncEvidenceEditor(false);
     renderMaterialManifest();
     return directionValid;
@@ -532,6 +588,7 @@
     evidence = {};
     evidenceRevisions = [];
     fieldRevisions = [];
+    correctionTransactions = [];
     savedFields = Object.fromEntries(keys.map(key => [key, '']));
     materialFiles = [];
     boundaries = emptyBoundaries();
