@@ -102,6 +102,7 @@ const record = (track, name, passed, evidence) => {
   const rejectedKeypoints = JSON.parse(JSON.stringify(importedKeypoints));
   rejectedKeypoints.frames[3].phaseId = 'push-up:wrong-phase';
   await page.locator('#v02-keypoint-import').setInputFiles({name: 'invalid-keypoints.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(rejectedKeypoints))});
+  await page.waitForFunction(() => document.querySelector('#v02-exercise')?.dataset.keypointImportStatus === 'REJECTED_WITHOUT_REPLACEMENT');
   record('A01', 'phase-mismatched keypoint sequence is rejected without replacement', await page.locator('#v02-exercise').getAttribute('data-keypoint-import-status') === 'REJECTED_WITHOUT_REPLACEMENT' && (await page.locator('#v02-keypoint-import-receipt').innerText()).includes('当前关键点序列未被覆盖') && (await page.locator('#v02-keypoint-sequence').innerText()).includes('标准关键点帧 4/5'), await page.locator('#v02-keypoint-import-receipt').innerText());
   const comparedExportDownload = page.waitForEvent('download');
   await page.locator('#v02-ex-export').click();
