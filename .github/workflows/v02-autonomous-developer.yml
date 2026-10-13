@@ -1,4 +1,4 @@
-name: V0.2 Autonomous Prototype Developer
+name: V0.2 Q and D Prototype Developers
 on:
   workflow_dispatch:
     inputs:
@@ -24,6 +24,7 @@ jobs:
       max-parallel: 1
       matrix:
         project: [A01, B01, C01]
+        provider: [Q, D]
     permissions:
       contents: read
     steps:
@@ -48,7 +49,7 @@ jobs:
           API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           if [[ -z "$API_KEY" ]]; then
-            echo "::error::OPENAI_API_KEY repository secret is missing; agent cannot run."
+            echo "::error::Missing QWEN_API_KEY or DEEPSEEK_API_KEY GitHub Actions secret for selected provider. Chat app connections do not automatically grant GitHub Actions API credentials."
             exit 1
           fi
       - name: Prepare bounded work order
@@ -63,7 +64,7 @@ jobs:
             C01) issue=11; page="portal/read-with-you-v01.html"; objective="Deliver real reading continuation/progress and accessible voice controls while respecting text copyright and existing issues 10-15.";;
           esac
           {
-            echo "You are the implementation agent for $PROJECT, issue #$issue."
+            echo "You are the implementation agent for $PROJECT, issue #$issue. Work in a small bounded increment."
             echo "Read docs/v0.2/2026-10-13-integrated-prototype-rebaseline.md and the current portal source."
             echo "Goal: $objective"
             echo "Edit $page and, only as needed, related portal assets and tests/v02. Do not edit other projects, .github/workflows, secrets, permissions, or historical issue data."
@@ -71,14 +72,18 @@ jobs:
             echo "Run appropriate local tests; document exact limitations and failures. Do not claim independent blind validation, external Pages deployment or acceptance."
             echo "Keep existing features and accessible links. Do not introduce unsupported medical or predictive claims."
           } > /tmp/v02-agent/prompt.txt
-      - name: Run implementation agent
+      - name: Run Q or D implementation agent
         if: steps.select.outputs.selected == 'true'
-        uses: openai/codex-action@v1
+        uses: QwenLM/qwen-code-action@v1
         with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          permission-profile: ":workspace"
-          prompt-file: /tmp/v02-agent/prompt.txt
-          output-file: /tmp/v02-agent/result.txt
+          openai_api_key: ${{ matrix.provider == 'Q' && secrets.QWEN_API_KEY || secrets.DEEPSEEK_API_KEY }}
+          openai_base_url: ${{ matrix.provider == 'Q' && 'https://dashscope.aliyuncs.com/compatible-mode/v1' || 'https://api.deepseek.com/v1' }}
+          openai_model: ${{ matrix.provider == 'Q' && 'qwen-coder-plus-latest' || 'deepseek-chat' }}
+          prompt: |
+            You are a code implementation agent. Read /tmp/v02-agent/prompt.txt.
+            Actually edit the relevant source files and tests in the workspace.
+            Do not just propose a plan. Do not create PRs yourself.
+            Report what changed and what you could test.
       - name: Validate changes are in scope
         if: steps.select.outputs.selected == 'true'
         env:
@@ -104,8 +109,8 @@ jobs:
         run: |
           mkdir -p /tmp/v02-patch
           git add -A
-          git diff --cached --binary > "/tmp/v02-patch/$PROJECT.patch"
-          if [[ ! -s "/tmp/v02-patch/$PROJECT.patch" ]]; then
+          git diff --cached --binary > "/tmp/v02-patch/$PROJECT-\${{ matrix.provider }}.patch"
+          if [[ ! -s "/tmp/v02-patch/$PROJECT-\${{ matrix.provider }}.patch" ]]; then
             echo "::error::Agent produced no code changes."
             exit 1
           fi
@@ -140,13 +145,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for project in A01 B01 C01; do
-            patch="/tmp/agent-patches/$project.patch"
+           for provider in Q D; do
+            patch="/tmp/agent-patches/$project-$provider.patch"
             [[ -s "$patch" ]] || continue
             branch="agent/v02-${project,,}-$RUN_ID"
             git checkout -B "$branch" origin/main
             git apply --index "$patch"
-            git commit -m "feat($project): autonomous V0.2 prototype increment"
+            git commit -m "feat($project): $provider autonomous V0.2 prototype increment"
             git push origin "$branch"
             case "$project" in A01) issue=22;; B01) issue=21;; C01) issue=11;; esac
-            gh pr create --base main --head "$branch" --draft --title "V0.2 $project automated prototype increment" --body "Automated code proposal for #$issue. Review required. This PR is NOT deployment, independent blind testing, or accepted product. Run V0.2 validation and verify the public user journey before merging."
+            gh pr create --base main --head "$branch" --draft --title "V0.2 $project $provider automated prototype increment" --body "Automated code proposal for #$issue. Review required. This PR is NOT deployment, independent blind testing, or accepted product. Run V0.2 validation and verify the public user journey before merging."
+           done
           done
