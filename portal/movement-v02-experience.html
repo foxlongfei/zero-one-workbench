@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>运动达人 V0.2｜完整教学跟练</title>
+<style>
+:root{--bg:#08111f;--card:#111d31;--line:#2a3d5d;--text:#edf5ff;--muted:#a9b7cc;--accent:#72e0b4;--accent2:#70a7ff;--warn:#ffd27a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(150deg,#07101d,#10213a);color:var(--text);font:16px/1.55 system-ui,-apple-system,sans-serif}
+main{max-width:1080px;margin:auto;padding:24px}.hero,.card{background:rgba(17,29,49,.94);border:1px solid var(--line);border-radius:18px;padding:22px;margin:0 0 18px}
+h1,h2,h3{margin:.1em 0 .5em}.muted{color:var(--muted)}.badge{display:inline-block;border:1px solid var(--accent);color:var(--accent);padding:3px 9px;border-radius:999px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.exercise{border:2px solid transparent}.exercise[aria-current="true"]{border-color:var(--accent)}
+.demo{position:relative;background:#fff;border-radius:14px;min-height:260px;display:grid;place-items:center;overflow:hidden}.demo img,.demo canvas{max-width:100%;height:260px;object-fit:contain}.demo canvas{display:none}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}button,select,input{font:inherit;border-radius:10px;border:1px solid var(--line);padding:10px 13px}button{background:#17304f;color:var(--text);cursor:pointer}button.primary{background:var(--accent);color:#03231a;font-weight:700}button:disabled{opacity:.45;cursor:not-allowed}
+label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;color:var(--text)}ol{padding-left:22px}.source{font-size:13px;color:var(--muted)}a{color:#89b7ff}.status{border-left:4px solid var(--accent2);padding:10px 14px;background:#0b1728;border-radius:9px}.timer{font-variant-numeric:tabular-nums;font-size:42px;font-weight:800;letter-spacing:.04em}.step{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid var(--line);padding:12px 0}.feedback{display:none}.feedback[data-visible="true"]{display:block}
+@media(max-width:600px){main{padding:12px}.hero,.card{padding:16px}.timer{font-size:34px}.demo img,.demo canvas{height:220px}}
+</style>
+</head>
+<body><main>
+<header class="hero">
+<span class="badge">A-TEACH · EXECUTING</span>
+<h1>运动达人｜完整教学跟练</h1>
+<p>先选目标和环境，再连续看示范、跟练、记录、反馈。两项动态示范均保留作者、版本、许可和源文件；它们是教学动画，不是医学诊断或姿态识别。</p>
+<p><a href="movement.html">返回运动主工作台</a> · <a href="../docs/v0.2/2026-10-13-integrated-prototype-rebaseline.md">查看总施工单</a></p>
+</header>
+
+<section class="card" aria-labelledby="setup-title">
+<h2 id="setup-title">1. 生成本次训练</h2>
+<div class="grid">
+<label>目标<select id="goal"><option value="whole-body">全身活动</option><option value="lower-body">下肢力量</option><option value="cardio">心肺热身</option></select></label>
+<label>环境<select id="environment"><option value="home">居家 · 无器械</option><option value="office">办公室 · 小空间</option><option value="outdoor">户外 · 平整地面</option></select></label>
+<label>每项时长<input id="duration" type="number" min="10" max="180" step="5" value="30"></label>
+</div>
+<div class="controls"><button class="primary" id="build">生成并开始</button><button id="restore">恢复最近一次记录</button></div>
+<p class="status" id="plan-status" role="status">尚未开始。完整流程：深蹲 → 开合跳 → 保存训练记录。</p>
+</section>
+
+<section class="grid" id="exercise-list" aria-label="动作教学">
+<article class="card exercise" data-exercise-id="commons:squats-wbs:2020-05-20" aria-current="true">
+<h2>2A. 徒手深蹲</h2>
+<div class="demo"><img id="squat-demo" crossorigin="anonymous" alt="徒手深蹲循环动态示范" src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Squats_wbs.gif"><canvas id="squat-still" aria-label="徒手深蹲暂停画面"></canvas></div>
+<div class="controls"><button class="demo-toggle" data-target="squat">暂停示范</button><button class="select-exercise" data-id="commons:squats-wbs:2020-05-20">跟练这个动作</button></div>
+<ol><li>双脚约与肩同宽，保持稳定站立。</li><li>髋部向后、膝髋屈曲，躯干保持受控。</li><li>脚掌稳定着地，回到站立，完成一次。</li></ol>
+<p class="source">动态资产：<a href="https://commons.wikimedia.org/wiki/File:Squats_wbs.gif">Squats wbs.gif</a>；作者 Wensceslao；版本 2020-05-20；SHA-1 55768725657d2890c9cfd984aaffe3377ed53ade；<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。</p>
+</article>
+<article class="card exercise" data-exercise-id="commons:jumpingjacks-wbs:2020-05-20" aria-current="false">
+<h2>2B. 开合跳</h2>
+<div class="demo"><img id="jump-demo" crossorigin="anonymous" alt="开合跳循环动态示范" src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Jumpingjacks_wbs.gif"><canvas id="jump-still" aria-label="开合跳暂停画面"></canvas></div>
+<div class="controls"><button class="demo-toggle" data-target="jump">暂停示范</button><button class="select-exercise" data-id="commons:jumpingjacks-wbs:2020-05-20">跟练这个动作</button></div>
+<ol><li>站直，双脚并拢，双臂自然放在身体两侧。</li><li>轻跳打开双腿，同时双臂举过头顶。</li><li>再次轻跳，手脚回到起始位置，连续交替。</li></ol>
+<p class="source">动态资产：<a href="https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif">Jumpingjacks wbs.gif</a>；作者 Wensceslao；版本 2020-05-20；SHA-1 734a8482608bb763c0135969ff31857bffbbdbaa；<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。</p>
+</article>
+</section>
+
+<section class="card" aria-labelledby="follow-title">
+<h2 id="follow-title">3. 连续跟练</h2>
+<p id="active-name">当前动作：徒手深蹲</p><div class="timer" id="timer">00:30</div>
+<div class="controls"><button class="primary" id="timer-toggle" disabled>开始计时</button><button id="complete-action" disabled>完成当前动作</button><button id="finish" disabled>结束并保存</button></div>
+<div class="step"><span>徒手深蹲</span><strong id="done-squat">待完成</strong></div>
+<div class="step"><span>开合跳</span><strong id="done-jump">待完成</strong></div>
+</section>
+
+<section class="card feedback" id="feedback" data-visible="false" aria-live="polite">
+<h2>4. 本次反馈</h2><p id="feedback-copy"></p><p id="record-id"></p>
+<button id="export">导出训练 JSON</button>
+</section>
+</main>
+<script>
+(() => {
+ const STORE='zero-one.movement.teach.sessions.v0.2';
+ const ids={squat:'commons:squats-wbs:2020-05-20',jump:'commons:jumpingjacks-wbs:2020-05-20'};
+ const names={[ids.squat]:'徒手深蹲',[ids.jump]:'开合跳'};
+ let active=ids.squat, remaining=30, tick=null, startedAt=null, completed=new Set(), currentRecord=null;
+ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+ function fmt(n){return '00:'+String(Math.max(0,n)).padStart(2,'0')}
+ function render(){
+   $('#active-name').textContent='当前动作：'+names[active]; $('#timer').textContent=fmt(remaining);
+   $$('.exercise').forEach(x=>x.setAttribute('aria-current',String(x.dataset.exerciseId===active)));
+   $('#done-squat').textContent=completed.has(ids.squat)?'已完成':'待完成';
+   $('#done-jump').textContent=completed.has(ids.jump)?'已完成':'待完成';
+   $('#finish').disabled=completed.size<2;
+ }
+ function select(id){active=id; remaining=Number($('#duration').value)||30; if(tick){clearInterval(tick);tick=null} $('#timer-toggle').textContent='开始计时'; render()}
+ function startPlan(){startedAt=new Date().toISOString();completed.clear();select(ids.squat);$('#timer-toggle').disabled=false;$('#complete-action').disabled=false;$('#plan-status').textContent='训练已开始：先完成徒手深蹲，再切换开合跳。';}
+ function toggleTimer(){
+  if(tick){clearInterval(tick);tick=null;$('#timer-toggle').textContent='继续计时';return}
+  $('#timer-toggle').textContent='暂停计时';
+  tick=setInterval(()=>{remaining-=1;render();if(remaining<=0){clearInterval(tick);tick=null;$('#timer-toggle').textContent='计时完成'}},1000);
+ }
+ function completeAction(){completed.add(active);if(active===ids.squat&&!completed.has(ids.jump))select(ids.jump);render()}
+ function finish(){
+  const endedAt=new Date().toISOString(), record={schema:'zero-one.movement.teach.session.v0.2',session_id:'teach-'+Date.now(),goal:$('#goal').value,environment:$('#environment').value,duration_seconds:Number($('#duration').value),exercise_ids:[ids.squat,ids.jump],completed_exercise_ids:[...completed],started_at:startedAt,ended_at:endedAt,demo_assets:[
+   {exercise_id:ids.squat,file:'Squats wbs.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Squats_wbs.gif',sha1:'55768725657d2890c9cfd984aaffe3377ed53ade'},
+   {exercise_id:ids.jump,file:'Jumpingjacks wbs.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif',sha1:'734a8482608bb763c0135969ff31857bffbbdbaa'}]};
+  const all=JSON.parse(localStorage.getItem(STORE)||'[]');all.unshift(record);localStorage.setItem(STORE,JSON.stringify(all.slice(0,20)));currentRecord=record;
+  $('#feedback-copy').textContent='已完成 2/2 项。建议下次先保持动作受控，再逐步增加每项时长；如出现疼痛请停止并寻求专业意见。';
+  $('#record-id').textContent='训练记录：'+record.session_id;$('#feedback').dataset.visible='true';$('#plan-status').textContent='本次训练已保存到浏览器。';
+ }
+ function restore(){const all=JSON.parse(localStorage.getItem(STORE)||'[]');if(!all.length){$('#plan-status').textContent='没有可恢复的训练记录。';return}currentRecord=all[0];$('#feedback-copy').textContent='最近一次已完成 '+currentRecord.completed_exercise_ids.length+'/2 项。';$('#record-id').textContent='训练记录：'+currentRecord.session_id;$('#feedback').dataset.visible='true'}
+ function exportRecord(){if(!currentRecord)return;const blob=new Blob([JSON.stringify(currentRecord,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=currentRecord.session_id+'.json';a.click();URL.revokeObjectURL(a.href)}
+ function toggleDemo(key,button){
+  const img=$('#'+key+'-demo'),canvas=$('#'+key+'-still');
+  if(img.style.display==='none'){canvas.style.display='none';img.style.display='block';img.src=img.src;button.textContent='暂停示范';button.dataset.state='playing';return}
+  canvas.width=img.naturalWidth||320;canvas.height=img.naturalHeight||260;try{canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height)}catch(e){}
+  img.style.display='none';canvas.style.display='block';button.textContent='继续示范';button.dataset.state='paused';
+ }
+ $('#build').addEventListener('click',startPlan);$('#restore').addEventListener('click',restore);$('#timer-toggle').addEventListener('click',toggleTimer);$('#complete-action').addEventListener('click',completeAction);$('#finish').addEventListener('click',finish);$('#export').addEventListener('click',exportRecord);
+ $$('.select-exercise').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id)));$$('.demo-toggle').forEach(b=>b.addEventListener('click',()=>toggleDemo(b.dataset.target,b)));
+ render();
+})();
+</script></body></html>
