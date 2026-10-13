@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>堪舆先生｜先生接案</title>
+<style>body{margin:0;background:#f4f0e6;color:#273127;font:17px/1.6 system-ui}main{max-width:1050px;margin:auto;padding:20px}section{background:#fffefa;padding:20px;border-radius:18px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:700px){.grid{grid-template-columns:1fr}}button,input,select,textarea{font:inherit;padding:10px;border:1px solid #9b9a8c;border-radius:9px}button{cursor:pointer}.primary{background:#3d6047;color:white}.case-type[aria-pressed="true"]{background:#3d6047;color:#fff}.muted{color:#687067}.notice{padding:12px;background:#f2ead1;border-radius:10px}.hidden{display:none}label{display:block;margin:10px 0}input,textarea,select{width:100%;box-sizing:border-box}.row{display:flex;gap:8px;flex-wrap:wrap}.tag{display:inline-block;background:#e2eadf;padding:3px 9px;border-radius:999px;margin:3px}code{overflow-wrap:anywhere}</style></head>
+<body><main id="advisor-entry" data-schema="zero-one.advisor.case.v0.1" data-case-status="EMPTY">
+<h1>堪舆先生 · 整体接案入口</h1>
+<p>先把问题、资料、方法与边界放进同一个 Case。当前只开放“失物”和“住宅”两条可操作样板；不以界面或传统方法名称冒充预测能力。</p>
+<section><h2>① 这次想问什么</h2><div class="row" id="case-types">
+<button class="case-type" data-type="lost" aria-pressed="false">失物</button>
+<button class="case-type" data-type="residence" aria-pressed="false">住宅</button>
+<button class="case-type" data-type="fortune" aria-pressed="false">吉凶</button>
+<button class="case-type" data-type="future" aria-pressed="false">前程</button>
+<button class="case-type" data-type="marriage" aria-pressed="false">婚姻</button>
+<button class="case-type" data-type="fertility" aria-pressed="false">求子</button>
+<button class="case-type" data-type="date" aria-pressed="false">择日</button></div>
+<p id="type-status" class="notice">请选择问题类型。涉及健康、生育、财产时，本原型不替代医疗、法律或警方等专业渠道。</p></section>
+<section id="case-form" class="hidden"><h2>② 建立同一 Case</h2>
+<p>Case ID：<code id="case-id"></code></p>
+<label>称呼（可匿名）<input id="client" placeholder="如：访客"></label>
+<label>问题描述<textarea id="question" rows="3" placeholder="只写希望处理的问题，不输入身份证、详细门牌等敏感信息"></textarea></label>
+<div id="lost-fields" class="hidden"><label>物品名称<input id="lost-item" placeholder="如：钥匙"></label><label>最后确认地点<input id="lost-place" placeholder="如：办公室抽屉"></label><label>最后确认时间<input id="lost-time" type="datetime-local"></label></div>
+<div id="residence-fields" class="hidden"><label>住宅概况<input id="residence-summary" placeholder="如：两房一厅，朝向待确认"></label><label>当前关注<input id="residence-concern" placeholder="如：采光、动线或材料归档"></label></div>
+<label>选择当前可用方法<select id="method"></select></label>
+<p id="method-boundary" class="muted"></p>
+<button class="primary" id="save-case">保存并检查缺口</button>
+<button id="export-case">导出当前 Case JSON</button>
+<p id="next-question" class="notice"></p></section>
+<section><h2>③ 连续案例</h2><p id="case-history">尚无已保存 Case。</p><p><a id="residence-link" href="housing-v02-experience.html">住宅专题：平面图标注与观察档案 →</a> · <a href="k02-board.html">原有证据与研究工作台 →</a></p>
+<p class="muted">保存只发生在当前浏览器。任何预测准确性主张都需要另行预注册、盲测与失败记录；本入口目前不输出吉凶、方位或寻物结论。</p></section></main>
+<script>
+(function(){var q=function(id){return document.getElementById(id)},root=q('advisor-entry'),selected='',caseId='';var available={
+lost:{label:'失物',methods:[['information-ledger','事实材料整理'],['traditional-method-placeholder','传统方法（占位，不演算）']],boundary:'当前只整理物品、最后地点与时间，并生成追问；不声称能推断位置。'},
+residence:{label:'住宅',methods:[['residence-dossier','住宅材料归一化'],['housing-observation','平面图观察专题']],boundary:'当前建立住宅资料与专题入口；没有模型运行与证据时不生成传统判断。'}
+};var unavailable={fortune:'吉凶',future:'前程',marriage:'婚姻',fertility:'求子',date:'择日'};
+function uid(){return 'case-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)}
+function load(){try{return JSON.parse(localStorage.getItem('advisor-cases-v01')||'[]')}catch(e){return []}}
+function store(items){localStorage.setItem('advisor-cases-v01',JSON.stringify(items.slice(-30)))}
+function renderHistory(){var items=load();q('case-history').textContent=items.length?'本机已保存 '+items.length+' 个 Case：'+items.map(function(x){return x.caseId+'｜'+x.typeLabel+'｜'+x.status}).join('；'):'尚无已保存 Case。';root.dataset.savedCaseCount=String(items.length)}
+function missing(){var fields=[['client','称呼'],['question','问题描述']];if(selected==='lost')fields=fields.concat([['lost-item','物品名称'],['lost-place','最后确认地点'],['lost-time','最后确认时间']]);if(selected==='residence')fields=fields.concat([['residence-summary','住宅概况'],['residence-concern','当前关注']]);return fields.filter(function(x){return !q(x[0]).value.trim()}).map(function(x){return x[1]})}
+function choose(type){document.querySelectorAll('.case-type').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.type===type))});if(!available[type]){selected='';caseId='';q('case-form').classList.add('hidden');q('type-status').textContent=unavailable[type]+'：NOT_AVAILABLE。本轮未实现资料合同、演算或验证，不能生成结论。';root.dataset.caseStatus='UNAVAILABLE_EXPLICIT';root.dataset.selectedType=type;return}selected=type;caseId=uid();root.dataset.selectedType=type;root.dataset.caseStatus='DRAFT';q('case-id').textContent=caseId;q('case-form').classList.remove('hidden');q('lost-fields').classList.toggle('hidden',type!=='lost');q('residence-fields').classList.toggle('hidden',type!=='residence');q('method').innerHTML='';available[type].methods.forEach(function(m){var o=document.createElement('option');o.value=m[0];o.textContent=m[1];q('method').appendChild(o)});q('method-boundary').textContent=available[type].boundary;q('type-status').textContent='已选择'+available[type].label+'。所有后续记录绑定 Case ID '+caseId+'。';q('next-question').textContent='请补充：'+missing().join('、');}
+document.querySelectorAll('.case-type').forEach(function(b){b.onclick=function(){choose(b.dataset.type)}});q('save-case').onclick=function(){var gaps=missing();if(gaps.length){q('next-question').textContent='先生下一问：请补充“'+gaps[0]+'”。仍缺：'+gaps.join('、');root.dataset.caseStatus='NEEDS_CLARIFICATION';root.dataset.missingCount=String(gaps.length);return}var item={schema:root.dataset.schema,caseId:caseId,type:selected,typeLabel:available[selected].label,client:q('client').value.trim(),question:q('question').value.trim(),method:q('method').value,status:'MATERIALS_RECORDED_NO_PREDICTION',fields:selected==='lost'?{item:q('lost-item').value.trim(),lastPlace:q('lost-place').value.trim(),lastTime:q('lost-time').value}:{summary:q('residence-summary').value.trim(),concern:q('residence-concern').value.trim()},boundary:available[selected].boundary,savedAt:new Date().toISOString()};var items=load().filter(function(x){return x.caseId!==caseId});items.push(item);store(items);root.dataset.caseStatus=item.status;root.dataset.missingCount='0';q('next-question').textContent='材料已保存；当前不输出预测。Case ID 保持 '+caseId+'。';renderHistory()};
+q('export-case').onclick=function(){var current=load().find(function(x){return x.caseId===caseId});if(!current){q('next-question').textContent='请先保存当前 Case，再导出。';return}var blob=new Blob([JSON.stringify(current,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=current.caseId+'.json';a.click();setTimeout(function(){URL.revokeObjectURL(url)},1000)};
+renderHistory();})();
+</script></body></html>
