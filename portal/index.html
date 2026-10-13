@@ -1,10 +1,14 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>零一空间｜双项目入口</title><link rel="stylesheet" href="assets/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>零一空间｜项目操作入口</title><link rel="stylesheet" href="assets/style.css"></head>
 <body><main class="wrap">
 <h1 class="hero">零一空间｜项目操作入口</h1>
 <p class="muted">只按用户层硬门计数：实物 → Pages 接入 → 发布 → 公开运行/读回 → CURRENT/Drive 同步。更新：2026-10-04 09:58 +08:00。</p>
+<section class="card" aria-label="欧洲古典音乐电台试听"><h2>🎼 听世界｜欧洲古典音乐电台（RW-05 首版）</h2><p>已接入 Radio Browser 开放电台目录，支持国家筛选、播放、切台与本地收藏。真实播放是否成功取决于电台音源及浏览器；实时中文字幕尚未集成。</p><p><a href="classical-radio.html">立即打开欧洲古典音乐电台播放器 →</a></p></section>
+<section class="card" aria-label="陪你读书V0.1体验入口"><h2>📖 陪你读书｜V0.1 朗读体验</h2><p>可试用：原创中文短文的浏览器语音朗读、声音选择、调速、暂停/继续、大字模式。使用设备自带中文声音，实际可用音色取决于手机或电脑。尚未完成双音色试听、章节进度恢复、配乐与家庭声音的验收。</p><p><a href="read-with-you-v01.html">打开《陪你读书》V0.1 体验页面 →</a></p><p class="muted">当前为公开功能试验版，不代表完整V0.1验收通过；PR #14仍独立待审查。</p></section>
 <section class="card"><h2>工程运行监控台</h2><p>统一查看自动施工、最近失败、草稿PR与待人工审批；按实际运行和验收记录推进。</p><p><a href="engineering-console.html">打开工程运行监控台 →</a></p></section>
+<section class="card" aria-label="V0.2施工总控制台"><h2>V0.2 施工总控制台｜三个项目</h2><p><b>最高目标：</b>可操作原型 → 独立测试 → Pages公开读回 → 用户验收。当前入口为已提交代码，不代表部署或双盲验收完成。</p><p><a href="v02-control.html">查看三项目施工单、发布门与实时核查入口 →</a> · <a href="engineering-console.html">原工程监控台 →</a></p></section>
+<section class="card" aria-label="三个原型机整体体验"><h2>三个原型机｜直接体验整体流程</h2><p>先运行完整的用户场景，再迭代算法和细节。以下为已提交到主分支的可操作体验样机；自动分析、真实浏览器验收仍需验证。</p><div class="grid"><article><h3>A01｜运动达人 V0.2</h3><p>选训练计划 → 跟练计时 → 本机视频预览 → 训练复盘。</p><a href="movement-v02-experience.html">开始完整训练体验 →</a></article><article><h3>B01｜堪舆先生 V0.2</h3><p>多种问题接案 → 方法索引 → 案例保存；住宅平面图为专题模块。</p><a href="traditional-case-v02.html">开始先生接案整体体验 →</a></article><article><h3>C01｜陪你读书 V0.1</h3><p>文字 → 本机中文朗读 → 大字模式与调速。</p><a href="read-with-you-v01.html">开始朗读体验 →</a></article></div></section>
 <section class="card" aria-label="V0.2原型机体验入口">
 <h2>V0.2 原型机｜可见功能与发布状态</h2>
 <p>以下入口打开当前主分支已有的页面。A01/B01的新整合功能位于待审查的PR #9，尚未进入正式页面；不把草稿代码或测试通过冒充已发布。</p>
@@ -24,6 +28,18 @@
 <p><b>M01 COMPLETED；M02 ACCEPTED_L1_CANDIDATE_ONLY；M03 BLOCKED_CLEAN_CONTEXT；M04 BLOCKED_BY_M03。</b></p>
 <p>真实图片姿态与 OpenSim 产物保留为能力证据，不替代正式主线状态。BICEPS V0.7 人工视觉审计仍为 <code>PUBLIC_VISUAL_GATE_FAILED</code>：功能响应可见，但肌肉近/远端附着连续和关节约束尚未被证明。</p>
 <p><a href="movement.html?v=879e6853">查看运动页面 →</a> · <a href="../docs/v0.1/evidence/m2/biceps-visual-anatomy-audit-v0.7.json">视觉审计 →</a></p></article>
+</section>
+<section class="card" aria-label="2026-10-13三项目实质进展检查">
+<h2>三项目实质进展核查｜2026-10-13</h2>
+<p><b>结论：</b>工程仍有提交和待审查成果，但不能认定三个方向都在持续自动施工；目前存在“研发成果尚未发布到用户页面”的断点。以下只按可核实证据展示，不将草稿 PR 计为已交付。</p>
+<div class="grid">
+<article><h3>零一空间研究</h3><p>已发布的 Z05-B/D07 来源绑定操作门有历史公开验证记录；Z05-B 整体未闭环。研究主线不得被住宅研究原型替代。</p><p><b>状态：部分已发布，主线进行中。</b></p></article>
+<article><h3>动起来 A01</h3><p>现有运动页面可作为原型入口；V0.2 五阶段对比及偏差标记等增量在 PR #9，已记录静态与浏览器测试，但未合并、未公开读回。</p><p><b>状态：原型可查看，增量待发布。</b></p><p><a href="movement.html">查看已发布运动页面 →</a></p></article>
+<article><h3>食色性也／陪你读书 C01</h3><p>《陪你读书 V0.1》已建立方案、任务及开发基线 PR #14；未见可验收试听页、音频样本或公开部署。它是食色性也的相关支线，不应代替整个项目。</p><p><b>状态：建档完成，产品未发布。</b></p></article>
+</div>
+<p><b>跨项目工程：</b>PR #9（A01/B01 产品增量）、#14（陪你读书）、#16（使用价值审计）、#17（三项目监控台）均为未合并草稿。PR #17 的监控页面尚未进入主分支，不能当作已上线操作台。</p>
+<p><a href="https://github.com/foxlongfei/zero-one-workbench/pull/9">V0.2 增量 PR #9 →</a> · <a href="https://github.com/foxlongfei/zero-one-workbench/pull/14">陪你读书 PR #14 →</a> · <a href="https://github.com/foxlongfei/zero-one-workbench/pull/16">审计 PR #16 →</a> · <a href="https://github.com/foxlongfei/zero-one-workbench/pull/17">监控台 PR #17 →</a></p>
+<p class="muted">本次发布仅更新操作页面上的事实状态与入口，不代表上述草稿已合并；Pages 公网生效仍需独立读回确认。Drive/CURRENT 尚未因本次更新标记为同步完成。</p>
 </section>
 <section class="card"><h2>本轮验收</h2>
 <p><b>Z05：</b>D07 已完成 Pages 发布和公开允许/阻断双案例读回，本轮增量硬门 PASS；Z05-B 整体仍未闭环。</p>
