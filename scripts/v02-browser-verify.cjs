@@ -300,6 +300,12 @@ const record = (track, name, passed, evidence) => {
   record('B-ENTRY', 'residence remains a linked submodule', await page.locator('#residence-link').getAttribute('href') === 'housing-v02-experience.html', await page.locator('#residence-link').getAttribute('href'));
   await page.locator('.restore-case').first().click();
   record('B-ENTRY', 'saved case restores into the same continuous Case ID', await page.locator('#advisor-entry').getAttribute('data-restored-case') === 'true' && (await page.locator('#case-id').innerText()) === lostCaseId && await page.locator('#lost-item').inputValue() === '钥匙' && (await page.locator('#type-status').innerText()).includes(lostCaseId), await page.locator('#type-status').innerText());
+  await page.evaluate(() => localStorage.removeItem('advisor-cases-v01'));
+  await page.locator('#import-case').setInputFiles({name:'case.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(lostCase))});
+  record('B-ENTRY', 'exported case imports into the same continuous Case ID', await page.locator('#advisor-entry').getAttribute('data-import-status') === 'PASS' && (await page.locator('#case-id').innerText()) === lostCaseId && (await page.locator('#next-question').innerText()).includes('导入成功'), await page.locator('#next-question').innerText());
+  const forgedCase = JSON.parse(JSON.stringify(lostCase));forgedCase.methodContract.boundary='伪造边界';
+  await page.locator('#import-case').setInputFiles({name:'forged.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(forgedCase))});
+  record('B-ENTRY', 'forged method contract import is rejected without replacing current Case', await page.locator('#advisor-entry').getAttribute('data-import-status') === 'REJECTED' && (await page.locator('#case-id').innerText()) === lostCaseId && (await page.locator('#next-question').innerText()).includes('方法合同与当前版本不一致'), await page.locator('#next-question').innerText());
   await page.locator('[data-type="marriage"]').click();
   record('B-ENTRY', 'unimplemented category is explicit and cannot emit a result', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'UNAVAILABLE_EXPLICIT' && (await page.locator('#type-status').innerText()).includes('NOT_AVAILABLE') && (await page.locator('#type-status').innerText()).includes('不能生成结论'), await page.locator('#type-status').innerText());
   await page.screenshot({ path: path.join(artifactDir, 'advisor-b-entry.png'), fullPage: true });
@@ -328,6 +334,10 @@ const record = (track, name, passed, evidence) => {
   const teachRecord = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.movement.teach.sessions.v0.2') || '[]')[0]);
   record('A-TEACH', 'session record saved', teachRecord?.schema === 'zero-one.movement.teach.session.v0.2' && teachRecord?.exercise_ids?.length === 2 && teachRecord?.completed_exercise_ids?.length === 2 && teachRecord?.resumed_from_draft === true, teachRecord?.session_id || 'missing record');
   record('A-TEACH', 'finished session clears resumable draft', await page.evaluate(() => localStorage.getItem('zero-one.movement.teach.draft.v0.2') === null), 'draft removed after finish');
+  record('A-TEACH', 'completed session appears in visible repeatable history', await page.locator('.repeat-session').count() === 1 && (await page.locator('#session-history').innerText()).includes(teachRecord.session_id), await page.locator('#session-history').innerText());
+  await page.locator('.repeat-session').click();
+  const repeatedDraft = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.movement.teach.draft.v0.2') || 'null'));
+  record('A-TEACH', 'repeat starts a new session from the saved plan', (await page.locator('#plan-status').innerText()).includes('开始新训练') && repeatedDraft?.started_at !== teachRecord.started_at && repeatedDraft?.goal === teachRecord.goal, await page.locator('#plan-status').innerText());
   record('A-TEACH', 'licensed asset provenance in record', teachRecord?.demo_assets?.every(asset => asset.author === 'Wensceslao' && asset.license === 'CC BY-SA 4.0' && asset.sha1?.length === 40), 'both demo assets retain author, license, version, source and SHA-1');
 
   const report = {

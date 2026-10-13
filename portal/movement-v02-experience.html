@@ -63,6 +63,10 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
 <h2>4. 本次反馈</h2><p id="feedback-copy"></p><p id="record-id"></p>
 <button id="export">导出训练 JSON</button>
 </section>
+<section class="card" aria-labelledby="history-title">
+<h2 id="history-title">5. 最近训练与再次开始</h2>
+<div id="session-history" class="muted">尚无已完成训练。</div>
+</section>
 </main>
 <script>
 (() => {
@@ -97,7 +101,12 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
    {exercise_id:ids.jump,file:'Jumpingjacks wbs.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif',sha1:'734a8482608bb763c0135969ff31857bffbbdbaa'}]};
   const all=JSON.parse(localStorage.getItem(STORE)||'[]');all.unshift(record);localStorage.setItem(STORE,JSON.stringify(all.slice(0,20)));localStorage.removeItem(DRAFT_STORE);currentRecord=record;
   $('#feedback-copy').textContent='已完成 2/2 项。建议下次先保持动作受控，再逐步增加每项时长；如出现疼痛请停止并寻求专业意见。';
-  $('#record-id').textContent='训练记录：'+record.session_id;$('#feedback').dataset.visible='true';$('#plan-status').textContent='本次训练已保存到浏览器。';
+  $('#record-id').textContent='训练记录：'+record.session_id;$('#feedback').dataset.visible='true';$('#plan-status').textContent='本次训练已保存到浏览器。';renderSessions();
+ }
+ function renderSessions(){
+  const box=$('#session-history'),all=JSON.parse(localStorage.getItem(STORE)||'[]');box.textContent='';
+  if(!all.length){box.textContent='尚无已完成训练。';return}
+  all.slice(0,5).forEach(record=>{const row=document.createElement('div');row.className='step';const copy=document.createElement('span');copy.textContent=`${record.session_id}｜${record.goal}｜每项 ${record.duration_seconds} 秒｜${record.completed_exercise_ids.length}/2`;const repeat=document.createElement('button');repeat.type='button';repeat.className='repeat-session';repeat.dataset.sessionId=record.session_id;repeat.textContent='按此方案再练';repeat.onclick=()=>{currentRecord=record;$('#goal').value=record.goal;$('#environment').value=record.environment;$('#duration').value=String(record.duration_seconds);startPlan();$('#plan-status').textContent='已按 '+record.session_id+' 的方案开始新训练；新记录会使用新的 Session ID。'};row.append(copy,repeat);box.appendChild(row)})
  }
  function restore(){
   const draft=JSON.parse(localStorage.getItem(DRAFT_STORE)||'null');
@@ -117,6 +126,6 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
  }
  $('#build').addEventListener('click',startPlan);$('#restore').addEventListener('click',restore);$('#timer-toggle').addEventListener('click',toggleTimer);$('#complete-action').addEventListener('click',completeAction);$('#finish').addEventListener('click',finish);$('#export').addEventListener('click',exportRecord);
  $$('.select-exercise').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id)));$$('.demo-toggle').forEach(b=>b.addEventListener('click',()=>toggleDemo(b.dataset.target,b)));
- render();
+ render();renderSessions();
 })();
 </script></body></html>
