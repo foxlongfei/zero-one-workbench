@@ -120,7 +120,7 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
  function exportRecord(){if(!currentRecord)return;const blob=new Blob([JSON.stringify(currentRecord,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=currentRecord.session_id+'.json';a.click();URL.revokeObjectURL(a.href)}
  function toggleDemo(key,button){
   const img=$('#'+key+'-demo'),canvas=$('#'+key+'-still');
-  if(img.style.display==='none'){canvas.style.display='none';img.style.display='block';img.src=img.src;button.textContent='暂停示范';button.dataset.state='playing';return}
+  if(button.dataset.state==='paused'){canvas.style.display='none';img.style.display='block';img.src=img.src;button.textContent='暂停示范';button.dataset.state='playing';return}
   canvas.width=img.naturalWidth||320;canvas.height=img.naturalHeight||260;try{canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height)}catch(e){}
   img.style.display='none';canvas.style.display='block';button.textContent='继续示范';button.dataset.state='paused';
  }
