@@ -14,7 +14,7 @@ const record = (track, name, passed, evidence) => {
 };
 
 (async () => {
-  browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE } : {}) });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
   await context.addInitScript(() => {
     if (!sessionStorage.getItem('__v02StoragePrepared')) {
@@ -113,6 +113,19 @@ const record = (track, name, passed, evidence) => {
   await page.waitForTimeout(180);
   await page.locator('#v02-stop').click();
   record('A01', 'playback changes phase', Number(await page.locator('#v02-exercise').getAttribute('data-phase')) > 55, `phase=${await page.locator('#v02-exercise').getAttribute('data-phase')}`);
+  await page.locator('#v02-follow-start').click();
+  const followSessionId = await page.locator('#v02-exercise').getAttribute('data-follow-session-id');
+  await page.locator('#v02-follow-complete').click();
+  await page.locator('#v02-follow-complete').click();
+  record('A01', 'standard Exercise starts an ordered same-object follow session', followSessionId?.startsWith('follow-') && await page.locator('#v02-exercise').getAttribute('data-follow-exercise-id') === 'exercise:wger:1551:push-up' && await page.locator('#v02-exercise').getAttribute('data-follow-completed-phases') === '2', await page.locator('#v02-follow-status').innerText());
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  record('A01', 'unfinished follow session restores on the same Exercise ID', await page.locator('#v02-exercise').getAttribute('data-follow-session-id') === followSessionId && await page.locator('#v02-exercise').getAttribute('data-follow-completed-phases') === '2' && (await page.locator('#v02-follow-status').innerText()).includes('底部转换'), await page.locator('#v02-follow-status').innerText());
+  await page.locator('#v02-follow-complete').click();
+  await page.locator('#v02-follow-complete').click();
+  await page.locator('#v02-follow-complete').click();
+  await page.locator('[data-follow-feedback="合适"]').click();
+  const followRecord = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.exercise.follow.sessions.v0.2') || '[]')[0]);
+  record('A01', 'five phases and user feedback produce a bounded training record', followRecord?.sessionId === followSessionId && followRecord?.exerciseId === 'exercise:wger:1551:push-up' && followRecord?.completedPhaseIds?.length === 5 && followRecord?.feedback === '合适' && followRecord?.boundary?.includes('NOT_CAMERA_RECOGNITION') && await page.locator('#v02-exercise').getAttribute('data-follow-status') === 'RECORDED', await page.locator('#v02-follow-receipt').innerText());
   await page.screenshot({ path: path.join(artifactDir, 'movement-a01.png'), fullPage: true });
 
   await page.goto(`${baseUrl}/portal/k02-board.html?sha=${process.env.GITHUB_SHA || 'local'}`, { waitUntil: 'domcontentloaded' });
@@ -300,7 +313,23 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#residence-concern').fill('采光与动线');
   await page.locator('#save-case').click();
   record('B-ENTRY', 'residence case shares the contract but receives a distinct ID', residenceCaseId.startsWith('case-') && residenceCaseId !== lostCaseId && await page.locator('#advisor-entry').getAttribute('data-saved-case-count') === '2' && (await page.locator('#case-history').innerText()).includes('失物') && (await page.locator('#case-history').innerText()).includes('住宅'), await page.locator('#case-history').innerText());
-  record('B-ENTRY', 'residence remains a linked submodule', await page.locator('#residence-link').getAttribute('href') === 'housing-v02-experience.html', await page.locator('#residence-link').getAttribute('href'));
+  record('B-ENTRY', 'residence link carries the saved same Case ID', (await page.locator('#residence-link').getAttribute('href')).includes(`caseId=${residenceCaseId}`) && await page.locator('#residence-link').getAttribute('data-case-id') === residenceCaseId, await page.locator('#residence-link').getAttribute('href'));
+  await page.locator('#residence-link').click();
+  await page.locator('#housing-workbench').waitFor();
+  record('B-ENTRY', 'housing workbench accepts the same advisor Case ID', await page.locator('#housing-workbench').getAttribute('data-handoff-status') === 'CASE_BOUND' && await page.locator('#housing-workbench').getAttribute('data-advisor-case-id') === residenceCaseId && (await page.locator('#case-handoff').innerText()).includes(residenceCaseId), await page.locator('#case-handoff').innerText());
+  await page.locator('#name').fill('住宅 Case 样板');
+  await page.locator('#type').selectOption('入口');
+  await page.locator('#note').fill('用户现场标注');
+  await page.locator('#canvas').click({ position: { x: 180, y: 160 } });
+  const observationDownload = page.waitForEvent('download');
+  await page.locator('#export').click();
+  const observation = JSON.parse(fs.readFileSync(await (await observationDownload).path(), 'utf8'));
+  record('B-ENTRY', 'housing export remains bound to the advisor Case ID', observation.advisorCaseId === residenceCaseId && observation.annotations.length === 1 && observation.source === 'manual' && observation.notes.includes('无自动识别'), JSON.stringify(observation));
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  record('B-ENTRY', 'same-case housing observation restores after reload', await page.locator('#housing-workbench').getAttribute('data-restored-observation') === 'true' && await page.locator('#housing-workbench').getAttribute('data-annotation-count') === '1' && (await page.locator('#summary').innerText()).includes('用户现场标注'), await page.locator('#summary').innerText());
+  await page.locator('#return-to-advisor').click();
+  await page.locator('#advisor-entry').waitFor();
+  record('B-ENTRY', 'housing return restores the same advisor Case ID', await page.locator('#advisor-entry').getAttribute('data-returned-from-housing') === 'true' && (await page.locator('#case-id').innerText()) === residenceCaseId && (await page.locator('#next-question').innerText()).includes('已从住宅标注返回同一 Case'), await page.locator('#next-question').innerText());
   await page.locator('.restore-case').first().click();
   record('B-ENTRY', 'saved case restores into the same continuous Case ID', await page.locator('#advisor-entry').getAttribute('data-restored-case') === 'true' && (await page.locator('#case-id').innerText()) === lostCaseId && await page.locator('#lost-item').inputValue() === '钥匙' && (await page.locator('#type-status').innerText()).includes(lostCaseId), await page.locator('#type-status').innerText());
   await page.evaluate(() => localStorage.removeItem('advisor-cases-v01'));

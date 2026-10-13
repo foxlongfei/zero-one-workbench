@@ -131,6 +131,9 @@
   let timer = null;
   let phase = 0;
   let speed = 1;
+  let trainingSession = null;
+  const TRAINING_DRAFT = 'zero-one.exercise.follow.draft.v0.2';
+  const TRAINING_HISTORY = 'zero-one.exercise.follow.sessions.v0.2';
   const out = root.querySelector('#v02-ex-content');
   const phaseName = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1])?.name || '动作周期';
   const phaseRecord = value => data.phases.find(item => value >= item.range[0] && value <= item.range[1]) || data.phases[0];
@@ -309,6 +312,65 @@
     renderDossierPreview();
   }
 
+  function trainingPhaseIndex() {
+    return trainingSession ? Math.min(trainingSession.completedPhaseIds.length, data.phases.length - 1) : 0;
+  }
+
+  function persistTrainingDraft() {
+    if (trainingSession) localStorage.setItem(TRAINING_DRAFT, JSON.stringify(trainingSession));
+  }
+
+  function renderTrainingSession() {
+    const status = out.querySelector('#v02-follow-status');
+    const complete = out.querySelector('#v02-follow-complete');
+    const feedback = out.querySelector('#v02-follow-feedback');
+    if (!status || !complete || !feedback) return;
+    if (!trainingSession) {
+      status.textContent = '尚未开始；本跟练只绑定标准俯卧撑 Exercise，不把变式记录冒充为同一动态。';
+      complete.disabled = true;
+      feedback.hidden = true;
+      root.dataset.followStatus = 'NOT_STARTED';
+      return;
+    }
+    const completed = trainingSession.completedPhaseIds.length;
+    root.dataset.followSessionId = trainingSession.sessionId;
+    root.dataset.followExerciseId = trainingSession.exerciseId;
+    root.dataset.followCompletedPhases = String(completed);
+    if (completed < data.phases.length) {
+      const next = data.phases[trainingPhaseIndex()];
+      status.textContent = `${trainingSession.sessionId}｜${completed}/5 已完成｜当前：${next.name}（${next.phaseId}）`;
+      complete.disabled = false;
+      complete.textContent = `完成“${next.name}”并进入下一阶段`;
+      feedback.hidden = true;
+      root.dataset.followStatus = 'IN_PROGRESS';
+      return;
+    }
+    status.textContent = `${trainingSession.sessionId}｜5/5 阶段已完成｜请选择本次感受，形成训练记录。`;
+    complete.disabled = true;
+    feedback.hidden = false;
+    root.dataset.followStatus = 'AWAITING_FEEDBACK';
+  }
+
+  function startTrainingSession() {
+    trainingSession = {
+      schema: 'zero-one.exercise.follow.session.v0.2',
+      sessionId: `follow-${Date.now()}`,
+      exerciseId: data.id,
+      sourceRecordId: data.upstream.exerciseId,
+      guidanceScope: definition.guidanceScope,
+      phaseIds: data.phases.map(item => item.phaseId),
+      completedPhaseIds: [],
+      feedback: null,
+      startedAt: new Date().toISOString(),
+      completedAt: null,
+      boundary: 'PROJECT_2D_TEACHING_ILLUSTRATION_NOT_CAMERA_RECOGNITION_OR_MEDICAL_ADVICE',
+    };
+    phase = Math.round((data.phases[0].range[0] + data.phases[0].range[1]) / 2);
+    persistTrainingDraft();
+    draw();
+    renderTrainingSession();
+  }
+
   function render() {
     clearInterval(timer);
     out.innerHTML = `
@@ -338,6 +400,14 @@
         <span id="v02-ex-notes-status" class="muted" aria-live="polite"></span>
       </section>
       <section id="v02-ex-dossier-preview" class="result" aria-live="polite"></section>
+      <section id="v02-follow-session" class="plan"><h4>标准俯卧撑连续跟练｜同一 Exercise ID</h4>
+        <p class="muted">依次完成 5 个稳定阶段，再记录感受；记录只保存在本机。该流程不把击掌/宽距变式当成标准俯卧撑动态，也不声称摄像头识别。</p>
+        <button class="btn" id="v02-follow-start" type="button">开始一次标准俯卧撑跟练</button>
+        <button class="btn ghost" id="v02-follow-complete" type="button" disabled>完成当前阶段</button>
+        <p id="v02-follow-status" aria-live="polite"></p>
+        <div id="v02-follow-feedback" hidden><b>本次感受</b> ${['轻松', '合适', '偏吃力', '疼痛或麻木'].map(value => `<button class="chip" type="button" data-follow-feedback="${value}">${value}</button>`).join(' ')}</div>
+        <p id="v02-follow-receipt" class="status" aria-live="polite"></p>
+      </section>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-licensed-catalog"><h4>可操作许可动作目录｜3 条真实 wger 记录</h4>
         <p><label for="v02-catalog-select">动作记录</label> <select id="v02-catalog-select">${catalog.map(item => `<option value="${item.id}">${item.name}｜record ${item.id}</option>`).join('')}</select>
@@ -425,6 +495,34 @@
       }
     };
     out.querySelector('#v02-ex-notes').oninput = renderDossierPreview;
+    out.querySelector('#v02-follow-start').onclick = startTrainingSession;
+    out.querySelector('#v02-follow-complete').onclick = () => {
+      if (!trainingSession || trainingSession.completedPhaseIds.length >= data.phases.length) return;
+      const current = data.phases[trainingSession.completedPhaseIds.length];
+      trainingSession.completedPhaseIds.push(current.phaseId);
+      if (trainingSession.completedPhaseIds.length < data.phases.length) {
+        const next = data.phases[trainingSession.completedPhaseIds.length];
+        phase = Math.round((next.range[0] + next.range[1]) / 2);
+      }
+      persistTrainingDraft();
+      draw();
+      renderTrainingSession();
+    };
+    out.querySelectorAll('[data-follow-feedback]').forEach(button => {
+      button.onclick = () => {
+        if (!trainingSession || trainingSession.completedPhaseIds.length !== data.phases.length) return;
+        trainingSession.feedback = button.dataset.followFeedback;
+        trainingSession.completedAt = new Date().toISOString();
+        const history = JSON.parse(localStorage.getItem(TRAINING_HISTORY) || '[]');
+        history.unshift(trainingSession);
+        localStorage.setItem(TRAINING_HISTORY, JSON.stringify(history.slice(0, 20)));
+        localStorage.removeItem(TRAINING_DRAFT);
+        root.dataset.followStatus = 'RECORDED';
+        root.dataset.followFeedback = trainingSession.feedback;
+        out.querySelector('#v02-follow-receipt').textContent = `已记录 ${trainingSession.sessionId}｜${trainingSession.exerciseId}｜5/5｜感受：${trainingSession.feedback}`;
+        out.querySelector('#v02-follow-feedback').hidden = true;
+      };
+    });
     out.querySelector('#v02-ex-export').onclick = () => {
       const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
       const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({
@@ -463,6 +561,11 @@
     root.dataset.variantCount = '3';
     selectCatalogRecord(data.upstream.exerciseId);
     draw();
+    try {
+      const draft = JSON.parse(localStorage.getItem(TRAINING_DRAFT) || 'null');
+      if (draft?.schema === 'zero-one.exercise.follow.session.v0.2' && draft.exerciseId === data.id && Array.isArray(draft.completedPhaseIds)) trainingSession = draft;
+    } catch (_) {}
+    renderTrainingSession();
   }
 
   root.querySelector('#v02-ex-find').onclick = () => {
