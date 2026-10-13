@@ -84,9 +84,20 @@ const record = (track, name, passed, evidence) => {
   record('A01', 'phase sequence navigation selects a stable phase', await page.locator('#v02-phase-detail').getAttribute('data-phase-id') === 'push-up:concentric' && await page.locator('#v02-phase-sequence [data-phase-target="push-up:concentric"]').getAttribute('aria-current') === 'step' && (await page.locator('#v02-ex-dossier-preview').innerText()).includes('push-up:concentric'), await page.locator('#v02-phase-detail').innerText());
   record('A01', 'visible keypoint frame follows selected stable phase', await page.locator('#v02-keypoint-sequence').getAttribute('data-phase-id') === 'push-up:concentric' && (await page.locator('#v02-keypoint-sequence').innerText()).includes('标准关键点帧 4/5') && (await page.locator('#v02-keypoint-sequence').innerText()).includes('shoulder') && (await page.locator('#v02-keypoint-sequence').innerText()).includes('不是用户识别结果'), await page.locator('#v02-keypoint-sequence').innerText());
   const importedKeypoints = JSON.parse(JSON.stringify(exerciseExport.definition.dynamics.keypointSequence));
+  importedKeypoints.provenance = {
+    schema: 'zero-one.keypoint-provenance.v0.1',
+    artifactId: 'kp:test:valid-video-v0.1',
+    mediaType: 'VIDEO',
+    sourceAsset: 'test-fixtures/push-up.mp4',
+    sourceSha256: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    license: 'TEST_FIXTURE',
+    annotator: 'TEST_KEYPOINT_EXTRACTOR',
+    derivedAt: '2026-10-13T05:30:00.000Z',
+    phaseBindings: importedKeypoints.frames.map((frame, sourceFrameIndex) => ({ phaseId: frame.phaseId, sourceFrameIndex })),
+  };
   importedKeypoints.frames[0].points.shoulder[0] = 0.29;
   await page.locator('#v02-keypoint-import').setInputFiles({name: 'valid-keypoints.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(importedKeypoints))});
-  record('A01', 'valid five-phase keypoint sequence is applied and compared point-by-point', await page.locator('#v02-exercise').getAttribute('data-keypoint-import-status') === 'VALIDATED_AND_APPLIED' && await page.locator('#v02-exercise').getAttribute('data-keypoint-import-frames') === '5' && await page.locator('#v02-exercise').getAttribute('data-keypoint-comparison-points') === '25' && await page.locator('#v02-keypoint-comparison [data-comparison-point]').count() === 25 && (await page.locator('#v02-keypoint-comparison').innerText()).includes('不是摄像头姿态识别'), await page.locator('#v02-keypoint-comparison').innerText());
+  record('A01', 'valid five-phase keypoint sequence is applied and compared point-by-point', await page.locator('#v02-exercise').getAttribute('data-keypoint-import-status') === 'PROVENANCE_VALIDATED_AND_APPLIED' && await page.locator('#v02-exercise').getAttribute('data-keypoint-import-frames') === '5' && await page.locator('#v02-exercise').getAttribute('data-keypoint-comparison-points') === '25' && await page.locator('#v02-keypoint-comparison [data-comparison-point]').count() === 25 && (await page.locator('#v02-keypoint-comparison').innerText()).includes('不是摄像头姿态识别'), await page.locator('#v02-keypoint-comparison').innerText());
   record('A01', 'largest reference deviation is highlighted with a bounded interpretation', await page.locator('#v02-keypoint-comparison [data-largest-deviation="true"]').count() === 1 && await page.locator('#v02-exercise').getAttribute('data-keypoint-largest-deviation') === 'push-up:support:shoulder' && (await page.locator('#v02-keypoint-comparison').innerText()).includes('先复核阶段对齐、取景与标点') && (await page.locator('#v02-keypoint-comparison').innerText()).includes('不是动作质量判定'), await page.locator('#v02-keypoint-comparison').innerText());
   const rejectedKeypoints = JSON.parse(JSON.stringify(importedKeypoints));
   rejectedKeypoints.frames[3].phaseId = 'push-up:wrong-phase';
