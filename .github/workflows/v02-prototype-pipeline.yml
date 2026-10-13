@@ -18,6 +18,7 @@ on:
     types: [opened, edited, reopened]
 permissions:
   contents: read
+  issues: write
 concurrency:
   group: v02-prototype-${{ github.ref }}
   cancel-in-progress: true
@@ -41,7 +42,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Static functional contract checks
-        run: python3 tests/v02/check_prototypes.py --project "${{ matrix.project }}"
+        run: |
+          test -f tests/v02/check_prototypes.py || { echo 'Missing prototype contract checker in this commit'; exit 1; }
+          python3 tests/v02/check_prototypes.py --project "${{ matrix.project }}"
       - name: Publish test report
         if: always()
         uses: actions/upload-artifact@v4
@@ -87,3 +90,21 @@ jobs:
           name: v02-public-readback
           path: reports/v02/
           if-no-files-found: ignore
+  failure-feedback:
+    name: Write failed pipeline evidence back to quality gate
+    if: always() && (needs.prototype-contracts.result == 'failure' || needs.browser-smoke.result == 'failure' || needs.public-readback.result == 'failure')
+    needs: [prototype-contracts, browser-smoke, public-readback]
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Comment with run evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN: ${{ github.run_id }}
+          CONTRACTS: ${{ needs.prototype-contracts.result }}
+          BROWSER: ${{ needs.browser-smoke.result }}
+          PUBLIC: ${{ needs.public-readback.result }}
+        run: |
+          gh issue comment 23 --repo "$REPO" --body "V0.2 automated check failed. Run: https://github.com/$REPO/actions/runs/$RUN . Contract: $CONTRACTS; Browser: $BROWSER; Public: $PUBLIC. Inspect artifacts/screenshots, repair, rerun. This is not an accepted prototype."

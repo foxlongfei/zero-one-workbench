@@ -287,7 +287,10 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#lost-time').fill('2026-10-13T08:00');
   await page.locator('#save-case').click();
   record('B-ENTRY', 'lost-item materials save without fabricated prediction', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'MATERIALS_RECORDED_NO_PREDICTION' && (await page.locator('#case-id').innerText()) === lostCaseId && (await page.locator('#next-question').innerText()).includes('当前不输出预测'), await page.locator('#next-question').innerText());
+  await page.locator('#question').fill('钥匙找不到了；补充：可能在会议室使用过');
+  await page.locator('#save-case').click();
   const lostCase = await page.evaluate(() => JSON.parse(localStorage.getItem('advisor-cases-v01') || '[]').find(item => item.type === 'lost'));
+  record('B-ENTRY', 'same Case appends a visible auditable revision chain', lostCase?.revisions?.length === 2 && lostCase.revisions[1].parentRevisionId === lostCase.revisions[0].revisionId && lostCase.revisions.every(item => item.caseId === lostCaseId) && await page.locator('#advisor-entry').getAttribute('data-revision-count') === '2' && (await page.locator('#case-history').innerText()).includes('修订 2'), JSON.stringify(lostCase?.revisions));
   record('B-ENTRY', 'selected method contract is saved with explicit boundary', lostCase?.methodContract?.status === 'MATERIAL_ORGANIZATION_ONLY' && lostCase?.methodContract?.boundary.includes('不推断物品位置'), JSON.stringify(lostCase?.methodContract));
   await page.locator('[data-type="residence"]').click();
   const residenceCaseId = await page.locator('#case-id').innerText();
@@ -302,9 +305,16 @@ const record = (track, name, passed, evidence) => {
   record('B-ENTRY', 'saved case restores into the same continuous Case ID', await page.locator('#advisor-entry').getAttribute('data-restored-case') === 'true' && (await page.locator('#case-id').innerText()) === lostCaseId && await page.locator('#lost-item').inputValue() === '钥匙' && (await page.locator('#type-status').innerText()).includes(lostCaseId), await page.locator('#type-status').innerText());
   await page.evaluate(() => localStorage.removeItem('advisor-cases-v01'));
   await page.locator('#import-case').setInputFiles({name:'case.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(lostCase))});
+  await page.waitForFunction(() => document.querySelector('#advisor-entry')?.dataset.importStatus === 'PASS');
   record('B-ENTRY', 'exported case imports into the same continuous Case ID', await page.locator('#advisor-entry').getAttribute('data-import-status') === 'PASS' && (await page.locator('#case-id').innerText()) === lostCaseId && (await page.locator('#next-question').innerText()).includes('导入成功'), await page.locator('#next-question').innerText());
+  const brokenRevisionCase = JSON.parse(JSON.stringify(lostCase));brokenRevisionCase.revisions[1].parentRevisionId='revision-forged-parent';
+  await page.locator('#import-case').setInputFiles({name:'broken-revision.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(brokenRevisionCase))});
+  await page.waitForFunction(() => document.querySelector('#advisor-entry')?.dataset.importStatus === 'REJECTED');
+  const brokenRevisionState = await page.evaluate(() => ({status:document.querySelector('#advisor-entry')?.dataset.importStatus,caseId:document.querySelector('#case-id')?.textContent,stored:JSON.parse(localStorage.getItem('advisor-cases-v01')||'[]')[0]}));
+  record('B-ENTRY', 'broken Case revision chain is rejected without replacing current Case', brokenRevisionState.status === 'REJECTED' && brokenRevisionState.caseId === lostCaseId && brokenRevisionState.stored?.caseId === lostCaseId && brokenRevisionState.stored?.revisions?.[1]?.parentRevisionId === brokenRevisionState.stored?.revisions?.[0]?.revisionId && (await page.locator('#next-question').innerText()).includes('修订父链断裂'), JSON.stringify(brokenRevisionState));
   const forgedCase = JSON.parse(JSON.stringify(lostCase));forgedCase.methodContract.boundary='伪造边界';
   await page.locator('#import-case').setInputFiles({name:'forged.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(forgedCase))});
+  await page.waitForFunction(() => document.querySelector('#advisor-entry')?.dataset.importStatus === 'REJECTED');
   record('B-ENTRY', 'forged method contract import is rejected without replacing current Case', await page.locator('#advisor-entry').getAttribute('data-import-status') === 'REJECTED' && (await page.locator('#case-id').innerText()) === lostCaseId && (await page.locator('#next-question').innerText()).includes('方法合同与当前版本不一致'), await page.locator('#next-question').innerText());
   await page.locator('[data-type="marriage"]').click();
   record('B-ENTRY', 'unimplemented category is explicit and cannot emit a result', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'UNAVAILABLE_EXPLICIT' && (await page.locator('#type-status').innerText()).includes('NOT_AVAILABLE') && (await page.locator('#type-status').innerText()).includes('不能生成结论'), await page.locator('#type-status').innerText());
@@ -316,6 +326,8 @@ const record = (track, name, passed, evidence) => {
   record('A-TEACH', 'two distinct whole-body actions', await page.locator('[data-exercise-id]').count() === 2, 'squat and jumping-jack cards are visible');
   record('A-TEACH', 'two dynamic assets identified', await page.locator('.demo img[src$=".gif"]').count() === 2, 'two Wikimedia Commons GIF demos');
   record('A-TEACH', 'asset-level attribution visible', await page.locator('.source a[href*="commons.wikimedia.org/wiki/File:"]').count() === 2 && await page.locator('.source a[href*="creativecommons.org/licenses/by-sa/4.0"]').count() === 2, 'author, version, SHA-1 and CC BY-SA 4.0 are shown per asset');
+  await page.waitForFunction(() => [...document.querySelectorAll('.demo img')].every(image => image.complete && image.naturalWidth > 0), null, {timeout:20000});
+  record('A-TEACH', 'dynamic media bytes decode before playback controls', await page.locator('.demo img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), 'both licensed Commons GIFs decoded');
   await page.locator('.demo-toggle').first().click();
   record('A-TEACH', 'dynamic demo pause control', await page.locator('.demo-toggle').first().getAttribute('data-state') === 'paused' && await page.locator('#squat-still').isVisible(), 'animated demo can be paused to a canvas frame');
   await page.locator('.demo-toggle').first().click();
@@ -339,6 +351,14 @@ const record = (track, name, passed, evidence) => {
   const repeatedDraft = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.movement.teach.draft.v0.2') || 'null'));
   record('A-TEACH', 'repeat starts a new session from the saved plan', (await page.locator('#plan-status').innerText()).includes('开始新训练') && repeatedDraft?.started_at !== teachRecord.started_at && repeatedDraft?.goal === teachRecord.goal, await page.locator('#plan-status').innerText());
   record('A-TEACH', 'licensed asset provenance in record', teachRecord?.demo_assets?.every(asset => asset.author === 'Wensceslao' && asset.license === 'CC BY-SA 4.0' && asset.sha1?.length === 40), 'both demo assets retain author, license, version, source and SHA-1');
+  await page.evaluate(() => localStorage.removeItem('zero-one.movement.teach.sessions.v0.2'));
+  await page.locator('#import-session').setInputFiles({name:'training.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(teachRecord))});
+  await page.waitForFunction(() => document.querySelector('#import-session-status')?.dataset.status === 'PASS');
+  record('A-TEACH', 'exported training record imports with provenance and remains repeatable', await page.locator('#import-session-status').getAttribute('data-status') === 'PASS' && (await page.locator('#session-history').innerText()).includes('已导入') && await page.locator('.repeat-session').count() === 1, await page.locator('#import-session-status').innerText());
+  const forgedTraining = JSON.parse(JSON.stringify(teachRecord));forgedTraining.demo_assets[0].sha1='0'.repeat(40);
+  await page.locator('#import-session').setInputFiles({name:'forged-training.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(forgedTraining))});
+  await page.waitForFunction(() => document.querySelector('#import-session-status')?.dataset.status === 'REJECTED');
+  record('A-TEACH', 'forged training provenance is rejected without replacing imported history', await page.locator('#import-session-status').getAttribute('data-status') === 'REJECTED' && await page.locator('.repeat-session').count() === 1 && (await page.locator('#import-session-status').innerText()).includes('来源不一致'), await page.locator('#import-session-status').innerText());
 
   const report = {
     schema: 'zero-one.v02.browser-verification.v1',

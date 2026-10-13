@@ -37,14 +37,14 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
 <section class="grid" id="exercise-list" aria-label="动作教学">
 <article class="card exercise" data-exercise-id="commons:squats-wbs:2020-05-20" aria-current="true">
 <h2>2A. 徒手深蹲</h2>
-<div class="demo"><img id="squat-demo" crossorigin="anonymous" alt="徒手深蹲循环动态示范" src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Squats_wbs.gif"><canvas id="squat-still" aria-label="徒手深蹲暂停画面"></canvas></div>
+<div class="demo"><img id="squat-demo" alt="徒手深蹲循环动态示范" src="assets/vendor/commons-squats-wbs-2020-05-20.gif"><canvas id="squat-still" aria-label="徒手深蹲暂停画面"></canvas></div>
 <div class="controls"><button class="demo-toggle" data-target="squat">暂停示范</button><button class="select-exercise" data-id="commons:squats-wbs:2020-05-20">跟练这个动作</button></div>
 <ol><li>双脚约与肩同宽，保持稳定站立。</li><li>髋部向后、膝髋屈曲，躯干保持受控。</li><li>脚掌稳定着地，回到站立，完成一次。</li></ol>
 <p class="source">动态资产：<a href="https://commons.wikimedia.org/wiki/File:Squats_wbs.gif">Squats wbs.gif</a>；作者 Wensceslao；版本 2020-05-20；SHA-1 55768725657d2890c9cfd984aaffe3377ed53ade；<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。</p>
 </article>
 <article class="card exercise" data-exercise-id="commons:jumpingjacks-wbs:2020-05-20" aria-current="false">
 <h2>2B. 开合跳</h2>
-<div class="demo"><img id="jump-demo" crossorigin="anonymous" alt="开合跳循环动态示范" src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Jumpingjacks_wbs.gif"><canvas id="jump-still" aria-label="开合跳暂停画面"></canvas></div>
+<div class="demo"><img id="jump-demo" alt="开合跳循环动态示范" src="assets/vendor/commons-jumpingjacks-wbs-2020-05-20.gif"><canvas id="jump-still" aria-label="开合跳暂停画面"></canvas></div>
 <div class="controls"><button class="demo-toggle" data-target="jump">暂停示范</button><button class="select-exercise" data-id="commons:jumpingjacks-wbs:2020-05-20">跟练这个动作</button></div>
 <ol><li>站直，双脚并拢，双臂自然放在身体两侧。</li><li>轻跳打开双腿，同时双臂举过头顶。</li><li>再次轻跳，手脚回到起始位置，连续交替。</li></ol>
 <p class="source">动态资产：<a href="https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif">Jumpingjacks wbs.gif</a>；作者 Wensceslao；版本 2020-05-20；SHA-1 734a8482608bb763c0135969ff31857bffbbdbaa；<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。</p>
@@ -65,6 +65,8 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
 </section>
 <section class="card" aria-labelledby="history-title">
 <h2 id="history-title">5. 最近训练与再次开始</h2>
+<label>导入训练记录 JSON<input id="import-session" type="file" accept="application/json,.json"></label>
+<p id="import-session-status" class="status">可导入本产品导出的完整训练记录；来源、动作 ID 或完成状态不一致时会拒绝，且不会覆盖现有记录。</p>
 <div id="session-history" class="muted">尚无已完成训练。</div>
 </section>
 </main>
@@ -97,8 +99,8 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
  function completeAction(){completed.add(active);if(active===ids.squat&&!completed.has(ids.jump))select(ids.jump);render();saveDraft()}
  function finish(){
   const endedAt=new Date().toISOString(), record={schema:'zero-one.movement.teach.session.v0.2',session_id:'teach-'+Date.now(),goal:$('#goal').value,environment:$('#environment').value,duration_seconds:Number($('#duration').value),exercise_ids:[ids.squat,ids.jump],completed_exercise_ids:[...completed],started_at:startedAt,ended_at:endedAt,resumed_from_draft:resumedFromDraft,demo_assets:[
-   {exercise_id:ids.squat,file:'Squats wbs.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Squats_wbs.gif',sha1:'55768725657d2890c9cfd984aaffe3377ed53ade'},
-   {exercise_id:ids.jump,file:'Jumpingjacks wbs.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif',sha1:'734a8482608bb763c0135969ff31857bffbbdbaa'}]};
+   {exercise_id:ids.squat,file:'Squats wbs.gif',repository_asset:'assets/vendor/commons-squats-wbs-2020-05-20.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Squats_wbs.gif',sha1:'55768725657d2890c9cfd984aaffe3377ed53ade'},
+   {exercise_id:ids.jump,file:'Jumpingjacks wbs.gif',repository_asset:'assets/vendor/commons-jumpingjacks-wbs-2020-05-20.gif',author:'Wensceslao',version:'2020-05-20',license:'CC BY-SA 4.0',source:'https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif',sha1:'734a8482608bb763c0135969ff31857bffbbdbaa'}]};
   const all=JSON.parse(localStorage.getItem(STORE)||'[]');all.unshift(record);localStorage.setItem(STORE,JSON.stringify(all.slice(0,20)));localStorage.removeItem(DRAFT_STORE);currentRecord=record;
   $('#feedback-copy').textContent='已完成 2/2 项。建议下次先保持动作受控，再逐步增加每项时长；如出现疼痛请停止并寻求专业意见。';
   $('#record-id').textContent='训练记录：'+record.session_id;$('#feedback').dataset.visible='true';$('#plan-status').textContent='本次训练已保存到浏览器。';renderSessions();
@@ -106,7 +108,19 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
  function renderSessions(){
   const box=$('#session-history'),all=JSON.parse(localStorage.getItem(STORE)||'[]');box.textContent='';
   if(!all.length){box.textContent='尚无已完成训练。';return}
-  all.slice(0,5).forEach(record=>{const row=document.createElement('div');row.className='step';const copy=document.createElement('span');copy.textContent=`${record.session_id}｜${record.goal}｜每项 ${record.duration_seconds} 秒｜${record.completed_exercise_ids.length}/2`;const repeat=document.createElement('button');repeat.type='button';repeat.className='repeat-session';repeat.dataset.sessionId=record.session_id;repeat.textContent='按此方案再练';repeat.onclick=()=>{currentRecord=record;$('#goal').value=record.goal;$('#environment').value=record.environment;$('#duration').value=String(record.duration_seconds);startPlan();$('#plan-status').textContent='已按 '+record.session_id+' 的方案开始新训练；新记录会使用新的 Session ID。'};row.append(copy,repeat);box.appendChild(row)})
+  all.slice(0,5).forEach(record=>{const row=document.createElement('div');row.className='step';const copy=document.createElement('span');copy.textContent=`${record.session_id}｜${record.goal}｜每项 ${record.duration_seconds} 秒｜${record.completed_exercise_ids.length}/2${record.imported_at?'｜已导入':''}`;const repeat=document.createElement('button');repeat.type='button';repeat.className='repeat-session';repeat.dataset.sessionId=record.session_id;repeat.textContent='按此方案再练';repeat.onclick=()=>{currentRecord=record;$('#goal').value=record.goal;$('#environment').value=record.environment;$('#duration').value=String(record.duration_seconds);startPlan();$('#plan-status').textContent='已按 '+record.session_id+' 的方案开始新训练；新记录会使用新的 Session ID。'};row.append(copy,repeat);box.appendChild(row)})
+ }
+ function validateSession(record){
+  const allowedGoals=['whole-body','lower-body','cardio'],allowedEnvironments=['home','office','outdoor'],expected=[ids.squat,ids.jump];
+  if(!record||record.schema!=='zero-one.movement.teach.session.v0.2')return 'schema 不匹配';
+  if(!/^teach-\d+$/.test(record.session_id||''))return 'Session ID 无效';
+  if(!allowedGoals.includes(record.goal)||!allowedEnvironments.includes(record.environment))return '训练方案字段无效';
+  if(!Number.isFinite(record.duration_seconds)||record.duration_seconds<10||record.duration_seconds>180)return '训练时长无效';
+  if(JSON.stringify(record.exercise_ids)!==JSON.stringify(expected)||JSON.stringify(record.completed_exercise_ids)!==JSON.stringify(expected))return '动作 ID 或完成状态不完整';
+  const assets=Array.isArray(record.demo_assets)?record.demo_assets:[],assetById=Object.fromEntries(assets.map(x=>[x.exercise_id,x])),squat=assetById[ids.squat],jump=assetById[ids.jump];
+  if(!squat||squat.license!=='CC BY-SA 4.0'||squat.sha1!=='55768725657d2890c9cfd984aaffe3377ed53ade'||squat.source!=='https://commons.wikimedia.org/wiki/File:Squats_wbs.gif'||squat.repository_asset!=='assets/vendor/commons-squats-wbs-2020-05-20.gif')return '深蹲示范来源不一致';
+  if(!jump||jump.license!=='CC BY-SA 4.0'||jump.sha1!=='734a8482608bb763c0135969ff31857bffbbdbaa'||jump.source!=='https://commons.wikimedia.org/wiki/File:Jumpingjacks_wbs.gif'||jump.repository_asset!=='assets/vendor/commons-jumpingjacks-wbs-2020-05-20.gif')return '开合跳示范来源不一致';
+  return '';
  }
  function restore(){
   const draft=JSON.parse(localStorage.getItem(DRAFT_STORE)||'null');
@@ -125,6 +139,7 @@ label{display:grid;gap:5px;color:var(--muted)}select,input{background:#0b1728;co
   img.style.display='none';canvas.style.display='block';button.textContent='继续示范';button.dataset.state='paused';
  }
  $('#build').addEventListener('click',startPlan);$('#restore').addEventListener('click',restore);$('#timer-toggle').addEventListener('click',toggleTimer);$('#complete-action').addEventListener('click',completeAction);$('#finish').addEventListener('click',finish);$('#export').addEventListener('click',exportRecord);
+ $('#import-session').addEventListener('change',function(){const file=this.files&&this.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const record=JSON.parse(reader.result),error=validateSession(record);if(error)throw new Error(error);const all=JSON.parse(localStorage.getItem(STORE)||'[]').filter(x=>x.session_id!==record.session_id),imported={...record,imported_at:new Date().toISOString()};all.unshift(imported);localStorage.setItem(STORE,JSON.stringify(all.slice(0,20)));currentRecord=imported;renderSessions();$('#import-session-status').textContent='导入成功：'+record.session_id+'；可按原方案再练，并生成新的 Session ID。';$('#import-session-status').dataset.status='PASS'}catch(error){$('#import-session-status').textContent='导入拒绝：'+error.message+'；现有训练记录未被覆盖。';$('#import-session-status').dataset.status='REJECTED'}finally{$('#import-session').value=''}};reader.readAsText(file)});
  $$('.select-exercise').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id)));$$('.demo-toggle').forEach(b=>b.addEventListener('click',()=>toggleDemo(b.dataset.target,b)));
  render();renderSessions();
 })();
