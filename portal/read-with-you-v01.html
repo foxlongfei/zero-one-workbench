@@ -4,22 +4,27 @@
 <style>body{font:20px/1.7 system-ui,sans-serif;background:#f5f2ea;color:#222;margin:0}main{max-width:760px;margin:auto;padding:24px}button,select,input{font:inherit}button{padding:14px 18px;margin:6px;border-radius:12px;border:1px solid #666;background:white;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #1266a0}section{background:white;padding:20px;border-radius:18px;margin:18px 0}label{display:block;margin:12px 0}#status{font-weight:bold}body.large{font-size:26px}body.large button{min-height:66px}small{font-size:.75em}</style></head><body><main>
 <h1>陪你读书 · V0.1</h1><p>本地朗读功能实验｜尚未发布验收。朗读由当前浏览器/操作系统提供，音色与可用性因设备而异。</p>
 <section><label>阅读模式 <select id="mode"><option value="normal">普通</option><option value="large">大字／大按钮</option></select></label>
-<h2>试读：清晨的一段路</h2><p id="passage">清晨，窗外的风轻轻吹过树梢。小路上没有多少行人，阳光从树叶之间落下来。我们慢慢往前走，听见远处传来鸟鸣，也听见自己的脚步声。</p>
+<h2>试读：清晨的一段路</h2><label>阅读段落 <select id="segment"><option value="0">第一段：清晨</option><option value="1">第二段：小路</option><option value="2">第三段：脚步</option></select></label><p id="passage"></p><button id="prevSegment">上一段</button><button id="nextSegment">下一段</button><p id="position" role="status"></p>
 <small>本段为项目原创功能测试文字，并非《西游记》原文。正式文本待版本与权利审核。</small></section>
 <section><label>朗读声音 <select id="voice" aria-label="选择朗读声音"></select></label>
 <label>速度 <input id="rate" type="range" min=".6" max="1.6" step=".1" value="1"> <output id="rateLabel">1.0×</output></label>
 <button id="play">▶ 开始朗读</button><button id="pause">⏸ 暂停</button><button id="resume">继续</button><button id="stop">■ 停止</button>
 <p id="status" role="status" aria-live="polite">等待操作</p>
-<p><small>刷新后保留模式、声音偏好和速度；浏览器语音合成无法保证精确恢复到句内播放位置。本版本不宣称支持进度恢复。</small></p>
+<p><small>刷新后保留段落位置、模式、声音偏好和速度；可以从已保存段落重新朗读，但不支持精确恢复句内位置。</small></p>
 </section>
 <section><h2>音乐研究状态</h2><p>S0：纯朗读可试验。S1：生成配乐待真实音频与许可审核。S2：授权音乐重编排待授权素材与真实试听。此页面不提供虚假的 S1/S2 切换。</p></section>
 </main><script>
 (function(){
 'use strict';
 const $=id=>document.getElementById(id), synth=window.speechSynthesis, supported=!!(synth&&window.SpeechSynthesisUtterance);
-const key='read-with-you-v01-prefs', defaults={mode:'normal',rate:1,voice:''};
+const key='read-with-you-v01-prefs', defaults={mode:'normal',rate:1,voice:'',segment:0};
+const passages=['清晨，窗外的风轻轻吹过树梢。','小路上没有多少行人，阳光从树叶之间落下来。','我们慢慢往前走，听见远处传来鸟鸣，也听见自己的脚步声。'];
 let prefs;try{prefs=Object.assign({},defaults,JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){prefs={...defaults}}
 function save(){try{localStorage.setItem(key,JSON.stringify(prefs))}catch(e){}}
+function showSegment(){const n=Math.min(passages.length-1,Math.max(0,Number(prefs.segment)||0));prefs.segment=n;$('segment').value=String(n);$('passage').textContent=passages[n];$('position').textContent='已保存阅读位置：第 '+(n+1)+' / '+passages.length+' 段';save()}
+$('segment').addEventListener('change',()=>{if(supported)synth.cancel();prefs.segment=Number($('segment').value);showSegment()});
+$('prevSegment').onclick=()=>{if(supported)synth.cancel();prefs.segment=Math.max(0,Number(prefs.segment)-1);showSegment()};
+$('nextSegment').onclick=()=>{if(supported)synth.cancel();prefs.segment=Math.min(passages.length-1,Number(prefs.segment)+1);showSegment()};showSegment();
 function status(t){$('status').textContent=t}
 $('mode').value=prefs.mode==='large'?'large':'normal';document.body.classList.toggle('large',$('mode').value==='large');
 $('rate').value=Math.min(1.6,Math.max(.6,Number(prefs.rate)||1));$('rateLabel').textContent=Number($('rate').value).toFixed(1)+'×';
@@ -31,7 +36,7 @@ $('voice').addEventListener('change',()=>{prefs.voice=$('voice').value;save()});
 if(supported){refreshVoices();synth.addEventListener?.('voiceschanged',refreshVoices)}else{status('当前浏览器不支持语音合成')}
 $('play').addEventListener('click',()=>{if(!supported){status('语音合成不可用');return}const v=voices();if(!v.length){status('没有可用的中文朗读声音，请检查系统语音设置');return}
 synth.cancel();const u=new SpeechSynthesisUtterance($('passage').textContent);u.lang='zh-CN';u.rate=Number($('rate').value);u.voice=v.find(x=>x.voiceURI===$('voice').value)||v[0];
-u.onstart=()=>status('正在朗读');u.onend=()=>status('朗读结束');u.onerror=e=>status('朗读失败：'+e.error);
+u.onstart=()=>status('正在朗读');u.onend=()=>{status('本段朗读结束，可继续下一段');};u.onerror=e=>status('朗读失败：'+e.error);
 synth.speak(u)});
 $('pause').addEventListener('click',()=>{if(supported&&synth.speaking){synth.pause();status('已暂停')}});
 $('resume').addEventListener('click',()=>{if(supported&&synth.paused){synth.resume();status('继续朗读')}});
