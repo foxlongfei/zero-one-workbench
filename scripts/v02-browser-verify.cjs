@@ -273,6 +273,33 @@ const record = (track, name, passed, evidence) => {
   const correctionDossier = JSON.parse(fs.readFileSync(await (await correctionDownload).path(), 'utf8'));
   record('B01', 'atomic correction transaction exports field and evidence final state', correctionDossier.correctionTransactions.length === 1 && correctionDossier.fields.place === '上海市徐汇区' && correctionDossier.evidence.place.value === '上海市徐汇区' && correctionDossier.correctionTransactions[0].after.evidence.value === '上海市徐汇区', JSON.stringify(correctionDossier.correctionTransactions));
 
+  await page.goto(`${baseUrl}/portal/advisor-v02-experience.html?sha=${process.env.GITHUB_SHA || 'local'}`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#advisor-entry').waitFor();
+  await page.locator('[data-type="lost"]').click();
+  const lostCaseId = await page.locator('#case-id').innerText();
+  record('B-ENTRY', 'lost-item case uses stable shared schema', await page.locator('#advisor-entry').getAttribute('data-schema') === 'zero-one.advisor.case.v0.1' && lostCaseId.startsWith('case-') && (await page.locator('#method-boundary').innerText()).includes('不声称能推断位置'), lostCaseId);
+  await page.locator('#save-case').click();
+  record('B-ENTRY', 'missing material triggers one explicit next question', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'NEEDS_CLARIFICATION' && (await page.locator('#next-question').innerText()).includes('称呼'), await page.locator('#next-question').innerText());
+  await page.locator('#client').fill('匿名访客');
+  await page.locator('#question').fill('钥匙找不到了');
+  await page.locator('#lost-item').fill('钥匙');
+  await page.locator('#lost-place').fill('办公室抽屉');
+  await page.locator('#lost-time').fill('2026-10-13T08:00');
+  await page.locator('#save-case').click();
+  record('B-ENTRY', 'lost-item materials save without fabricated prediction', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'MATERIALS_RECORDED_NO_PREDICTION' && (await page.locator('#case-id').innerText()) === lostCaseId && (await page.locator('#next-question').innerText()).includes('当前不输出预测'), await page.locator('#next-question').innerText());
+  await page.locator('[data-type="residence"]').click();
+  const residenceCaseId = await page.locator('#case-id').innerText();
+  await page.locator('#client').fill('住宅访客');
+  await page.locator('#question').fill('希望整理住宅材料');
+  await page.locator('#residence-summary').fill('两房一厅，朝向待确认');
+  await page.locator('#residence-concern').fill('采光与动线');
+  await page.locator('#save-case').click();
+  record('B-ENTRY', 'residence case shares the contract but receives a distinct ID', residenceCaseId.startsWith('case-') && residenceCaseId !== lostCaseId && await page.locator('#advisor-entry').getAttribute('data-saved-case-count') === '2' && (await page.locator('#case-history').innerText()).includes('失物') && (await page.locator('#case-history').innerText()).includes('住宅'), await page.locator('#case-history').innerText());
+  record('B-ENTRY', 'residence remains a linked submodule', await page.locator('#residence-link').getAttribute('href') === 'housing-v02-experience.html', await page.locator('#residence-link').getAttribute('href'));
+  await page.locator('[data-type="marriage"]').click();
+  record('B-ENTRY', 'unimplemented category is explicit and cannot emit a result', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'UNAVAILABLE_EXPLICIT' && (await page.locator('#type-status').innerText()).includes('NOT_AVAILABLE') && (await page.locator('#type-status').innerText()).includes('不能生成结论'), await page.locator('#type-status').innerText());
+  await page.screenshot({ path: path.join(artifactDir, 'advisor-b-entry.png'), fullPage: true });
+
   const report = {
     schema: 'zero-one.v02.browser-verification.v1',
     timestamp: new Date().toISOString(),
