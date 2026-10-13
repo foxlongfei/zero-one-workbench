@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>陪你读书 V0.1｜本地朗读实验</title>
+<style>body{font:20px/1.7 system-ui,sans-serif;background:#f5f2ea;color:#222;margin:0}main{max-width:760px;margin:auto;padding:24px}button,select,input{font:inherit}button{padding:14px 18px;margin:6px;border-radius:12px;border:1px solid #666;background:white;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #1266a0}section{background:white;padding:20px;border-radius:18px;margin:18px 0}label{display:block;margin:12px 0}#status{font-weight:bold}body.large{font-size:26px}body.large button{min-height:66px}small{font-size:.75em}</style></head><body><main>
+<h1>陪你读书 · V0.1</h1><p>本地朗读功能实验｜尚未发布验收。朗读由当前浏览器/操作系统提供，音色与可用性因设备而异。</p>
+<section><label>阅读模式 <select id="mode"><option value="normal">普通</option><option value="large">大字／大按钮</option></select></label>
+<h2>试读：清晨的一段路</h2><p id="passage">清晨，窗外的风轻轻吹过树梢。小路上没有多少行人，阳光从树叶之间落下来。我们慢慢往前走，听见远处传来鸟鸣，也听见自己的脚步声。</p>
+<small>本段为项目原创功能测试文字，并非《西游记》原文。正式文本待版本与权利审核。</small></section>
+<section><label>朗读声音 <select id="voice" aria-label="选择朗读声音"></select></label>
+<label>速度 <input id="rate" type="range" min=".6" max="1.6" step=".1" value="1"> <output id="rateLabel">1.0×</output></label>
+<button id="play">▶ 开始朗读</button><button id="pause">⏸ 暂停</button><button id="resume">继续</button><button id="stop">■ 停止</button>
+<p id="status" role="status" aria-live="polite">等待操作</p>
+<p><small>刷新后保留模式、声音偏好和速度；浏览器语音合成无法保证精确恢复到句内播放位置。本版本不宣称支持进度恢复。</small></p>
+</section>
+<section><h2>音乐研究状态</h2><p>S0：纯朗读可试验。S1：生成配乐待真实音频与许可审核。S2：授权音乐重编排待授权素材与真实试听。此页面不提供虚假的 S1/S2 切换。</p></section>
+</main><script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id), synth=window.speechSynthesis, supported=!!(synth&&window.SpeechSynthesisUtterance);
+const key='read-with-you-v01-prefs', defaults={mode:'normal',rate:1,voice:''};
+let prefs;try{prefs=Object.assign({},defaults,JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){prefs={...defaults}}
+function save(){try{localStorage.setItem(key,JSON.stringify(prefs))}catch(e){}}
+function status(t){$('status').textContent=t}
+$('mode').value=prefs.mode==='large'?'large':'normal';document.body.classList.toggle('large',$('mode').value==='large');
+$('rate').value=Math.min(1.6,Math.max(.6,Number(prefs.rate)||1));$('rateLabel').textContent=Number($('rate').value).toFixed(1)+'×';
+$('mode').addEventListener('change',()=>{prefs.mode=$('mode').value;document.body.classList.toggle('large',prefs.mode==='large');save()});
+$('rate').addEventListener('input',()=>{prefs.rate=Number($('rate').value);$('rateLabel').textContent=prefs.rate.toFixed(1)+'×';save()});
+function voices(){return supported?synth.getVoices().filter(v=>v.lang.toLowerCase().startsWith('zh')):[]}
+function refreshVoices(){const v=voices(),select=$('voice');select.replaceChildren();if(!v.length){const opt=new Option('当前设备无可用中文声音','');select.add(opt);return}v.forEach(x=>select.add(new Option(x.name+' ('+x.lang+')',x.voiceURI)));select.value=v.some(x=>x.voiceURI===prefs.voice)?prefs.voice:v[0].voiceURI}
+$('voice').addEventListener('change',()=>{prefs.voice=$('voice').value;save()});
+if(supported){refreshVoices();synth.addEventListener?.('voiceschanged',refreshVoices)}else{status('当前浏览器不支持语音合成')}
+$('play').addEventListener('click',()=>{if(!supported){status('语音合成不可用');return}const v=voices();if(!v.length){status('没有可用的中文朗读声音，请检查系统语音设置');return}
+synth.cancel();const u=new SpeechSynthesisUtterance($('passage').textContent);u.lang='zh-CN';u.rate=Number($('rate').value);u.voice=v.find(x=>x.voiceURI===$('voice').value)||v[0];
+u.onstart=()=>status('正在朗读');u.onend=()=>status('朗读结束');u.onerror=e=>status('朗读失败：'+e.error);
+synth.speak(u)});
+$('pause').addEventListener('click',()=>{if(supported&&synth.speaking){synth.pause();status('已暂停')}});
+$('resume').addEventListener('click',()=>{if(supported&&synth.paused){synth.resume();status('继续朗读')}});
+$('stop').addEventListener('click',()=>{if(supported){synth.cancel();status('已停止')}});
+window.addEventListener('pagehide',()=>{if(supported)synth.cancel()});
+})();
+</script></body></html>
