@@ -320,6 +320,40 @@
     if (trainingSession) localStorage.setItem(TRAINING_DRAFT, JSON.stringify(trainingSession));
   }
 
+  function trainingHistory() {
+    try {
+      const records = JSON.parse(localStorage.getItem(TRAINING_HISTORY) || '[]');
+      return Array.isArray(records) ? records.filter(item => item?.exerciseId === data.id) : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function renderTrainingHistory() {
+    const box = out.querySelector('#v02-follow-history');
+    if (!box) return;
+    const records = trainingHistory();
+    root.dataset.followHistoryCount = String(records.length);
+    box.replaceChildren();
+    if (!records.length) {
+      box.textContent = '尚无已完成跟练。';
+      return;
+    }
+    records.slice(0, 5).forEach((record, index) => {
+      const row = document.createElement('p');
+      row.dataset.followHistorySession = record.sessionId;
+      row.textContent = `${index + 1}. ${record.sessionId}｜5/5｜感受：${record.feedback}｜${record.completedAt}`;
+      const repeat = document.createElement('button');
+      repeat.type = 'button';
+      repeat.className = 'chip';
+      repeat.dataset.repeatFollowSession = record.sessionId;
+      repeat.textContent = '按本次 Exercise 再练一次';
+      repeat.onclick = () => startTrainingSession(record.sessionId);
+      row.append(' ', repeat);
+      box.append(row);
+    });
+  }
+
   function renderTrainingSession() {
     const status = out.querySelector('#v02-follow-status');
     const complete = out.querySelector('#v02-follow-complete');
@@ -351,7 +385,7 @@
     root.dataset.followStatus = 'AWAITING_FEEDBACK';
   }
 
-  function startTrainingSession() {
+  function startTrainingSession(parentSessionId = null) {
     trainingSession = {
       schema: 'zero-one.exercise.follow.session.v0.2',
       sessionId: `follow-${Date.now()}`,
@@ -363,6 +397,7 @@
       feedback: null,
       startedAt: new Date().toISOString(),
       completedAt: null,
+      parentSessionId,
       boundary: 'PROJECT_2D_TEACHING_ILLUSTRATION_NOT_CAMERA_RECOGNITION_OR_MEDICAL_ADVICE',
     };
     phase = Math.round((data.phases[0].range[0] + data.phases[0].range[1]) / 2);
@@ -407,6 +442,7 @@
         <p id="v02-follow-status" aria-live="polite"></p>
         <div id="v02-follow-feedback" hidden><b>本次感受</b> ${['轻松', '合适', '偏吃力', '疼痛或麻木'].map(value => `<button class="chip" type="button" data-follow-feedback="${value}">${value}</button>`).join(' ')}</div>
         <p id="v02-follow-receipt" class="status" aria-live="polite"></p>
+        <h5>最近完成记录</h5><div id="v02-follow-history" aria-live="polite"></div>
       </section>
       <p><b>来源：</b>${data.provenance.source}<br><b>许可：</b>${data.provenance.license}<br><b>证据状态：</b>${data.provenance.evidenceStatus}</p>
       <section id="v02-licensed-catalog"><h4>可操作许可动作目录｜3 条真实 wger 记录</h4>
@@ -521,6 +557,7 @@
         root.dataset.followFeedback = trainingSession.feedback;
         out.querySelector('#v02-follow-receipt').textContent = `已记录 ${trainingSession.sessionId}｜${trainingSession.exerciseId}｜5/5｜感受：${trainingSession.feedback}`;
         out.querySelector('#v02-follow-feedback').hidden = true;
+        renderTrainingHistory();
       };
     });
     out.querySelector('#v02-ex-export').onclick = () => {
@@ -566,6 +603,7 @@
       if (draft?.schema === 'zero-one.exercise.follow.session.v0.2' && draft.exerciseId === data.id && Array.isArray(draft.completedPhaseIds)) trainingSession = draft;
     } catch (_) {}
     renderTrainingSession();
+    renderTrainingHistory();
   }
 
   root.querySelector('#v02-ex-find').onclick = () => {

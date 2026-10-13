@@ -127,6 +127,10 @@ const record = (track, name, passed, evidence) => {
   await page.locator('[data-follow-feedback="合适"]').click();
   const followRecord = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.exercise.follow.sessions.v0.2') || '[]')[0]);
   record('A01', 'five phases and user feedback produce a bounded training record', followRecord?.sessionId === followSessionId && followRecord?.exerciseId === 'exercise:wger:1551:push-up' && followRecord?.completedPhaseIds?.length === 5 && followRecord?.feedback === '合适' && followRecord?.boundary?.includes('NOT_CAMERA_RECOGNITION') && await page.locator('#v02-exercise').getAttribute('data-follow-status') === 'RECORDED', await page.locator('#v02-follow-receipt').innerText());
+  record('A01', 'completed follow session is visible in the same Exercise history', await page.locator('#v02-exercise').getAttribute('data-follow-history-count') === '1' && await page.locator(`[data-follow-history-session="${followSessionId}"]`).count() === 1 && (await page.locator('#v02-follow-history').innerText()).includes('感受：合适'), await page.locator('#v02-follow-history').innerText());
+  await page.locator(`[data-repeat-follow-session="${followSessionId}"]`).click();
+  const repeatDraft = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.exercise.follow.draft.v0.2') || 'null'));
+  record('A01', 'history starts a new traceable follow session for the same Exercise', repeatDraft?.parentSessionId === followSessionId && repeatDraft?.sessionId !== followSessionId && repeatDraft?.exerciseId === 'exercise:wger:1551:push-up' && repeatDraft?.completedPhaseIds?.length === 0 && await page.locator('#v02-exercise').getAttribute('data-follow-status') === 'IN_PROGRESS', JSON.stringify(repeatDraft));
   await page.screenshot({ path: path.join(artifactDir, 'movement-a01.png'), fullPage: true });
 
   await page.goto(`${baseUrl}/portal/k02-board.html?sha=${process.env.GITHUB_SHA || 'local'}`, { waitUntil: 'domcontentloaded' });
@@ -331,6 +335,11 @@ const record = (track, name, passed, evidence) => {
   await page.locator('#return-to-advisor').click();
   await page.locator('#advisor-entry').waitFor();
   record('B-ENTRY', 'housing return restores the same advisor Case ID', await page.locator('#advisor-entry').getAttribute('data-returned-from-housing') === 'true' && (await page.locator('#case-id').innerText()) === residenceCaseId && (await page.locator('#next-question').innerText()).includes('已从住宅标注返回同一 Case'), await page.locator('#next-question').innerText());
+  record('B-ENTRY', 'advisor visibly links the same-case housing observation', await page.locator('#advisor-entry').getAttribute('data-housing-observation-status') === 'LINKED_SAME_CASE' && await page.locator('#advisor-entry').getAttribute('data-housing-annotation-count') === '1' && (await page.locator('#housing-observation-summary').innerText()).includes('住宅 Case 样板') && (await page.locator('#housing-observation-summary').innerText()).includes('标注 1 条'), await page.locator('#housing-observation-summary').innerText());
+  const linkedCaseDownload = page.waitForEvent('download');
+  await page.locator('#export-case').click();
+  const linkedCase = JSON.parse(fs.readFileSync(await (await linkedCaseDownload).path(), 'utf8'));
+  record('B-ENTRY', 'advisor Case export carries the linked same-case observation', linkedCase.caseId === residenceCaseId && linkedCase.linkedHousingObservation?.advisorCaseId === residenceCaseId && linkedCase.linkedHousingObservation?.annotations?.length === 1 && linkedCase.linkedHousingObservation?.notes?.includes('无自动识别'), JSON.stringify(linkedCase.linkedHousingObservation));
   await page.locator('.restore-case').first().click();
   record('B-ENTRY', 'saved case restores into the same continuous Case ID', await page.locator('#advisor-entry').getAttribute('data-restored-case') === 'true' && (await page.locator('#case-id').innerText()) === lostCaseId && await page.locator('#lost-item').inputValue() === '钥匙' && (await page.locator('#type-status').innerText()).includes(lostCaseId), await page.locator('#type-status').innerText());
   await page.evaluate(() => localStorage.removeItem('advisor-cases-v01'));
