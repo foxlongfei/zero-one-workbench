@@ -300,6 +300,28 @@ const record = (track, name, passed, evidence) => {
   record('B-ENTRY', 'unimplemented category is explicit and cannot emit a result', await page.locator('#advisor-entry').getAttribute('data-case-status') === 'UNAVAILABLE_EXPLICIT' && (await page.locator('#type-status').innerText()).includes('NOT_AVAILABLE') && (await page.locator('#type-status').innerText()).includes('不能生成结论'), await page.locator('#type-status').innerText());
   await page.screenshot({ path: path.join(artifactDir, 'advisor-b-entry.png'), fullPage: true });
 
+
+  await page.goto(`${baseUrl}/portal/movement-v02-experience.html?sha=${process.env.GITHUB_SHA || 'local'}`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#exercise-list').waitFor();
+  record('A-TEACH', 'two distinct whole-body actions', await page.locator('[data-exercise-id]').count() === 2, 'squat and jumping-jack cards are visible');
+  record('A-TEACH', 'two dynamic assets identified', await page.locator('.demo img[src$=".gif"]').count() === 2, 'two Wikimedia Commons GIF demos');
+  record('A-TEACH', 'asset-level attribution visible', await page.locator('.source a[href*="commons.wikimedia.org/wiki/File:"]').count() === 2 && await page.locator('.source a[href*="creativecommons.org/licenses/by-sa/4.0"]').count() === 2, 'author, version, SHA-1 and CC BY-SA 4.0 are shown per asset');
+  await page.locator('.demo-toggle').first().click();
+  record('A-TEACH', 'dynamic demo pause control', await page.locator('.demo-toggle').first().getAttribute('data-state') === 'paused' && await page.locator('#squat-still').isVisible(), 'animated demo can be paused to a canvas frame');
+  await page.locator('.demo-toggle').first().click();
+  record('A-TEACH', 'dynamic demo resume control', await page.locator('.demo-toggle').first().getAttribute('data-state') === 'playing' && await page.locator('#squat-demo').isVisible(), 'paused demo can resume');
+  await page.locator('#goal').selectOption('whole-body');
+  await page.locator('#environment').selectOption('home');
+  await page.locator('#duration').fill('10');
+  await page.locator('#build').click();
+  await page.locator('#complete-action').click();
+  record('A-TEACH', 'continuous lesson advances', (await page.locator('#done-squat').innerText()) === '已完成' && (await page.locator('#active-name').innerText()).includes('开合跳'), 'completing squat advances to jumping jack');
+  await page.locator('#complete-action').click();
+  await page.locator('#finish').click();
+  const teachRecord = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.movement.teach.sessions.v0.2') || '[]')[0]);
+  record('A-TEACH', 'session record saved', teachRecord?.schema === 'zero-one.movement.teach.session.v0.2' && teachRecord?.exercise_ids?.length === 2 && teachRecord?.completed_exercise_ids?.length === 2, teachRecord?.session_id || 'missing record');
+  record('A-TEACH', 'licensed asset provenance in record', teachRecord?.demo_assets?.every(asset => asset.author === 'Wensceslao' && asset.license === 'CC BY-SA 4.0' && asset.sha1?.length === 40), 'both demo assets retain author, license, version, source and SHA-1');
+
   const report = {
     schema: 'zero-one.v02.browser-verification.v1',
     timestamp: new Date().toISOString(),
