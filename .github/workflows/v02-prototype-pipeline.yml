@@ -42,7 +42,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Static functional contract checks
-        run: python3 tests/v02/check_prototypes.py --project "${{ matrix.project }}"
+        run: |
+          test -f tests/v02/check_prototypes.py || { echo 'Missing prototype contract checker in this commit'; exit 1; }
+          python3 tests/v02/check_prototypes.py --project "${{ matrix.project }}"
       - name: Publish test report
         if: always()
         uses: actions/upload-artifact@v4
