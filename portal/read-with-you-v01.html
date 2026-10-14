@@ -13,7 +13,7 @@
 <p><small>刷新后保留段落位置、模式、声音偏好和速度；可以从已保存段落重新朗读，但不支持精确恢复句内位置。</small></p>
 </section>
 <section><h2>听世界｜朗读背景音与电台</h2><p>背景音与人声各自独立播放；直播电台受音源和浏览器策略限制。</p><label>背景音音量 <input type="range" id="bgVolume" min="0" max="1" step=".05" value=".25"></label><audio id="bgAudio" controls preload="none" style="width:100%"></audio><label>电台流地址（HTTPS）<input id="stationUrl" type="url" placeholder="从电台选择后粘贴 HTTPS 音频流地址" style="width:100%"></label><button id="playStation">播放背景电台</button><p><a href="classical-radio.html">打开原有电台目录挑选节目 →</a>（高级筛选仍保留）</p><p><small>独立音量已提供；智能 ducking、生成式配乐与经授权的人声学习均尚未验收。</small></p></section>
-</main><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-xXDvecyV+U+rn8h9yga6nfLsT7WI7IA4GWWteB1dRgt2eUUV8bgQ5I9V4o3wODkmNV1cMK/rTjqa9eAl/1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script>
+</main><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script>
 (function(){
 'use strict';
 const $=id=>document.getElementById(id), synth=window.speechSynthesis, supported=!!(synth&&window.SpeechSynthesisUtterance);
