@@ -371,6 +371,22 @@
     out.querySelector('#v02-follow-archive-status').textContent = `已导出全部 ${records.length} 条跟练记录；原记录仍保留在本机。`;
   }
 
+  function validateTrainingArchive(archive) {
+    if (!archive || archive.schema !== 'zero-one.exercise.follow.archive.v0.2') return '档案 schema 不匹配';
+    if (archive.exerciseId !== data.id) return '档案 Exercise ID 不一致';
+    if (!Array.isArray(archive.records) || archive.recordCount !== archive.records.length) return '档案记录数不一致';
+    if (archive.records.length > 20) return '档案超过本机 20 条记录上限';
+    if (archive.boundary !== 'LOCAL_USER_RECORD_ARCHIVE_NOT_CAMERA_RECOGNITION_OR_MEDICAL_ADVICE') return '档案边界声明不一致';
+    const sessionIds = new Set();
+    for (const record of archive.records) {
+      const error = validateTrainingRecord(record);
+      if (error) return `${record?.sessionId || '未知 Session'}：${error}`;
+      if (sessionIds.has(record.sessionId)) return `档案内 Session ID 重复：${record.sessionId}`;
+      sessionIds.add(record.sessionId);
+    }
+    return '';
+  }
+
   function feedbackNextStep(feedback) {
     const guidance = {
       '轻松': '保持动作质量；下次只小幅增加次数或缩短休息，不自动升级难度。',
@@ -539,6 +555,8 @@
         <h5>最近完成记录</h5><div id="v02-follow-history" aria-live="polite"></div>
         <p><button class="btn ghost" id="v02-follow-export-all" type="button">导出全部跟练历史 JSON</button>
         <span id="v02-follow-archive-status" class="muted" role="status" aria-live="polite"></span></p>
+        <p><label class="btn ghost">恢复全部跟练历史 JSON<input id="v02-follow-import-all" type="file" accept=".json,application/json" style="display:none"></label>
+        <span id="v02-follow-archive-import-status" class="muted" role="status" aria-live="polite"></span></p>
         <p><label class="btn ghost">导入跟练记录 JSON<input id="v02-follow-import" type="file" accept=".json,application/json" style="display:none"></label>
         <span id="v02-follow-history-status" class="muted" role="status" aria-live="polite"></span></p>
       </section>
@@ -679,6 +697,29 @@
       }
     };
     out.querySelector('#v02-follow-export-all').onclick = downloadTrainingArchive;
+    out.querySelector('#v02-follow-import-all').onchange = async event => {
+      const status = out.querySelector('#v02-follow-archive-import-status');
+      const previous = localStorage.getItem(TRAINING_HISTORY);
+      try {
+        const archive = JSON.parse(await event.target.files[0].text());
+        const error = validateTrainingArchive(archive);
+        if (error) throw new Error(error);
+        localStorage.setItem(TRAINING_HISTORY, JSON.stringify(archive.records));
+        root.dataset.followArchiveImportStatus = 'PASS_ATOMIC_REPLACE';
+        root.dataset.followArchiveImportCount = String(archive.records.length);
+        status.textContent = `整包恢复成功：${archive.records.length} 条跟练记录已在全部校验通过后一次替换；可继续复练。`;
+        renderTrainingHistory();
+      } catch (error) {
+        try {
+          if (previous === null) localStorage.removeItem(TRAINING_HISTORY);
+          else localStorage.setItem(TRAINING_HISTORY, previous);
+        } catch (_) {}
+        root.dataset.followArchiveImportStatus = 'REJECTED_WITHOUT_OVERWRITE';
+        status.textContent = `整包恢复拒绝：${error.message}；现有跟练历史未被部分覆盖。`;
+      } finally {
+        event.target.value = '';
+      }
+    };
     out.querySelector('#v02-ex-export').onclick = () => {
       const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
       const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({
