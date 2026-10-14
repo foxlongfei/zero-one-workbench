@@ -376,7 +376,23 @@
       exportButton.dataset.exportFollowSession = record.sessionId;
       exportButton.textContent = '导出本次记录';
       exportButton.onclick = () => downloadTrainingRecord(record);
-      row.append(' ', repeat, ' ', exportButton);
+      const details = document.createElement('details');
+      details.dataset.followDetailsSession = record.sessionId;
+      const summary = document.createElement('summary');
+      summary.textContent = '查看本次五阶段完成路线';
+      const phaseList = document.createElement('ol');
+      record.completedPhaseIds.forEach((phaseId, phaseIndex) => {
+        const phase = data.phases.find(item => item.phaseId === phaseId);
+        const item = document.createElement('li');
+        item.dataset.followDetailPhase = phaseId;
+        item.textContent = `${phaseIndex + 1}. ${phase?.name || phaseId}｜${phaseId}`;
+        phaseList.append(item);
+      });
+      const boundary = document.createElement('p');
+      boundary.className = 'muted';
+      boundary.textContent = `本次感受：${record.feedback}｜来源 record ${record.sourceRecordId}｜这是用户跟练记录，不是摄像头识别或医学建议。`;
+      details.append(summary, phaseList, boundary);
+      row.append(' ', repeat, ' ', exportButton, details);
       box.append(row);
     });
   }
