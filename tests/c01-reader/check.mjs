@@ -1,0 +1,50 @@
+import { chromium } from 'playwright';
+import { spawn } from 'node:child_process';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+const server=spawn('python3',['-m','http.server','8765','--bind','127.0.0.1'],{stdio:'ignore'});
+await new Promise(r=>setTimeout(r,1200));
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const evidence={checks:[],errors:[]};
+const check=(name,ok,details='')=>{evidence.checks.push({name,pass:!!ok,details});if(!ok)throw Error(name+' failed: '+details)};
+try{
+const page=await browser.newPage({viewport:{width:1200,height:900}});
+page.on('pageerror',e=>evidence.errors.push(e.message));
+await page.addInitScript(()=>{
+window.__spoken=[];
+class Utterance{constructor(text){this.text=text;this.rate=1}}
+window.SpeechSynthesisUtterance=Utterance;
+Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{cancel(){},pause(){},resume(){},getVoices(){return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test'}]},addEventListener(){},speak(u){window.__spoken.push(u.text);setTimeout(()=>u.onend?.(),25)}}});
+});
+await page.goto('http://127.0.0.1:8765/portal/read-with-you-v01.html');
+await page.waitForSelector('#importButton');
+check('shelf visible',await page.locator('#shelfScreen').isVisible());
+await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/real-book.epub'));
+await page.getByText('real-book',{exact:true}).first().click();
+await page.waitForTimeout(1800);
+check('EPUB opened',await page.locator('foliate-view').count()===1,await page.locator('#status').innerText());
+check('EPUB no open error',!(await page.locator('#status').innerText()).includes('打开失败'),await page.locator('#status').innerText());
+await page.locator('#tocButton').click();
+check('TOC has chapters',await page.locator('#tocList button').count()>=2,await page.locator('#tocList').innerText());
+await page.locator('#tocList button').last().click();
+await page.waitForTimeout(300);
+check('chapter navigation',!(await page.locator('#status').innerText()).includes('失败'));
+await page.locator('#speak').click();
+await page.waitForTimeout(300);
+check('speech invoked',await page.evaluate(()=>window.__spoken.length>0),JSON.stringify(await page.evaluate(()=>window.__spoken.slice(0,2))));
+await page.locator('#back').click();
+await page.locator('.book').first().click();
+await page.waitForTimeout(1000);
+check('EPUB reopen without error',!(await page.locator('#status').innerText()).includes('打开失败'),await page.locator('#status').innerText());
+await page.locator('#back').click();
+await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/real-book.txt'));
+await page.getByText('real-book',{exact:true}).last().click();
+check('TXT opened',await page.locator('#textView').isVisible());
+await page.locator('#next').click();
+check('TXT pagination',await page.locator('#position').innerText().then(x=>x.includes('2 /')));
+await page.reload();
+await page.locator('.book').last().click();
+check('TXT resume',await page.locator('#position').innerText().then(x=>x.includes('2 /')));
+await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
+check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
+} catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
