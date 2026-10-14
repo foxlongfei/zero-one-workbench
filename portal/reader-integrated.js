@@ -1,0 +1,34 @@
+import './vendor/foliate-js/view.js';
+const $=id=>document.getElementById(id);let db,books=[],active=null,view=null,textPages=[],textIndex=0,speaking=false,utter=null,token=0;
+const synth=window.speechSynthesis;const supported=!!(synth&&window.SpeechSynthesisUtterance);
+const status=s=>$('status').textContent=s;
+const tx=(mode='readonly')=>db.transaction('books',mode).objectStore('books');
+function request(r){return new Promise((ok,no)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+async function openDB(){db=await new Promise((ok,no)=>{const r=indexedDB.open('zero-one-reader-library',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('books'))r.result.createObjectStore('books',{keyPath:'id'})};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+const format=b=>(b.format||b.filename?.split('.').pop()||'').toLowerCase();
+async function refresh(){books=(await request(tx().getAll())).filter(b=>b.blob);$('shelf').replaceChildren();for(const b of books){const card=document.createElement('button');card.className='book';const name=document.createElement('strong');name.textContent=b.title||b.filename||'未命名';const meta=document.createElement('small');meta.textContent=format(b).toUpperCase();card.append(name,meta);card.onclick=()=>openBook(b);$('shelf').append(card)}if(!books.length)$('shelf').textContent='书架还是空的。点击「添加电子书」开始。'}
+$('importButton').onclick=()=>$('files').click();
+$('files').onchange=async e=>{for(const f of e.target.files){const ext=f.name.split('.').pop().toLowerCase();if(!['epub','mobi','azw3','fb2','cbz','txt'].includes(ext))continue;await request(tx('readwrite').put({id:'local-'+crypto.randomUUID(),title:f.name.replace(/\.[^.]+$/,''),format:ext.toUpperCase(),filename:f.name,blob:f,local:true,added:new Date().toISOString()}))}await refresh();status('已导入本机书库')};
+function stop(){token++;synth?.cancel();speaking=false;$('speak').textContent='🔊 朗读'}
+function showShelf(){stop();view?.close();view?.remove();view=null;active=null;$('readerScreen').hidden=true;$('shelfScreen').hidden=false;$('tocPanel').hidden=true;$('settings').hidden=true}
+$('back').onclick=showShelf;
+function savePos(value){if(!active)return;try{localStorage.setItem('reader-pos-'+active.id,JSON.stringify(value))}catch{}}
+function getPos(){try{return JSON.parse(localStorage.getItem('reader-pos-'+active.id)||'null')}catch{return null}}
+function addToc(items,depth=0){if(!items||depth>8)return;for(const item of items){const li=document.createElement('li'),b=document.createElement('button');b.textContent='　'.repeat(depth)+(item.label||item.title||'章节');b.onclick=async()=>{stop();await view.goTo(item.href);$('tocPanel').hidden=true};li.append(b);$('tocList').append(li);addToc(item.subitems||item.children,depth+1)}}
+function splitTXT(text){const chunks=[];for(let i=0;i<text.length;i+=3000)chunks.push(text.slice(i,i+3000));return chunks.length?chunks:['（空文件）']}
+async function openBook(b){stop();active=b;$('shelfScreen').hidden=true;$('readerScreen').hidden=false;$('bookTitle').textContent=b.title||b.filename;$('tocList').replaceChildren();$('textView').hidden=true;$('textView').replaceChildren();$('bookView').querySelector('foliate-view')?.remove();status('正在打开 '+b.title);
+try{if(format(b)==='txt'){textPages=splitTXT(await b.blob.text());textIndex=Math.min(textPages.length-1,Number(getPos()?.index)||0);$('textView').hidden=false;renderText();$('tocButton').disabled=true}else{view=document.createElement('foliate-view');$('bookView').append(view);view.addEventListener('relocate',e=>{if(active){const cfi=e.detail?.cfi;if(cfi)savePos({cfi});$('position').textContent=e.detail?.tocItem?.label||'已保存阅读位置'}});await view.open(b.blob);addToc(view.book?.toc);$('tocButton').disabled=false;await view.init({lastLocation:getPos()?.cfi||null,showTextStart:true});status('已打开 '+b.title)}}catch(e){status('打开失败：'+e.message);console.error(e)}}
+function renderText(){$('textView').textContent=textPages[textIndex]||'';$('position').textContent='第 '+(textIndex+1)+' / '+textPages.length+' 页';savePos({index:textIndex})}
+$('tocButton').onclick=()=>$('tocPanel').hidden=!$('tocPanel').hidden;
+$('settingsButton').onclick=()=>$('settings').hidden=!$('settings').hidden;
+async function page(direction){stop();if(view){await(direction>0?view.next():view.prev())}else if(active){textIndex=Math.min(textPages.length-1,Math.max(0,textIndex+direction));renderText()}}
+$('prev').onclick=()=>page(-1);$('next').onclick=()=>page(1);
+function voices(){return synth?.getVoices()||[]}
+function refreshVoices(){const all=voices();$('voice').replaceChildren(...all.map((v,i)=>new Option(v.name+' · '+v.lang,String(i))));const zh=all.findIndex(v=>v.lang.toLowerCase().startsWith('zh'));if(zh>=0)$('voice').value=String(zh)}
+refreshVoices();synth?.addEventListener?.('voiceschanged',refreshVoices);
+async function speakSection(index,run){if(run!==token||!active)return;let txt='';if(view){const section=view.book?.sections[index];if(!section){stop();status('已朗读到结尾');return}await view.goTo(index);const doc=await section.createDocument();doc.querySelectorAll('script,style,nav').forEach(x=>x.remove());txt=(doc.body||doc.documentElement)?.textContent||''}else{if(index>=textPages.length){stop();status('已朗读到结尾');return}textIndex=index;renderText();txt=textPages[index]}if(run!==token)return;txt=txt.replace(/\s+/g,' ').trim();if(!txt){await speakSection(index+1,run);return}let offset=0;const pieces=txt.match(/[\s\S]{1,550}/g)||[];function nextPiece(){if(run!==token)return;if(offset>=pieces.length){speakSection(index+1,run).catch(e=>status(e.message));return}const u=new SpeechSynthesisUtterance(pieces[offset++]);utter=u;u.lang='zh-CN';u.rate=Number($('rate').value);const v=voices()[Number($('voice').value)];if(v)u.voice=v;u.onend=nextPiece;u.onerror=e=>{stop();status('朗读失败：'+e.error)};synth.speak(u)}nextPiece()}
+$('speak').onclick=async()=>{if(!supported){status('当前浏览器没有语音朗读能力');return}if(speaking){if(synth.paused){synth.resume();$('speak').textContent='⏸ 暂停'}else{synth.pause();$('speak').textContent='▶ 继续'}return}stop();speaking=true;$('speak').textContent='⏸ 暂停';const run=token;try{const index=view?(view.renderer?.getContents()?.[0]?.index??0):textIndex;await speakSection(index,run)}catch(e){stop();status('朗读无法开始：'+e.message)}};
+$('musicFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const audio=$('music');if(audio.dataset.url)URL.revokeObjectURL(audio.dataset.url);audio.dataset.url=URL.createObjectURL(f);audio.src=audio.dataset.url;audio.volume=Number($('volume').value)};
+$('volume').oninput=()=>$('music').volume=Number($('volume').value);$('music').volume=.15;
+window.addEventListener('pagehide',()=>{stop();if($('music').dataset.url)URL.revokeObjectURL($('music').dataset.url)});
+openDB().then(refresh).catch(e=>status('书库不可用：'+e.message));
