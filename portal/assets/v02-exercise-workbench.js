@@ -416,11 +416,14 @@
 
   function renderTrainingSession() {
     const status = out.querySelector('#v02-follow-status');
+    const plan = out.querySelector('#v02-follow-plan');
     const complete = out.querySelector('#v02-follow-complete');
     const feedback = out.querySelector('#v02-follow-feedback');
-    if (!status || !complete || !feedback) return;
+    if (!status || !plan || !complete || !feedback) return;
     if (!trainingSession) {
       status.textContent = '尚未开始；本跟练只绑定标准俯卧撑 Exercise，不把变式记录冒充为同一动态。';
+      plan.textContent = '本次计划：标准俯卧撑五阶段｜基础方案（尚无上次反馈）。';
+      plan.dataset.planSource = 'BASELINE';
       complete.disabled = true;
       feedback.hidden = true;
       root.dataset.followStatus = 'NOT_STARTED';
@@ -431,6 +434,10 @@
     root.dataset.followExerciseId = trainingSession.exerciseId;
     root.dataset.followCompletedPhases = String(completed);
     root.dataset.followAdaptation = trainingSession.adaptationInstruction || 'BASELINE';
+    plan.dataset.planSource = trainingSession.parentSessionId || 'BASELINE';
+    plan.textContent = trainingSession.adaptationInstruction
+      ? `本次调整计划｜依据 ${trainingSession.parentSessionId} 的“${trainingSession.parentFeedback}”反馈：${trainingSession.adaptationInstruction}`
+      : '本次计划：标准俯卧撑五阶段｜基础方案（尚无上次反馈）。';
     if (completed < data.phases.length) {
       const next = data.phases[trainingPhaseIndex()];
       const adaptation = trainingSession.adaptationInstruction ? `｜本次调整：${trainingSession.adaptationInstruction}` : '';
@@ -505,6 +512,7 @@
         <button class="btn" id="v02-follow-start" type="button">开始一次标准俯卧撑跟练</button>
         <button class="btn ghost" id="v02-follow-complete" type="button" disabled>完成当前阶段</button>
         <p id="v02-follow-status" aria-live="polite"></p>
+        <p id="v02-follow-plan" class="status" aria-live="polite">本次计划：标准俯卧撑五阶段｜基础方案（尚无上次反馈）。</p>
         <div id="v02-follow-feedback" hidden><b>本次感受</b> ${['轻松', '合适', '偏吃力', '疼痛或麻木'].map(value => `<button class="chip" type="button" data-follow-feedback="${value}">${value}</button>`).join(' ')}</div>
         <p id="v02-follow-receipt" class="status" aria-live="polite"></p>
         <h5>最近完成记录</h5><div id="v02-follow-history" aria-live="polite"></div>
@@ -622,7 +630,7 @@
         localStorage.removeItem(TRAINING_DRAFT);
         root.dataset.followStatus = 'RECORDED';
         root.dataset.followFeedback = trainingSession.feedback;
-        out.querySelector('#v02-follow-receipt').textContent = `已记录 ${trainingSession.sessionId}｜${trainingSession.exerciseId}｜5/5｜感受：${trainingSession.feedback}`;
+        out.querySelector('#v02-follow-receipt').textContent = `已记录 ${trainingSession.sessionId}｜${trainingSession.exerciseId}｜5/5｜感受：${trainingSession.feedback}｜下一步：${feedbackNextStep(trainingSession.feedback)}`;
         out.querySelector('#v02-follow-feedback').hidden = true;
         renderTrainingHistory();
       };
