@@ -16,21 +16,24 @@ async function makeEpub() {
   return zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
 }
 
+let browser;
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   await context.addInitScript(() => {
     window.__spoken = [];
-    window.SpeechSynthesisUtterance = class {
+    const Utterance = class {
       constructor(text) { this.text = text; }
     };
-    window.speechSynthesis = {
+    const synth = {
       speaking: false, paused: false,
       getVoices: () => [{ name: '测试中文声音', lang: 'zh-CN', voiceURI: 'test-zh' }],
       addEventListener: () => {}, cancel() { this.speaking = false; },
       pause() { this.paused = true; }, resume() { this.paused = false; },
       speak(u) { this.speaking = true; window.__spoken.push(u.text); u.onstart?.(); setTimeout(() => { this.speaking = false; u.onend?.(); }, 20); }
     };
+    Object.defineProperty(window, 'SpeechSynthesisUtterance', { configurable: true, value: Utterance });
+    Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: synth });
   });
   const page = await context.newPage();
   await page.goto(pageUrl);
@@ -59,5 +62,4 @@ async function makeEpub() {
   if (!(await page.locator('#position').innerText()).includes('2 / 2')) throw Error('EPUB book and position were not restored after reload');
 
   console.log(JSON.stringify({ status: 'PASS', txtSections: 3, epubSections: 2, continuousTts: true, reloadRestore: true, parser: 'epubjs@0.3.93' }));
-  await browser.close();
-})().catch(error => { console.error(error); process.exitCode = 1; });
+})().catch(error => { console.error(error); process.exitCode = 1; }).finally(async () => { await browser?.close(); });
