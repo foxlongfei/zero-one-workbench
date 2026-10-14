@@ -3,7 +3,7 @@
 import argparse, json, pathlib, re, sys
 from html.parser import HTMLParser
 ROOT=pathlib.Path(__file__).resolve().parents[2]
-PAGES={'A01':('movement-v02-experience.html',['program','routine','start','upload','save']), 'B01':('traditional-case-v02.html',['categories','title','question','method','save','export']), 'C01':('read-with-you-v01.html',[])}
+PAGES={'A01':('movement-v02-experience.html',['goal','environment','duration','build','restore','session-history']), 'B01':('advisor-v02-experience.html',['case-types','question','method','save-case','export-case','import-case']), 'C01':('read-with-you-v01.html',[])}
 class Parse(HTMLParser):
  def __init__(self): super().__init__();self.ids=set();self.links=[]
  def handle_starttag(self,tag,attrs):
@@ -22,7 +22,7 @@ def check(project):
   for word in ['失物','住宅','婚姻','求子','择日','localStorage']:
    if word not in data:fail.append('missing case capability '+word)
  if project=='A01':
-  for word in ['setInterval','localStorage','video']:
+  for word in ['setInterval','localStorage','repeat-session','resumed_from_draft']:
    if word not in data:fail.append('missing training capability '+word)
  if project=='C01' and 'speechSynthesis' not in data:fail.append('missing speech engine')
  report={'project':project,'source_page':name,'status':'PASS' if not fail else 'FAIL','failures':fail,'test_type':'static_contract_not_double_blind'}

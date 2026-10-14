@@ -1,0 +1,59 @@
+{
+  "schema": "zero-one.residence.v0.2",
+  "id": "residence:habs-dc-97:frederick-douglass-house",
+  "sampleStatus": "PUBLIC_ARCHIVE_REAL_RESIDENCE_NOT_USER_HOME",
+  "sourceArtifact": "HABS DC,WASH,166- (sheet 2 of 8) — FIRST FLOOR PLAN",
+  "sourceUrl": "https://www.loc.gov/pictures/item/dc0092.sheet.00002a",
+  "repositoryPage": "https://commons.wikimedia.org/wiki/File:Frederick_Douglass_House,_1411_W_Street,_Southeast,_Washington,_District_of_Columbia,_DC_HABS_DC,WASH,166-_(sheet_2_of_8).png",
+  "license": "PUBLIC_DOMAIN_US_NPS",
+  "surveyNumber": "HABS DC-97",
+  "archiveAccession": "HABS DC,WASH,166- (sheet 2 of 8)",
+  "repositoryAsset": "../assets/vendor/habs-dc-97-sheet-2-first-floor-plan.png",
+  "repositoryAssetBytes": 2127568,
+  "repositoryAssetWidth": 9652,
+  "repositoryAssetHeight": 7584,
+  "repositoryAssetSha256": "9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315",
+  "documentationDate": "compiled after 1933",
+  "buildingDates": ["ca. 1855 initial construction", "ca. 1889-ca. 1895 subsequent work", "1917-1920 subsequent work"],
+  "fields": {
+    "name": "Frederick Douglass House（Cedar Hill）",
+    "place": "Washington, District of Columbia, USA",
+    "dir": "",
+    "floor": "",
+    "rooms": "HABS sheet 2/8 FIRST FLOOR PLAN；首版人工复核墙线已转换为35条DXF线段，门洞作为墙线间隙保留",
+    "size": "图纸总尺寸标注 62'-2 1/2\" × 42'-7 7/8\"；分别校准为18.9611 m × 13.0024 m",
+    "needs": "公开历史住宅空间分析样板；不代表现住户需求",
+    "surround": "",
+    "material": "HABS DC,WASH,166- sheet 2/8；FIRST FLOOR PLAN；真实历史住宅测绘档案",
+    "source": "DRAWING_OR_ARCHIVE",
+    "confidence": "HIGH"
+  },
+  "evidence": {
+    "name": {"value": "Frederick Douglass House（Cedar Hill）", "source": "Library of Congress HABS DC-97", "confidence": "HIGH", "capturedAt": "2026-10-10T23:32:00Z"},
+    "place": {"value": "Washington, District of Columbia, USA", "source": "Library of Congress accession HABS DC,WASH,166-", "confidence": "HIGH", "capturedAt": "2026-10-10T23:32:00Z"},
+    "material": {"value": "HABS DC,WASH,166- sheet 2/8；FIRST FLOOR PLAN；真实历史住宅测绘档案", "source": "https://www.loc.gov/pictures/item/dc0092.sheet.00002a", "confidence": "HIGH", "capturedAt": "2026-10-11T02:31:00Z"}
+  },
+  "materialFiles": [
+    {"caseId":"residence:habs-dc-97:frederick-douglass-house","name":"habs-dc-97-sheet-2-first-floor-plan.png","bytes":2127568,"mime":"image/png","source":"PUBLIC_ARCHIVE_US_NPS_HABS","license":"PUBLIC_DOMAIN_US_NPS","sha256":"9dbb9f1ded1fb175cc76adaa80746c6015271f8a375a101edf3967fc5a64c315","capturedAt":"2026-10-11T02:31:00Z"},
+    {"caseId":"residence:habs-dc-97:frederick-douglass-house","name":"habs-dc-97-first-floor-trace.json","bytes":3244,"mime":"application/json","source":"PROJECT_TRACE_OF_PUBLIC_ARCHIVE","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor-trace.json","sha256":"75e98361334fd54141c3cd4c7912707b8ef36f69050eb79c354164d764599605","capturedAt":"2026-10-11T03:36:00Z"},
+    {"caseId":"residence:habs-dc-97:frederick-douglass-house","name":"habs-dc-97-first-floor.dxf","bytes":2293,"mime":"image/vnd.dxf","source":"PROJECT_TRACE_OF_PUBLIC_ARCHIVE","license":"PROJECT_TRACE_OF_PUBLIC_DOMAIN_SOURCE","path":"../../research/depthmap/habs-dc-97-first-floor.dxf","sha256":"bf8e5b0db0bfdb876a4bd205a4238d7de860ded5a67fee9841beadace4d4aaa7","capturedAt":"2026-10-11T03:36:00Z"}
+  ],
+  "analysisArtifacts": {
+    "geometryTrace": "../../research/depthmap/habs-dc-97-first-floor-trace.json",
+    "depthmapRun": "v02-habs-dc-97-depthmap-run.json",
+    "depthmapCsv": "v02-habs-dc-97-depthmap-vga.csv",
+    "radianceRun": "v02-habs-dc-97-radiance-daylight.json",
+    "radianceCsv": "v02-habs-dc-97-radiance-daylight.csv"
+  },
+  "revisions": [],
+  "boundaries": {
+    "actualResidence": "HISTORIC_REAL_RESIDENCE_ARCHIVE",
+    "userResidence": "NOT_USER_HOME",
+    "modelRun": "DEPTHMAPX_VGA_RUN_FOR_THIS_TRACE",
+    "geometryContinuity": "MANUAL_TRACE_V0_1_REQUIRES_SECOND_PERSON_CAD_REVIEW",
+    "depthmapX": "DEPTHMAPX_0_9_1_VGA_708_POINTS",
+    "radiance": "RADIANCE_6_0_2_CLEAR_SKY_80_SENSORS",
+    "crossLayerEquivalence": "SAME_CASE_ID_AND_PLAN_TRACE_WITH_EXPLICIT_VERTICAL_ASSUMPTIONS",
+    "radianceGeometry": "WINDOWS_AND_HEIGHT_REQUIRE_FIELD_CONFIRMATION"
+  }
+}
