@@ -22,8 +22,10 @@ jobs:
         run: |
           python3 - <<'PY'
           import json,os,urllib.request,urllib.error,pathlib
-          issue='A01: 用户要完整俯卧撑动作对象和可操作的全身演示；B01: 用户要同一住宅ID贯穿材料和分析。当前仅有二维自制示意及住宅表单，尚未验收。优先成熟开源、许可可追溯、完整交付。'
-          task='请独立审查下面的既有V0.2施工目标，提出一个最有价值、成本最低、可验证的下一步。必须指出未验证的许可和运行风险。不要宣称已执行。限180字。\n'+issue
+          tasks={
+            'Q':'原施工单 RW-01 #11：C01整书EPUB/TXT导入、目录章节、跨章节连续TTS、进度恢复。已存在 portal/reading-library.html 与 portal/read-with-you-v01.html 但未集成。请列出最小可执行代码修改（文件、函数、测试、许可风险），不得新增施工单或假称完成。限300字。',
+            'D':'原施工单 RW-02 #12：C01真实TTS、背景音独立音量/ducking、经知情同意的家人声音定制。请列出优先复用的可验证实现路径、最小代码修改、许可证/隐私/成本检查及可执行测试。不得新增施工单或假称完成。限300字。'
+          }
           models=[
             ('Q','https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions','qwen3.8-flash','DASHSCOPE_API_KEY'),
             ('D','https://api.deepseek.com/chat/completions','deepseek-chat','DEEPSEEK_API_KEY')]
@@ -31,9 +33,10 @@ jobs:
           pathlib.Path('artifacts/v02').mkdir(parents=True,exist_ok=True)
           output=pathlib.Path('artifacts/v02/three-doctor-trial.json')
           def save():
-            output.write_text(json.dumps({'scope':'Bounded independent API review, NOT completed product work','results':reports},ensure_ascii=False,indent=2),encoding='utf8')
+            output.write_text(json.dumps({'scope':'Existing RW-01 #11 and RW-02 #12 API execution evidence only; NOT product code or acceptance','results':reports},ensure_ascii=False,indent=2),encoding='utf8')
           save()
           for role,url,model,keyname in models:
+            task=tasks[role]
             key=os.environ.get(keyname,'')
             if not key: raise SystemExit(role+' secret missing')
             data=json.dumps({'model':model,'messages':[{'role':'user','content':task}],'max_tokens':120,'stream':False}).encode()
