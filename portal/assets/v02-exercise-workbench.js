@@ -350,6 +350,27 @@
     setTimeout(() => URL.revokeObjectURL(url), 500);
   }
 
+  function downloadTrainingArchive() {
+    const records = trainingHistory();
+    const archive = {
+      schema: 'zero-one.exercise.follow.archive.v0.2',
+      exerciseId: data.id,
+      exportedAt: new Date().toISOString(),
+      recordCount: records.length,
+      records,
+      boundary: 'LOCAL_USER_RECORD_ARCHIVE_NOT_CAMERA_RECOGNITION_OR_MEDICAL_ADVICE',
+    };
+    const blob = new Blob([`${JSON.stringify(archive, null, 2)}\n`], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'exercise-wger-1551-push-up-follow-history.json';
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+    root.dataset.followArchiveCount = String(records.length);
+    out.querySelector('#v02-follow-archive-status').textContent = `已导出全部 ${records.length} 条跟练记录；原记录仍保留在本机。`;
+  }
+
   function feedbackNextStep(feedback) {
     const guidance = {
       '轻松': '保持动作质量；下次只小幅增加次数或缩短休息，不自动升级难度。',
@@ -516,6 +537,8 @@
         <div id="v02-follow-feedback" hidden><b>本次感受</b> ${['轻松', '合适', '偏吃力', '疼痛或麻木'].map(value => `<button class="chip" type="button" data-follow-feedback="${value}">${value}</button>`).join(' ')}</div>
         <p id="v02-follow-receipt" class="status" aria-live="polite"></p>
         <h5>最近完成记录</h5><div id="v02-follow-history" aria-live="polite"></div>
+        <p><button class="btn ghost" id="v02-follow-export-all" type="button">导出全部跟练历史 JSON</button>
+        <span id="v02-follow-archive-status" class="muted" role="status" aria-live="polite"></span></p>
         <p><label class="btn ghost">导入跟练记录 JSON<input id="v02-follow-import" type="file" accept=".json,application/json" style="display:none"></label>
         <span id="v02-follow-history-status" class="muted" role="status" aria-live="polite"></span></p>
       </section>
@@ -655,6 +678,7 @@
         event.target.value = '';
       }
     };
+    out.querySelector('#v02-follow-export-all').onclick = downloadTrainingArchive;
     out.querySelector('#v02-ex-export').onclick = () => {
       const record = catalog.find(item => item.exerciseId === root.dataset.selectedExerciseId);
       const dossier = globalThis.ZeroOneDossierContracts.buildExerciseDossier({

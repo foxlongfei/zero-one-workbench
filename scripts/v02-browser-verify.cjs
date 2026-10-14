@@ -155,6 +155,10 @@ const record = (track, name, passed, evidence) => {
   const effortFollowRecord = {...exportedFollowRecord, sessionId:`follow-${Number(followSessionId.slice(7)) + 2}`, feedback:'偏吃力', completedAt:new Date().toISOString()};
   await page.locator('#v02-follow-import').setInputFiles({name:'effort-follow.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(effortFollowRecord))});
   await page.waitForFunction(() => document.querySelector('#v02-exercise')?.dataset.followImportStatus === 'PASS');
+  const followArchiveDownload = page.waitForEvent('download');
+  await page.locator('#v02-follow-export-all').click();
+  const followArchive = JSON.parse(fs.readFileSync(await (await followArchiveDownload).path(), 'utf8'));
+  record('A01', 'all follow history exports as one bounded user-owned archive', followArchive.schema === 'zero-one.exercise.follow.archive.v0.2' && followArchive.exerciseId === 'exercise:wger:1551:push-up' && followArchive.recordCount === 3 && followArchive.records.some(item => item.feedback === '疼痛或麻木') && followArchive.records.some(item => item.feedback === '偏吃力') && followArchive.boundary.includes('NOT_CAMERA_RECOGNITION') && (await page.locator('#v02-follow-archive-status').innerText()).includes('3 条跟练记录'), JSON.stringify({recordCount:followArchive.recordCount,boundary:followArchive.boundary}));
   await page.locator(`[data-repeat-follow-session="${effortFollowRecord.sessionId}"]`).click();
   const adjustedDraft = await page.evaluate(() => JSON.parse(localStorage.getItem('zero-one.exercise.follow.draft.v0.2') || 'null'));
   record('A01', 'effort feedback is carried into the next repeat plan', adjustedDraft?.parentSessionId === effortFollowRecord.sessionId && adjustedDraft?.parentFeedback === '偏吃力' && adjustedDraft?.adaptationInstruction?.includes('减少次数或活动幅度') && await page.locator('#v02-exercise').getAttribute('data-follow-adaptation').then(value => value.includes('减少次数或活动幅度')) && (await page.locator('#v02-follow-status').innerText()).includes('本次调整'), await page.locator('#v02-follow-status').innerText());
@@ -371,6 +375,10 @@ const record = (track, name, passed, evidence) => {
   page.once('dialog', dialog => dialog.dismiss());
   await page.locator(`[data-delete-case="${residenceCaseId}"]`).click();
   record('B-ENTRY', 'cancelled privacy deletion keeps Case and linked observation intact', await page.locator('#advisor-entry').getAttribute('data-delete-status') === 'CANCELLED' && await page.locator('#advisor-entry').getAttribute('data-local-case-count') === '2' && await page.locator('#advisor-entry').getAttribute('data-local-observation-count') === '1' && (await page.locator('#type-status').innerText()).includes('仍保留'), await page.locator('#type-status').innerText());
+  const caseArchiveDownload = page.waitForEvent('download');
+  await page.locator('#export-all-cases').click();
+  const caseArchive = JSON.parse(fs.readFileSync(await (await caseArchiveDownload).path(), 'utf8'));
+  record('B-ENTRY', 'all local Cases and linked observations export as one bounded archive', caseArchive.schema === 'zero-one.advisor.case-archive.v0.2' && caseArchive.caseCount === 2 && caseArchive.observationCount === 1 && caseArchive.cases.some(item => item.caseId === lostCaseId) && caseArchive.cases.some(item => item.caseId === residenceCaseId && item.linkedHousingObservation?.advisorCaseId === residenceCaseId) && caseArchive.boundary.includes('NO_PREDICTION') && (await page.locator('#export-all-status').innerText()).includes('2 个 Case'), JSON.stringify({caseCount:caseArchive.caseCount,observationCount:caseArchive.observationCount,boundary:caseArchive.boundary}));
   record('B-ENTRY', 'case history exposes a direct same-Case housing continuation', await page.locator(`[data-case-history-row="${residenceCaseId}"]`).count() === 1 && (await page.locator(`[data-case-observation-status="${residenceCaseId}"]`).innerText()).includes('标注 1 条') && (await page.locator(`[data-open-housing-case="${residenceCaseId}"]`).getAttribute('href')).includes(`caseId=${residenceCaseId}`) && (await page.locator(`[data-open-housing-case="${residenceCaseId}"]`).innerText()).includes('继续住宅观察'), await page.locator(`[data-case-history-row="${residenceCaseId}"]`).innerText());
   const linkedCaseDownload = page.waitForEvent('download');
   await page.locator('#export-case').click();
