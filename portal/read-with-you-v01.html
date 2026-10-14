@@ -35,7 +35,7 @@ function refreshVoices(){const v=voices(),select=$('voice');select.replaceChildr
 $('voice').addEventListener('change',()=>{prefs.voice=$('voice').value;save()});
 if(supported){refreshVoices();synth.addEventListener?.('voiceschanged',refreshVoices)}else{status('当前浏览器不支持语音合成')}
 $('play').addEventListener('click',()=>{if(!supported){status('语音合成不可用');return}const v=voices();if(!v.length){status('没有可用的中文朗读声音，请检查系统语音设置');return}
-synth.cancel();autoNext=!!bookId;const u=new SpeechSynthesisUtterance($('passage').textContent);u.lang='zh-CN';u.rate=Number($('rate').value);u.voice=v.find(x=>x.voiceURI===$('voice').value)||v[0];
+playToken++;synth.cancel();autoNext=!!bookId;const u=new SpeechSynthesisUtterance($('passage').textContent);u.lang='zh-CN';u.rate=Number($('rate').value);u.voice=v.find(x=>x.voiceURI===$('voice').value)||v[0];
 const token=++playToken;u.onstart=()=>status('正在朗读第 '+(Number(prefs.segment)+1)+' 节');u.onend=()=>{if(token!==playToken)return;if(autoNext&&Number(prefs.segment)<passages.length-1){prefs.segment++;showSegment();$('play').click()}else{autoNext=false;status('已读到当前内容结尾')}};u.onerror=e=>status('朗读失败：'+e.error);
 synth.speak(u)});
 $('pause').addEventListener('click',()=>{if(supported&&synth.speaking){synth.pause();status('已暂停')}});
