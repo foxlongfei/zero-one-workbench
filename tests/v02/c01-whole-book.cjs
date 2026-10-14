@@ -53,7 +53,7 @@ let browser;
 
   const epub = await makeEpub();
   await page.locator('#bookFiles').setInputFiles({ name: '目录验证.epub', mimeType: 'application/epub+zip', buffer: epub });
-  await page.waitForFunction(() => /EPUB.js\/TXT|读取失败/.test(document.querySelector('#bookInfo').textContent));
+  await page.waitForFunction(() => /目录验证|读取失败/.test(document.querySelector('#bookInfo').textContent));
   const epubInfo = await page.locator('#bookInfo').innerText();
   if (!epubInfo.includes('EPUB.js/TXT') || (await page.locator('#segment option').count()) !== 2) throw Error('EPUB import failed: '+epubInfo);
   const labels = await page.locator('#segment option').allTextContents();
