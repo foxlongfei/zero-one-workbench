@@ -4,6 +4,18 @@
 <body><main class="wrap">
 <h1 class="hero">零一空间｜项目操作入口</h1>
 <section class="card" aria-label="唯一正式入口与交付硬门" style="border:2px solid #245c4a"><h2>统一控制台｜唯一正式入口</h2><p><strong>当前三个原型：全部未通过用户验收。</strong> 只有完整可操作、已经部署、用户可见可体验，并通过两轮相互独立的盲测及用户验收，才能标记为交付。</p><p>本页是唯一正式发布入口；其他页面仅为此入口的子功能，不另建平行主页。任何 PR 草稿、测试通过或文档记录均不算已交付。</p><div class="grid"><article><h3>A01 运动达人｜未验收</h3><a href="movement-v02-experience.html">打开当前体验版 →</a></article><article><h3>B01 堪舆先生｜未验收</h3><a href="traditional-case-v02.html">打开当前体验版 →</a></article><article><h3>C01 陪你读书｜未验收</h3><a href="read-with-you-v01.html">打开当前试验版 →</a><p>整本电子书、背景音、授权家人声音训练尚未完成。</p></article></div><p><a href="v02-control.html">原施工任务及发布门 →</a> · <a href="engineering-console.html">工程运行与失败记录 →</a> · <a href="https://github.com/foxlongfei/zero-one-workbench/issues/24">统一交付施工单 #24 →</a> · <a href="https://github.com/foxlongfei/zero-one-workbench/actions">自动化运行记录 →</a></p><p class="muted">交付门：完整集成 → 实际操作 → 部署公开读回 → 独立盲测一 → 独立盲测二 → 用户验收。各门缺少证据即不得标完成。2026-10-14 更新。</p></section>
+<section class="card" id="execution-rule-20261014" aria-label="三原型执行优先级与认知同步规则" style="border:2px solid #245c4a">
+<h2>施工收敛与认知同步｜2026-10-14</h2>
+<p><strong>唯一技术路线：成熟开源／专业模型优先接入，许可与实际运行验证后再做薄适配；禁止以自制示意、表单、模型问答替代核心能力。</strong> 只维护原施工单，不另开平行主线。每次施工和每小时审计开始前，必须读取本页最新规则、原施工单与认知同步存档；结束时核对变化并增量写回存档，写回失败标记 SYNC_PENDING，不得宣称同步。</p>
+<div class="grid">
+<article><h3>ACTIVE ① A01｜运动达人</h3><p>当前唯一产品目标：接入许可明确的真实动态动作资源／成熟姿态能力，完成一个动作的教学→跟练→记录→反馈。原任务 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/22">#22</a>；未验收。</p></article>
+<article><h3>ACTIVE ② B01｜堪舆先生</h3><p>当前唯一产品目标：接入可复算的历法／排盘／传统规则实现，完成一个失物案例的输入→执行→依据→追问；再扩展住宅案例。传统推演不作为科学预测。原任务 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/21">#21</a>；未验收。</p></article>
+<article><h3>ACTIVE ③ C01｜陪你读书</h3><p>当前唯一产品目标：复用成熟 EPUB/TXT 解析与 TTS，先完成整书连续朗读和进度恢复。Q博士原 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/11">#11</a>；D博士原 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/12">#12</a>；未验收。</p></article>
+</div>
+<p><strong>PAUSED／仅维护：</strong>旧 V0.1 局部实验、孤立人体／肱二头肌演示、单独的 UI 美化、独立状态页／新控制台、无产品产物的模型讨论和重复代理试验；保留既有文件与证据，不删除、不冒充验收。音乐电台 RW-05 属独立支线，不得挤占三原型核心集成；知识研究 Z05 和历史 M01–M04 状态保留为独立研究证据，不自动算作 A01/B01 交付。</p>
+<p><strong>每小时硬门：</strong>核对原任务→确认已有成熟组件与许可证→实际接入／修改产品代码→测试→隔离 PR→发布／公开读回→两轮独立盲测→用户验收。每轮记录 SHA、运行证据、真实增量和失败断点；无代码／用户功能变化写 RUN_WITHOUT_PRODUCT_PROGRESS。审计与施工不得互相替代，API 连通不等于编码。不得自动合并、重复派工、无界重试或越权付费。三原型状态均为 IN_PROGRESS / NOT_ACCEPTED。</p>
+<p class="muted">本页规则为公开核对锚点；Google Drive 认知同步增量写回仍须独立验证，不能因页面更新视为已同步。</p>
+</section>
 <p class="muted">只按用户层硬门计数：实物 → Pages 接入 → 发布 → 公开运行/读回 → CURRENT/Drive 同步。更新：2026-10-04 09:58 +08:00。</p>
 <section class="card" aria-label="欧洲古典音乐电台试听"><h2>🎼 听世界｜欧洲古典音乐电台（RW-05 首版）</h2><p>已接入 Radio Browser 开放电台目录，支持国家筛选、播放、切台与本地收藏。真实播放是否成功取决于电台音源及浏览器；实时中文字幕尚未集成。</p><p><a href="classical-radio.html">立即打开欧洲古典音乐电台播放器 →</a></p></section>
 <section class="card" aria-label="陪你读书书库目录"><h2>📚 陪你读书｜书库目录</h2><p>已建立本地优先的书库目录：列出用户提供的两部套书元数据，允许读者自行导入 EPUB/TXT 文件并保存在本机。整书阅读引擎、背景音与家人授权声音仍待开发。</p><p><a href="reading-library.html">打开书库、查看书名并导入电子书 →</a></p></section>\n<section class="card" aria-label="陪你读书V0.1体验入口"><h2>📖 陪你读书｜V0.1 朗读体验</h2><p>可试用：原创中文短文的浏览器语音朗读、声音选择、调速、暂停/继续、大字模式。使用设备自带中文声音，实际可用音色取决于手机或电脑。尚未完成双音色试听、章节进度恢复、配乐与家庭声音的验收。</p><p><a href="read-with-you-v01.html">打开《陪你读书》V0.1 体验页面 →</a></p><p class="muted">当前为公开功能试验版，不代表完整V0.1验收通过；PR #14仍独立待审查。</p></section>
