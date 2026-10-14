@@ -350,6 +350,16 @@
     setTimeout(() => URL.revokeObjectURL(url), 500);
   }
 
+  function feedbackNextStep(feedback) {
+    const guidance = {
+      '轻松': '保持动作质量；下次只小幅增加次数或缩短休息，不自动升级难度。',
+      '合适': '保持当前次数与节奏，继续优先脊柱中立和稳定控制。',
+      '偏吃力': '下次减少次数或活动幅度，并延长休息；动作变形时提前停止。',
+      '疼痛或麻木': '停止本动作，不要直接复练；若持续、加重或伴随无力，请寻求合格医疗或康复专业人员评估。'
+    };
+    return guidance[feedback] || '先复核本次记录，再决定是否继续。';
+  }
+
   function renderTrainingHistory() {
     const box = out.querySelector('#v02-follow-history');
     if (!box) return;
@@ -368,7 +378,10 @@
       repeat.type = 'button';
       repeat.className = 'chip';
       repeat.dataset.repeatFollowSession = record.sessionId;
-      repeat.textContent = '按本次 Exercise 再练一次';
+      const repeatBlocked = record.feedback === '疼痛或麻木';
+      repeat.disabled = repeatBlocked;
+      repeat.dataset.repeatBlocked = String(repeatBlocked);
+      repeat.textContent = repeatBlocked ? '已阻止直接复练' : '按本次 Exercise 再练一次';
       repeat.onclick = () => startTrainingSession(record.sessionId);
       const exportButton = document.createElement('button');
       exportButton.type = 'button';
@@ -391,8 +404,12 @@
       const boundary = document.createElement('p');
       boundary.className = 'muted';
       boundary.textContent = `本次感受：${record.feedback}｜来源 record ${record.sourceRecordId}｜这是用户跟练记录，不是摄像头识别或医学建议。`;
+      const nextStep = document.createElement('p');
+      nextStep.className = repeatBlocked ? 'status warn' : 'status';
+      nextStep.dataset.followNextStep = record.sessionId;
+      nextStep.textContent = `下一步：${feedbackNextStep(record.feedback)}`;
       details.append(summary, phaseList, boundary);
-      row.append(' ', repeat, ' ', exportButton, details);
+      row.append(' ', repeat, ' ', exportButton, nextStep, details);
       box.append(row);
     });
   }
