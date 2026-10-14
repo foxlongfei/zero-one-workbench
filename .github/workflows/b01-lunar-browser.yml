@@ -1,0 +1,55 @@
+name: B01 lunar engine browser verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "portal/traditional-lunar-engine.html"
+      - "portal/assets/b01-lunar-case.js"
+      - "portal/vendor/lunar-javascript/**"
+      - "scripts/b01-lunar-browser-verify.cjs"
+      - ".github/workflows/b01-lunar-browser.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: b01-lunar-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate product JavaScript syntax
+        run: node --check portal/assets/b01-lunar-case.js && node --check scripts/b01-lunar-browser-verify.cjs
+      - name: Install pinned browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
+      - name: Start branch web server
+        run: |
+          python3 -m http.server 4173 >/tmp/b01-http.log 2>&1 &
+          for attempt in {1..20}; do
+            curl --fail --silent http://127.0.0.1:4173/portal/traditional-lunar-engine.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/b01-http.log
+          exit 1
+      - name: Run lost-item flow against complete engine
+        env:
+          B01_BASE_URL: http://127.0.0.1:4173
+        run: node scripts/b01-lunar-browser-verify.cjs
+      - name: Upload reproducible evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: b01-lunar-${{ github.sha }}
+          path: artifacts/b01-lunar/
+          if-no-files-found: error

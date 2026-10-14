@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>B01｜成熟历法引擎失物案例</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    label{display:grid;gap:6px;font-weight:650} input,textarea,select,button{font:inherit;padding:.7rem;border:1px solid #9aa;border-radius:8px} textarea{resize:vertical} button{cursor:pointer}.actions{display:flex;flex-wrap:wrap;gap:10px}.notice{border-left:4px solid #245c4a;padding:.7rem 1rem;background:#eef8f4}.error{border-left-color:#a33;background:#fff1f1}.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.result-grid pre{white-space:pre-wrap;overflow-wrap:anywhere}.history button{width:100%;text-align:left;margin:.3rem 0;background:#fff}
+  </style>
+</head>
+<body><main class="wrap">
+  <h1>B01｜可复算历法引擎·失物案例</h1>
+  <p><a href="index.html">← 返回统一入口</a></p>
+  <p class="notice">本页直接调用仓库内完整 <strong>6tail/lunar-javascript</strong> 浏览器引擎，薄适配仅负责案例输入、追问、保存与证据呈现；不复制或缩减上游算法。</p>
+
+  <section class="card" aria-labelledby="lost-heading">
+    <h2 id="lost-heading">1. 录入失物事实</h2>
+    <div class="case-grid">
+      <label>物品名称<input id="itemName" autocomplete="off" placeholder="例如：黑色钥匙包"></label>
+      <label>最后见到时间<input id="lastSeenAt" type="datetime-local"></label>
+      <label>最后见到位置<input id="lastSeenPlace" autocomplete="off" placeholder="例如：办公室东侧会议室"></label>
+      <label>已经查找过的位置<textarea id="searchedPlaces" rows="3" placeholder="逐项填写，避免只写“找过了”"></textarea></label>
+    </div>
+    <label>补充事实（可选）<textarea id="context" rows="3" placeholder="离开路线、同行者、监控或付款记录等"></textarea></label>
+    <div class="actions"><button id="runCase" type="button">执行可复算案例</button><button id="fillExample" type="button">载入测试案例</button><button id="resetCase" type="button">清空</button></div>
+    <div id="status" class="notice" role="status" aria-live="polite">等待输入。</div>
+  </section>
+
+  <section class="card" id="resultCard" hidden aria-labelledby="result-heading">
+    <h2 id="result-heading">2. 计算依据、追问与现实查找</h2>
+    <p><strong>Case ID：</strong><span id="caseId"></span></p>
+    <div class="result-grid">
+      <article><h3>历法计算</h3><pre id="calendarOutput"></pre></article>
+      <article><h3>可复算方法链</h3><pre id="methodOutput"></pre></article>
+      <article><h3>继续追问</h3><ol id="followUp"></ol></article>
+      <article><h3>现实查找计划</h3><ol id="searchPlan"></ol></article>
+    </div>
+    <p class="notice" id="boundary"></p>
+    <div class="actions"><button id="saveCase" type="button">保存到本机</button><button id="exportCase" type="button">导出本案例 JSON</button></div>
+  </section>
+
+  <section class="card history" aria-labelledby="history-heading"><h2 id="history-heading">3. 本机案例</h2><div id="history">尚无保存案例。</div></section>
+  <section class="card"><h2>来源、许可和限制</h2><p>引擎：<a href="https://github.com/6tail/lunar-javascript">6tail/lunar-javascript</a>；许可证：<a href="vendor/lunar-javascript/LICENSE">MIT</a>；本仓库保留完整上游浏览器版本。传统历法、宜忌与方位标签不代表科学预测，不替代报警、挂失、联系场所或逐点搜索。</p></section>
+</main>
+<script src="vendor/lunar-javascript/lunar.js"></script>
+<script src="assets/b01-lunar-case.js"></script>
+<script>
+(function(){'use strict';
+  const $=id=>document.getElementById(id); let current=null;
+  const inputs=['itemName','lastSeenAt','lastSeenPlace','searchedPlaces','context'];
+  function input(){return Object.fromEntries(inputs.map(id=>[id,$(id).value]));}
+  function setStatus(message,error=false){$('status').textContent=message;$('status').className='notice'+(error?' error':'');}
+  function list(id,items){$(id).replaceChildren(...items.map(value=>{const li=document.createElement('li');li.textContent=value;return li;}));}
+  function render(item){current=item;if(item.status==='NEEDS_INPUT'){$('resultCard').hidden=true;setStatus(item.followUp.join('；'),true);return;}
+    $('resultCard').hidden=false;$('caseId').textContent=item.caseId;$('calendarOutput').textContent=JSON.stringify(item.calculation,null,2);$('methodOutput').textContent=JSON.stringify(item.method,null,2);list('followUp',item.followUp);list('searchPlan',item.searchPlan);$('boundary').textContent=item.boundary;setStatus('案例已计算；修改相同输入可得到相同历法结果。');}
+  function run(){try{render(B01LunarCase.calculate(input(),window.Solar));}catch(error){$('resultCard').hidden=true;setStatus('执行失败：'+error.message,true);}}
+  function renderHistory(){const items=B01LunarCase.readCases(localStorage);if(!items.length){$('history').textContent='尚无保存案例。';return;}$('history').replaceChildren(...items.map(item=>{const button=document.createElement('button');button.type='button';button.textContent=`${item.caseId}｜${item.input.itemName}｜${item.input.lastSeenAt}`;button.onclick=()=>{inputs.forEach(id=>{$(id).value=item.input[id]||''});render(item);};return button;}));}
+  $('runCase').onclick=run;$('saveCase').onclick=()=>{try{B01LunarCase.saveCase(localStorage,current);renderHistory();setStatus('案例、输入、方法链和计算结果已保存到本机。');}catch(error){setStatus('保存失败：'+error.message,true);}};
+  $('exportCase').onclick=()=>{if(!current)return;const blob=new Blob([JSON.stringify(current,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=current.caseId+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);};
+  $('fillExample').onclick=()=>{const example={itemName:'黑色钥匙包',lastSeenAt:'2024-02-10T09:30',lastSeenPlace:'办公室东侧会议室',searchedPlaces:'会议桌、外套口袋、通勤背包',context:'10:00 离开会议室，之后经过前台和停车场'};inputs.forEach(id=>{$(id).value=example[id]||''});run();};
+  $('resetCase').onclick=()=>{inputs.forEach(id=>{$(id).value=''});current=null;$('resultCard').hidden=true;setStatus('已清空；本机已保存案例未删除。');};renderHistory();
+})();
+</script></body></html>
