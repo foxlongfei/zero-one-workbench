@@ -1,6 +1,9 @@
 name: Three-doctor bounded discussion trial
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/three-doctor-trial.yml'
 permissions:
   contents: read
 concurrency:
