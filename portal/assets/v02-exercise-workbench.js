@@ -430,9 +430,11 @@
     root.dataset.followSessionId = trainingSession.sessionId;
     root.dataset.followExerciseId = trainingSession.exerciseId;
     root.dataset.followCompletedPhases = String(completed);
+    root.dataset.followAdaptation = trainingSession.adaptationInstruction || 'BASELINE';
     if (completed < data.phases.length) {
       const next = data.phases[trainingPhaseIndex()];
-      status.textContent = `${trainingSession.sessionId}｜${completed}/5 已完成｜当前：${next.name}（${next.phaseId}）`;
+      const adaptation = trainingSession.adaptationInstruction ? `｜本次调整：${trainingSession.adaptationInstruction}` : '';
+      status.textContent = `${trainingSession.sessionId}｜${completed}/5 已完成｜当前：${next.name}（${next.phaseId}）${adaptation}`;
       complete.disabled = false;
       complete.textContent = `完成“${next.name}”并进入下一阶段`;
       feedback.hidden = true;
@@ -446,6 +448,7 @@
   }
 
   function startTrainingSession(parentSessionId = null) {
+    const parentRecord = typeof parentSessionId === 'string' ? trainingHistory().find(item => item.sessionId === parentSessionId) : null;
     trainingSession = {
       schema: 'zero-one.exercise.follow.session.v0.2',
       sessionId: `follow-${Date.now()}`,
@@ -457,7 +460,9 @@
       feedback: null,
       startedAt: new Date().toISOString(),
       completedAt: null,
-      parentSessionId,
+      parentSessionId: parentRecord?.sessionId || null,
+      parentFeedback: parentRecord?.feedback || null,
+      adaptationInstruction: parentRecord ? feedbackNextStep(parentRecord.feedback) : null,
       boundary: 'PROJECT_2D_TEACHING_ILLUSTRATION_NOT_CAMERA_RECOGNITION_OR_MEDICAL_ADVICE',
     };
     phase = Math.round((data.phases[0].range[0] + data.phases[0].range[1]) / 2);
@@ -593,7 +598,7 @@
       }
     };
     out.querySelector('#v02-ex-notes').oninput = renderDossierPreview;
-    out.querySelector('#v02-follow-start').onclick = startTrainingSession;
+    out.querySelector('#v02-follow-start').onclick = () => startTrainingSession();
     out.querySelector('#v02-follow-complete').onclick = () => {
       if (!trainingSession || trainingSession.completedPhaseIds.length >= data.phases.length) return;
       const current = data.phases[trainingSession.completedPhaseIds.length];
