@@ -57,7 +57,7 @@ let browser;
   const epubInfo = await page.locator('#bookInfo').innerText();
   if (!epubInfo.includes('EPUB.js/TXT') || (await page.locator('#segment option').count()) !== 2) throw Error('EPUB import failed: '+epubInfo);
   const labels = await page.locator('#segment option').allTextContents();
-  if (!labels.some(x => x.includes('第一章')) || !labels.some(x => x.includes('第二章'))) throw Error('EPUB table of contents was not exposed');
+  if (!labels.some(x => x.includes('第一章')) || !labels.some(x => x.includes('第二章'))) throw Error('EPUB table of contents was not exposed: '+JSON.stringify(labels));
   await page.locator('#segment').selectOption('1');
   await page.reload();
   await page.waitForFunction(() => document.querySelector('#bookInfo').textContent.includes('EPUB.js/TXT'));
