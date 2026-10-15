@@ -28,7 +28,7 @@ def probe(item):
     except (Exception):return None
 def main():
     streams=get(BASE+"streams.json")
-    channels={c["id"]:c for c in get(BASE+"channels.json")}
+    channels={c["id"]:c for c in get(BASE+"channels.json")}\n    logos={}\n    for logo in get(BASE+"logos.json"):\n        if logo.get("channel") and logo.get("url") and logo["channel"] not in logos:logos[logo["channel"]]=logo["url"]
     candidates=[];seen=set()
     for s in streams:
         url=s.get("url","");cid=s.get("channel");c=channels.get(cid,{})
@@ -36,9 +36,9 @@ def main():
         if not url.startswith("https://") or not re.search(r"\.m3u8(?:\?|$)|\.mpd(?:\?|$)",url,re.I):continue
         if any(x in (title+" "+str(cid)).lower() for x in BAN):continue
         if not any(x in title.lower() for x in KEYWORDS):continue
-        if s.get("status") in ("offline","error") or url in seen:continue
-        seen.add(url);candidates.append({"url":url,"id":cid,"title":title,"country":c.get("country") or "国际","logo":c.get("logo"),"category":category(title)})
-        if len(candidates)>=65:break
+        if s.get("status") in ("offline","error") or url in seen or not cid:continue
+        seen.add(url);candidates.append({"url":url,"id":cid,"title":title,"country":c.get("country") or "国际","logo":logos.get(cid),"category":category(title)})
+        if len(candidates)>=180:break
     valid=[]
     with ThreadPoolExecutor(max_workers=8) as pool:
         for future in as_completed([pool.submit(probe,x) for x in candidates]):
@@ -50,7 +50,7 @@ def main():
         if c["id"] in used:continue
         used.add(c["id"])
         out.append({"id":c["id"],"title":c["title"],"category":c["category"],"country":c["country"],"logo":c["logo"],"officialUrl":c["url"],"streamUrl":c["url"],"height":h,"lastMediaCheck":now,"mediaCheckStatus":"passed","verified":True,"shopping":False,"checkedAt":now[:10]})
-        if len(out)>=24:break
+        if len(out)>=48:break
     doc={"version":2,"updated":now,"policy":"Automated FFprobe >=720p validation of iptv-org public stream index; playback and legal restrictions vary by location; no rebroadcast.","channels":out}
     if not out:
         print("No streams passed. Preserve last known good catalog and fail run.")
