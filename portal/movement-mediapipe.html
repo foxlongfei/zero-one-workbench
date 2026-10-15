@@ -136,6 +136,17 @@
       const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{const error=new Error(message);error.name='TimeoutError';reject(error)},ms)});
       return Promise.race([promise,timeout]).finally(()=>clearTimeout(timer));
     }
+    function waitForVideoFrame(video,ms=8000){
+      return new Promise((resolve,reject)=>{
+        let settled=false,frameToken=0,rafToken=0,timer=0;
+        const cleanup=()=>{clearTimeout(timer);if(frameToken&&video.cancelVideoFrameCallback)video.cancelVideoFrameCallback(frameToken);if(rafToken)cancelAnimationFrame(rafToken)};
+        const finish=(callback,value)=>{if(settled)return;settled=true;cleanup();callback(value)};
+        const ready=()=>finish(resolve,true);
+        const check=()=>{if(video.readyState>=2&&video.videoWidth>0&&video.videoHeight>0)ready();else rafToken=requestAnimationFrame(check)};
+        timer=setTimeout(()=>{const error=new Error('摄像头首帧等待超时');error.name='TimeoutError';finish(reject,error)},ms);
+        if(typeof video.requestVideoFrameCallback==='function')frameToken=video.requestVideoFrameCallback(ready);else check();
+      });
+    }
     function cameraErrorMessage(error){
       if(error?.name==='TimeoutError')return error.message+'。摄像头已关闭，请检查浏览器提示、网络和设备后重新启动。';
       if(error?.name==='NotAllowedError'||error?.name==='SecurityError')return '未获得摄像头权限。请在浏览器地址栏允许摄像头后，点击“重新启动摄像头”。';
@@ -158,7 +169,10 @@
         if(attempt!==cameraAttempt)return;
         const videoTrack=stream.getVideoTracks()[0];if(videoTrack)videoTrack.addEventListener('ended',()=>{if(cameraRunning)stopCamera({discardPractice:true,status:'摄像头连接已中断；未完成练习未保存。请检查设备后重新启动。'})},{once:true});
         ui.video.srcObject=stream;await ui.video.play();
-        cameraRunning=true;$('stopCamera').disabled=false;$('stopCamera').textContent='停止摄像头';$('startPractice').disabled=false;ui.cameraStatus.textContent='摄像头已启动，正在识别人体。';loop();
+        ui.cameraStatus.textContent='摄像头已连接，正在等待首帧画面…';
+        await waitForVideoFrame(ui.video,8000);
+        if(attempt!==cameraAttempt)return;
+        cameraRunning=true;$('stopCamera').disabled=false;$('stopCamera').textContent='停止摄像头';$('startPractice').disabled=false;ui.cameraStatus.textContent='已收到摄像头画面，正在识别人体。';loop();
       }catch(error){stopCamera({discardPractice:true,status:cameraErrorMessage(error)})}
     }
     function loop(){
@@ -202,7 +216,7 @@
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
     $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',cancelOrStopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
     $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex))});
-    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout};renderHistory();
+    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
   })();
   </script>
 </body>
