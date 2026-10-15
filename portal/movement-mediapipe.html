@@ -1,8 +1,149 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A01 MediaPipe 姿态识别</title><h1>A01 全身姿态识别</h1><p>调用成熟 MediaPipe Pose Landmarker 模型，非自制模型；视频只在本机分析。</p><button id="start">启动摄像头</button><button id="stop">停止</button><p id="status">未启动</p><div style="position:relative;max-width:700px"><video id="video" autoplay muted playsinline style="width:100%"></video><canvas id="canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div><p>动作：<select id="exercise"><option>俯卧撑</option><option>深蹲</option></select> 次数：<input id="reps" type="number" value="5" min="0"><button id="save">保存训练</button></p><p id="history"></p><p>上游：MediaPipe（Apache-2.0），模型：pose_landmarker_lite；需联网、HTTPS、摄像头权限。</p><script type="module">
-import {PoseLandmarker,FilesetResolver,DrawingUtils} from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm';
-const g=id=>document.getElementById(id),v=g('video'),c=g('canvas'),ctx=c.getContext('2d');let model,stream,run=false,frame=0,last=-1;
-async function start(){try{g('status').textContent='加载模型…';const vision=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm');model=await PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task'},runningMode:'VIDEO',numPoses:1});stream=await navigator.mediaDevices.getUserMedia({video:true});v.srcObject=stream;await v.play();run=true;loop()}catch(e){g('status').textContent='启动失败：'+e.message;stop()}}
-function loop(){if(!run)return;if(v.readyState>=2&&v.currentTime!==last){last=v.currentTime;c.width=v.videoWidth;c.height=v.videoHeight;const r=model.detectForVideo(v,performance.now()),d=new DrawingUtils(ctx);for(const p of r.landmarks){d.drawConnectors(p,PoseLandmarker.POSE_CONNECTIONS,{color:'#00b99d'});d.drawLandmarks(p,{color:'#f90',radius:3})}g('status').textContent='检测人体：'+r.landmarks.length}frame=requestAnimationFrame(loop)}
-function stop(){run=false;cancelAnimationFrame(frame);if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;v.srcObject=null;ctx.clearRect(0,0,c.width,c.height)}
-g('start').onclick=start;g('stop').onclick=stop;g('save').onclick=()=>{const a=JSON.parse(localStorage.getItem('a01-records')||'[]');a.push({date:new Date().toISOString(),exercise:g('exercise').value,reps:Number(g('reps').value)});localStorage.setItem('a01-records',JSON.stringify(a.slice(-30)));g('history').textContent='已保存 '+a.length+' 次'};window.addEventListener('pagehide',stop);
-</script>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>A01 MediaPipe 动作跟练</title>
+  <style>
+    :root{color-scheme:light;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f8;color:#17212b}
+    body{max-width:960px;margin:auto;padding:24px 16px 48px;line-height:1.55}
+    h1,h2{line-height:1.2}.lead{color:#43515f}.grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:18px}
+    .card{background:#fff;border:1px solid #d9e0e5;border-radius:14px;padding:16px;box-shadow:0 3px 14px #17212b0c}
+    .camera{position:relative;aspect-ratio:4/3;background:#14202a;border-radius:10px;overflow:hidden;margin:12px 0}
+    video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}canvas{pointer-events:none}
+    button,input,select{font:inherit}button{border:0;border-radius:9px;background:#086b5c;color:#fff;padding:.65em 1em;font-weight:650;cursor:pointer}
+    button.secondary{background:#e8eeef;color:#1d343a}button:disabled{opacity:.45;cursor:not-allowed}
+    .actions{display:flex;flex-wrap:wrap;gap:8px}.fields{display:grid;gap:12px}.fields label{display:grid;gap:5px;font-weight:650}
+    input,select{padding:.6em;border:1px solid #aebbc3;border-radius:8px;background:#fff}.status{min-height:1.6em;color:#2b4b55}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.metric{background:#eef7f5;border-radius:9px;padding:10px}.metric b{display:block;font-size:1.25rem}
+    .feedback{padding:10px 12px;border-left:4px solid #0b8f77;background:#eef9f6;border-radius:5px}.muted{color:#60717c;font-size:.92rem}
+    #historyList{padding-left:1.3em}#historyList li{margin:.7em 0}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:1/-1}}
+  </style>
+</head>
+<body>
+  <h1>A01 动作教学与摄像头跟练</h1>
+  <p class="lead">使用成熟的 MediaPipe Pose Landmarker 在本机识别全身关键点。视频不上传；记录只保存练习时间、人工填写次数和人体跟踪覆盖率，不把覆盖率冒充动作质量评分。</p>
+  <div class="grid">
+    <main class="card">
+      <h2>1. 摄像头与教学</h2>
+      <p id="instruction">深蹲：双脚与肩同宽，膝盖方向与脚尖一致；在舒适范围内下蹲，保持躯干稳定。</p>
+      <div class="actions">
+        <button id="startCamera">启动摄像头</button>
+        <button id="stopCamera" class="secondary" disabled>停止摄像头</button>
+      </div>
+      <p id="cameraStatus" class="status" role="status">未启动摄像头</p>
+      <div class="camera"><video id="video" autoplay muted playsinline></video><canvas id="canvas"></canvas></div>
+      <p class="muted">需要联网加载 Apache-2.0 的 MediaPipe Tasks Vision 与 Google 预训练 pose_landmarker_lite 模型；需要 HTTPS 和摄像头权限。</p>
+    </main>
+    <aside class="card">
+      <h2>2. 跟练与反馈</h2>
+      <div class="fields">
+        <label>动作<select id="exercise"><option value="深蹲">深蹲</option><option value="俯卧撑">俯卧撑</option></select></label>
+        <label>完成次数（自行确认）<input id="reps" type="number" value="5" min="0" max="999" inputmode="numeric"></label>
+      </div>
+      <div class="actions" style="margin-top:14px">
+        <button id="startPractice" disabled>开始跟练</button>
+        <button id="finishPractice" class="secondary" disabled>结束并生成反馈</button>
+      </div>
+      <div class="metrics" aria-live="polite">
+        <div class="metric"><span>时长</span><b id="duration">0 秒</b></div>
+        <div class="metric"><span>识别帧</span><b id="tracked">0 / 0</b></div>
+        <div class="metric"><span>覆盖率</span><b id="coverage">—</b></div>
+      </div>
+      <p id="practiceStatus" class="status" role="status">请先启动摄像头。</p>
+      <p id="feedback" class="feedback" hidden></p>
+      <button id="saveRecord" disabled>保存本次记录</button>
+    </aside>
+  </div>
+  <section class="card" style="margin-top:18px">
+    <h2>3. 本机练习历史</h2>
+    <p id="historySummary" class="muted"></p>
+    <ol id="historyList"></ol>
+  </section>
+  <script>
+  (()=>{
+    'use strict';
+    const STORAGE_KEY='a01-mediapipe-practice-v2';
+    const $=id=>document.getElementById(id);
+    const ui={video:$('video'),canvas:$('canvas'),cameraStatus:$('cameraStatus'),practiceStatus:$('practiceStatus'),feedback:$('feedback'),duration:$('duration'),tracked:$('tracked'),coverage:$('coverage')};
+    const ctx=ui.canvas.getContext('2d');
+    let PoseLandmarker,DrawingUtils,model,stream,animationId=0,lastVideoTime=-1,cameraRunning=false;
+    let practice=null,timerId=0,pendingRecord=null;
+    const instructions={
+      '深蹲':'深蹲：双脚与肩同宽，膝盖方向与脚尖一致；在舒适范围内下蹲，保持躯干稳定。',
+      '俯卧撑':'俯卧撑：双手略宽于肩，头、肩、髋尽量保持一条直线；按自己的能力控制幅度。'
+    };
+    const clamp=(n,min,max)=>Math.min(max,Math.max(min,n));
+    function assessCoverage(tracked,total){
+      const coverage=total?Math.round(tracked/total*100):0;
+      if(!total)return {coverage,feedback:'没有取得可分析的视频帧，请检查摄像头后重新跟练。'};
+      if(coverage>=85)return {coverage,feedback:'人体跟踪稳定，可以据此回看本次练习记录。'};
+      if(coverage>=55)return {coverage,feedback:'人体偶有离开识别范围；下次请让全身保持在画面中。'};
+      return {coverage,feedback:'人体跟踪覆盖率较低；请增加光线、拉远镜头并确保全身入镜。'};
+    }
+    function elapsedSeconds(){return practice?Math.max(0,Math.round((performance.now()-practice.startedAt)/1000)):0}
+    function updateMetrics(){
+      const seconds=elapsedSeconds(),tracked=practice?.tracked||0,total=practice?.total||0;
+      ui.duration.textContent=seconds+' 秒';ui.tracked.textContent=tracked+' / '+total;ui.coverage.textContent=total?assessCoverage(tracked,total).coverage+'%':'—';
+    }
+    function readHistory(){try{const value=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(value)?value:[]}catch{return []}}
+    function renderHistory(){
+      const records=readHistory().slice().reverse(),list=$('historyList');list.replaceChildren();
+      $('historySummary').textContent=records.length?'最近 '+records.length+' 次（仅保存在此浏览器）':'暂无记录，完成一次跟练后可保存。';
+      for(const record of records){const li=document.createElement('li');const time=new Date(record.date).toLocaleString('zh-CN',{hour12:false});li.textContent=`${time}｜${record.exercise} ${record.reps} 次｜${record.durationSec} 秒｜人体跟踪 ${record.coverage}%｜${record.feedback}`;list.append(li)}
+    }
+    async function loadMediaPipe(){
+      const module=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm');
+      PoseLandmarker=module.PoseLandmarker;DrawingUtils=module.DrawingUtils;
+      const vision=await module.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm');
+      return PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task'},runningMode:'VIDEO',numPoses:1});
+    }
+    async function startCamera(){
+      if(cameraRunning)return;
+      try{
+        $('startCamera').disabled=true;ui.cameraStatus.textContent='正在加载 MediaPipe 模型…';
+        if(!navigator.mediaDevices?.getUserMedia)throw new Error('当前浏览器不支持摄像头访问');
+        if(!model)model=await loadMediaPipe();
+        stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});ui.video.srcObject=stream;await ui.video.play();
+        cameraRunning=true;$('stopCamera').disabled=false;$('startPractice').disabled=false;ui.cameraStatus.textContent='摄像头已启动，正在识别人体。';loop();
+      }catch(error){stopCamera();ui.cameraStatus.textContent='启动失败：'+error.message}
+    }
+    function loop(){
+      if(!cameraRunning)return;
+      if(ui.video.readyState>=2&&ui.video.currentTime!==lastVideoTime){
+        lastVideoTime=ui.video.currentTime;ui.canvas.width=ui.video.videoWidth;ui.canvas.height=ui.video.videoHeight;ctx.clearRect(0,0,ui.canvas.width,ui.canvas.height);
+        const result=model.detectForVideo(ui.video,performance.now()),poses=result.landmarks||[],drawing=new DrawingUtils(ctx);
+        for(const pose of poses){drawing.drawConnectors(pose,PoseLandmarker.POSE_CONNECTIONS,{color:'#00d4ad',lineWidth:3});drawing.drawLandmarks(pose,{color:'#ff9f1c',radius:3})}
+        ui.cameraStatus.textContent=poses.length?'已识别人体，保持全身在画面内。':'暂未识别人体，请后退并改善光线。';
+        if(practice){practice.total+=1;if(poses.length)practice.tracked+=1;updateMetrics()}
+      }
+      animationId=requestAnimationFrame(loop);
+    }
+    function startPractice(){
+      if(!cameraRunning||practice)return;
+      practice={startedAt:performance.now(),tracked:0,total:0};pendingRecord=null;ui.feedback.hidden=true;$('saveRecord').disabled=true;$('startPractice').disabled=true;$('finishPractice').disabled=false;
+      ui.practiceStatus.textContent='跟练进行中；完成后点“结束并生成反馈”。';updateMetrics();timerId=setInterval(updateMetrics,500);
+    }
+    function finishPractice(){
+      if(!practice)return;
+      clearInterval(timerId);updateMetrics();const result=assessCoverage(practice.tracked,practice.total);
+      pendingRecord={date:new Date().toISOString(),exercise:$('exercise').value,reps:clamp(Number($('reps').value)||0,0,999),durationSec:elapsedSeconds(),trackedFrames:practice.tracked,totalFrames:practice.total,coverage:result.coverage,feedback:result.feedback};
+      practice=null;ui.coverage.textContent=result.coverage+'%';ui.feedback.textContent=result.feedback;ui.feedback.hidden=false;ui.practiceStatus.textContent='本次跟练已结束，可保存记录。';
+      $('saveRecord').disabled=false;$('finishPractice').disabled=true;$('startPractice').disabled=!cameraRunning;
+    }
+    function saveRecord(){
+      if(!pendingRecord)return;
+      const records=readHistory();records.push(pendingRecord);localStorage.setItem(STORAGE_KEY,JSON.stringify(records.slice(-30)));pendingRecord=null;$('saveRecord').disabled=true;ui.practiceStatus.textContent='已保存到本机练习历史。';renderHistory();
+    }
+    function stopCamera(){
+      if(practice)finishPractice();cameraRunning=false;cancelAnimationFrame(animationId);if(stream)stream.getTracks().forEach(track=>track.stop());stream=null;ui.video.srcObject=null;ctx.clearRect(0,0,ui.canvas.width,ui.canvas.height);
+      $('startCamera').disabled=false;$('stopCamera').disabled=true;$('startPractice').disabled=true;ui.cameraStatus.textContent='摄像头已停止。';
+    }
+    $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
+    $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',stopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);
+    window.addEventListener('pagehide',stopCamera);window.A01Practice={assessCoverage,readHistory,renderHistory};renderHistory();
+  })();
+  </script>
+</body>
+</html>
