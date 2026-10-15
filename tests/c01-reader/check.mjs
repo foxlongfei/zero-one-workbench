@@ -92,6 +92,22 @@ check('TXT shelf shows page progress',(await resumedTxt.locator('[data-role="pro
 await resumedTxt.locator('[data-action="open"]').click();
 await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('2 /'));
 check('TXT resume',await page.locator('#position').innerText().then(x=>x.includes('2 /')));
+await page.locator('#back').click();
+const txtId=await resumedTxt.getAttribute('data-book-id');
+page.once('dialog',dialog=>dialog.dismiss());
+await resumedTxt.locator('[data-action="reset"]').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已取消重置'));
+check('reset cancellation receipt',(await page.locator('#status').innerText()).includes('阅读位置保持不变'),await page.locator('#status').innerText());
+check('cancelled reset keeps TXT position',(await resumedTxt.locator('[data-role="progress"]').innerText()).includes('第 2 页'),await resumedTxt.innerText());
+page.once('dialog',dialog=>dialog.accept());
+await resumedTxt.locator('[data-action="reset"]').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已清除'));
+check('reset clears saved TXT position',await page.evaluate(id=>localStorage.getItem('reader-pos-'+id)===null,txtId),txtId);
+check('reset restores fresh shelf state',(await resumedTxt.locator('[data-role="progress"]').innerText())==='尚未开始'&&(await resumedTxt.locator('[data-action="open"]').innerText())==='阅读',await resumedTxt.innerText());
+check('reset action hides without progress',await resumedTxt.locator('[data-action="reset"]').isHidden(),await resumedTxt.innerText());
+await resumedTxt.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('1 /'));
+check('TXT restarts from first page',await page.locator('#position').innerText().then(x=>x.includes('1 /')),await page.locator('#position').innerText());
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
