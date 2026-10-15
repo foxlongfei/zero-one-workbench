@@ -2,7 +2,7 @@
 """Curate playable public IPTV streams. Fail closed: never publish unchecked streams."""
 import json, subprocess, urllib.request, datetime, re, os
 from concurrent.futures import ThreadPoolExecutor, as_completed
-BASE="https://raw.githubusercontent.com/iptv-org/database/master/data/"
+BASE="https://iptv-org.github.io/api/"
 OUT="portal/watch-world-sources.json"
 KEYWORDS=("nasa","earth","nature","wildlife","fashion","music","mtv","arte","france 24","dw english","nhk world","euronews","al jazeera english","sky news","bloomberg","red bull")
 BAN=("shop","shopping","teleshop","home shopping","qvc","hsn","adult","xxx","casino","gambling")
