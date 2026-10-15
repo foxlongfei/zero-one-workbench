@@ -115,6 +115,14 @@ await page.waitForFunction(()=>document.querySelector('#position')?.textContent.
 await page.locator('#back').click();
 await page.waitForFunction(id=>document.querySelector('#shelf .book')?.dataset.bookId===id,reimportedEpubId);
 check('returning to shelf promotes latest book',(await page.locator('#shelf .book').first().getAttribute('data-book-id'))===reimportedEpubId,await page.locator('#shelf').innerText());
+await page.locator('#shelfSearch').fill('EPUB');
+check('shelf search filters by format',await page.locator('#shelf .book').count()===1&&await reimportedEpub.count()===1,await page.locator('#shelfScreen').innerText());
+check('search reports filtered count',(await page.locator('#searchSummary').innerText())==='找到 1 / 2 本',await page.locator('#searchSummary').innerText());
+await page.locator('#shelfSearch').fill('不存在的书');
+check('shelf search has empty result feedback',(await page.locator('#shelf').innerText()).includes('没有找到“不存在的书”'),await page.locator('#shelf').innerText());
+await page.locator('#shelfSearch').fill('');
+check('clearing search restores all books',await page.locator('#shelf .book').count()===2,await page.locator('#shelf').innerText());
+check('clearing search preserves recent order',(await page.locator('#shelf .book').first().getAttribute('data-book-id'))===reimportedEpubId,await page.locator('#shelf').innerText());
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
