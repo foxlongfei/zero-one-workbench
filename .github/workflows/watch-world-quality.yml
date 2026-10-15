@@ -1,0 +1,24 @@
+name: Watch World source quality gate
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+  push:
+    paths:
+      - 'portal/watch-world-sources.json'
+      - 'scripts/watch-world/**'
+      - '.github/workflows/watch-world-quality.yml'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reject duplicates, shopping, and unverified low-resolution streams
+        run: node scripts/watch-world/check-sources.mjs
+      - name: Explain live-check boundary
+        run: echo "Catalog validation only. Live media probes and 720p decode verification not yet implemented."
