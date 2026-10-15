@@ -17,7 +17,7 @@
     input,select{padding:.6em;border:1px solid #aebbc3;border-radius:8px;background:#fff}.status{min-height:1.6em;color:#2b4b55}
     .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.metric{background:#eef7f5;border-radius:9px;padding:10px}.metric b{display:block;font-size:1.25rem}
     .feedback{padding:10px 12px;border-left:4px solid #0b8f77;background:#eef9f6;border-radius:5px}.muted{color:#60717c;font-size:.92rem}
-    #historyList{padding-left:1.3em}#historyList li{margin:.7em 0}
+    #historyList{padding:0;list-style:none}#historyList li{margin:.8em 0}details{border:1px solid #d9e0e5;border-radius:9px;padding:9px 11px}summary{cursor:pointer;font-weight:650}.recordDetails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 14px;margin:.7em 0 0}.recordDetails dt{color:#60717c}.recordDetails dd{margin:0;text-align:right}
     @media(max-width:720px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:1/-1}}
   </style>
 </head>
@@ -59,6 +59,7 @@
   <section class="card" style="margin-top:18px">
     <h2>3. 本机练习历史</h2>
     <p id="historySummary" class="muted"></p>
+    <button id="exportHistory" class="secondary" disabled>导出 CSV</button>
     <ol id="historyList"></ol>
   </section>
   <script>
@@ -88,10 +89,31 @@
       ui.duration.textContent=seconds+' 秒';ui.tracked.textContent=tracked+' / '+total;ui.coverage.textContent=total?assessCoverage(tracked,total).coverage+'%':'—';
     }
     function readHistory(){try{const value=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(value)?value:[]}catch{return []}}
+    function csvCell(value){return '"'+String(value??'').replaceAll('"','""')+'"'}
+    function buildHistoryCsv(records=readHistory()){
+      const columns=['记录时间','动作','人工确认次数','练习时长（秒）','识别帧','总帧','人体跟踪覆盖率（%）','反馈'];
+      const rows=records.map(record=>[record.date,record.exercise,record.reps,record.durationSec,record.trackedFrames??'',record.totalFrames??'',record.coverage,record.feedback]);
+      return '\ufeff'+[columns,...rows].map(row=>row.map(csvCell).join(',')).join('\r\n');
+    }
     function renderHistory(){
       const records=readHistory().slice().reverse(),list=$('historyList');list.replaceChildren();
       $('historySummary').textContent=records.length?'最近 '+records.length+' 次（仅保存在此浏览器）':'暂无记录，完成一次跟练后可保存。';
-      for(const record of records){const li=document.createElement('li');const time=new Date(record.date).toLocaleString('zh-CN',{hour12:false});li.textContent=`${time}｜${record.exercise} ${record.reps} 次｜${record.durationSec} 秒｜人体跟踪 ${record.coverage}%｜${record.feedback}`;list.append(li)}
+      $('exportHistory').disabled=!records.length;
+      for(const record of records){
+        const li=document.createElement('li'),details=document.createElement('details'),summary=document.createElement('summary'),facts=document.createElement('dl');
+        const time=new Date(record.date).toLocaleString('zh-CN',{hour12:false}),tracked=record.trackedFrames??'—',total=record.totalFrames??'—';
+        summary.textContent=`${time}｜${record.exercise} ${record.reps} 次｜${record.durationSec} 秒｜跟踪 ${record.coverage}%`;
+        facts.className='recordDetails';
+        for(const [label,value] of [['人工确认次数',record.reps+' 次'],['练习时长',record.durationSec+' 秒'],['识别帧',tracked+' / '+total],['人体跟踪覆盖率',record.coverage+'%'],['反馈',record.feedback]]){
+          const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;facts.append(dt,dd)
+        }
+        details.append(summary,facts);li.append(details);list.append(li)
+      }
+    }
+    function exportHistory(){
+      const records=readHistory();if(!records.length)return;
+      const url=URL.createObjectURL(new Blob([buildHistoryCsv(records)],{type:'text/csv;charset=utf-8'})),link=document.createElement('a');
+      link.href=url;link.download='A01-练习记录-'+new Date().toISOString().slice(0,10)+'.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),0);
     }
     async function loadMediaPipe(){
       const module=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm');
@@ -141,8 +163,8 @@
       $('startCamera').disabled=false;$('stopCamera').disabled=true;$('startPractice').disabled=true;ui.cameraStatus.textContent='摄像头已停止。';
     }
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
-    $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',stopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);
-    window.addEventListener('pagehide',stopCamera);window.A01Practice={assessCoverage,readHistory,renderHistory};renderHistory();
+    $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',stopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
+    window.addEventListener('pagehide',stopCamera);window.A01Practice={assessCoverage,readHistory,renderHistory,buildHistoryCsv};renderHistory();
   })();
   </script>
 </body>

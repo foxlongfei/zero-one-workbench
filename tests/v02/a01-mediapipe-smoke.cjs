@@ -30,7 +30,16 @@ const fs=require('fs'),path=require('path');
       A01Practice.renderHistory();
     });
     const history=await page.locator('#historyList').innerText();
-    if(!history.includes('深蹲 8 次')||!history.includes('42 秒')||!history.includes('80%')||!history.includes('测试记录'))throw Error('history detail missing');
+    if(!history.includes('深蹲 8 次')||!history.includes('42 秒')||!history.includes('80%'))throw Error('history summary missing');
+    await page.locator('#historyList details').click();
+    const details=await page.locator('.recordDetails').innerText();
+    if(!details.includes('80 / 100')||!details.includes('人工确认次数')||!details.includes('测试记录'))throw Error('record evidence details missing');
+    const csv=await page.evaluate(()=>A01Practice.buildHistoryCsv());
+    if(!csv.includes('人体跟踪覆盖率（%）')||!csv.includes('"深蹲"')||!csv.includes('"80"'))throw Error('CSV export data missing');
+    const downloadPromise=page.waitForEvent('download');
+    await page.locator('#exportHistory').click();
+    const download=await downloadPromise;
+    if(!(await download.suggestedFilename()).endsWith('.csv'))throw Error('CSV download filename missing');
     await page.reload();
     if(!(await page.locator('#historyList').innerText()).includes('深蹲 8 次'))throw Error('history did not persist after reload');
 
@@ -40,7 +49,7 @@ const fs=require('fs'),path=require('path');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['pre-camera gate','coverage feedback bands','exercise teaching switch','history detail','reload persistence']
+      checks:['pre-camera gate','coverage feedback bands','exercise teaching switch','history evidence detail','CSV export','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
   }finally{await browser.close()}
