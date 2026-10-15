@@ -24,6 +24,9 @@ const fs=require('fs'),path=require('path');
 
     await page.evaluate(()=>{
       localStorage.setItem('a01-mediapipe-practice-v2',JSON.stringify([{
+        date:'2026-10-15T16:30:00.000Z',exercise:'俯卧撑',reps:5,durationSec:30,
+        trackedFrames:55,totalFrames:60,coverage:92,feedback:'保留记录'
+      },{
         date:'2026-10-15T17:30:00.000Z',exercise:'深蹲',reps:8,durationSec:42,
         trackedFrames:80,totalFrames:100,coverage:80,feedback:'测试记录'
       }]));
@@ -31,8 +34,8 @@ const fs=require('fs'),path=require('path');
     });
     const history=await page.locator('#historyList').innerText();
     if(!history.includes('深蹲 8 次')||!history.includes('42 秒')||!history.includes('80%'))throw Error('history summary missing');
-    await page.locator('#historyList details').click();
-    const details=await page.locator('.recordDetails').innerText();
+    await page.locator('#historyList details').first().click();
+    const details=await page.locator('.recordDetails').first().innerText();
     if(!details.includes('80 / 100')||!details.includes('人工确认次数')||!details.includes('测试记录'))throw Error('record evidence details missing');
     const csv=await page.evaluate(()=>A01Practice.buildHistoryCsv());
     if(!csv.includes('人体跟踪覆盖率（%）')||!csv.includes('"深蹲"')||!csv.includes('"80"'))throw Error('CSV export data missing');
@@ -40,8 +43,21 @@ const fs=require('fs'),path=require('path');
     await page.locator('#exportHistory').click();
     const download=await downloadPromise;
     if(!(await download.suggestedFilename()).endsWith('.csv'))throw Error('CSV download filename missing');
+
+    page.once('dialog',dialog=>dialog.dismiss());
+    await page.locator('button[data-record-index="1"]').click();
+    if(!(await page.locator('#historyNotice').innerText()).includes('已取消删除'))throw Error('delete cancel feedback missing');
+    if((await page.locator('#historyList details').count())!==2)throw Error('cancelled delete changed history');
+
+    page.once('dialog',dialog=>dialog.accept());
+    await page.locator('button[data-record-index="1"]').click();
+    if(!(await page.locator('#historyNotice').innerText()).includes('已删除'))throw Error('delete success feedback missing');
+    if((await page.locator('#historyList details').count())!==1)throw Error('confirmed delete did not remove one record');
+    const csvAfterDelete=await page.evaluate(()=>A01Practice.buildHistoryCsv());
+    if(csvAfterDelete.includes('测试记录')||!csvAfterDelete.includes('保留记录'))throw Error('CSV still includes deleted record');
     await page.reload();
-    if(!(await page.locator('#historyList').innerText()).includes('深蹲 8 次'))throw Error('history did not persist after reload');
+    const persistedHistory=await page.locator('#historyList').innerText();
+    if(persistedHistory.includes('深蹲 8 次')||!persistedHistory.includes('俯卧撑 5 次'))throw Error('confirmed delete did not persist after reload');
 
     fs.mkdirSync('reports/v02/screenshots',{recursive:true});
     await page.screenshot({path:'reports/v02/screenshots/A01-mediapipe-history-mobile.png',fullPage:true});
@@ -49,7 +65,7 @@ const fs=require('fs'),path=require('path');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['pre-camera gate','coverage feedback bands','exercise teaching switch','history evidence detail','CSV export','reload persistence']
+      checks:['pre-camera gate','coverage feedback bands','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
   }finally{await browser.close()}

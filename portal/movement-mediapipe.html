@@ -12,12 +12,12 @@
     .camera{position:relative;aspect-ratio:4/3;background:#14202a;border-radius:10px;overflow:hidden;margin:12px 0}
     video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}canvas{pointer-events:none}
     button,input,select{font:inherit}button{border:0;border-radius:9px;background:#086b5c;color:#fff;padding:.65em 1em;font-weight:650;cursor:pointer}
-    button.secondary{background:#e8eeef;color:#1d343a}button:disabled{opacity:.45;cursor:not-allowed}
+    button.secondary{background:#e8eeef;color:#1d343a}button.danger{background:#fff1f0;color:#a1261d;border:1px solid #e7b5b1}button:disabled{opacity:.45;cursor:not-allowed}
     .actions{display:flex;flex-wrap:wrap;gap:8px}.fields{display:grid;gap:12px}.fields label{display:grid;gap:5px;font-weight:650}
     input,select{padding:.6em;border:1px solid #aebbc3;border-radius:8px;background:#fff}.status{min-height:1.6em;color:#2b4b55}
     .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.metric{background:#eef7f5;border-radius:9px;padding:10px}.metric b{display:block;font-size:1.25rem}
     .feedback{padding:10px 12px;border-left:4px solid #0b8f77;background:#eef9f6;border-radius:5px}.muted{color:#60717c;font-size:.92rem}
-    #historyList{padding:0;list-style:none}#historyList li{margin:.8em 0}details{border:1px solid #d9e0e5;border-radius:9px;padding:9px 11px}summary{cursor:pointer;font-weight:650}.recordDetails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 14px;margin:.7em 0 0}.recordDetails dt{color:#60717c}.recordDetails dd{margin:0;text-align:right}
+    #historyList{padding:0;list-style:none}#historyList li{margin:.8em 0}details{border:1px solid #d9e0e5;border-radius:9px;padding:9px 11px}summary{cursor:pointer;font-weight:650}.recordDetails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 14px;margin:.7em 0}.recordDetails dt{color:#60717c}.recordDetails dd{margin:0;text-align:right}
     @media(max-width:720px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:1/-1}}
   </style>
 </head>
@@ -59,7 +59,8 @@
   <section class="card" style="margin-top:18px">
     <h2>3. 本机练习历史</h2>
     <p id="historySummary" class="muted"></p>
-    <button id="exportHistory" class="secondary" disabled>导出 CSV</button>
+    <div class="actions"><button id="exportHistory" class="secondary" disabled>导出 CSV</button></div>
+    <p id="historyNotice" class="status" role="status" aria-live="polite"></p>
     <ol id="historyList"></ol>
   </section>
   <script>
@@ -96,19 +97,28 @@
       return '\ufeff'+[columns,...rows].map(row=>row.map(csvCell).join(',')).join('\r\n');
     }
     function renderHistory(){
-      const records=readHistory().slice().reverse(),list=$('historyList');list.replaceChildren();
+      const storedRecords=readHistory(),records=storedRecords.slice().reverse(),list=$('historyList');list.replaceChildren();
       $('historySummary').textContent=records.length?'最近 '+records.length+' 次（仅保存在此浏览器）':'暂无记录，完成一次跟练后可保存。';
       $('exportHistory').disabled=!records.length;
-      for(const record of records){
-        const li=document.createElement('li'),details=document.createElement('details'),summary=document.createElement('summary'),facts=document.createElement('dl');
+      records.forEach((record,displayIndex)=>{
+        const storageIndex=storedRecords.length-1-displayIndex;
+        const li=document.createElement('li'),details=document.createElement('details'),summary=document.createElement('summary'),facts=document.createElement('dl'),remove=document.createElement('button');
         const time=new Date(record.date).toLocaleString('zh-CN',{hour12:false}),tracked=record.trackedFrames??'—',total=record.totalFrames??'—';
         summary.textContent=`${time}｜${record.exercise} ${record.reps} 次｜${record.durationSec} 秒｜跟踪 ${record.coverage}%`;
         facts.className='recordDetails';
         for(const [label,value] of [['人工确认次数',record.reps+' 次'],['练习时长',record.durationSec+' 秒'],['识别帧',tracked+' / '+total],['人体跟踪覆盖率',record.coverage+'%'],['反馈',record.feedback]]){
           const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;facts.append(dt,dd)
         }
-        details.append(summary,facts);li.append(details);list.append(li)
-      }
+        remove.type='button';remove.className='danger';remove.textContent='删除这条记录';remove.dataset.recordIndex=String(storageIndex);
+        details.append(summary,facts,remove);li.append(details);list.append(li)
+      })
+    }
+    function deleteRecord(index){
+      const records=readHistory(),record=records[index];if(!record)return false;
+      const label=`${new Date(record.date).toLocaleString('zh-CN',{hour12:false})} 的“${record.exercise}”记录`;
+      if(!window.confirm(`确定删除${label}吗？删除后无法恢复。`)){$('historyNotice').textContent='已取消删除，记录保持不变。';return false}
+      records.splice(index,1);localStorage.setItem(STORAGE_KEY,JSON.stringify(records));renderHistory();
+      $('historyNotice').textContent='已删除该条练习记录；刷新页面后也不会恢复。';return true
     }
     function exportHistory(){
       const records=readHistory();if(!records.length)return;
@@ -164,7 +174,8 @@
     }
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
     $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',stopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
-    window.addEventListener('pagehide',stopCamera);window.A01Practice={assessCoverage,readHistory,renderHistory,buildHistoryCsv};renderHistory();
+    $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex))});
+    window.addEventListener('pagehide',stopCamera);window.A01Practice={assessCoverage,readHistory,renderHistory,buildHistoryCsv,deleteRecord};renderHistory();
   })();
   </script>
 </body>
