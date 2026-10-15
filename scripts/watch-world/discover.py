@@ -28,7 +28,10 @@ def probe(item):
     except (Exception):return None
 def main():
     streams=get(BASE+"streams.json")
-    channels={c["id"]:c for c in get(BASE+"channels.json")}\n    logos={}\n    for logo in get(BASE+"logos.json"):\n        if logo.get("channel") and logo.get("url") and logo["channel"] not in logos:logos[logo["channel"]]=logo["url"]
+    channels={c["id"]:c for c in get(BASE+"channels.json")}
+    logos={}
+    for logo in get(BASE+"logos.json"):
+        if logo.get("channel") and logo.get("url") and logo["channel"] not in logos:logos[logo["channel"]]=logo["url"]
     candidates=[];seen=set()
     for s in streams:
         url=s.get("url","");cid=s.get("channel");c=channels.get(cid,{})
