@@ -18,7 +18,8 @@ def priority(name, country):
 
 def category(name):
     t=name.lower()
-    if priority(name, "") < 3:return "chinese-tv"\n    if any(x in t for x in ("nasa","space","earth")):return "space"
+    if priority(name, "") < 3:return "chinese-tv"
+    if any(x in t for x in ("nasa","space","earth")):return "space"
     if any(x in t for x in ("wildlife","nature")):return "nature"
     if any(x in t for x in ("fashion",)):return "fashion"
     if any(x in t for x in ("music","mtv","arte","red bull")):return "music"
@@ -28,9 +29,9 @@ def probe(item):
     try:
         p=subprocess.run(["ffprobe","-v","error","-rw_timeout","9000000","-analyzeduration","2500000","-probesize","1500000","-show_entries","stream=codec_type,width,height,codec_name","-of","json",url],capture_output=True,text=True,timeout=18)
         if p.returncode:return None
-        vids=[s for s in json.loads(p.stdout).get("streams",[]) if s.get("codec_type")=="video" and int(s.get("height") or 0)>=720]
+        vids=[s for s in json.loads(p.stdout).get("streams",[]) if s.get("codec_type")=="video" and int(s.get("height") or 0)>=480]
         if not vids:return None
-        h=max(vids,key=lambda x:int(x["height"]))
+        h=min(vids,key=lambda x:(abs(int(x["height"])-720),int(x["height"])))
         return item,int(h["height"])
     except (Exception):return None
 def main():
@@ -49,19 +50,21 @@ def main():
         if s.get("status") in ("offline","error") or url in seen or not cid:continue
         seen.add(url);candidates.append({"url":url,"id":cid,"title":title,"country":c.get("country") or "国际","logo":logos.get(cid),"category":category(title)})
         if len(candidates)>=600:break
-    candidates.sort(key=lambda c:priority(c["title"],c["country"]))\n    candidates=candidates[:240]\n    valid=[]
+    candidates.sort(key=lambda c:priority(c["title"],c["country"]))
+    candidates=candidates[:240]
+    valid=[]
     with ThreadPoolExecutor(max_workers=8) as pool:
         for future in as_completed([pool.submit(probe,x) for x in candidates]):
             result=future.result()
             if result:valid.append(result)
     now=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
     out=[];used=set()
-    for c,h in sorted(valid,key=lambda x:(priority(x[0]["title"],x[0]["country"]),-x[1],x[0]["title"])):
+    for c,h in sorted(valid,key=lambda x:(priority(x[0]["title"],x[0]["country"]),abs(x[1]-720),x[0]["title"])):
         if c["id"] in used:continue
         used.add(c["id"])
         out.append({"id":c["id"],"title":c["title"],"category":c["category"],"country":c["country"],"logo":c["logo"],"officialUrl":c["url"],"streamUrl":c["url"],"height":h,"lastMediaCheck":now,"mediaCheckStatus":"passed","verified":True,"shopping":False,"checkedAt":now[:10]})
         if len(out)>=100:break
-    doc={"version":2,"updated":now,"policy":"Automated FFprobe >=720p validation of iptv-org public stream index; playback and legal restrictions vary by location; no rebroadcast.","channels":out}
+    doc={"version":2,"updated":now,"policy":"Automated FFprobe >=480p validation; player defaults to adaptive low-bandwidth mode of iptv-org public stream index; playback and legal restrictions vary by location; no rebroadcast.","channels":out}
     if not out:
         print("No streams passed. Preserve last known good catalog and fail run.")
         raise SystemExit(1)
