@@ -20,6 +20,12 @@ jobs:
         run: python3 scripts/watch-world/discover.py
       - name: Validate and deduplicate
         run: node scripts/watch-world/check-sources.mjs
+      - name: Upload verified directory for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: watch-world-verified-catalog
+          path: portal/watch-world-sources.json
+          retention-days: 14
       - name: Commit verified catalog
         run: |
           git config user.name 'github-actions[bot]'
