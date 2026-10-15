@@ -1,0 +1,53 @@
+name: Portal integrated delivery gate
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'portal/**'
+      - 'scripts/portal-delivery-smoke.cjs'
+      - '.github/workflows/portal-delivery.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'portal/**'
+      - 'scripts/portal-delivery-smoke.cjs'
+      - '.github/workflows/portal-delivery.yml'
+permissions:
+  contents: read
+concurrency:
+  group: portal-delivery-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned browser test dependency
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
+      - name: Start complete portal locally
+        run: |
+          python3 -m http.server 4173 > /tmp/portal-http.log 2>&1 &
+          for attempt in {1..20}; do
+            curl -fsS http://127.0.0.1:4173/portal/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/portal-http.log
+          exit 1
+      - name: Check every product route in real Chromium
+        run: |
+          mkdir -p artifacts/portal-delivery
+          node scripts/portal-delivery-smoke.cjs
+      - name: Save screenshots and machine-readable results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portal-delivery-${{ github.sha }}
+          path: artifacts/portal-delivery/
+          if-no-files-found: warn
