@@ -87,6 +87,7 @@ check('TXT pagination',await page.locator('#position').innerText().then(x=>x.inc
 await page.reload();
 await page.waitForSelector('#importButton:enabled');
 const resumedTxt=page.locator('#shelf .book').filter({hasText:'TXT'});
+check('most recently read book sorts first',(await page.locator('#shelf .book').first().getAttribute('data-book-id'))===(await resumedTxt.getAttribute('data-book-id')),await page.locator('#shelf').innerText());
 check('TXT shelf exposes resume action',(await resumedTxt.locator('[data-action="open"]').innerText())==='继续阅读',await resumedTxt.innerText());
 check('TXT shelf shows page progress',(await resumedTxt.locator('[data-role="progress"]').innerText()).includes('第 2 页'),await resumedTxt.innerText());
 await resumedTxt.locator('[data-action="open"]').click();
@@ -108,6 +109,12 @@ check('reset action hides without progress',await resumedTxt.locator('[data-acti
 await resumedTxt.locator('[data-action="open"]').click();
 await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('1 /'));
 check('TXT restarts from first page',await page.locator('#position').innerText().then(x=>x.includes('1 /')),await page.locator('#position').innerText());
+await page.locator('#back').click();
+await reimportedEpub.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('第一章'));
+await page.locator('#back').click();
+await page.waitForFunction(id=>document.querySelector('#shelf .book')?.dataset.bookId===id,reimportedEpubId);
+check('returning to shelf promotes latest book',(await page.locator('#shelf .book').first().getAttribute('data-book-id'))===reimportedEpubId,await page.locator('#shelf').innerText());
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
