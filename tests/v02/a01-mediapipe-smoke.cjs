@@ -19,6 +19,19 @@ const fs=require('fs'),path=require('path');
     if(assessments.map(x=>x.coverage).join(',')!=='90,60,20,0')throw Error('coverage calculation failed');
     if(!assessments[0].feedback.includes('稳定')||!assessments[2].feedback.includes('较低'))throw Error('coverage feedback bands failed');
 
+    await page.evaluate(()=>{
+      window.__cameraError='NotAllowedError';window.__cameraRequests=0;
+      Object.defineProperty(navigator,'mediaDevices',{configurable:true,value:{getUserMedia:async()=>{window.__cameraRequests+=1;throw new DOMException('denied',window.__cameraError)}}});
+    });
+    await page.locator('#startCamera').click();
+    if(!(await page.locator('#cameraStatus').innerText()).includes('摄像头权限'))throw Error('permission denial recovery guidance missing');
+    if(!(await page.locator('#startCamera').isEnabled())||(await page.locator('#startCamera').innerText())!=='重新启动摄像头')throw Error('camera retry control missing after denial');
+    if(await page.locator('#startPractice').isEnabled())throw Error('practice enabled after camera denial');
+    await page.evaluate(()=>{window.__cameraError='NotFoundError'});
+    await page.locator('#startCamera').click();
+    if(!(await page.locator('#cameraStatus').innerText()).includes('未检测到摄像头'))throw Error('missing-device recovery guidance missing');
+    if(await page.evaluate(()=>window.__cameraRequests)!==2)throw Error('camera retry did not issue a second request');
+
     await page.selectOption('#exercise','俯卧撑');
     if(!(await page.locator('#instruction').innerText()).includes('头、肩、髋'))throw Error('exercise instruction did not update');
 
@@ -65,7 +78,7 @@ const fs=require('fs'),path=require('path');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['pre-camera gate','coverage feedback bands','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
+      checks:['pre-camera gate','coverage feedback bands','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
   }finally{await browser.close()}
