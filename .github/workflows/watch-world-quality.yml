@@ -1,24 +1,28 @@
-name: Watch World source quality gate
+name: Watch World live source refresh
 on:
   workflow_dispatch:
   schedule:
     - cron: '17 */6 * * *'
   push:
     paths:
-      - 'portal/watch-world-sources.json'
       - 'scripts/watch-world/**'
       - '.github/workflows/watch-world-quality.yml'
 jobs:
-  validate:
+  refresh:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Reject duplicates, shopping, and unverified low-resolution streams
+      - name: Install FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - name: Discover and verify 720p streams
+        run: python3 scripts/watch-world/discover.py
+      - name: Validate and deduplicate
         run: node scripts/watch-world/check-sources.mjs
-      - name: Explain live-check boundary
-        run: echo "Catalog validation only. Live media probes and 720p decode verification not yet implemented."
+      - name: Commit verified catalog
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add portal/watch-world-sources.json
+          git diff --cached --quiet || (git commit -m "data(watch-world): refresh verified live streams" && git push)
