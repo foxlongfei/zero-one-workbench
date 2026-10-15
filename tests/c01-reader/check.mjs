@@ -52,6 +52,12 @@ check('EPUB position restored',(await page.locator('#position').innerText()).inc
 await page.locator('#back').click();
 const epubId=await epub.getAttribute('data-book-id');
 check('EPUB position exists before delete',await page.evaluate(id=>localStorage.getItem('reader-pos-'+id)!==null,epubId),epubId);
+page.once('dialog',dialog=>dialog.dismiss());
+await epub.locator('[data-action="delete"]').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已取消删除'));
+check('delete cancellation receipt',(await page.locator('#status').innerText()).includes('书籍和阅读位置保持不变'),await page.locator('#status').innerText());
+check('cancelled delete keeps EPUB on shelf',await epub.count()===1,await page.locator('#shelf').innerText());
+check('cancelled delete keeps EPUB position',await page.evaluate(id=>localStorage.getItem('reader-pos-'+id)!==null,epubId),epubId);
 page.once('dialog',dialog=>dialog.accept());
 await epub.locator('[data-action="delete"]').click();
 await page.waitForFunction(id=>!document.querySelector(`#shelf .book[data-book-id="${id}"]`),epubId);
@@ -60,6 +66,15 @@ check('EPUB position removed with book',await page.evaluate(id=>localStorage.get
 await page.reload();
 await page.waitForSelector('#importButton:enabled');
 check('deleted EPUB stays removed after reload',await page.locator('#shelf .book').filter({hasText:'EPUB'}).count()===0,await page.locator('#shelf').innerText());
+await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/real-book.epub'));
+const reimportedEpub=page.locator('#shelf .book').filter({hasText:'EPUB'});
+await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===1);
+const reimportedEpubId=await reimportedEpub.getAttribute('data-book-id');
+check('reimport creates a clean EPUB record',reimportedEpubId!==epubId,`${epubId} -> ${reimportedEpubId}`);
+await reimportedEpub.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('第一章'));
+check('reimport does not inherit deleted position',!(await page.locator('#position').innerText()).includes('第二章'),await page.locator('#position').innerText());
+await page.locator('#back').click();
 await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/real-book.txt'));
 const txt=page.locator('#shelf .book').filter({hasText:'TXT'});
 await txt.locator('[data-action="open"]').click();
