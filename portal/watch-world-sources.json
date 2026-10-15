@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "updated": "2026-10-15",
+  "policy": "Only official landing pages until playback and redistribution permissions are confirmed. No untested stream URLs.",
+  "channels": [
+    {
+      "id": "nasa-live",
+      "title": "NASA 官方直播",
+      "category": "space",
+      "country": "美国",
+      "officialUrl": "https://www.nasa.gov/live/",
+      "verified": true
+    },
+    {
+      "id": "explore-live",
+      "title": "Explore.org 自然直播",
+      "category": "nature",
+      "country": "国际",
+      "officialUrl": "https://explore.org/livecams",
+      "verified": true
+    },
+    {
+      "id": "earthcam",
+      "title": "EarthCam 世界城市摄像头",
+      "category": "scenery",
+      "country": "国际",
+      "officialUrl": "https://www.earthcam.com/",
+      "verified": true
+    },
+    {
+      "id": "fashiontv",
+      "title": "FashionTV 官方网站",
+      "category": "fashion",
+      "country": "国际",
+      "officialUrl": "https://www.fashiontv.com/",
+      "verified": true
+    },
+    {
+      "id": "arte-concert",
+      "title": "ARTE Concert 官方音乐视频",
+      "category": "music",
+      "country": "欧洲",
+      "officialUrl": "https://www.arte.tv/en/arte-concert/",
+      "verified": true
+    }
+  ]
+}
