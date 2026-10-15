@@ -4,14 +4,21 @@ import json, subprocess, urllib.request, datetime, re, os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 BASE="https://iptv-org.github.io/api/"
 OUT="portal/watch-world-sources.json"
-KEYWORDS=("nasa","earth","nature","wildlife","fashion","music","mtv","arte","france 24","dw english","nhk world","euronews","al jazeera english","sky news","bloomberg","red bull")
+KEYWORDS=("cctv","cgtn","央视","中央电视台","卫视","凤凰","凤凰卫视","tvb","viutv","rthk","香港电台","港台电视","台视","中视","华视","民视","公视","三立","东森","年代","非凡","寰宇","nasa","earth","nature","wildlife","fashion","music","mtv","arte","france 24","dw english","nhk world","euronews","al jazeera english","sky news","bloomberg","red bull")
 BAN=("shop","shopping","teleshop","home shopping","qvc","hsn","adult","xxx","casino","gambling")
 def get(url):
     req=urllib.request.Request(url,headers={"User-Agent":"WatchWorldQualityBot/0.1"})
     with urllib.request.urlopen(req,timeout=22) as r:return json.load(r)
+def priority(name, country):
+    t=name.lower(); c=(country or "").lower()
+    if re.search(r"cctv[ -]?\\d+|cctv|央视|中央电视台|cgtn",t):return 0
+    if "卫视" in t or "satellite tv" in t or "satellite television" in t:return 1
+    if any(k in t for k in ("凤凰","tvb","viutv","rthk","香港电台","港台电视","台视","中视","华视","民视","公视","三立","东森","年代","非凡","寰宇")) or c in ("hk","tw","hong kong","taiwan"):return 2
+    return 3
+
 def category(name):
     t=name.lower()
-    if any(x in t for x in ("nasa","space","earth")):return "space"
+    if priority(name, "") < 3:return "chinese-tv"\n    if any(x in t for x in ("nasa","space","earth")):return "space"
     if any(x in t for x in ("wildlife","nature")):return "nature"
     if any(x in t for x in ("fashion",)):return "fashion"
     if any(x in t for x in ("music","mtv","arte","red bull")):return "music"
@@ -38,22 +45,22 @@ def main():
         title=c.get("name") or cid or ""
         if not url.startswith("https://") or not re.search(r"\.m3u8(?:\?|$)|\.mpd(?:\?|$)",url,re.I):continue
         if any(x in (title+" "+str(cid)).lower() for x in BAN):continue
-        if not any(x in title.lower() for x in KEYWORDS):continue
+        if not any(x in title.lower() for x in KEYWORDS) and priority(title,c.get("country"))>=3:continue
         if s.get("status") in ("offline","error") or url in seen or not cid:continue
         seen.add(url);candidates.append({"url":url,"id":cid,"title":title,"country":c.get("country") or "国际","logo":logos.get(cid),"category":category(title)})
-        if len(candidates)>=180:break
-    valid=[]
+        if len(candidates)>=600:break
+    candidates.sort(key=lambda c:priority(c["title"],c["country"]))\n    candidates=candidates[:240]\n    valid=[]
     with ThreadPoolExecutor(max_workers=8) as pool:
         for future in as_completed([pool.submit(probe,x) for x in candidates]):
             result=future.result()
             if result:valid.append(result)
     now=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
     out=[];used=set()
-    for c,h in sorted(valid,key=lambda x:(-x[1],x[0]["title"])):
+    for c,h in sorted(valid,key=lambda x:(priority(x[0]["title"],x[0]["country"]),-x[1],x[0]["title"])):
         if c["id"] in used:continue
         used.add(c["id"])
         out.append({"id":c["id"],"title":c["title"],"category":c["category"],"country":c["country"],"logo":c["logo"],"officialUrl":c["url"],"streamUrl":c["url"],"height":h,"lastMediaCheck":now,"mediaCheckStatus":"passed","verified":True,"shopping":False,"checkedAt":now[:10]})
-        if len(out)>=48:break
+        if len(out)>=100:break
     doc={"version":2,"updated":now,"policy":"Automated FFprobe >=720p validation of iptv-org public stream index; playback and legal restrictions vary by location; no rebroadcast.","channels":out}
     if not out:
         print("No streams passed. Preserve last known good catalog and fail run.")
