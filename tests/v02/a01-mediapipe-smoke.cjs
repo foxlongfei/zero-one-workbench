@@ -19,6 +19,16 @@ const fs=require('fs'),path=require('path');
     if(assessments.map(x=>x.coverage).join(',')!=='90,60,20,0')throw Error('coverage calculation failed');
     if(!assessments[0].feedback.includes('稳定')||!assessments[2].feedback.includes('较低'))throw Error('coverage feedback bands failed');
 
+    const timeoutResult=await page.evaluate(async()=>{try{await A01Practice.withTimeout(new Promise(()=>{}),10,'请求摄像头权限超时');return 'resolved'}catch(error){return error.name+':'+error.message}});
+    if(timeoutResult!=='TimeoutError:请求摄像头权限超时')throw Error('camera timeout guard failed');
+
+    await page.evaluate(()=>Object.defineProperty(navigator,'mediaDevices',{configurable:true,value:{getUserMedia:()=>new Promise(()=>{})}}));
+    await page.locator('#startCamera').click();
+    if((await page.locator('#stopCamera').innerText())!=='取消启动'||!(await page.locator('#stopCamera').isEnabled()))throw Error('cancel camera startup control missing');
+    await page.locator('#stopCamera').click();
+    if(!(await page.locator('#cameraStatus').innerText()).includes('已取消摄像头启动'))throw Error('camera startup cancellation feedback missing');
+    if(!(await page.locator('#startCamera').isEnabled())||await page.locator('#startPractice').isEnabled())throw Error('camera cancellation did not restore safe controls');
+
     await page.evaluate(()=>{
       window.__cameraError='NotAllowedError';window.__cameraRequests=0;
       Object.defineProperty(navigator,'mediaDevices',{configurable:true,value:{getUserMedia:async()=>{window.__cameraRequests+=1;throw new DOMException('denied',window.__cameraError)}}});
@@ -78,7 +88,7 @@ const fs=require('fs'),path=require('path');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['pre-camera gate','coverage feedback bands','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
+      checks:['pre-camera gate','coverage feedback bands','startup timeout guard','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
   }finally{await browser.close()}
