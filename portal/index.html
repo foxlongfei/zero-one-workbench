@@ -1,21 +1,17 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>零一空间｜项目操作入口</title><link rel="stylesheet" href="assets/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>零一空间｜产品入口</title><link rel="stylesheet" href="assets/style.css"><style>
+body{background:#f5f7f5;color:#1c3028}main.wrap{max-width:1100px;margin:auto;padding:20px}h1{margin-bottom:8px}.intro{color:#52635a;margin-bottom:25px}.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:16px}.product{background:#fff;border:1px solid #dce6df;border-radius:15px;padding:22px}.product h2{margin:0 0 8px}.product p{line-height:1.65}.product a{display:inline-block;margin-top:8px;font-weight:650}.status{font-size:.85rem;color:#735b30}.note{margin-top:26px;color:#52635a;font-size:.95rem}.links{margin-top:22px;display:flex;gap:15px;flex-wrap:wrap}.links a{font-size:.92rem}
+</style></head>
 <body><main class="wrap">
-<h1 class="hero">零一空间｜项目操作入口</h1>
-<section class="card" aria-label="唯一正式入口与交付硬门" style="border:2px solid #245c4a"><h2>统一控制台｜唯一正式入口</h2><p><strong>当前三个原型：全部未通过用户验收。</strong> 只有完整可操作、已经部署、用户可见可体验，并通过两轮相互独立的盲测及用户验收，才能标记为交付。</p><p>本页是唯一正式发布入口；其他页面仅为此入口的子功能，不另建平行主页。任何 PR 草稿、测试通过或文档记录均不算已交付。</p><div class="grid"><article><h3>A01 运动达人｜未验收</h3><a href="movement-v02-experience.html">打开当前体验版 →</a></article><article><h3>B01 堪舆先生｜未验收</h3><a href="traditional-lunar-engine.html">打开历法引擎与案例新版 →</a></article><article><h3>C01 陪你读书｜未验收</h3><a href="read-with-you-v01.html">打开整书阅读与朗读新版 →</a><p>书库与整书朗读已开始整合；完整跨设备测试、背景音与授权声音仍未验收。</p></article></div><p><a href="v02-control.html">原施工任务及发布门 →</a> · <a href="engineering-console.html">工程运行与失败记录 →</a> · <a href="https://github.com/foxlongfei/zero-one-workbench/issues/24">统一交付施工单 #24 →</a> · <a href="https://github.com/foxlongfei/zero-one-workbench/actions">自动化运行记录 →</a></p><p class="muted">交付门：完整集成 → 实际操作 → 部署公开读回 → 独立盲测一 → 独立盲测二 → 用户验收。各门缺少证据即不得标完成。2026-10-14 更新。</p></section>
-<section class="card" id="delivery-first-core-rule-20261015" aria-label="全项目固定开发核心规则" style="border:2px solid #245c4a"><h2>全项目开发核心规则｜交付和使用优先｜2026-10-15</h2><p><strong>最高目标是实际交付与真实使用，不是无限计划、审计、等待或保持 Draft。</strong> 对零一空间所有产品和后续开发项目均适用；继承原施工单，不另开平行主线。</p><p><strong>成熟完整系统优先，不阉割、不局限。</strong> 复用许可清晰、可维护、可迁移的成熟开源产品及模型；保留有价值的完整功能。首版可选择一个能真实使用的核心场景，但不得为方便交差而用缩水演示取代成熟系统、破坏原功能或将未来扩展锁死。</p><p><strong>固定默认工作流：</strong>读取当前代码/原任务 → 接入成熟能力并实际编码 → 自动化与真实浏览器测试 → 修复失败 → 生成可复现样本和独立复核证据 → 满足有限且事先明确的首版发布条件后立即推进评审、部署、公开读回 → 收集真实使用反馈 → 持续改进。无需用户逐轮提醒。不得用重复汇报、状态修改或提交次数代替运行成果。</p><p><strong>发布与最终验收严格分开。</strong> 可用试用版达到核心功能正常、许可合规、无已知高风险故障、关键测试通过及可回退后即可发布；双盲独立复核与用户最终验收用于验证完整产品目标，不能被无限追加的后续功能变成永久禁发理由。缺少独立盲测不得伪称已通过；缺少授权不得越权合并、付费或改变生产环境，但须主动完成一切可执行步骤并准确指出唯一阻塞。</p><p><strong>反无限循环：</strong>每个失败必须对应可复现日志、修复提交和复测；重复两轮无实质增量时调整执行方法、缩小到真实阻塞或升级求助，不得继续原地审计。非首版必需功能归入后续迭代，不能反向提高当前版本的门槛。状态区分 CODE_READY、TESTED、RELEASE_CANDIDATE、PUBLIC_BETA、USER_ACCEPTED；NOT_ACCEPTED 仅表示未获得最终用户验收，不妨碍合法且可回退的公开试用。</p></section>
-<section class="card" id="execution-rule-20261014" aria-label="三原型执行优先级与认知同步规则" style="border:2px solid #245c4a">
-<h2>施工收敛与认知同步｜2026-10-14</h2>
-<p><strong>唯一技术路线：成熟开源／专业模型优先接入，许可与实际运行验证后再做薄适配；禁止以自制示意、表单、模型问答替代核心能力。</strong> 只维护原施工单，不另开平行主线。每次施工和每小时审计开始前，必须读取本页最新规则、原施工单与认知同步存档；结束时核对变化并增量写回存档，写回失败标记 SYNC_PENDING，不得宣称同步。</p>
-<div class="grid">
-<article><h3>ACTIVE ① A01｜运动达人</h3><p>当前唯一产品目标：接入许可明确的真实动态动作资源／成熟姿态能力，完成一个动作的教学→跟练→记录→反馈。原任务 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/22">#22</a>；未验收。</p></article>
-<article><h3>ACTIVE ② B01｜堪舆先生</h3><p>当前唯一产品目标：接入可复算的历法／排盘／传统规则实现，完成一个失物案例的输入→执行→依据→追问；再扩展住宅案例。传统推演不作为科学预测。原任务 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/21">#21</a>；未验收。</p></article>
-<article><h3>ACTIVE ③ C01｜陪你读书</h3><p>当前唯一产品目标：复用成熟 EPUB/TXT 解析与 TTS，先完成整书连续朗读和进度恢复。Q博士原 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/11">#11</a>；D博士原 <a href="https://github.com/foxlongfei/zero-one-workbench/issues/12">#12</a>；未验收。</p></article>
+<h1>零一空间</h1><p class="intro">从这里进入产品。保留完整目标，优先接入成熟能力，以实际使用和验证结果为准。</p>
+<div class="products">
+<article class="product"><h2>动起来 · 运动达人</h2><p>完整人体与动作、真实动态教学、训练跟练、记录和反馈；面向不同年龄、场地和身体条件。</p><p class="status">当前：训练流程样机；真实动作教学与完整人体能力尚未贯通，未验收。</p><a href="movement-v02-experience.html">打开现有训练体验 →</a></article>
+<article class="product"><h2>零一空间研究 · 堪舆先生</h2><p>综合传统术数与空间知识的先生式交流系统。涵盖命理、择日、失物、住宅、风水等多种问题，区分规则推演、史料来源与现实证据。</p><p class="status">当前：历法与失物辅助模块可供试用；不是完整先生系统，未验收。</p><a href="traditional-lunar-engine.html">打开现有历法模块 →</a></article>
+<article class="product"><h2>零一空间研究 · 陪你读书</h2><p>整书阅读与聆听、目录、进度、笔记交流、背景音及经授权的个性化声音。</p><p class="status">当前：整书集成仍在开发分支；公开版能力以实际页面为准，未验收。</p><a href="read-with-you-v01.html">打开当前阅读页面 →</a></article>
+<article class="product"><h2>听世界 · 网络电台</h2><p>选择音乐和广播频道，边听边做自己的事。</p><a href="classical-radio.html">打开听世界 →</a></article>
+<article class="product"><h2>看世界 · 直播频道</h2><p>世界直播、城市、自然、太空、音乐与文化视频。</p><p class="status">当前：直播源目录尚未成功接入，暂不可视为可用产品。</p><a href="watch-world.html">查看看世界 →</a></article>
 </div>
-<p><strong>PAUSED／仅维护：</strong>旧 V0.1 局部实验、孤立人体／肱二头肌演示、单独的 UI 美化、独立状态页／新控制台、无产品产物的模型讨论和重复代理试验；保留既有文件与证据，不删除、不冒充验收。音乐电台 RW-05 属独立支线，不得挤占三原型核心集成；知识研究 Z05 和历史 M01–M04 状态保留为独立研究证据，不自动算作 A01/B01 交付。</p>
-<p><strong>每小时硬门：</strong>核对原任务→确认已有成熟组件与许可证→实际接入／修改产品代码→测试→隔离 PR→发布／公开读回→两轮独立盲测→用户验收。每轮记录 SHA、运行证据、真实增量和失败断点；无代码／用户功能变化写 RUN_WITHOUT_PRODUCT_PROGRESS。审计与施工不得互相替代，API 连通不等于编码。不得自动合并、重复派工、无界重试或越权付费。三原型状态均为 IN_PROGRESS / NOT_ACCEPTED。</p>
-<p class="muted">本页规则为公开核对锚点；Google Drive 认知同步增量写回仍须独立验证，不能因页面更新视为已同步。</p>
-</section>
-<section class="card" aria-label="三原型当前断点"><h2>当前施工断点</h2><div class="grid"><article><h3>A01｜动作模型接入</h3><p>原任务 #22 · 成熟真实动态动作资源与姿态能力尚未完成整机接入；NOT_ACCEPTED。</p></article><article><h3>B01｜传统方法执行</h3><p>原任务 #21 · 成熟历法／排盘与可复算案例方法尚未接入完整流程；NOT_ACCEPTED。</p></article><article><h3>C01｜整书听读</h3><p>原任务 #11/#12 · 书库、朗读与背景音已开始在一个页面合并；须验证整本 EPUB、连续朗读和本机进度；授权声音仍未接入，NOT_ACCEPTED。</p></article></div><p><a href="https://github.com/foxlongfei/zero-one-workbench/issues/24">原施工单及进度证据 →</a> · <a href="v02-control.html">详细工程状态（按需展开）→</a> · <a href="engineering-console.html">运行日志 →</a></p><p class="muted">历史 Z05、M01–M04、旧版实验、PR 资料保留在代码和原施工记录中，不再占据主操作页面。不删除历史、不把提交冒充用户验收。</p></section>
+<p class="note"><strong>交付标准：</strong>可实际操作、成熟组件真实运行、许可可核查、部署可访问、测试可复现。试用发布与最终用户验收分别记录。未完成的功能不写成已上线。</p>
+<nav class="links" aria-label="工程资料"><a href="https://github.com/foxlongfei/zero-one-workbench/issues/24">原施工单</a><a href="https://github.com/foxlongfei/zero-one-workbench/actions">自动化记录</a><a href="v02-control.html">历史施工记录</a><a href="engineering-console.html">工程日志</a></nav>
 </main></body></html>
