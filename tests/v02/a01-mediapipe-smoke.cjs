@@ -25,6 +25,12 @@ const fs=require('fs'),path=require('path');
       A01Practice.canStartPractice(true,1,2000)
     ]);
     if(readiness.join(',')!=='false,false,false,true')throw Error('stable pose readiness gate failed');
+    const saveability=await page.evaluate(()=>[
+      A01Practice.hasUsablePracticeFrames(0),
+      A01Practice.hasUsablePracticeFrames('0'),
+      A01Practice.hasUsablePracticeFrames(1)
+    ]);
+    if(saveability.join(',')!=='false,false,true')throw Error('zero-frame practice record gate failed');
     const countdownResult=await page.evaluate(async()=>{
       let allowed=true,started=false,cancelled=false,ticks=[];
       A01Practice.createPracticeCountdown({
@@ -121,7 +127,7 @@ const fs=require('fs'),path=require('path');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['pre-camera gate','coverage feedback bands','two-second stable pose readiness gate','pose-loss cancels practice countdown','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
+      checks:['pre-camera gate','coverage feedback bands','two-second stable pose readiness gate','zero-frame practice record gate','pose-loss cancels practice countdown','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
   }finally{await browser.close()}
