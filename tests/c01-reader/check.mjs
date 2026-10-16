@@ -135,6 +135,14 @@ await fast.locator('[data-action="open"]').evaluate(button=>button.click());
 await page.waitForFunction(()=>document.querySelector('#bookTitle')?.textContent==='fast-second'&&document.querySelector('#textView')?.textContent.includes('FAST SECOND CONTENT'));
 await page.waitForTimeout(250);
 check('latest rapid-open request owns title and body',(await page.locator('#bookTitle').innerText())==='fast-second'&&(await page.locator('#textView').innerText()).includes('FAST SECOND CONTENT')&&!(await page.locator('#textView').innerText()).includes('SLOW FIRST CONTENT'),`${await page.locator('#bookTitle').innerText()} | ${(await page.locator('#textView').innerText()).slice(0,80)}`);
+await page.locator('#back').click();
+await page.locator('#files').setInputFiles({name:'broken.epub',mimeType:'application/epub+zip',buffer:Buffer.from('not a valid epub archive')});
+await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===5);
+const broken=page.locator('#shelf .book').filter({hasText:'broken'});
+await broken.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#shelfScreen')?.hidden===false&&document.querySelector('#status')?.textContent.includes('打开《broken》失败'));
+check('invalid EPUB returns to usable shelf',await page.locator('#shelfScreen').isVisible()&&await page.locator('#readerScreen').isHidden(),await page.locator('#status').innerText());
+check('failed book remains manageable',(await broken.count())===1&&(await page.locator('#status').innerText()).includes('书籍仍保留在书架，可重新导入或删除'),await page.locator('#status').innerText());
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
