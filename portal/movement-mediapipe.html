@@ -70,7 +70,7 @@
     const $=id=>document.getElementById(id);
     const ui={video:$('video'),canvas:$('canvas'),cameraStatus:$('cameraStatus'),practiceStatus:$('practiceStatus'),feedback:$('feedback'),duration:$('duration'),tracked:$('tracked'),coverage:$('coverage')};
     const ctx=ui.canvas.getContext('2d');
-    let PoseLandmarker,DrawingUtils,model,stream,animationId=0,lastVideoTime=-1,cameraRunning=false,cameraAttempt=0;
+    let PoseLandmarker,DrawingUtils,model,stream,animationId=0,lastVideoTime=-1,cameraRunning=false,poseReady=false,cameraAttempt=0;
     let practice=null,timerId=0,pendingRecord=null;
     const instructions={
       '深蹲':'深蹲：双脚与肩同宽，膝盖方向与脚尖一致；在舒适范围内下蹲，保持躯干稳定。',
@@ -84,6 +84,7 @@
       if(coverage>=55)return {coverage,feedback:'人体偶有离开识别范围；下次请让全身保持在画面中。'};
       return {coverage,feedback:'人体跟踪覆盖率较低；请增加光线、拉远镜头并确保全身入镜。'};
     }
+    function canStartPractice(cameraActive,poseCount){return Boolean(cameraActive&&poseCount>0)}
     function elapsedSeconds(){return practice?Math.max(0,Math.round((performance.now()-practice.startedAt)/1000)):0}
     function updateMetrics(){
       const seconds=elapsedSeconds(),tracked=practice?.tracked||0,total=practice?.total||0;
@@ -172,7 +173,7 @@
         ui.cameraStatus.textContent='摄像头已连接，正在等待首帧画面…';
         await waitForVideoFrame(ui.video,8000);
         if(attempt!==cameraAttempt)return;
-        cameraRunning=true;$('stopCamera').disabled=false;$('stopCamera').textContent='停止摄像头';$('startPractice').disabled=false;ui.cameraStatus.textContent='已收到摄像头画面，正在识别人体。';loop();
+        cameraRunning=true;poseReady=false;$('stopCamera').disabled=false;$('stopCamera').textContent='停止摄像头';$('startPractice').disabled=true;ui.cameraStatus.textContent='已收到摄像头画面，请让全身进入画面。';loop();
       }catch(error){stopCamera({discardPractice:true,status:cameraErrorMessage(error)})}
     }
     function loop(){
@@ -181,13 +182,14 @@
         lastVideoTime=ui.video.currentTime;ui.canvas.width=ui.video.videoWidth;ui.canvas.height=ui.video.videoHeight;ctx.clearRect(0,0,ui.canvas.width,ui.canvas.height);
         const result=model.detectForVideo(ui.video,performance.now()),poses=result.landmarks||[],drawing=new DrawingUtils(ctx);
         for(const pose of poses){drawing.drawConnectors(pose,PoseLandmarker.POSE_CONNECTIONS,{color:'#00d4ad',lineWidth:3});drawing.drawLandmarks(pose,{color:'#ff9f1c',radius:3})}
+        poseReady=canStartPractice(cameraRunning,poses.length);if(!practice)$('startPractice').disabled=!poseReady;
         ui.cameraStatus.textContent=poses.length?'已识别人体，保持全身在画面内。':'暂未识别人体，请后退并改善光线。';
         if(practice){practice.total+=1;if(poses.length)practice.tracked+=1;updateMetrics()}
       }
       animationId=requestAnimationFrame(loop);
     }
     function startPractice(){
-      if(!cameraRunning||practice)return;
+      if(!cameraRunning||!poseReady||practice)return;
       practice={startedAt:performance.now(),tracked:0,total:0};pendingRecord=null;ui.feedback.hidden=true;$('saveRecord').disabled=true;$('startPractice').disabled=true;$('finishPractice').disabled=false;
       ui.practiceStatus.textContent='跟练进行中；完成后点“结束并生成反馈”。';updateMetrics();timerId=setInterval(updateMetrics,500);
     }
@@ -196,7 +198,7 @@
       clearInterval(timerId);updateMetrics();const result=assessCoverage(practice.tracked,practice.total);
       pendingRecord={date:new Date().toISOString(),exercise:$('exercise').value,reps:clamp(Number($('reps').value)||0,0,999),durationSec:elapsedSeconds(),trackedFrames:practice.tracked,totalFrames:practice.total,coverage:result.coverage,feedback:result.feedback};
       practice=null;ui.coverage.textContent=result.coverage+'%';ui.feedback.textContent=result.feedback;ui.feedback.hidden=false;ui.practiceStatus.textContent='本次跟练已结束，可保存记录。';
-      $('saveRecord').disabled=false;$('finishPractice').disabled=true;$('startPractice').disabled=!cameraRunning;
+      $('saveRecord').disabled=false;$('finishPractice').disabled=true;$('startPractice').disabled=!poseReady;
     }
     function saveRecord(){
       if(!pendingRecord)return;
@@ -206,7 +208,7 @@
       cameraAttempt+=1;
       if(practice&&discardPractice){clearInterval(timerId);practice=null;pendingRecord=null;$('saveRecord').disabled=true;$('finishPractice').disabled=true;ui.feedback.hidden=true;ui.practiceStatus.textContent='练习因摄像头或页面中断而取消，未生成记录。'}
       else if(practice)finishPractice();
-      cameraRunning=false;cancelAnimationFrame(animationId);if(stream)stream.getTracks().forEach(track=>track.stop());stream=null;ui.video.srcObject=null;ctx.clearRect(0,0,ui.canvas.width,ui.canvas.height);
+      cameraRunning=false;poseReady=false;cancelAnimationFrame(animationId);if(stream)stream.getTracks().forEach(track=>track.stop());stream=null;ui.video.srcObject=null;ctx.clearRect(0,0,ui.canvas.width,ui.canvas.height);
       $('startCamera').disabled=false;$('startCamera').textContent='重新启动摄像头';$('stopCamera').disabled=true;$('stopCamera').textContent='停止摄像头';$('startPractice').disabled=true;ui.cameraStatus.textContent=status;
     }
     function cancelOrStopCamera(){
@@ -216,7 +218,7 @@
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
     $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',cancelOrStopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
     $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex))});
-    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
+    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
   })();
   </script>
 </body>

@@ -4,6 +4,7 @@
   "checks": [
     "pre-camera gate",
     "coverage feedback bands",
+    "pose readiness gate",
     "startup timeout guard",
     "first video frame gate",
     "first video frame timeout",
