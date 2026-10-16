@@ -42,6 +42,15 @@ await page.locator('foliate-view').evaluate(el=>{el.goTo=el.__testGoTo;delete el
 await page.locator('#tocList button').first().click();
 await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('第一章'));
 check('chapter navigation',!(await page.locator('#status').innerText()).includes('失败'));
+await page.locator('foliate-view').evaluate(el=>{el.__testNext=el.next.bind(el);el.next=async()=>{throw Error('test broken next page')}});
+await page.locator('#next').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('下一页加载失败'));
+check('page failure keeps reader usable',await page.locator('#readerScreen').isVisible()&&(await page.locator('#status').innerText()).includes('可重试、使用目录或返回书架'),await page.locator('#status').innerText());
+await page.locator('foliate-view').evaluate(el=>{el.next=async()=>{}});
+await page.locator('#next').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已翻到下一页');
+check('page recovery clears stale error',(await page.locator('#status').innerText())==='已翻到下一页',await page.locator('#status').innerText());
+await page.locator('foliate-view').evaluate(el=>{el.next=el.__testNext;delete el.__testNext});
 await page.locator('#speak').click();
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已朗读到结尾');
 const spoken=await page.evaluate(()=>window.__spoken.join(''));

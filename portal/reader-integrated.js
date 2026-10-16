@@ -31,7 +31,7 @@ try{if(format(b)==='txt'){const contents=await b.blob.text();if(run!==openRun||a
 function renderText(){$('textView').textContent=textPages[textIndex]||'';$('position').textContent='第 '+(textIndex+1)+' / '+textPages.length+' 页';savePos({index:textIndex})}
 $('tocButton').onclick=()=>$('tocPanel').hidden=!$('tocPanel').hidden;
 $('settingsButton').onclick=()=>$('settings').hidden=!$('settings').hidden;
-async function page(direction){stop();if(view){await(direction>0?view.next():view.prev())}else if(active){textIndex=Math.min(textPages.length-1,Math.max(0,textIndex+direction));renderText()}}
+async function page(direction){stop();if(view){const target=view,label=direction>0?'下一页':'上一页';try{await(direction>0?target.next():target.prev());if(view===target)status('已翻到'+label)}catch(e){if(view===target)status(`${label}加载失败：${e.message}；可重试、使用目录或返回书架`)}}else if(active){textIndex=Math.min(textPages.length-1,Math.max(0,textIndex+direction));renderText()}}
 $('prev').onclick=()=>page(-1);$('next').onclick=()=>page(1);
 function voices(){return synth?.getVoices()||[]}
 function refreshVoices(){const all=voices();$('voice').replaceChildren(...all.map((v,i)=>new Option(v.name+' · '+v.lang,String(i))));const zh=all.findIndex(v=>v.lang.toLowerCase().startsWith('zh'));if(zh>=0)$('voice').value=String(zh)}
