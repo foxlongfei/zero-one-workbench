@@ -19,11 +19,12 @@ const fs=require('fs'),path=require('path');
     if(assessments.map(x=>x.coverage).join(',')!=='90,60,20,0')throw Error('coverage calculation failed');
     if(!assessments[0].feedback.includes('稳定')||!assessments[2].feedback.includes('较低'))throw Error('coverage feedback bands failed');
     const readiness=await page.evaluate(()=>[
-      A01Practice.canStartPractice(false,1),
-      A01Practice.canStartPractice(true,0),
-      A01Practice.canStartPractice(true,1)
+      A01Practice.canStartPractice(false,1,2000),
+      A01Practice.canStartPractice(true,0,2000),
+      A01Practice.canStartPractice(true,1,1999),
+      A01Practice.canStartPractice(true,1,2000)
     ]);
-    if(readiness.join(',')!=='false,false,true')throw Error('pose readiness gate failed');
+    if(readiness.join(',')!=='false,false,false,true')throw Error('stable pose readiness gate failed');
 
     const timeoutResult=await page.evaluate(async()=>{try{await A01Practice.withTimeout(new Promise(()=>{}),10,'请求摄像头权限超时');return 'resolved'}catch(error){return error.name+':'+error.message}});
     if(timeoutResult!=='TimeoutError:请求摄像头权限超时')throw Error('camera timeout guard failed');
@@ -104,7 +105,7 @@ const fs=require('fs'),path=require('path');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['pre-camera gate','coverage feedback bands','pose readiness gate','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
+      checks:['pre-camera gate','coverage feedback bands','two-second stable pose readiness gate','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
   }finally{await browser.close()}
