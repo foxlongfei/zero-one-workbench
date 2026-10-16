@@ -83,6 +83,14 @@ check('EPUB reopen without error',!(await page.locator('#status').innerText()).i
 check('EPUB position restored',(await page.locator('#position').innerText()).includes('第二章'),await page.locator('#position').innerText());
 await page.locator('#back').click();
 const epubId=await epub.getAttribute('data-book-id');
+await page.evaluate(id=>localStorage.setItem('reader-pos-'+id,JSON.stringify({cfi:'bad-cfi',label:'坏位置'})),epubId);
+await page.evaluate(()=>{const proto=customElements.get('foliate-view').prototype;proto.__testInit=proto.init;proto.init=function(options){if(options.lastLocation==='bad-cfi')return Promise.reject(Error('test stale cfi'));return proto.__testInit.call(this,options)}});
+await epub.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('阅读位置已失效'));
+check('stale EPUB position falls back to book start',await page.locator('#readerScreen').isVisible()&&(await page.locator('#position').innerText()).includes('第一章'),await page.locator('#status').innerText()+' | '+await page.locator('#position').innerText());
+check('stale EPUB position is replaced',await page.evaluate(id=>!localStorage.getItem('reader-pos-'+id)?.includes('bad-cfi'),epubId),await page.evaluate(id=>localStorage.getItem('reader-pos-'+id),epubId));
+await page.evaluate(()=>{const proto=customElements.get('foliate-view').prototype;proto.init=proto.__testInit;delete proto.__testInit});
+await page.locator('#back').click();
 check('EPUB position exists before delete',await page.evaluate(id=>localStorage.getItem('reader-pos-'+id)!==null,epubId),epubId);
 page.once('dialog',dialog=>dialog.dismiss());
 await epub.locator('[data-action="delete"]').click();
