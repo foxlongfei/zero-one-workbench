@@ -46,7 +46,7 @@
         <button id="startPractice" disabled>开始跟练（3 秒准备）</button>
         <button id="finishPractice" class="secondary" disabled>结束并生成反馈</button>
       </div>
-      <p class="muted">点击开始后请继续保持全身入镜；准备倒计时中人体丢失会自动取消，不会生成练习记录。</p>
+      <p class="muted">点击开始后请继续保持全身入镜；准备倒计时中人体丢失会立即取消，跟练中持续丢失 5 秒也会取消，均不会生成练习记录。</p>
       <div class="metrics" aria-live="polite">
         <div class="metric"><span>时长</span><b id="duration">0 秒</b></div>
         <div class="metric"><span>识别帧</span><b id="tracked">0 / 0</b></div>
@@ -72,6 +72,7 @@
     const ui={video:$('video'),canvas:$('canvas'),cameraStatus:$('cameraStatus'),practiceStatus:$('practiceStatus'),feedback:$('feedback'),duration:$('duration'),tracked:$('tracked'),coverage:$('coverage')};
     const ctx=ui.canvas.getContext('2d');
     const POSE_HOLD_MS=2000;
+    const PRACTICE_POSE_LOSS_MS=5000;
     let PoseLandmarker,DrawingUtils,model,stream,animationId=0,lastVideoTime=-1,cameraRunning=false,poseReady=false,poseDetectedSince=0,cameraAttempt=0;
     let practice=null,timerId=0,pendingRecord=null,practiceCountdown=null;
     const instructions={
@@ -88,6 +89,7 @@
     }
     function canStartPractice(cameraActive,poseCount,stableForMs=0,requiredMs=POSE_HOLD_MS){return Boolean(cameraActive&&poseCount>0&&stableForMs>=requiredMs)}
     function hasUsablePracticeFrames(totalFrames){return Number(totalFrames)>0}
+    function shouldCancelPracticeForPoseLoss(poseCount,lostForMs,requiredMs=PRACTICE_POSE_LOSS_MS){return Number(poseCount)===0&&lostForMs>=requiredMs}
     function createPracticeCountdown({isAllowed,onTick,onStart,onCancel,durationMs=3000,tickMs=100}){
       const startedAt=performance.now();let timer=0,finished=false,lastSeconds=-1;
       const finish=callback=>{if(finished)return;finished=true;clearTimeout(timer);callback()};
@@ -206,7 +208,19 @@
         if(poseReady)ui.cameraStatus.textContent='已稳定识别人体，可以开始跟练。';
         else if(poses.length)ui.cameraStatus.textContent=`已识别人体，请保持全身稳定 ${Math.max(1,Math.ceil((POSE_HOLD_MS-stableForMs)/1000))} 秒。`;
         else ui.cameraStatus.textContent='暂未识别人体，请后退并改善光线；稳定计时已重置。';
-        if(practice){practice.total+=1;if(poses.length)practice.tracked+=1;updateMetrics()}
+        if(practice){
+          practice.total+=1;
+          if(poses.length){
+            practice.tracked+=1;practice.poseLostSince=0;
+            ui.practiceStatus.textContent='跟练进行中；完成后点“结束并生成反馈”。';
+          }else{
+            if(!practice.poseLostSince)practice.poseLostSince=now;
+            const lostForMs=now-practice.poseLostSince;
+            if(shouldCancelPracticeForPoseLoss(poses.length,lostForMs))cancelPractice('人体持续离开画面，本次跟练已取消且未保存。请重新稳定站立 2 秒后再开始。');
+            else ui.practiceStatus.textContent=`人体暂时离开画面，${Math.max(1,Math.ceil((PRACTICE_POSE_LOSS_MS-lostForMs)/1000))} 秒后将取消本次跟练。`;
+          }
+          updateMetrics();
+        }
       }
       animationId=requestAnimationFrame(loop);
     }
@@ -225,8 +239,13 @@
     }
     function beginPractice(){
       if(!cameraRunning||!poseReady||practice)return;
-      practice={startedAt:performance.now(),tracked:0,total:0};pendingRecord=null;ui.feedback.hidden=true;$('saveRecord').disabled=true;$('startPractice').textContent='开始跟练（3 秒准备）';$('startPractice').disabled=true;$('finishPractice').disabled=false;
+      practice={startedAt:performance.now(),tracked:0,total:0,poseLostSince:0};pendingRecord=null;ui.feedback.hidden=true;$('saveRecord').disabled=true;$('startPractice').textContent='开始跟练（3 秒准备）';$('startPractice').disabled=true;$('finishPractice').disabled=false;
       ui.practiceStatus.textContent='跟练进行中；完成后点“结束并生成反馈”。';updateMetrics();timerId=setInterval(updateMetrics,500);
+    }
+    function cancelPractice(message){
+      if(!practice)return false;
+      clearInterval(timerId);practice=null;pendingRecord=null;ui.feedback.hidden=true;$('saveRecord').disabled=true;$('finishPractice').disabled=true;$('startPractice').disabled=!poseReady;
+      ui.practiceStatus.textContent=message;return true;
     }
     function finishPractice(){
       if(!practice)return;
@@ -247,7 +266,7 @@
     function stopCamera({discardPractice=false,status='摄像头已停止。'}={}){
       cameraAttempt+=1;
       if(practiceCountdown)practiceCountdown.cancel();
-      if(practice&&discardPractice){clearInterval(timerId);practice=null;pendingRecord=null;$('saveRecord').disabled=true;$('finishPractice').disabled=true;ui.feedback.hidden=true;ui.practiceStatus.textContent='练习因摄像头或页面中断而取消，未生成记录。'}
+      if(practice&&discardPractice)cancelPractice('练习因摄像头或页面中断而取消，未生成记录。')
       else if(practice)finishPractice();
       cameraRunning=false;poseReady=false;poseDetectedSince=0;cancelAnimationFrame(animationId);if(stream)stream.getTracks().forEach(track=>track.stop());stream=null;ui.video.srcObject=null;ctx.clearRect(0,0,ui.canvas.width,ui.canvas.height);
       $('startCamera').disabled=false;$('startCamera').textContent='重新启动摄像头';$('stopCamera').disabled=true;$('stopCamera').textContent='停止摄像头';$('startPractice').disabled=true;ui.cameraStatus.textContent=status;
@@ -259,7 +278,7 @@
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
     $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',cancelOrStopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
     $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex))});
-    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,createPracticeCountdown,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
+    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,shouldCancelPracticeForPoseLoss,createPracticeCountdown,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
   })();
   </script>
 </body>
