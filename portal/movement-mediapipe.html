@@ -211,12 +211,12 @@
     }
     function startPractice(){
       if(!cameraRunning||!poseReady||practice||practiceCountdown)return;
-      $('startPractice').disabled=true;$('finishPractice').disabled=true;
+      $('startPractice').disabled=true;$('startPractice').textContent='准备中…';$('finishPractice').disabled=true;
       practiceCountdown=createPracticeCountdown({
         isAllowed:()=>cameraRunning&&poseReady&&!practice,
         onTick:seconds=>{ui.practiceStatus.textContent=`准备开始：${seconds} 秒。请保持全身在画面中。`},
         onCancel:()=>{
-          practiceCountdown=null;$('startPractice').disabled=!poseReady;
+          practiceCountdown=null;$('startPractice').textContent='开始跟练（3 秒准备）';$('startPractice').disabled=!poseReady;
           ui.practiceStatus.textContent='启动已取消：倒计时期间未持续识别到人体，请重新稳定站立后再开始。';
         },
         onStart:()=>{practiceCountdown=null;beginPractice()}
@@ -224,7 +224,7 @@
     }
     function beginPractice(){
       if(!cameraRunning||!poseReady||practice)return;
-      practice={startedAt:performance.now(),tracked:0,total:0};pendingRecord=null;ui.feedback.hidden=true;$('saveRecord').disabled=true;$('startPractice').disabled=true;$('finishPractice').disabled=false;
+      practice={startedAt:performance.now(),tracked:0,total:0};pendingRecord=null;ui.feedback.hidden=true;$('saveRecord').disabled=true;$('startPractice').textContent='开始跟练（3 秒准备）';$('startPractice').disabled=true;$('finishPractice').disabled=false;
       ui.practiceStatus.textContent='跟练进行中；完成后点“结束并生成反馈”。';updateMetrics();timerId=setInterval(updateMetrics,500);
     }
     function finishPractice(){
