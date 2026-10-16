@@ -43,9 +43,10 @@
         <label>完成次数（自行确认）<input id="reps" type="number" value="5" min="0" max="999" inputmode="numeric"></label>
       </div>
       <div class="actions" style="margin-top:14px">
-        <button id="startPractice" disabled>开始跟练</button>
+        <button id="startPractice" disabled>开始跟练（3 秒准备）</button>
         <button id="finishPractice" class="secondary" disabled>结束并生成反馈</button>
       </div>
+      <p class="muted">点击开始后请继续保持全身入镜；准备倒计时中人体丢失会自动取消，不会生成练习记录。</p>
       <div class="metrics" aria-live="polite">
         <div class="metric"><span>时长</span><b id="duration">0 秒</b></div>
         <div class="metric"><span>识别帧</span><b id="tracked">0 / 0</b></div>
