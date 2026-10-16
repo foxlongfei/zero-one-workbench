@@ -33,6 +33,12 @@ check('EPUB opened',await page.locator('foliate-view').count()===1,await page.lo
 check('EPUB no open error',!(await page.locator('#status').innerText()).includes('打开失败'),await page.locator('#status').innerText());
 await page.locator('#tocButton').click();
 check('TOC has chapters',await page.locator('#tocList button').count()>=2,await page.locator('#tocList').innerText());
+await page.locator('foliate-view').evaluate(el=>{el.__testGoTo=el.goTo.bind(el);el.goTo=async()=>{throw Error('test broken chapter')}});
+await page.locator('#tocList button').first().click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('跳转失败'));
+check('broken chapter keeps reader usable',await page.locator('#readerScreen').isVisible()&&await page.locator('#tocPanel').isVisible(),await page.locator('#status').innerText());
+check('broken chapter offers recovery choices',(await page.locator('#status').innerText()).includes('可选择其他章节或返回书架'),await page.locator('#status').innerText());
+await page.locator('foliate-view').evaluate(el=>{el.goTo=el.__testGoTo;delete el.__testGoTo});
 await page.locator('#tocList button').first().click();
 await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('第一章'));
 check('chapter navigation',!(await page.locator('#status').innerText()).includes('失败'));
