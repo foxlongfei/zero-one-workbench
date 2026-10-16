@@ -123,6 +123,18 @@ check('shelf search has empty result feedback',(await page.locator('#shelf').inn
 await page.locator('#shelfSearch').fill('');
 check('clearing search restores all books',await page.locator('#shelf .book').count()===2,await page.locator('#shelf').innerText());
 check('clearing search preserves recent order',(await page.locator('#shelf .book').first().getAttribute('data-book-id'))===reimportedEpubId,await page.locator('#shelf').innerText());
+await page.locator('#files').setInputFiles([
+  {name:'slow-first.txt',mimeType:'text/plain',buffer:Buffer.from('SLOW FIRST CONTENT\n'.repeat(400))},
+  {name:'fast-second.txt',mimeType:'text/plain',buffer:Buffer.from('FAST SECOND CONTENT')}
+]);
+await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===4);
+await page.evaluate(()=>{const original=Blob.prototype.text;Blob.prototype.text=function(){const result=original.call(this);return this.size>1000?new Promise(resolve=>setTimeout(async()=>resolve(await result),180)):result}});
+const slow=page.locator('#shelf .book').filter({hasText:'slow-first'}),fast=page.locator('#shelf .book').filter({hasText:'fast-second'});
+await slow.locator('[data-action="open"]').evaluate(button=>button.click());
+await fast.locator('[data-action="open"]').evaluate(button=>button.click());
+await page.waitForFunction(()=>document.querySelector('#bookTitle')?.textContent==='fast-second'&&document.querySelector('#textView')?.textContent.includes('FAST SECOND CONTENT'));
+await page.waitForTimeout(250);
+check('latest rapid-open request owns title and body',(await page.locator('#bookTitle').innerText())==='fast-second'&&(await page.locator('#textView').innerText()).includes('FAST SECOND CONTENT')&&!(await page.locator('#textView').innerText()).includes('SLOW FIRST CONTENT'),`${await page.locator('#bookTitle').innerText()} | ${(await page.locator('#textView').innerText()).slice(0,80)}`);
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
