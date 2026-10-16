@@ -91,6 +91,10 @@
     function hasUsablePracticeFrames(totalFrames){return Number(totalFrames)>0}
     function shouldCancelPracticeForPoseLoss(poseCount,lostForMs,requiredMs=PRACTICE_POSE_LOSS_MS){return Number(poseCount)===0&&lostForMs>=requiredMs}
     function shouldHandleCameraTrackEnd(cameraActive,activeAttempt,endedAttempt,activeTrack,endedTrack){return Boolean(cameraActive&&activeAttempt===endedAttempt&&activeTrack===endedTrack)}
+    function handleCameraTrackEnd({cameraActive,activeAttempt,endedAttempt,activeTrack,endedTrack,onDisconnect}){
+      if(!shouldHandleCameraTrackEnd(cameraActive,activeAttempt,endedAttempt,activeTrack,endedTrack))return false;
+      onDisconnect();return true;
+    }
     function createPracticeCountdown({isAllowed,onTick,onStart,onCancel,durationMs=3000,tickMs=100}){
       const startedAt=performance.now();let timer=0,finished=false,lastSeconds=-1;
       const finish=callback=>{if(finished)return;finished=true;clearTimeout(timer);callback()};
@@ -190,7 +194,7 @@
         const videoTrack=stream.getVideoTracks()[0];
         if(videoTrack)videoTrack.addEventListener('ended',()=>{
           const activeTrack=stream?.getVideoTracks()[0];
-          if(shouldHandleCameraTrackEnd(cameraRunning,cameraAttempt,attempt,activeTrack,videoTrack))stopCamera({discardPractice:true,status:'摄像头连接已中断；未完成练习未保存。请检查设备后重新启动。'});
+          handleCameraTrackEnd({cameraActive:cameraRunning,activeAttempt:cameraAttempt,endedAttempt:attempt,activeTrack,endedTrack:videoTrack,onDisconnect:()=>stopCamera({discardPractice:true,status:'摄像头连接已中断；未完成练习未保存。请检查设备后重新启动。'})});
         },{once:true});
         ui.video.srcObject=stream;await ui.video.play();
         ui.cameraStatus.textContent='摄像头已连接，正在等待首帧画面…';
@@ -283,7 +287,7 @@
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
     $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',cancelOrStopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
     $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex))});
-    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,shouldCancelPracticeForPoseLoss,shouldHandleCameraTrackEnd,createPracticeCountdown,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
+    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,shouldCancelPracticeForPoseLoss,shouldHandleCameraTrackEnd,handleCameraTrackEnd,createPracticeCountdown,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
   })();
   </script>
 </body>
