@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "portal/movement-mediapipe.html"
+      - "portal/movement-mediapipe-v2.html"
+      - "portal/index.html"
       - "portal/vendor/mediapipe/**"
       - "scripts/prepare-a01-mediapipe-vendor.sh"
       - "tests/v02/a01-mediapipe-smoke.cjs"
@@ -13,6 +15,8 @@ on:
       - integration/a01-mediapipe-20261014
     paths:
       - "portal/movement-mediapipe.html"
+      - "portal/movement-mediapipe-v2.html"
+      - "portal/index.html"
       - "tests/v02/a01-mediapipe-smoke.cjs"
       - ".github/workflows/a01-pr28-regression.yml"
   workflow_dispatch:
