@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "test_type": "browser_logic_smoke_not_camera_hardware_not_double_blind",
+  "checks": [
+    "pre-camera gate",
+    "coverage feedback bands",
+    "pose readiness gate",
+    "startup timeout guard",
+    "first video frame gate",
+    "first video frame timeout",
+    "cancel pending startup",
+    "permission denial guidance",
+    "camera retry",
+    "missing-device guidance",
+    "exercise teaching switch",
+    "history evidence detail",
+    "CSV export",
+    "delete cancel protection",
+    "confirmed record deletion",
+    "CSV excludes deleted record",
+    "reload persistence"
+  ]
+}
