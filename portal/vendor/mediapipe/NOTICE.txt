@@ -1,0 +1,12 @@
+MediaPipe Tasks Vision runtime
+Upstream: https://www.npmjs.com/package/@mediapipe/tasks-vision
+Pinned version: 0.10.21
+License: Apache License 2.0
+Copyright: Google LLC
+
+Pose Landmarker Lite model
+Upstream: https://developers.google.com/mediapipe/solutions/vision/pose_landmarker
+Model URL: https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
+
+The deployment build downloads these pinned artifacts once, verifies their SHA-256
+digests, and serves them from this site's own /portal/vendor/mediapipe/ path.
