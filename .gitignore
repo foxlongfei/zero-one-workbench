@@ -1,0 +1,4 @@
+# Generated A01 deployment assets (built from pinned, checksum-verified upstreams).
+portal/vendor/mediapipe/vision_bundle.mjs
+portal/vendor/mediapipe/wasm/
+portal/vendor/mediapipe/models/
