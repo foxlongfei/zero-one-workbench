@@ -133,6 +133,14 @@ await page.waitForFunction(()=>document.querySelector('#position')?.textContent.
 check('TXT resume',await page.locator('#position').innerText().then(x=>x.includes('2 /')));
 await page.locator('#back').click();
 const txtId=await resumedTxt.getAttribute('data-book-id');
+await page.evaluate(id=>localStorage.setItem('reader-pos-'+id,JSON.stringify({index:-10,lastReadAt:Date.now()})),txtId);
+await resumedTxt.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('TXT 阅读位置已失效'));
+check('stale TXT position falls back to first page',(await page.locator('#position').innerText()).includes('1 /')&&(await page.locator('#textView').innerText()).length>0,await page.locator('#status').innerText()+' | '+await page.locator('#position').innerText());
+check('stale TXT position is replaced',await page.evaluate(id=>JSON.parse(localStorage.getItem('reader-pos-'+id)).index===0,txtId),await page.evaluate(id=>localStorage.getItem('reader-pos-'+id),txtId));
+await page.locator('#next').click();
+await page.waitForFunction(()=>document.querySelector('#position')?.textContent.includes('2 /'));
+await page.locator('#back').click();
 page.once('dialog',dialog=>dialog.dismiss());
 await resumedTxt.locator('[data-action="reset"]').click();
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已取消重置'));
