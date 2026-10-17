@@ -150,9 +150,16 @@
       link.href=url;link.download='A01-练习记录-'+new Date().toISOString().slice(0,10)+'.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),0);
     }
     async function loadMediaPipe(){
-      const module=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm');
+      let module;
+      try{module=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm')}
+      catch(primaryError){
+        try{module=await import('https://esm.sh/@mediapipe/tasks-vision@0.10.22?bundle')}
+        catch(secondaryError){throw new Error('MediaPipe 在线模块加载失败（jsDelivr 与 esm.sh 均不可用）。请检查网络是否允许访问 CDN；摄像头权限本身可能正常。',{cause:secondaryError})}
+      }
       PoseLandmarker=module.PoseLandmarker;DrawingUtils=module.DrawingUtils;
-      const vision=await module.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm');
+      let vision;
+      try{vision=await module.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm')}
+      catch(error){vision=await module.FilesetResolver.forVisionTasks('https://unpkg.com/@mediapipe/tasks-vision@0.10.22/wasm')}
       return PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task'},runningMode:'VIDEO',numPoses:1});
     }
     function withTimeout(promise,ms,message){
