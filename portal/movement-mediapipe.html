@@ -34,7 +34,7 @@
       </div>
       <p id="cameraStatus" class="status" role="status">未启动摄像头</p>
       <div class="camera"><video id="video" autoplay muted playsinline></video><canvas id="canvas"></canvas></div>
-      <p class="muted">需要联网加载 Apache-2.0 的 MediaPipe Tasks Vision 与 Google 预训练 pose_landmarker_lite 模型；需要 HTTPS 和摄像头权限。</p>
+      <p class="muted">MediaPipe Tasks Vision 与 pose_landmarker_lite 模型随本站同源部署；运行时不访问第三方 CDN。摄像头仍需要 HTTPS 和浏览器权限。</p>
     </main>
     <aside class="card">
       <h2>2. 跟练与反馈</h2>
@@ -149,18 +149,20 @@
       const url=URL.createObjectURL(new Blob([buildHistoryCsv(records)],{type:'text/csv;charset=utf-8'})),link=document.createElement('a');
       link.href=url;link.download='A01-练习记录-'+new Date().toISOString().slice(0,10)+'.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),0);
     }
+    function getRuntimeUrls(){
+      const root=new URL('./vendor/mediapipe/',document.baseURI);
+      return {
+        module:new URL('vision_bundle.mjs',root).href,
+        wasm:new URL('wasm/',root).href,
+        model:new URL('models/pose_landmarker_lite.task',root).href
+      };
+    }
     async function loadMediaPipe(){
-      let module;
-      try{module=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm')}
-      catch(primaryError){
-        try{module=await import('https://esm.sh/@mediapipe/tasks-vision@0.10.22?bundle')}
-        catch(secondaryError){throw new Error('MediaPipe 在线模块加载失败（jsDelivr 与 esm.sh 均不可用）。请检查网络是否允许访问 CDN；摄像头权限本身可能正常。',{cause:secondaryError})}
-      }
+      const runtime=getRuntimeUrls();
+      const module=await import(runtime.module);
       PoseLandmarker=module.PoseLandmarker;DrawingUtils=module.DrawingUtils;
-      let vision;
-      try{vision=await module.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm')}
-      catch(error){vision=await module.FilesetResolver.forVisionTasks('https://unpkg.com/@mediapipe/tasks-vision@0.10.22/wasm')}
-      return PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task'},runningMode:'VIDEO',numPoses:1});
+      const vision=await module.FilesetResolver.forVisionTasks(runtime.wasm);
+      return PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:runtime.model},runningMode:'VIDEO',numPoses:1});
     }
     function withTimeout(promise,ms,message){
       let timer;
@@ -183,7 +185,7 @@
       if(error?.name==='NotAllowedError'||error?.name==='SecurityError')return '未获得摄像头权限。请在浏览器地址栏允许摄像头后，点击“重新启动摄像头”。';
       if(error?.name==='NotFoundError'||error?.name==='DevicesNotFoundError')return '未检测到摄像头设备。请连接设备后，点击“重新启动摄像头”。';
       if(error?.name==='NotReadableError'||error?.name==='TrackStartError')return '摄像头可能正被其他应用占用。关闭占用后，点击“重新启动摄像头”。';
-      return '摄像头启动失败：'+(error?.message||'未知错误')+'。请检查网络、设备和权限后重试。';
+      return '摄像头启动失败：'+(error?.message||'未知错误')+'。若提示本地 MediaPipe 资源缺失，请报告页面地址；否则请检查设备和权限后重试。';
     }
     async function startCamera(){
       if(cameraRunning)return;
@@ -294,7 +296,7 @@
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
     $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',cancelOrStopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
     $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex))});
-    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,shouldCancelPracticeForPoseLoss,shouldHandleCameraTrackEnd,handleCameraTrackEnd,createPracticeCountdown,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame};renderHistory();
+    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,shouldCancelPracticeForPoseLoss,shouldHandleCameraTrackEnd,handleCameraTrackEnd,createPracticeCountdown,readHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame,getRuntimeUrls,loadMediaPipe};renderHistory();
   })();
   </script>
 </body>
