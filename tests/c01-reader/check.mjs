@@ -19,6 +19,10 @@ Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{cancel(
 await page.goto('http://127.0.0.1:8765/portal/read-with-you-v01.html');
 await page.waitForSelector('#importButton:enabled');
 check('shelf visible',await page.locator('#shelfScreen').isVisible());
+await page.locator('#files').setInputFiles({name:'blank.txt',mimeType:'text/plain',buffer:Buffer.from(' \n\t ')});
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('空白 TXT'));
+check('blank TXT is rejected before shelf import',await page.locator('#shelf .book').count()===0,await page.locator('#status').innerText());
+check('blank TXT rejection is explicit',(await page.locator('#status').innerText()).includes('已导入 0 本；跳过 1 本空白 TXT'),await page.locator('#status').innerText());
 await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/real-book.epub'));
 const epub=page.locator('#shelf .book').filter({hasText:'EPUB'});
 await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===1);
