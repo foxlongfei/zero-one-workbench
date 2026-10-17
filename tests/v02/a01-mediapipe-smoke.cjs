@@ -1,14 +1,41 @@
 const {chromium}=require('playwright');
-const fs=require('fs'),path=require('path');
+const fs=require('fs'),path=require('path'),http=require('http');
 
 (async()=>{
+  const portalRoot=path.resolve(__dirname,'../../portal');
+  const contentTypes={'.html':'text/html; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8','.wasm':'application/wasm','.task':'application/octet-stream','.txt':'text/plain; charset=utf-8'};
+  const server=http.createServer((request,response)=>{
+    const pathname=decodeURIComponent(new URL(request.url,'http://127.0.0.1').pathname);
+    const filePath=path.resolve(portalRoot,'.'+pathname);
+    if(!filePath.startsWith(portalRoot+path.sep))return response.writeHead(403).end('forbidden');
+    fs.readFile(filePath,(error,data)=>{
+      if(error)return response.writeHead(error.code==='ENOENT'?404:500).end(error.code||'error');
+      response.writeHead(200,{'content-type':contentTypes[path.extname(filePath)]||'application/octet-stream','cache-control':'no-store'}).end(data);
+    });
+  });
+  await new Promise((resolve,reject)=>server.listen(0,'127.0.0.1',error=>error?reject(error):resolve()));
+  const origin=`http://127.0.0.1:${server.address().port}`;
   const browser=await chromium.launch({headless:true});
   const page=await browser.newPage({viewport:{width:390,height:844}});
-  const target='file://'+path.resolve(__dirname,'../../portal/movement-mediapipe.html');
+  page.setDefaultTimeout(120000);
+  const externalRequests=[];
+  page.on('request',request=>{if(new URL(request.url()).origin!==origin)externalRequests.push(request.url())});
+  const target=origin+'/movement-mediapipe.html';
   try{
     await page.goto(target);
     if(await page.locator('#startPractice').isEnabled())throw Error('practice enabled before camera');
     if(!(await page.locator('#historySummary').innerText()).includes('暂无记录'))throw Error('empty history state missing');
+
+    const runtime=await page.evaluate(async()=>{
+      const urls=A01Practice.getRuntimeUrls();
+      const model=await A01Practice.loadMediaPipe();
+      const result={urls,hasVideoDetector:typeof model.detectForVideo==='function'};
+      model.close?.();
+      return result;
+    });
+    if(!runtime.hasVideoDetector)throw Error('same-origin MediaPipe model did not initialize');
+    if(Object.values(runtime.urls).some(url=>!url.startsWith(origin+'/vendor/mediapipe/')))throw Error('MediaPipe runtime escaped same-origin vendor path');
+    if(externalRequests.length)throw Error('unexpected external runtime request: '+externalRequests.join(', '));
 
     const assessments=await page.evaluate(()=>[
       A01Practice.assessCoverage(9,10),
@@ -158,8 +185,8 @@ const fs=require('fs'),path=require('path');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['pre-camera gate','coverage feedback bands','two-second stable pose readiness gate','zero-frame practice record gate','sustained pose loss cancels active practice','stale camera track end isolation','current camera track end invokes discard controller','pose-loss cancels practice countdown','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
+      checks:['same-origin runtime URL gate','no external runtime requests','MediaPipe WASM and pose model initialization','pre-camera gate','coverage feedback bands','two-second stable pose readiness gate','zero-frame practice record gate','sustained pose loss cancels active practice','stale camera track end isolation','current camera track end invokes discard controller','pose-loss cancels practice countdown','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
-  }finally{await browser.close()}
+  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
 })().catch(error=>{console.error(error);process.exit(1)});

@@ -1,11 +1,22 @@
 name: A01 PR28 pose-start regression
 
 on:
+  pull_request:
+    paths:
+      - "portal/movement-mediapipe.html"
+      - "portal/movement-mediapipe-v2.html"
+      - "portal/index.html"
+      - "portal/vendor/mediapipe/**"
+      - "scripts/prepare-a01-mediapipe-vendor.sh"
+      - "tests/v02/a01-mediapipe-smoke.cjs"
+      - ".github/workflows/a01-pr28-regression.yml"
   push:
     branches:
       - integration/a01-mediapipe-20261014
     paths:
       - "portal/movement-mediapipe.html"
+      - "portal/movement-mediapipe-v2.html"
+      - "portal/index.html"
       - "tests/v02/a01-mediapipe-smoke.cjs"
       - ".github/workflows/a01-pr28-regression.yml"
   workflow_dispatch:
@@ -34,6 +45,8 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
+      - name: Build pinned same-origin MediaPipe runtime
+        run: bash scripts/prepare-a01-mediapipe-vendor.sh portal
       - name: Run A01 pose-start browser regression
         run: node tests/v02/a01-mediapipe-smoke.cjs
       - name: Upload A01 regression evidence
