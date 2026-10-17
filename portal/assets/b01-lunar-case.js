@@ -22,9 +22,10 @@
     if (!match) throw new Error('请输入有效的最后见到日期时间');
     const parts = match.slice(1).map(Number);
     const [year, month, day, hour, minute] = parts;
-    const probe = new Date(year, month - 1, day, hour, minute, 0);
-    if (probe.getFullYear() !== year || probe.getMonth() !== month - 1 || probe.getDate() !== day ||
-        probe.getHours() !== hour || probe.getMinutes() !== minute) {
+    const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+    const monthDays = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (year < 1 || month < 1 || month > 12 || day < 1 || day > monthDays[month - 1] ||
+        hour < 0 || hour > 23 || minute < 0 || minute > 59) {
       throw new Error('最后见到日期时间不存在');
     }
     return { year, month, day, hour, minute };

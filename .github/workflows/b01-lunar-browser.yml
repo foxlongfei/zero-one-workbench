@@ -8,6 +8,7 @@ on:
       - "portal/assets/b01-lunar-case.js"
       - "portal/vendor/lunar-javascript/**"
       - "scripts/b01-lunar-browser-verify.cjs"
+      - "scripts/b01-lunar-unit-verify.cjs"
       - ".github/workflows/b01-lunar-browser.yml"
   workflow_dispatch:
 
@@ -28,7 +29,11 @@ jobs:
         with:
           node-version: 22
       - name: Validate product JavaScript syntax
-        run: node --check portal/assets/b01-lunar-case.js && node --check scripts/b01-lunar-browser-verify.cjs
+        run: node --check portal/assets/b01-lunar-case.js && node --check scripts/b01-lunar-browser-verify.cjs && node --check scripts/b01-lunar-unit-verify.cjs
+      - name: Run deterministic date and repeat regressions
+        env:
+          TZ: America/New_York
+        run: node scripts/b01-lunar-unit-verify.cjs
       - name: Install pinned browser verifier
         run: |
           npm install --no-save --no-package-lock playwright@1.55.0
