@@ -24,7 +24,11 @@ def check(project):
  if project=='A01':
   for word in ['setInterval','localStorage','video']:
    if word not in data:fail.append('missing training capability '+word)
- if project=='C01' and 'speechSynthesis' not in data:fail.append('missing speech engine')
+ if project=='C01':
+  # C01 uses an external ES module because CSP forbids inline scripts; inspect its actual source.
+  js=ROOT/'portal'/'reader-integrated.js'
+  module_source=js.read_text(encoding='utf-8') if js.exists() and 'reader-integrated.js' in data else ''
+  if 'speechSynthesis' not in (data+module_source) or 'SpeechSynthesisUtterance' not in (data+module_source):fail.append('missing speech engine')
  report={'project':project,'source_page':name,'status':'PASS' if not fail else 'FAIL','failures':fail,'test_type':'static_contract_not_double_blind'}
  out=ROOT/'reports'/'v02';out.mkdir(parents=True,exist_ok=True);(out/(project+'-contract.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
  print(json.dumps(report,ensure_ascii=False));return bool(fail)
