@@ -117,7 +117,11 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-num2').inputValue() === '22' &&
       await page.locator('#liuyao-num3').inputValue() === '6');
     const restoredLiuyao = await page.locator('#liuyao-result').innerText();
-    check('Liu Yao share recalculates result', restoredLiuyao.trim().length > 80 && /动爻|卦/.test(restoredLiuyao));
+    check('Liu Yao share recalculates result',
+      restoredLiuyao.trim().length > 80 &&
+      await page.locator('#liuyao-result .hex-header').count() === 1 &&
+      await page.locator('#liuyao-result .hex-lines-table').count() === 1,
+      restoredLiuyao.slice(0, 300));
 
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
   } finally {
