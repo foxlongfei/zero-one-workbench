@@ -31,6 +31,8 @@ const check = (name, ok, detail = '') => {
       await page.locator('#tab-bazi').count() === 1 &&
       await page.locator('#tab-liuyao').count() === 1 &&
       await page.locator('#tab-ziwei').count() === 1);
+    check('strict CSP has no inline event handlers',
+      await page.locator('[onclick], [onchange], [onsubmit]').count() === 0);
     check('portal return path available',
       await page.locator('#portal-return').getAttribute('href') === '../index.html');
     const licenseHref = await page.locator('#local-license-link').getAttribute('href');
@@ -83,8 +85,16 @@ const check = (name, ok, detail = '') => {
     await page.locator('#theme-toggle').click();
     check('theme switch works', await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'light'));
     await page.locator('#share-btn').click();
+    check('share modal opens', await page.locator('#share-modal').isVisible());
+    check('share URL is prepared', (await page.locator('#share-url').inputValue()).includes('#'));
+    await page.locator('#copy-url-btn').click();
     await page.locator('.toast').waitFor({ state: 'visible' });
-    check('share link works', (await page.locator('.toast').innerText()).trim().length > 0);
+    check('share link copies', (await page.locator('.toast').innerText()).trim().length > 0);
+    await page.locator('#share-modal-close').click();
+    check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
+    await page.locator('#share-btn').click();
+    await page.keyboard.press('Escape');
+    check('share modal closes by Escape', !(await page.locator('#share-modal').isVisible()));
 
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
   } finally {
