@@ -1037,6 +1037,16 @@ const TianjiApp = (function () {
       params.m = $('ziwei-month') ? $('ziwei-month').value : '';
       params.d = $('ziwei-day') ? $('ziwei-day').value : '';
       params.h = $('ziwei-hour') ? $('ziwei-hour').value : '12';
+      var zg = document.querySelector('input[name="ziwei-gender"]:checked');
+      params.gender = zg ? zg.value : 'male';
+    } else if (activeTab === 'liuyao') {
+      params.tab = 'liuyao';
+      params.method = $('liuyao-method') ? $('liuyao-method').value : 'time';
+      if (params.method === 'number') {
+        params.n1 = $('liuyao-num1') ? $('liuyao-num1').value : '';
+        params.n2 = $('liuyao-num2') ? $('liuyao-num2').value : '';
+        params.n3 = $('liuyao-num3') ? $('liuyao-num3').value : '';
+      }
     }
     var encoded = btoa(JSON.stringify(params));
     return window.location.origin + window.location.pathname + '#' + encoded;
@@ -1112,7 +1122,20 @@ const TianjiApp = (function () {
         if (decoded.m && $('ziwei-month')) $('ziwei-month').value = decoded.m;
         if (decoded.d && $('ziwei-day')) $('ziwei-day').value = decoded.d;
         if (decoded.h && $('ziwei-hour')) $('ziwei-hour').value = decoded.h;
+        if (decoded.gender) {
+          var zwRadio = document.querySelector('input[name="ziwei-gender"][value="' + decoded.gender + '"]');
+          if (zwRadio) zwRadio.checked = true;
+        }
         switchTab('ziwei');
+      } else if (decoded.tab === 'liuyao') {
+        var method = ['time', 'number', 'coin'].indexOf(decoded.method) >= 0 ? decoded.method : 'time';
+        if ($('liuyao-method')) $('liuyao-method').value = method;
+        if (decoded.n1 !== undefined && $('liuyao-num1')) $('liuyao-num1').value = decoded.n1;
+        if (decoded.n2 !== undefined && $('liuyao-num2')) $('liuyao-num2').value = decoded.n2;
+        if (decoded.n3 !== undefined && $('liuyao-num3')) $('liuyao-num3').value = decoded.n3;
+        updateLiuyaoInputs();
+        switchTab('liuyao');
+        if (method === 'number' && decoded.n1 && decoded.n2) castLiuyao();
       }
     } catch (e) {
       // Invalid hash -- ignore silently
