@@ -859,7 +859,13 @@ const TianjiApp = (function () {
     if (input) input.value = input.defaultValue;
   }
 
+  function clearSharedChartHash() {
+    if (!window.location.hash) return;
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
   function resetActiveTab(dateStr) {
+    clearSharedChartHash();
     if (activeTab === 'liuyao') {
       resetSelectToDefault('liuyao-method');
       ['liuyao-num1', 'liuyao-num2', 'liuyao-num3'].forEach(resetInputToDefault);
