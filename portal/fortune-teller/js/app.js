@@ -522,7 +522,7 @@ const TianjiApp = (function () {
   /** Refresh the currently active tab's content. */
   function refreshActiveTab() {
     if (activeTab === 'bazi') calculateBazi();
-    else if (activeTab === 'liuyao') { /* Liu Yao waits for cast button */ }
+    else if (activeTab === 'liuyao' && lastLiuYaoResult) renderLiuyaoResult(lastLiuYaoResult);
     else if (activeTab === 'ziwei') calculateZiwei();
   }
 
@@ -1059,7 +1059,7 @@ const TianjiApp = (function () {
   // -----------------------------------------------------------------------
 
   function generateShareUrl() {
-    var params = {};
+    var params = { lang: I18n.getLang() };
     if (activeTab === 'bazi') {
       params.tab = 'bazi';
       params.date = $('bazi-date') ? $('bazi-date').value : '';
@@ -1148,6 +1148,13 @@ const TianjiApp = (function () {
     if (!hash || hash.length < 2) return;
     try {
       var decoded = JSON.parse(atob(hash.substring(1)));
+      if (decoded.lang === 'zh' || decoded.lang === 'en') {
+        I18n.setLang(decoded.lang);
+        applyI18n();
+        rebuildHourSelector();
+        var languageButton = $('lang-toggle');
+        if (languageButton) languageButton.textContent = decoded.lang === 'zh' ? 'EN' : '中';
+      }
       if (decoded.tab === 'bazi') {
         if (decoded.date && $('bazi-date')) $('bazi-date').value = decoded.date;
         if (decoded.hour && $('bazi-hour')) $('bazi-hour').value = decoded.hour;
