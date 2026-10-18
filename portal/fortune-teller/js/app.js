@@ -1042,8 +1042,27 @@ const TianjiApp = (function () {
     return window.location.origin + window.location.pathname + '#' + encoded;
   }
 
+  function openShareModal() {
+    var modal = $('share-modal');
+    var input = $('share-url');
+    if (!modal || !input) return;
+    input.value = generateShareUrl();
+    modal.style.display = 'flex';
+    var closeBtn = $('share-modal-close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeShareModal() {
+    var modal = $('share-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    var shareBtn = $('share-btn');
+    if (shareBtn) shareBtn.focus();
+  }
+
   function copyShareLink() {
-    var url = generateShareUrl();
+    var input = $('share-url');
+    var url = input && input.value ? input.value : generateShareUrl();
     function fallbackCopy() {
       var ta = document.createElement('textarea');
       ta.value = url;
@@ -1269,8 +1288,21 @@ const TianjiApp = (function () {
       zwGenders[g].addEventListener('change', calculateZiwei);
     }
 
-    // Share / copy link
-    if ($('share-btn')) $('share-btn').addEventListener('click', copyShareLink);
+    // Share modal and copy link — all handlers live here to satisfy strict CSP.
+    if ($('share-btn')) $('share-btn').addEventListener('click', openShareModal);
+    if ($('copy-url-btn')) $('copy-url-btn').addEventListener('click', copyShareLink);
+    if ($('share-modal-close')) $('share-modal-close').addEventListener('click', closeShareModal);
+    var shareModal = $('share-modal');
+    if (shareModal) {
+      shareModal.addEventListener('click', function (event) {
+        if (event.target === shareModal) closeShareModal();
+      });
+    }
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && shareModal && shareModal.style.display !== 'none') {
+        closeShareModal();
+      }
+    });
 
     // Reset button
     if ($('reset-btn')) {
@@ -1313,6 +1345,8 @@ const TianjiApp = (function () {
     toggleLang: toggleLang,
     drawRadarChart: drawRadarChart,
     buildHexagramSVG: buildHexagramSVG,
+    openShareModal: openShareModal,
+    closeShareModal: closeShareModal,
     copyShareLink: copyShareLink,
     enableDragScroll: enableDragScroll,
   };
