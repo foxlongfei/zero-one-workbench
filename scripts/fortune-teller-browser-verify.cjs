@@ -31,6 +31,14 @@ const check = (name, ok, detail = '') => {
       await page.locator('#tab-bazi').count() === 1 &&
       await page.locator('#tab-liuyao').count() === 1 &&
       await page.locator('#tab-ziwei').count() === 1);
+    check('portal return path available',
+      await page.locator('#portal-return').getAttribute('href') === '../index.html');
+    const licenseHref = await page.locator('#local-license-link').getAttribute('href');
+    check('local MIT license available', licenseHref === 'LICENSE');
+    const licenseResponse = await page.request.get(base + '/portal/fortune-teller/' + licenseHref);
+    check('local MIT license HTTP 200',
+      licenseResponse.status() === 200 && (await licenseResponse.text()).includes('MIT License'),
+      String(licenseResponse.status()));
 
     await page.locator('#bazi-date').fill('1990-05-15');
     await page.locator('#bazi-hour').selectOption('7');
