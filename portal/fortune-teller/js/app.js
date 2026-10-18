@@ -582,6 +582,17 @@ const TianjiApp = (function () {
     var year = parseInt(parts[0], 10);
     var month = parseInt(parts[1], 10);
     var day = parseInt(parts[2], 10);
+    var parsedDate = new Date(Date.UTC(year, month - 1, day));
+    var validDate = parts.length === 3 && year >= 1900 && year <= 2100 &&
+      month >= 1 && month <= 12 && day >= 1 && day <= 31 &&
+      parsedDate.getUTCFullYear() === year &&
+      parsedDate.getUTCMonth() === month - 1 &&
+      parsedDate.getUTCDate() === day &&
+      hourBranchIdx >= 0 && hourBranchIdx <= 11;
+    if (!validDate) {
+      resultArea.innerHTML = '<p class="empty-state" role="alert">' + I18n.t('invalidDate') + '</p>';
+      return;
+    }
     var clockHour = branchIdxToClockHour(hourBranchIdx);
 
     // ── Core computation via BaZi engine ──
@@ -928,6 +939,12 @@ const TianjiApp = (function () {
 
     if (!yVal || !mVal || !dVal) {
       area.innerHTML = '<p class="empty-state">' + I18n.t('noData') + '</p>';
+      return;
+    }
+
+    if (yVal < 1900 || yVal > 2100 || mVal < 1 || mVal > 12 ||
+        dVal < 1 || dVal > 30 || hVal < 0 || hVal > 11) {
+      area.innerHTML = '<p class="empty-state" role="alert">' + I18n.t('invalidDate') + '</p>';
       return;
     }
 
