@@ -230,8 +230,28 @@ const check = (name, ok, detail = '') => {
       await page.locator('#share-modal-close').click();
     }
     await page.locator('#liuyao-method').selectOption('coin');
+    await page.evaluate(() => {
+      const sequence = [
+        0.1, 0.1, 0.1,
+        0.1, 0.1, 0.9,
+        0.1, 0.9, 0.9,
+        0.9, 0.9, 0.9,
+        0.1, 0.1, 0.9,
+        0.1, 0.9, 0.9,
+      ];
+      let index = 0;
+      Math.random = () => sequence[index++ % sequence.length];
+    });
     await page.locator('#liuyao-cast-btn').click();
     const coinResult = await page.locator('#liuyao-result').innerText();
+    const deterministicMovingLines = await page.locator(
+      '#liuyao-result .hex-lines-table tbody tr.moving-row td:first-child'
+    ).allInnerTexts();
+    check('Liu Yao coin values follow traditional 6/7/8/9 semantics',
+      coinResult.includes('涣') &&
+      coinResult.includes('井') &&
+      JSON.stringify(deterministicMovingLines) === JSON.stringify(['Line 4', 'Line 1']),
+      coinResult.slice(0, 400));
     await page.locator('#share-btn').click();
     const coinShareUrl = await page.locator('#share-url').inputValue();
     const sharedCoinPage = await browser.newPage({ viewport: { width: 1280, height: 900 } });
