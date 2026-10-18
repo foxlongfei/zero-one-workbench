@@ -6,7 +6,7 @@ const targets = [
   {name:'portal',path:'/portal/index.html',selector:'a[href="movement-mediapipe.html"]'},
   {name:'A01',path:'/portal/movement-mediapipe.html',selector:'main'},
   {name:'B01',path:'/portal/traditional-lunar-engine.html',selector:'body'},
-  {name:'C01',path:'/portal/reading-library.html',selector:'body'},
+  {name:'C01',path:'/portal/reader-integrated.html',selector:'#shelfScreen'},
   {name:'watch-world',path:'/portal/watch-world.html',selector:'body'}
 ];
 (async()=>{
@@ -21,7 +21,7 @@ const targets = [
    await page.locator(target.selector).first().waitFor({timeout:10000});
    if(!response||response.status()>=400)errors.push('HTTP '+response?.status());
    if(target.name==='portal'){
-    for(const href of ['movement-mediapipe.html','traditional-lunar-engine.html','reading-library.html','watch-world.html']){
+    for(const href of ['movement-mediapipe.html','traditional-lunar-engine.html','reader-integrated.html','watch-world.html']){
      if(await page.locator('a[href="'+href+'"]').count()!==1)errors.push('missing/duplicate product link '+href);
     }
    }
