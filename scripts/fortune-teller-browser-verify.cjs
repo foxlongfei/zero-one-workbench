@@ -196,6 +196,15 @@ const check = (name, ok, detail = '') => {
     check('Zi Wei share restores gender', await page.locator('#ziwei-gender-female').isChecked());
     check('Zi Wei share restores chart', await page.locator('#ziwei-result .ziwei-cell').count() >= 12);
 
+    await page.locator('#reset-btn').click();
+    check('reset clears shared URL state',
+      await page.evaluate(() => window.location.hash === '') &&
+      await page.locator('#ziwei-year').inputValue() === '1990' &&
+      await page.locator('#ziwei-month').inputValue() === '4' &&
+      await page.locator('#ziwei-day').inputValue() === '21' &&
+      await page.locator('#ziwei-hour').inputValue() === '7' &&
+      await page.locator('#ziwei-gender-male').isChecked());
+
     await page.locator('#tab-liuyao').click();
     await page.locator('#liuyao-method').selectOption('number');
     await page.locator('#liuyao-num1').fill('11');
