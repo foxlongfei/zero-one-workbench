@@ -163,11 +163,11 @@ const TianjiApp = (function () {
   function _buildCastResult(method, upperCode, lowerCode, movingPos) {
     // Build raw lines from trigram codes
     var rawLines = [];
-    for (var i = 0; i < 3; i++) rawLines.push(((lowerCode >> i) & 1) ? 9 : 8);
-    for (var j = 0; j < 3; j++) rawLines.push(((upperCode >> j) & 1) ? 9 : 8);
+    for (var i = 0; i < 3; i++) rawLines.push(((lowerCode >> i) & 1) ? 7 : 8);
+    for (var j = 0; j < 3; j++) rawLines.push(((upperCode >> j) & 1) ? 7 : 8);
     // Apply moving line
     var ml = movingPos - 1;
-    rawLines[ml] = rawLines[ml] === 9 ? 7 : 6;
+    rawLines[ml] = rawLines[ml] === 7 ? 9 : 6;
     return _buildCoinResult(rawLines, method);
   }
 
@@ -178,9 +178,9 @@ const TianjiApp = (function () {
       var isYang = (v === 7 || v === 9 || v === 1);
       primary.push(isYang ? 1 : 0);
       if (v === 6) { changed.push(1); moving.push(i + 1); }
-      else if (v === 7) { changed.push(0); moving.push(i + 1); }
+      else if (v === 7) { changed.push(1); }
       else if (v === 8) { changed.push(0); }
-      else { changed.push(1); }
+      else { changed.push(0); moving.push(i + 1); }
     }
     // Lookup hexagrams
     var pLower = primary[0] | (primary[1] << 1) | (primary[2] << 2);
