@@ -1135,7 +1135,9 @@ const TianjiApp = (function () {
         if (decoded.n3 !== undefined && $('liuyao-num3')) $('liuyao-num3').value = decoded.n3;
         updateLiuyaoInputs();
         switchTab('liuyao');
-        if (method === 'number' && decoded.n1 && decoded.n2) castLiuyao();
+        if (method === 'number' && decoded.n1 && decoded.n2) {
+          window.setTimeout(castLiuyao, 0);
+        }
       }
     } catch (e) {
       // Invalid hash -- ignore silently
