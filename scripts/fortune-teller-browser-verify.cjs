@@ -111,6 +111,15 @@ const check = (name, ok, detail = '') => {
       englishLineLabels.join(', '));
     await page.locator('#lang-toggle').click();
 
+    await page.locator('#reset-btn').click();
+    check('Liu Yao reset only resets active module',
+      await page.locator('#liuyao-method').inputValue() === 'time' &&
+      await page.locator('#liuyao-number-inputs').isHidden() &&
+      await page.locator('#liuyao-num1').inputValue() === '3' &&
+      await page.locator('#liuyao-num2').inputValue() === '7' &&
+      await page.locator('#liuyao-num3').inputValue() === '' &&
+      (await page.locator('#liuyao-result').innerText()).trim().length > 0);
+
     await page.locator('#tab-ziwei').click();
     await page.locator('#ziwei-year').fill('1990');
     await page.locator('#ziwei-month').selectOption('4');
@@ -133,6 +142,20 @@ const check = (name, ok, detail = '') => {
     await page.locator('#ziwei-day').fill('21');
     await page.locator('#ziwei-day').press('Tab');
     check('Zi Wei recovers after invalid input',
+      await page.locator('#ziwei-result .ziwei-cell').count() >= 12);
+
+    await page.locator('#ziwei-year').fill('2001');
+    await page.locator('#ziwei-month').selectOption('9');
+    await page.locator('#ziwei-day').fill('9');
+    await page.locator('#ziwei-hour').selectOption('2');
+    await page.locator('#ziwei-gender-female').check();
+    await page.locator('#reset-btn').click();
+    check('Zi Wei reset restores original chart inputs',
+      await page.locator('#ziwei-year').inputValue() === '1990' &&
+      await page.locator('#ziwei-month').inputValue() === '4' &&
+      await page.locator('#ziwei-day').inputValue() === '21' &&
+      await page.locator('#ziwei-hour').inputValue() === '7' &&
+      await page.locator('#ziwei-gender-male').isChecked() &&
       await page.locator('#ziwei-result .ziwei-cell').count() >= 12);
 
     await page.locator('#lang-toggle').click();
