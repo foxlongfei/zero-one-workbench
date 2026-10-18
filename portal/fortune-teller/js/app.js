@@ -841,6 +841,54 @@ const TianjiApp = (function () {
     if (numInputs) numInputs.style.display = method === 'number' ? 'block' : 'none';
   }
 
+  function resetSelectToDefault(id) {
+    var select = $(id);
+    if (!select) return;
+    var defaultIndex = 0;
+    for (var i = 0; i < select.options.length; i++) {
+      if (select.options[i].defaultSelected) {
+        defaultIndex = i;
+        break;
+      }
+    }
+    select.selectedIndex = defaultIndex;
+  }
+
+  function resetInputToDefault(id) {
+    var input = $(id);
+    if (input) input.value = input.defaultValue;
+  }
+
+  function resetActiveTab(dateStr) {
+    if (activeTab === 'liuyao') {
+      resetSelectToDefault('liuyao-method');
+      ['liuyao-num1', 'liuyao-num2', 'liuyao-num3'].forEach(resetInputToDefault);
+      lastLiuYaoResult = null;
+      pendingSharedLiuYaoLines = null;
+      updateLiuyaoInputs();
+      if ($('liuyao-result')) {
+        $('liuyao-result').innerHTML = '<p class="empty-state">' + I18n.t('noData') + '</p>';
+      }
+      return;
+    }
+
+    if (activeTab === 'ziwei') {
+      ['ziwei-year', 'ziwei-day'].forEach(resetInputToDefault);
+      resetSelectToDefault('ziwei-month');
+      resetSelectToDefault('ziwei-hour');
+      var ziweiMale = document.querySelector('input[name="ziwei-gender"][value="male"]');
+      if (ziweiMale) ziweiMale.checked = true;
+      calculateZiwei();
+      return;
+    }
+
+    if ($('bazi-date')) $('bazi-date').value = dateStr;
+    if ($('bazi-hour')) $('bazi-hour').value = '0';
+    var baziMale = document.querySelector('input[name="bazi-gender"][value="male"]');
+    if (baziMale) baziMale.checked = true;
+    calculateBazi();
+  }
+
   function castLiuyao() {
     var method = $('liuyao-method') ? $('liuyao-method').value : 'time';
     var result;
@@ -1397,11 +1445,7 @@ const TianjiApp = (function () {
     // Reset button
     if ($('reset-btn')) {
       $('reset-btn').addEventListener('click', function () {
-        if ($('bazi-date')) $('bazi-date').value = dateStr;
-        if ($('bazi-hour')) $('bazi-hour').value = '0';
-        var mr = document.querySelector('input[name="bazi-gender"][value="male"]');
-        if (mr) mr.checked = true;
-        calculateBazi();
+        resetActiveTab(dateStr);
       });
     }
 
