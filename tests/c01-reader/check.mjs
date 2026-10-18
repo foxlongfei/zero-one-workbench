@@ -14,7 +14,7 @@ await page.addInitScript(()=>{
 window.__spoken=[];
 class Utterance{constructor(text){this.text=text;this.rate=1}}
 window.SpeechSynthesisUtterance=Utterance;
-Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{cancel(){},pause(){},resume(){},getVoices(){return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test'}]},addEventListener(){},speak(u){window.__spoken.push(u.text);setTimeout(()=>u.onend?.(),25)}}});
+Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,cancel(){this.paused=false},pause(){this.paused=true},resume(){this.paused=false},getVoices(){return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test'}]},addEventListener(){},speak(u){window.__spoken.push(u.text);setTimeout(()=>u.onend?.(),120)}}});
 });
 await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
@@ -58,8 +58,17 @@ await page.locator('#next').click();
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已翻到下一页');
 check('page recovery clears stale error',(await page.locator('#status').innerText())==='已翻到下一页',await page.locator('#status').innerText());
 await page.locator('foliate-view').evaluate(el=>{el.next=el.__testNext;delete el.__testNext});
+await page.locator('#settingsButton').click();
+await page.locator('#volume').fill('0.4');
 await page.locator('#speak').click();
+await page.waitForFunction(()=>Math.abs(document.querySelector('#music').volume-.1)<.001);
+check('background audio ducks during speech',await page.locator('#music').evaluate(el=>Math.abs(el.volume-.1)<.001));
+await page.locator('#speak').click();
+check('background audio restores while speech pauses',await page.locator('#music').evaluate(el=>Math.abs(el.volume-.4)<.001));
+await page.locator('#speak').click();
+check('background audio ducks again when speech resumes',await page.locator('#music').evaluate(el=>Math.abs(el.volume-.1)<.001));
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已朗读到结尾');
+check('background audio restores after speech ends',await page.locator('#music').evaluate(el=>Math.abs(el.volume-.4)<.001));
 const spoken=await page.evaluate(()=>window.__spoken.join(''));
 check('whole-book speech crosses chapters',spoken.includes('太阳升起')&&spoken.includes('月亮出现'),spoken.slice(0,180));
 await page.locator('#tocButton').click();
