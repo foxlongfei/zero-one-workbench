@@ -453,6 +453,7 @@ const TianjiApp = (function () {
 
   /** Apply all [data-i18n] attributes in the DOM. */
   function applyI18n() {
+    document.documentElement.lang = I18n.getLang() === 'zh' ? 'zh-CN' : 'en';
     var els = document.querySelectorAll('[data-i18n]');
     for (var i = 0; i < els.length; i++) {
       var key = els[i].getAttribute('data-i18n');
