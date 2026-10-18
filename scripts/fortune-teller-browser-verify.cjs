@@ -134,6 +134,16 @@ const check = (name, ok, detail = '') => {
       await page.locator('label[for="liuyao-num1"]').innerText() === 'Number 1' &&
       await page.locator('label[for="liuyao-num2"]').innerText() === 'Number 2' &&
       (await page.locator('label[for="liuyao-num3"]').innerText()).includes('Number 3'));
+    const englishZiweiStars = await page.locator('#ziwei-result .zw-star').allInnerTexts();
+    check('Zi Wei stars follow bilingual UI',
+      englishZiweiStars.includes('Zi Wei') &&
+      englishZiweiStars.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishZiweiStars.join(', '));
+    const englishZiweiBranches = await page.locator('#ziwei-result .zw-branch').allInnerTexts();
+    check('Zi Wei branches follow bilingual UI',
+      englishZiweiBranches.length === 12 &&
+      englishZiweiBranches.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishZiweiBranches.join(', '));
     await page.locator('#theme-toggle').click();
     check('theme switch works', await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'light'));
     await page.locator('#ziwei-gender-female').check();
