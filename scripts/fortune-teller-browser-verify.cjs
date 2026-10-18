@@ -59,6 +59,20 @@ const check = (name, ok, detail = '') => {
       await page.locator('#bazi-result .nayin-label').count() === 4,
       baziText.slice(0, 600));
 
+    await page.locator('#bazi-date').evaluate(input => {
+      input.value = '2101-01-01';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    check('BaZi rejects out-of-range date',
+      await page.locator('#bazi-result [role="alert"]').count() === 1 &&
+      (await page.locator('#bazi-result').innerText()).includes('日期无效'));
+    await page.locator('#bazi-date').fill('1990-05-15');
+    await page.locator('#bazi-date').press('Tab');
+    const repeatedBazi = await page.locator('#bazi-result').innerText();
+    check('BaZi recovers deterministically after invalid input',
+      expected.every(p => repeatedBazi.includes(p[0]) && repeatedBazi.includes(p[1])),
+      repeatedBazi.slice(0, 300));
+
     await page.locator('#tab-liuyao').click();
     await page.locator('#liuyao-method').selectOption('number');
     await page.locator('#liuyao-num1').fill('3');
@@ -79,6 +93,18 @@ const check = (name, ok, detail = '') => {
     check('Zi Wei twelve-palace chart renders',
       await page.locator('#ziwei-result .ziwei-cell').count() >= 12 && /命宫|紫微/.test(ziweiText),
       ziweiText.slice(0, 300));
+
+    await page.locator('#ziwei-day').evaluate(input => {
+      input.value = '31';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    check('Zi Wei rejects invalid lunar day',
+      await page.locator('#ziwei-result [role="alert"]').count() === 1 &&
+      (await page.locator('#ziwei-result').innerText()).includes('日期无效'));
+    await page.locator('#ziwei-day').fill('21');
+    await page.locator('#ziwei-day').press('Tab');
+    check('Zi Wei recovers after invalid input',
+      await page.locator('#ziwei-result .ziwei-cell').count() >= 12);
 
     await page.locator('#lang-toggle').click();
     check('bilingual UI switches', (await page.locator('#tab-bazi').innerText()).toLowerCase().includes('bazi'));
