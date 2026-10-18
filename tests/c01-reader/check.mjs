@@ -19,6 +19,17 @@ Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:
 await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
 check('shelf visible',await page.locator('#shelfScreen').isVisible());
+await page.locator('#musicFile').setInputFiles({name:'forest.wav',mimeType:'audio/wav',buffer:Buffer.from('RIFF-test-background-audio')});
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已保存在本机'));
+check('background audio saved locally',(await page.locator('#musicName').innerText())==='forest.wav'&&await page.locator('#music').getAttribute('src')?.then(Boolean),await page.locator('#status').innerText());
+await page.reload();
+await page.waitForSelector('#importButton:enabled');
+check('background audio restored after reload',(await page.locator('#musicName').innerText())==='forest.wav'&&await page.locator('#music').getAttribute('src')?.then(Boolean),await page.locator('#musicName').innerText());
+await page.locator('#clearMusic').evaluate(button=>button.click());
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已清除本机背景音'));
+await page.reload();
+await page.waitForSelector('#importButton:enabled');
+check('cleared background audio stays removed',(await page.locator('#musicName').innerText())==='尚未选择背景音'&&await page.locator('#music').getAttribute('src')===null,await page.locator('#musicName').innerText());
 await page.locator('#files').setInputFiles({name:'blank.txt',mimeType:'text/plain',buffer:Buffer.from(' \n\t ')});
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('空白 TXT'));
 check('blank TXT is rejected before shelf import',await page.locator('#shelf .book').count()===0,await page.locator('#status').innerText());
