@@ -128,6 +128,12 @@ const check = (name, ok, detail = '') => {
 
     await page.locator('#lang-toggle').click();
     check('bilingual UI switches', (await page.locator('#tab-bazi').innerText()).toLowerCase().includes('bazi'));
+    check('document language follows bilingual UI',
+      await page.locator('html').getAttribute('lang') === 'en');
+    check('Liu Yao number labels follow bilingual UI',
+      await page.locator('label[for="liuyao-num1"]').innerText() === 'Number 1' &&
+      await page.locator('label[for="liuyao-num2"]').innerText() === 'Number 2' &&
+      (await page.locator('label[for="liuyao-num3"]').innerText()).includes('Number 3'));
     await page.locator('#theme-toggle').click();
     check('theme switch works', await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'light'));
     await page.locator('#ziwei-gender-female').check();
