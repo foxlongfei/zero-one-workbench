@@ -120,6 +120,11 @@ const TianjiApp = (function () {
   /** Convert clock hour (0-23) to branch index. */
   function hourToBranch(h) { return h === 23 ? 0 : Math.floor((h + 1) / 2); }
 
+  /** Localized Liu Yao line position, with an optional compact SVG label. */
+  function linePositionLabel(index, compact) {
+    return I18n.t((compact ? 'linePositionShort' : 'linePosition') + (index + 1));
+  }
+
   // (BaZi engine functions removed — now delegated to bazi.js)
 
   // -----------------------------------------------------------------------
@@ -435,8 +440,7 @@ const TianjiApp = (function () {
       }
 
       // Position label (left)
-      var posNames = ['初','二','三','四','五','上'];
-      svg += '<text x="' + (lx - 14) + '" y="' + (y + 1) + '" text-anchor="end" font-size="12" fill="' + color + '">' + posNames[i] + '</text>';
+      svg += '<text x="' + (lx - 14) + '" y="' + (y + 1) + '" text-anchor="end" font-size="12" fill="' + color + '">' + linePositionLabel(i, true) + '</text>';
 
       // Moving marker (right)
       if (isMoving) {
@@ -913,8 +917,7 @@ const TianjiApp = (function () {
     html += '<div class="hex-moving">';
     html += '<strong>' + I18n.t('movingLines') + ':</strong> ';
     if (result.movingPositions.length > 0) {
-      var posNames = ['初','二','三','四','五','上'];
-      html += result.movingPositions.map(function (p) { return posNames[p - 1] + I18n.t('linePosition'); }).join(', ');
+      html += result.movingPositions.map(function (p) { return linePositionLabel(p - 1, false); }).join(', ');
     } else {
       html += I18n.t('noMovingLines');
     }
@@ -926,12 +929,11 @@ const TianjiApp = (function () {
     html += '<th>' + I18n.t('lineYang') + '/' + I18n.t('lineYin') + '</th>';
     html += '<th>' + I18n.t('movingMark') + '</th>';
     html += '</tr></thead><tbody>';
-    var lineNames = ['初','二','三','四','五','上'];
     for (var i = 5; i >= 0; i--) {
       var isYang = result.primaryLines[i] === 1;
       var isMoving = result.movingPositions.indexOf(i + 1) !== -1;
       html += '<tr' + (isMoving ? ' class="moving-row"' : '') + '>';
-      html += '<td>' + lineNames[i] + '</td>';
+      html += '<td>' + linePositionLabel(i, false) + '</td>';
       html += '<td>' + (isYang ? I18n.t('lineYang') : I18n.t('lineYin')) + '</td>';
       html += '<td>' + (isMoving ? I18n.t('movingMark') : '') + '</td>';
       html += '</tr>';
@@ -1201,7 +1203,6 @@ const TianjiApp = (function () {
         }
         updateLiuyaoInputs();
         switchTab('liuyao');
-
       }
     } catch (e) {
       // Invalid hash -- ignore silently
