@@ -100,6 +100,15 @@ const check = (name, ok, detail = '') => {
     check('Liu Yao rendered result follows language switch',
       englishLiuyao.includes('Primary') && englishLiuyao.includes('Moving Lines'),
       englishLiuyao.slice(0, 300));
+    const englishLineLabels = [
+      ...(await page.locator('#liuyao-result .hex-lines-table tbody td:first-child').allInnerTexts()),
+      ...(await page.locator('#liuyao-result .hex-svg-wrap text').allInnerTexts()),
+      await page.locator('#liuyao-result .hex-moving').innerText(),
+    ];
+    check('Liu Yao line positions follow bilingual UI',
+      englishLineLabels.some(label => label.includes('Line 1')) &&
+      englishLineLabels.every(label => !/[初二三四五上爻]/.test(label)),
+      englishLineLabels.join(', '));
     await page.locator('#lang-toggle').click();
 
     await page.locator('#tab-ziwei').click();
