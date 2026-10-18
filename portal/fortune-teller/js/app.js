@@ -96,6 +96,8 @@ const TianjiApp = (function () {
   // -----------------------------------------------------------------------
   let activeTab = 'bazi';
   let darkTheme = false;
+  let lastLiuYaoResult = null;
+  let pendingSharedLiuYaoLines = null;
 
   // -----------------------------------------------------------------------
   //  Helpers
@@ -150,7 +152,7 @@ const TianjiApp = (function () {
       for (var c = 0; c < 3; c++) sum += Math.random() < 0.5 ? 2 : 3;
       rawLines.push(sum); // 6,7,8,9
     }
-    return _buildCoinResult(rawLines);
+    return _buildCoinResult(rawLines, 'coin');
   }
 
   function _buildCastResult(method, upperCode, lowerCode, movingPos) {
@@ -161,10 +163,10 @@ const TianjiApp = (function () {
     // Apply moving line
     var ml = movingPos - 1;
     rawLines[ml] = rawLines[ml] === 9 ? 7 : 6;
-    return _buildCoinResult(rawLines);
+    return _buildCoinResult(rawLines, method);
   }
 
-  function _buildCoinResult(rawLines) {
+  function _buildCoinResult(rawLines, method) {
     var primary = [], changed = [], moving = [];
     for (var i = 0; i < 6; i++) {
       var v = rawLines[i];
@@ -189,6 +191,7 @@ const TianjiApp = (function () {
       movingPositions: moving,
       primaryHex: primaryHex,
       changedHex: changedHex,
+      method: method || 'coin',
     };
   }
 
@@ -869,6 +872,8 @@ const TianjiApp = (function () {
     var area = $('liuyao-result');
     if (!area) return;
 
+    lastLiuYaoResult = result;
+
     var html = '';
 
     // Hexagram info header
@@ -1077,6 +1082,10 @@ const TianjiApp = (function () {
         params.n2 = $('liuyao-num2') ? $('liuyao-num2').value : '';
         params.n3 = $('liuyao-num3') ? $('liuyao-num3').value : '';
       }
+      if (lastLiuYaoResult && lastLiuYaoResult.method === params.method &&
+          Array.isArray(lastLiuYaoResult.rawLines)) {
+        params.lines = lastLiuYaoResult.rawLines.join(',');
+      }
     }
     var encoded = btoa(JSON.stringify(params));
     return window.location.origin + window.location.pathname + '#' + encoded;
@@ -1163,6 +1172,13 @@ const TianjiApp = (function () {
         if (decoded.n1 !== undefined && $('liuyao-num1')) $('liuyao-num1').value = decoded.n1;
         if (decoded.n2 !== undefined && $('liuyao-num2')) $('liuyao-num2').value = decoded.n2;
         if (decoded.n3 !== undefined && $('liuyao-num3')) $('liuyao-num3').value = decoded.n3;
+        if (typeof decoded.lines === 'string') {
+          var restoredLines = decoded.lines.split(',').map(function (value) { return Number(value); });
+          var validLines = restoredLines.length === 6 && restoredLines.every(function (value) {
+            return value === 6 || value === 7 || value === 8 || value === 9;
+          });
+          if (validLines) pendingSharedLiuYaoLines = restoredLines;
+        }
         updateLiuyaoInputs();
         switchTab('liuyao');
 
@@ -1378,7 +1394,13 @@ const TianjiApp = (function () {
     switchTab(activeTab);
     // Recalculate deterministic shared Liu Yao only after all initialization
     // has completed; earlier rendering is overwritten by the final tab setup.
-    if (activeTab === 'liuyao' && $('liuyao-method') &&
+    if (activeTab === 'liuyao' && pendingSharedLiuYaoLines) {
+      renderLiuyaoResult(_buildCoinResult(
+        pendingSharedLiuYaoLines,
+        $('liuyao-method') ? $('liuyao-method').value : 'coin'
+      ));
+      pendingSharedLiuYaoLines = null;
+    } else if (activeTab === 'liuyao' && $('liuyao-method') &&
         $('liuyao-method').value === 'number' &&
         $('liuyao-num1').value && $('liuyao-num2').value) {
       castLiuyao();
