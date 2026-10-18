@@ -84,6 +84,7 @@ const check = (name, ok, detail = '') => {
     check('bilingual UI switches', (await page.locator('#tab-bazi').innerText()).toLowerCase().includes('bazi'));
     await page.locator('#theme-toggle').click();
     check('theme switch works', await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'light'));
+    await page.locator('#ziwei-gender-female').check();
     await page.locator('#share-btn').click();
     check('share modal opens', await page.locator('#share-modal').isVisible());
     check('share URL is prepared', (await page.locator('#share-url').inputValue()).includes('#'));
@@ -95,6 +96,28 @@ const check = (name, ok, detail = '') => {
     await page.locator('#share-btn').click();
     await page.keyboard.press('Escape');
     check('share modal closes by Escape', !(await page.locator('#share-modal').isVisible()));
+
+    const ziweiShareUrl = await page.locator('#share-url').inputValue();
+    await page.goto(ziweiShareUrl, { waitUntil: 'networkidle' });
+    check('Zi Wei share restores gender', await page.locator('#ziwei-gender-female').isChecked());
+    check('Zi Wei share restores chart', await page.locator('#ziwei-result .ziwei-cell').count() >= 12);
+
+    await page.locator('#tab-liuyao').click();
+    await page.locator('#liuyao-method').selectOption('number');
+    await page.locator('#liuyao-num1').fill('11');
+    await page.locator('#liuyao-num2').fill('22');
+    await page.locator('#liuyao-num3').fill('6');
+    await page.locator('#liuyao-cast-btn').click();
+    await page.locator('#share-btn').click();
+    const liuyaoShareUrl = await page.locator('#share-url').inputValue();
+    await page.goto(liuyaoShareUrl, { waitUntil: 'networkidle' });
+    check('Liu Yao share restores number inputs',
+      await page.locator('#liuyao-method').inputValue() === 'number' &&
+      await page.locator('#liuyao-num1').inputValue() === '11' &&
+      await page.locator('#liuyao-num2').inputValue() === '22' &&
+      await page.locator('#liuyao-num3').inputValue() === '6');
+    const restoredLiuyao = await page.locator('#liuyao-result').innerText();
+    check('Liu Yao share recalculates result', restoredLiuyao.trim().length > 80 && /动爻|卦/.test(restoredLiuyao));
 
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
   } finally {
