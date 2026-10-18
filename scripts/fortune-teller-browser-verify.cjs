@@ -95,6 +95,12 @@ const check = (name, ok, detail = '') => {
     check('Liu Yao recovers deterministically after invalid input',
       recoveredLiuyao === liuyaoText,
       recoveredLiuyao.slice(0, 300));
+    await page.locator('#lang-toggle').click();
+    const englishLiuyao = await page.locator('#liuyao-result').innerText();
+    check('Liu Yao rendered result follows language switch',
+      englishLiuyao.includes('Primary') && englishLiuyao.includes('Moving Lines'),
+      englishLiuyao.slice(0, 300));
+    await page.locator('#lang-toggle').click();
 
     await page.locator('#tab-ziwei').click();
     await page.locator('#ziwei-year').fill('1990');
@@ -171,12 +177,15 @@ const check = (name, ok, detail = '') => {
     const coinResult = await page.locator('#liuyao-result').innerText();
     await page.locator('#share-btn').click();
     const coinShareUrl = await page.locator('#share-url').inputValue();
-    await page.goto(coinShareUrl, { waitUntil: 'networkidle' });
+    const sharedCoinPage = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await sharedCoinPage.goto(coinShareUrl, { waitUntil: 'networkidle' });
     check('Liu Yao coin share restores method',
-      await page.locator('#liuyao-method').inputValue() === 'coin');
+      await sharedCoinPage.locator('#liuyao-method').inputValue() === 'coin');
+    const restoredCoinResult = await sharedCoinPage.locator('#liuyao-result').innerText();
     check('Liu Yao coin share restores exact cast',
-      (await page.locator('#liuyao-result').innerText()) === coinResult,
-      (await page.locator('#liuyao-result').innerText()).slice(0, 300));
+      restoredCoinResult === coinResult,
+      restoredCoinResult.slice(0, 300));
+    await sharedCoinPage.close();
 
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
   } finally {
