@@ -840,10 +840,23 @@ const TianjiApp = (function () {
     if (method === 'time') {
       result = liuYaoCastByTime(new Date());
     } else if (method === 'number') {
-      var n1 = parseInt($('liuyao-num1').value, 10) || 0;
-      var n2 = parseInt($('liuyao-num2').value, 10) || 0;
+      var n1Raw = $('liuyao-num1').value.trim();
+      var n2Raw = $('liuyao-num2').value.trim();
       var n3Val = $('liuyao-num3').value;
-      var n3 = n3Val !== '' ? parseInt(n3Val, 10) : null;
+      var n1 = Number(n1Raw);
+      var n2 = Number(n2Raw);
+      var n3 = n3Val !== '' ? Number(n3Val) : null;
+      var validNumbers = n1Raw !== '' && n2Raw !== '' &&
+        Number.isInteger(n1) && n1 >= 1 && n1 <= 999 &&
+        Number.isInteger(n2) && n2 >= 1 && n2 <= 999 &&
+        (n3 === null || (Number.isInteger(n3) && n3 >= 1 && n3 <= 999));
+      if (!validNumbers) {
+        var numberResult = $('liuyao-result');
+        if (numberResult) {
+          numberResult.innerHTML = '<p class="empty-state" role="alert">' + I18n.t('invalidNumbers') + '</p>';
+        }
+        return;
+      }
       result = liuYaoCastByNumber(n1, n2, n3);
     } else {
       result = liuYaoCastByCoin();
