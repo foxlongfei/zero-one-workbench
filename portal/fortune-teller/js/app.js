@@ -999,6 +999,17 @@ const TianjiApp = (function () {
       'palaceWealthDesc','palaceHealthDesc','palaceTravelDesc','palaceServantsDesc',
       'palaceCareerDesc','palacePropertyDesc','palaceFortuneDesc','palaceParentsDesc'
     ];
+    var branchI18nKeys = [
+      'branchZi','branchChou','branchYin','branchMao','branchChen','branchSi',
+      'branchWu2','branchWei','branchShen','branchYou','branchXu','branchHai'
+    ];
+    var starI18nKeys = {
+      '紫微':'starZiwei', '天机':'starTianji', '太阳':'starTaiyang',
+      '武曲':'starWuqu', '天同':'starTiantong', '廉贞':'starLianzhen',
+      '天府':'starTianfu', '太阴':'starTaiyin', '贪狼':'starTanlang',
+      '巨门':'starJumen', '天相':'starTianxiang', '天梁':'starTianliang',
+      '七杀':'starQisha2', '破军':'starPojun'
+    };
 
     var html = '<div class="ziwei-grid">';
 
@@ -1036,7 +1047,8 @@ const TianjiApp = (function () {
           palaceDesc = pIdx >= 0 ? I18n.t(palaceDescKeys[pIdx]) : '';
           if (palace.stars.length > 0) {
             starsHtml = palace.stars.map(function (s) {
-              return '<span class="zw-star">' + s + '</span>';
+              var starKey = starI18nKeys[s];
+              return '<span class="zw-star">' + (starKey ? I18n.t(starKey) : s) + '</span>';
             }).join(' ');
           } else {
             starsHtml = '<span class="zw-no-star">' + I18n.t('noMajorStar') + '</span>';
@@ -1044,7 +1056,7 @@ const TianjiApp = (function () {
         }
 
         html += '<div class="ziwei-cell" title="' + palaceDesc + '" style="grid-row:' + (row+1) + ';grid-column:' + (col+1) + '">';
-        html += '<div class="zw-branch">' + BRANCHES[branchIdx] + '</div>';
+        html += '<div class="zw-branch">' + I18n.t(branchI18nKeys[branchIdx]) + '</div>';
         html += '<div class="zw-palace-name">' + palaceName + '</div>';
         html += '<div class="zw-stars">' + starsHtml + '</div>';
         html += '</div>';
