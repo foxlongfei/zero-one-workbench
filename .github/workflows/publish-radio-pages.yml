@@ -26,6 +26,10 @@ jobs:
           printf '%s\n' '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=portal/"><title>零一空间</title><a href="portal/">进入零一空间</a></html>' > _site/index.html
           test -s _site/portal/classical-radio.html
           test -s _site/portal/index.html
+          test -s _site/portal/reading-library.html
+          test -s _site/portal/reader-integrated.html
+          test -s _site/portal/reader-integrated.js
+          test -s _site/portal/vendor/foliate-js/view.js
           test -s _site/portal/vendor/mediapipe/vision_bundle.mjs
           test -s _site/portal/vendor/mediapipe/wasm/vision_wasm_internal.wasm
           test -s _site/portal/vendor/mediapipe/models/pose_landmarker_lite.task
