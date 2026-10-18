@@ -1135,9 +1135,7 @@ const TianjiApp = (function () {
         if (decoded.n3 !== undefined && $('liuyao-num3')) $('liuyao-num3').value = decoded.n3;
         updateLiuyaoInputs();
         switchTab('liuyao');
-        if (method === 'number' && decoded.n1 && decoded.n2) {
-          window.setTimeout(castLiuyao, 0);
-        }
+
       }
     } catch (e) {
       // Invalid hash -- ignore silently
@@ -1348,6 +1346,13 @@ const TianjiApp = (function () {
 
     // Initial tab
     switchTab(activeTab);
+    // Recalculate deterministic shared Liu Yao only after all initialization
+    // has completed; earlier rendering is overwritten by the final tab setup.
+    if (activeTab === 'liuyao' && $('liuyao-method') &&
+        $('liuyao-method').value === 'number' &&
+        $('liuyao-num1').value && $('liuyao-num2').value) {
+      castLiuyao();
+    }
 
     // Enable drag scroll on any existing luck pillar containers
     var luckScroll = document.querySelector('.luck-pillars-scroll');
