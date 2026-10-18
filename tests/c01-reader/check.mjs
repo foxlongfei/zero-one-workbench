@@ -16,7 +16,7 @@ class Utterance{constructor(text){this.text=text;this.rate=1}}
 window.SpeechSynthesisUtterance=Utterance;
 Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{cancel(){},pause(){},resume(){},getVoices(){return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test'}]},addEventListener(){},speak(u){window.__spoken.push(u.text);setTimeout(()=>u.onend?.(),25)}}});
 });
-await page.goto('http://127.0.0.1:8765/portal/read-with-you-v01.html');
+await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
 check('shelf visible',await page.locator('#shelfScreen').isVisible());
 await page.locator('#files').setInputFiles({name:'blank.txt',mimeType:'text/plain',buffer:Buffer.from(' \n\t ')});
@@ -27,6 +27,9 @@ await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/re
 const epub=page.locator('#shelf .book').filter({hasText:'EPUB'});
 await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===1);
 check('EPUB imported once',await epub.count()===1,await page.locator('#shelf').innerText());
+check('EPUB metadata title replaces filename',(await epub.locator('strong').innerText())==='实际章节测试书',await epub.innerText());
+check('EPUB author appears on shelf',(await epub.innerText()).includes('零一测试作者'),await epub.innerText());
+check('EPUB embedded cover appears on shelf',await epub.locator('.book-cover.has-image img').count()===1,await epub.locator('.book-cover').innerHTML());
 await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/real-book.epub'));
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已在书架，未重复添加'));
 check('duplicate EPUB not added',await epub.count()===1,await page.locator('#shelf').innerText());
