@@ -163,6 +163,21 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-result .hex-lines-table').count() === 1,
       restoredLiuyao.slice(0, 300));
 
+    if (await page.locator('#share-modal').isVisible()) {
+      await page.locator('#share-modal-close').click();
+    }
+    await page.locator('#liuyao-method').selectOption('coin');
+    await page.locator('#liuyao-cast-btn').click();
+    const coinResult = await page.locator('#liuyao-result').innerText();
+    await page.locator('#share-btn').click();
+    const coinShareUrl = await page.locator('#share-url').inputValue();
+    await page.goto(coinShareUrl, { waitUntil: 'networkidle' });
+    check('Liu Yao coin share restores method',
+      await page.locator('#liuyao-method').inputValue() === 'coin');
+    check('Liu Yao coin share restores exact cast',
+      (await page.locator('#liuyao-result').innerText()) === coinResult,
+      (await page.locator('#liuyao-result').innerText()).slice(0, 300));
+
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
   } finally {
     await browser.close();
