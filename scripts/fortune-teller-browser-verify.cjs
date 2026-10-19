@@ -41,6 +41,11 @@ const check = (name, ok, detail = '') => {
     check('local MIT license HTTP 200',
       licenseResponse.status() === 200 && (await licenseResponse.text()).includes('MIT License'),
       String(licenseResponse.status()));
+    const chineseBoundary = await page.locator('#interpretation-boundary').innerText();
+    check('fortune results disclose interpretation boundary',
+      chineseBoundary.includes('不是可证实的未来预测') &&
+      chineseBoundary.includes('不能替代医疗、法律、财务'),
+      chineseBoundary);
 
     await page.locator('#bazi-date').fill('1990-05-15');
     await page.locator('#bazi-hour').selectOption('7');
@@ -190,6 +195,11 @@ const check = (name, ok, detail = '') => {
 
     await page.locator('#lang-toggle').click();
     check('bilingual UI switches', (await page.locator('#tab-bazi').innerText()).toLowerCase().includes('bazi'));
+    const englishBoundary = await page.locator('#interpretation-boundary').innerText();
+    check('interpretation boundary follows bilingual UI',
+      englishBoundary.includes('not verifiable predictions of the future') &&
+      englishBoundary.includes('do not replace medical, legal, financial'),
+      englishBoundary);
     check('document language follows bilingual UI',
       await page.locator('html').getAttribute('lang') === 'en');
     check('Liu Yao number labels follow bilingual UI',
