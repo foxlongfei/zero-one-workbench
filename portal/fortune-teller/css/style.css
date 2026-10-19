@@ -2030,6 +2030,16 @@ input[type="number"]::-webkit-outer-spin-button {
    31. Mobile — Bottom Nav visible, top tabs hidden
    ============================================================ */
 @media (max-width: 767px) {
+  .app-header .container {
+    flex-wrap: wrap;
+  }
+
+  .header-right {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
   .tab-nav {
     display: none;
   }
