@@ -203,9 +203,9 @@ const LiuYao = (function () {
   /**
    * Raw line encoding:
    *   6 = 老阴 (Old Yin):   line is Yin, changes to Yang
-   *   7 = 老阳 (Old Yang):  line is Yang, changes to Yin
+   *   7 = 少阳 (Young Yang):stays Yang
    *   8 = 少阴 (Young Yin): stays Yin
-   *   9 = 少阳 (Young Yang):stays Yang
+   *   9 = 老阳 (Old Yang):  line is Yang, changes to Yin
    *
    * @param {number[]} rawLines  6 raw line values
    * @returns {{ primary, changed, movingLines }}
@@ -221,7 +221,7 @@ const LiuYao = (function () {
     // Moving line positions (1-based)
     var movingLines = [];
     for (var i = 0; i < 6; i++) {
-      if (rawLines[i] === 6 || rawLines[i] === 7) {
+      if (rawLines[i] === 6 || rawLines[i] === 9) {
         movingLines.push(i + 1);
       }
     }
@@ -232,9 +232,9 @@ const LiuYao = (function () {
       var changedBits = [];
       for (var i = 0; i < 6; i++) {
         if (rawLines[i] === 6)      changedBits.push(1); // Old Yin → Yang
-        else if (rawLines[i] === 7) changedBits.push(0); // Old Yang → Yin
+        else if (rawLines[i] === 7) changedBits.push(1); // Young Yang stays
         else if (rawLines[i] === 8) changedBits.push(0); // Young Yin stays
-        else                        changedBits.push(1); // Young Yang stays
+        else                        changedBits.push(0); // Old Yang → Yin
       }
       changed = linesToHexagram(changedBits);
     }
@@ -256,9 +256,9 @@ const LiuYao = (function () {
    * castByTime — 时间起卦
    *
    * Algorithm:
-   *   upper trigram = (year + month + day) % 8
-   *   lower trigram = (year + month + day + hour) % 8
-   *   moving line   = (year + month + day + hour) % 6 + 1
+   *   upper trigram = (year + month + day) mod 8 (0→坤/8)
+   *   lower trigram = (year + month + day + hour) mod 8 (0→坤/8)
+   *   moving line   = (year + month + day + hour) mod 6 (0→line 6)
    *
    * @param {Date} [date]  JS Date (defaults to now)
    * @returns {object}  CastResult { method, primary, changed, rawLines, movingLines, input }
@@ -272,9 +272,9 @@ const LiuYao = (function () {
     var h = date.getHours();
     var total = y + m + d + h;
 
-    var upperIdx = (y + m + d) % 8;
-    var lowerIdx = total % 8;
-    var movingPos = total % 6 + 1; // 1–6
+    var upperIdx = ((y + m + d - 1) % 8 + 8) % 8;
+    var lowerIdx = ((total - 1) % 8 + 8) % 8;
+    var movingPos = ((total - 1) % 6 + 6) % 6 + 1; // remainder 0 => line 6
 
     var upperCode = _XIANTIAN_ORDER[upperIdx];
     var lowerCode = _XIANTIAN_ORDER[lowerIdx];
@@ -282,15 +282,15 @@ const LiuYao = (function () {
     // Build 6 raw lines from trigram codes
     var rawLines = [];
     for (var i = 0; i < 3; i++) {
-      rawLines.push(((lowerCode >> i) & 1) ? 9 : 8);
+      rawLines.push(((lowerCode >> i) & 1) ? 7 : 8);
     }
     for (var i = 0; i < 3; i++) {
-      rawLines.push(((upperCode >> i) & 1) ? 9 : 8);
+      rawLines.push(((upperCode >> i) & 1) ? 7 : 8);
     }
 
     // Apply moving line
     var mlIdx = movingPos - 1;
-    rawLines[mlIdx] = (rawLines[mlIdx] === 9) ? 7 : 6;
+    rawLines[mlIdx] = (rawLines[mlIdx] === 7) ? 9 : 6;
 
     var result = _processRawLines(rawLines);
 
@@ -307,7 +307,7 @@ const LiuYao = (function () {
   /**
    * castByNumbers — 数字起卦
    *
-   * Two-number mode: n1 → upper, n2 → lower, moving = (n1+n2) % 6 + 1
+   * Two-number mode: n1 → upper, n2 → lower, moving = (n1+n2) mod 6 (0→6)
    * Three-number mode: n1 → upper, n2 → lower, n3 → moving line
    *
    * @param {number} n1
@@ -316,13 +316,13 @@ const LiuYao = (function () {
    * @returns {object} CastResult
    */
   function castByNumbers(n1, n2, n3) {
-    var upperIdx = n1 % 8;
-    var lowerIdx = n2 % 8;
+    var upperIdx = ((n1 - 1) % 8 + 8) % 8;
+    var lowerIdx = ((n2 - 1) % 8 + 8) % 8;
     var movingPos;
     if (n3 !== undefined && n3 !== null) {
-      movingPos = n3 % 6 + 1;
+      movingPos = ((n3 - 1) % 6 + 6) % 6 + 1;
     } else {
-      movingPos = (n1 + n2) % 6 + 1;
+      movingPos = ((n1 + n2 - 1) % 6 + 6) % 6 + 1;
     }
 
     var upperCode = _XIANTIAN_ORDER[upperIdx];
@@ -330,14 +330,14 @@ const LiuYao = (function () {
 
     var rawLines = [];
     for (var i = 0; i < 3; i++) {
-      rawLines.push(((lowerCode >> i) & 1) ? 9 : 8);
+      rawLines.push(((lowerCode >> i) & 1) ? 7 : 8);
     }
     for (var i = 0; i < 3; i++) {
-      rawLines.push(((upperCode >> i) & 1) ? 9 : 8);
+      rawLines.push(((upperCode >> i) & 1) ? 7 : 8);
     }
 
     var mlIdx = movingPos - 1;
-    rawLines[mlIdx] = (rawLines[mlIdx] === 9) ? 7 : 6;
+    rawLines[mlIdx] = (rawLines[mlIdx] === 7) ? 9 : 6;
 
     var result = _processRawLines(rawLines);
 
