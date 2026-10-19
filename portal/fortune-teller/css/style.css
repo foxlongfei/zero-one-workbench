@@ -2126,6 +2126,10 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 
   .tab-panel {
+    display: none !important;
+  }
+
+  .tab-panel:not([hidden]) {
     display: block !important;
     page-break-inside: avoid;
   }
