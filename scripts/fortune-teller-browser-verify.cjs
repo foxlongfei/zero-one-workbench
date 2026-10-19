@@ -234,6 +234,27 @@ const check = (name, ok, detail = '') => {
       englishZiweiBranches.length === 12 &&
       englishZiweiBranches.every(label => !/[\u4e00-\u9fff]/.test(label)),
       englishZiweiBranches.join(', '));
+    check('print action follows bilingual UI',
+      await page.locator('#print-btn').innerText() === 'Print/PDF');
+    await page.evaluate(() => {
+      window.__printInvoked = false;
+      window.print = () => { window.__printInvoked = true; };
+    });
+    await page.locator('#print-btn').click();
+    check('print action invokes the browser print flow',
+      await page.evaluate(() => window.__printInvoked === true));
+    await page.emulateMedia({ media: 'print' });
+    const printedPanelDisplays = await page.evaluate(() => ({
+      bazi: getComputedStyle(document.getElementById('panel-bazi')).display,
+      liuyao: getComputedStyle(document.getElementById('panel-liuyao')).display,
+      ziwei: getComputedStyle(document.getElementById('panel-ziwei')).display,
+    }));
+    check('print output contains only the active chart',
+      printedPanelDisplays.bazi === 'none' &&
+      printedPanelDisplays.liuyao === 'none' &&
+      printedPanelDisplays.ziwei !== 'none',
+      JSON.stringify(printedPanelDisplays));
+    await page.emulateMedia({ media: 'screen' });
     await page.locator('#theme-toggle').click();
     check('theme switch works', await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'light'));
     await page.locator('#ziwei-gender-female').check();
