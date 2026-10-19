@@ -570,6 +570,7 @@ const TianjiApp = (function () {
         var monthOpt = document.createElement('option');
         monthOpt.value = month;
         monthOpt.textContent = I18n.t('lunarMonthName' + month);
+        monthOpt.defaultSelected = month === 4;
         monthSel.appendChild(monthOpt);
       }
       monthSel.value = currentMonth || '4';
@@ -583,6 +584,7 @@ const TianjiApp = (function () {
         var hourOpt = document.createElement('option');
         hourOpt.value = hour;
         hourOpt.textContent = I18n.t('shiChen' + hour);
+        hourOpt.defaultSelected = hour === 7;
         hourSel.appendChild(hourOpt);
       }
       hourSel.value = currentHour || '7';
