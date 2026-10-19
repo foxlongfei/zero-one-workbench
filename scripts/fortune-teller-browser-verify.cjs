@@ -322,6 +322,16 @@ const check = (name, ok, detail = '') => {
       restoredCoinResult.slice(0, 300));
     await sharedCoinPage.close();
 
+    await page.goto(base + '/portal/fortune-teller/index.html#damaged-share-state', {
+      waitUntil: 'networkidle',
+    });
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    const invalidShareToast = await page.locator('.toast').innerText();
+    check('invalid share link is cleared with actionable feedback',
+      await page.evaluate(() => window.location.hash === '') &&
+      invalidShareToast.includes('invalid or damaged'),
+      invalidShareToast);
+
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
   } finally {
     await browser.close();
