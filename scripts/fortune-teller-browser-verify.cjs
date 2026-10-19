@@ -322,7 +322,7 @@ const check = (name, ok, detail = '') => {
       restoredCoinResult.slice(0, 300));
     await sharedCoinPage.close();
 
-    await page.goto(base + '/portal/fortune-teller/index.html#damaged-share-state', {
+    await page.goto(base + '/portal/fortune-teller/index.html?invalid-share-test=1#damaged-share-state', {
       waitUntil: 'networkidle',
     });
     await page.locator('.toast').waitFor({ state: 'visible' });
