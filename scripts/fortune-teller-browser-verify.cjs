@@ -354,6 +354,24 @@ const check = (name, ok, detail = '') => {
        invalidShareToast.includes('分享链接无效或已损坏')),
       invalidShareToast);
 
+    const mobilePage = await browser.newPage({ viewport: { width: 375, height: 812 } });
+    await mobilePage.goto(base + '/portal/fortune-teller/index.html', { waitUntil: 'networkidle' });
+    const mobileHeaderActions = mobilePage.locator(
+      '#portal-return, #lang-toggle, #theme-toggle, #reset-btn, #print-btn, #share-btn'
+    );
+    check('mobile header keeps every product action visible',
+      await mobileHeaderActions.count() === 6 &&
+      await mobileHeaderActions.evaluateAll(elements => elements.every(element => {
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 &&
+          rect.left >= 0 && rect.right <= window.innerWidth;
+      })));
+    check('mobile product has no horizontal page overflow',
+      await mobilePage.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      await mobilePage.evaluate(() =>
+        document.documentElement.scrollWidth + '>' + window.innerWidth));
+    await mobilePage.close();
+
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
   } finally {
     await browser.close();
