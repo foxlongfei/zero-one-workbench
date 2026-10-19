@@ -82,6 +82,36 @@ const check = (name, ok, detail = '') => {
     const liuyaoText = await page.locator('#liuyao-result').innerText();
     check('Liu Yao number casting renders', liuyaoText.trim().length > 80 && /动爻|卦/.test(liuyaoText), liuyaoText.slice(0, 300));
 
+    const bundledBoundaryCast = await page.evaluate(() => {
+      const cast = LiuYao.castByNumbers(8, 8, 6);
+      return {
+        primary: cast.primary.name,
+        changed: cast.changed && cast.changed.name,
+        rawLines: cast.rawLines,
+        movingLines: cast.movingLines,
+      };
+    });
+    check('Bundled Liu Yao engine maps zero remainders to Kun and line 6',
+      bundledBoundaryCast.primary === '坤' &&
+      bundledBoundaryCast.changed === '豫' &&
+      JSON.stringify(bundledBoundaryCast.rawLines) === JSON.stringify([8, 8, 8, 8, 8, 6]) &&
+      JSON.stringify(bundledBoundaryCast.movingLines) === JSON.stringify([6]),
+      JSON.stringify(bundledBoundaryCast));
+
+    await page.locator('#liuyao-num1').fill('8');
+    await page.locator('#liuyao-num2').fill('8');
+    await page.locator('#liuyao-num3').fill('6');
+    await page.locator('#liuyao-cast-btn').click();
+    const boundaryCastText = await page.locator('#liuyao-result').innerText();
+    const boundaryMovingLines = await page.locator(
+      '#liuyao-result .hex-lines-table tbody tr.moving-row td:first-child'
+    ).allInnerTexts();
+    check('Liu Yao UI uses traditional one-based remainder mapping',
+      boundaryCastText.includes('坤') &&
+      boundaryCastText.includes('豫') &&
+      JSON.stringify(boundaryMovingLines) === JSON.stringify(['上爻']),
+      boundaryCastText.slice(0, 400));
+
     await page.locator('#liuyao-num1').fill('0');
     await page.locator('#liuyao-cast-btn').click();
     check('Liu Yao rejects out-of-range number input',
