@@ -179,6 +179,18 @@ const check = (name, ok, detail = '') => {
     check('Zi Wei recovers after invalid input',
       await page.locator('#ziwei-result .ziwei-cell').count() >= 12);
 
+    await page.locator('#ziwei-year').fill('1990');
+    await page.locator('#ziwei-month').selectOption('1');
+    await page.locator('#ziwei-day').fill('30');
+    await page.locator('#ziwei-day').press('Tab');
+    check('Zi Wei rejects day 30 in a 29-day lunar month',
+      await page.locator('#ziwei-result [role="alert"]').count() === 1 &&
+      (await page.locator('#ziwei-result').innerText()).includes('日期无效'));
+    await page.locator('#ziwei-day').fill('29');
+    await page.locator('#ziwei-day').press('Tab');
+    check('Zi Wei recovers on the last valid day of a short lunar month',
+      await page.locator('#ziwei-result .ziwei-cell').count() >= 12);
+
     await page.locator('#ziwei-year').fill('2001');
     await page.locator('#ziwei-month').selectOption('9');
     await page.locator('#ziwei-day').fill('9');
