@@ -214,6 +214,22 @@ const check = (name, ok, detail = '') => {
       englishBoundary);
     check('document language follows bilingual UI',
       await page.locator('html').getAttribute('lang') === 'en');
+    const englishHeaderLabels = await page.locator(
+      '#portal-return, #lang-toggle, #theme-toggle, #reset-btn, #print-btn, #share-btn'
+    ).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')));
+    check('header actions expose English accessible names after language switch',
+      JSON.stringify(englishHeaderLabels) === JSON.stringify([
+        'Back to Zero-One Portal',
+        'Switch language',
+        'Toggle theme',
+        'Reset current chart',
+        'Print or save current chart as PDF',
+        'Share current chart',
+      ]),
+      englishHeaderLabels.join(', '));
+    check('language and theme hover hints follow bilingual UI',
+      await page.locator('#lang-toggle').getAttribute('title') === 'Switch language' &&
+      await page.locator('#theme-toggle').getAttribute('title') === 'Toggle theme');
     check('Liu Yao number labels follow bilingual UI',
       await page.locator('label[for="liuyao-num1"]').innerText() === 'Number 1' &&
       await page.locator('label[for="liuyao-num2"]').innerText() === 'Number 2' &&
