@@ -135,18 +135,21 @@ const TianjiApp = (function () {
     dt = dt || new Date();
     var y = dt.getFullYear(), m = dt.getMonth() + 1, d = dt.getDate(), h = dt.getHours();
     var total = y + m + d + h;
-    var upperIdx = mod(y + m + d, 8);
-    var lowerIdx = mod(total, 8);
-    var movingPos = mod(total, 6) + 1; // 1-6
+    // Traditional Xiantian numbering is one-based: remainder 0 maps to
+    // Kun (8) and line 6, rather than wrapping to Qian / line 1.
+    var upperIdx = mod(y + m + d - 1, 8);
+    var lowerIdx = mod(total - 1, 8);
+    var movingPos = mod(total - 1, 6) + 1; // 1-6, remainder 0 => line 6
     var upperCode = TRIGRAM_ORDER[upperIdx];
     var lowerCode = TRIGRAM_ORDER[lowerIdx];
     return _buildCastResult('time', upperCode, lowerCode, movingPos);
   }
 
   function liuYaoCastByNumber(n1, n2, n3) {
-    var upperCode = TRIGRAM_ORDER[mod(n1, 8)];
-    var lowerCode = TRIGRAM_ORDER[mod(n2, 8)];
-    var movingPos = n3 != null ? mod(n3, 6) + 1 : mod(n1 + n2, 6) + 1;
+    var upperCode = TRIGRAM_ORDER[mod(n1 - 1, 8)];
+    var lowerCode = TRIGRAM_ORDER[mod(n2 - 1, 8)];
+    var movingNumber = n3 != null ? n3 : n1 + n2;
+    var movingPos = mod(movingNumber - 1, 6) + 1;
     return _buildCastResult('number', upperCode, lowerCode, movingPos);
   }
 
