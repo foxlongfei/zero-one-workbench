@@ -492,6 +492,7 @@ const TianjiApp = (function () {
     if (btn) btn.textContent = lang === 'zh' ? 'EN' : '中';
     applyI18n();
     rebuildHourSelector();
+    rebuildZiweiSelectors();
     refreshActiveTab();
   }
 
@@ -556,6 +557,35 @@ const TianjiApp = (function () {
     // Restore selection
     if (current !== undefined && current !== '') {
       sel.value = current;
+    }
+  }
+
+  /** Rebuild Zi Wei lunar-month and hour selectors in the active language. */
+  function rebuildZiweiSelectors() {
+    var monthSel = $('ziwei-month');
+    if (monthSel) {
+      var currentMonth = monthSel.value;
+      monthSel.innerHTML = '';
+      for (var month = 1; month <= 12; month++) {
+        var monthOpt = document.createElement('option');
+        monthOpt.value = month;
+        monthOpt.textContent = I18n.t('lunarMonthName' + month);
+        monthSel.appendChild(monthOpt);
+      }
+      monthSel.value = currentMonth || '4';
+    }
+
+    var hourSel = $('ziwei-hour');
+    if (hourSel) {
+      var currentHour = hourSel.value;
+      hourSel.innerHTML = '';
+      for (var hour = 0; hour < 12; hour++) {
+        var hourOpt = document.createElement('option');
+        hourOpt.value = hour;
+        hourOpt.textContent = I18n.t('shiChen' + hour);
+        hourSel.appendChild(hourOpt);
+      }
+      hourSel.value = currentHour || '7';
     }
   }
 
@@ -1243,6 +1273,7 @@ const TianjiApp = (function () {
         I18n.setLang(decoded.lang);
         applyI18n();
         rebuildHourSelector();
+        rebuildZiweiSelectors();
         var languageButton = $('lang-toggle');
         if (languageButton) languageButton.textContent = decoded.lang === 'zh' ? 'EN' : '中';
       }
@@ -1382,6 +1413,7 @@ const TianjiApp = (function () {
 
     // Build hour selector
     rebuildHourSelector();
+    rebuildZiweiSelectors();
 
     // Set default date to today
     var today = new Date();
