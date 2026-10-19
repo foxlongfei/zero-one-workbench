@@ -1020,8 +1020,27 @@ const TianjiApp = (function () {
       return;
     }
 
-    if (yVal < 1900 || yVal > 2100 || mVal < 1 || mVal > 12 ||
-        dVal < 1 || dVal > 30 || hVal < 0 || hVal > 11) {
+    var validLunarDate = false;
+    if (yVal >= 1900 && yVal <= 2100 && mVal >= 1 && mVal <= 12 &&
+        dVal >= 1 && dVal <= 30 && hVal >= 0 && hVal <= 11) {
+      try {
+        // The input is a regular (non-leap) lunar month. Round-trip through
+        // the bundled calendar so a 30th day in a 29-day month cannot roll
+        // silently into the following month and produce a plausible chart.
+        var solarDate = Calendar.lunarToSolar(yVal, mVal, dVal, false);
+        var lunarRoundTrip = Calendar.solarToLunar(
+          solarDate.year, solarDate.month, solarDate.day
+        );
+        validLunarDate = lunarRoundTrip.year === yVal &&
+          lunarRoundTrip.month === mVal &&
+          lunarRoundTrip.day === dVal &&
+          lunarRoundTrip.isLeap === false;
+      } catch (e) {
+        validLunarDate = false;
+      }
+    }
+
+    if (!validLunarDate) {
       area.innerHTML = '<p class="empty-state" role="alert">' + I18n.t('invalidDate') + '</p>';
       return;
     }
