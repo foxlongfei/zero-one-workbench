@@ -329,7 +329,8 @@ const check = (name, ok, detail = '') => {
     const invalidShareToast = await page.locator('.toast').innerText();
     check('invalid share link is cleared with actionable feedback',
       await page.evaluate(() => window.location.hash === '') &&
-      invalidShareToast.includes('invalid or damaged'),
+      (invalidShareToast.includes('invalid or damaged') ||
+       invalidShareToast.includes('分享链接无效或已损坏')),
       invalidShareToast);
 
     console.log(JSON.stringify({ status: 'PASS', checks: checks.length, pillars: direct, independent }, null, 2));
