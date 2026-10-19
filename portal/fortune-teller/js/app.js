@@ -471,6 +471,15 @@ const TianjiApp = (function () {
     for (var j = 0; j < phs.length; j++) {
       phs[j].placeholder = I18n.t(phs[j].getAttribute('data-i18n-placeholder'));
     }
+    // Keep accessible names and hover hints in sync with visible language.
+    var ariaLabels = document.querySelectorAll('[data-i18n-aria]');
+    for (var k = 0; k < ariaLabels.length; k++) {
+      ariaLabels[k].setAttribute('aria-label', I18n.t(ariaLabels[k].getAttribute('data-i18n-aria')));
+    }
+    var titles = document.querySelectorAll('[data-i18n-title]');
+    for (var m = 0; m < titles.length; m++) {
+      titles[m].setAttribute('title', I18n.t(titles[m].getAttribute('data-i18n-title')));
+    }
     // Update page title
     document.title = I18n.t('appTitle') + ' - ' + I18n.t('appSubtitle');
   }
