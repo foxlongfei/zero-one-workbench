@@ -1494,6 +1494,9 @@ const TianjiApp = (function () {
     }
 
     // Share modal and copy link — all handlers live here to satisfy strict CSP.
+    if ($('print-btn')) $('print-btn').addEventListener('click', function () {
+      window.print();
+    });
     if ($('share-btn')) $('share-btn').addEventListener('click', openShareModal);
     if ($('copy-url-btn')) $('copy-url-btn').addEventListener('click', copyShareLink);
     if ($('share-modal-close')) $('share-modal-close').addEventListener('click', closeShareModal);
