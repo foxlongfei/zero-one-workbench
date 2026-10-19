@@ -1271,6 +1271,10 @@ const TianjiApp = (function () {
     if (!hash || hash.length < 2) return;
     try {
       var decoded = JSON.parse(atob(hash.substring(1)));
+      if (!decoded || typeof decoded !== 'object' ||
+          ['bazi', 'ziwei', 'liuyao'].indexOf(decoded.tab) === -1) {
+        throw new Error('Invalid shared chart payload');
+      }
       if (decoded.lang === 'zh' || decoded.lang === 'en') {
         I18n.setLang(decoded.lang);
         applyI18n();
@@ -1314,7 +1318,8 @@ const TianjiApp = (function () {
         switchTab('liuyao');
       }
     } catch (e) {
-      // Invalid hash -- ignore silently
+      clearSharedChartHash();
+      showToast(I18n.t('invalidShareLink'));
     }
   }
 
