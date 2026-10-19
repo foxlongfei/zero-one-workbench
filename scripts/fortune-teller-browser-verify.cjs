@@ -218,6 +218,12 @@ const check = (name, ok, detail = '') => {
       await page.locator('label[for="liuyao-num1"]').innerText() === 'Number 1' &&
       await page.locator('label[for="liuyao-num2"]').innerText() === 'Number 2' &&
       (await page.locator('label[for="liuyao-num3"]').innerText()).includes('Number 3'));
+    check('Zi Wei lunar month selector follows bilingual UI',
+      await page.locator('#ziwei-month option').first().innerText() === '1st Lunar Month' &&
+      await page.locator('#ziwei-month option').last().innerText() === '12th Lunar Month');
+    check('Zi Wei hour selector follows bilingual UI',
+      (await page.locator('#ziwei-hour option').first().innerText()).startsWith('Zi ') &&
+      (await page.locator('#ziwei-hour option').last().innerText()).startsWith('Hai '));
     const englishZiweiStars = await page.locator('#ziwei-result .zw-star').allInnerTexts();
     check('Zi Wei stars follow bilingual UI',
       englishZiweiStars.includes('Zi Wei') &&
