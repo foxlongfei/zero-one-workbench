@@ -137,6 +137,22 @@ const check = (name, ok, detail = '') => {
     check('Liu Yao rendered result follows language switch',
       englishLiuyao.includes('Primary') && englishLiuyao.includes('Moving Lines'),
       englishLiuyao.slice(0, 300));
+    const englishHexagramNames = await page.locator('#liuyao-result .hex-name').allInnerTexts();
+    const englishHexagramDescriptions = await page.locator('#liuyao-result .hex-desc').allInnerTexts();
+    check('Liu Yao hexagram names follow bilingual UI',
+      JSON.stringify(englishHexagramNames) === JSON.stringify([
+        'The Wanderer (Hexagram 56)',
+        'Retreat (Hexagram 33)',
+      ]) &&
+      englishHexagramNames.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishHexagramNames.join(' | '));
+    check('Liu Yao hexagram descriptions follow bilingual UI',
+      JSON.stringify(englishHexagramDescriptions) === JSON.stringify([
+        'Fire over Mountain.',
+        'Heaven over Mountain.',
+      ]) &&
+      englishHexagramDescriptions.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishHexagramDescriptions.join(' | '));
     const englishLineLabels = [
       ...(await page.locator('#liuyao-result .hex-lines-table tbody td:first-child').allInnerTexts()),
       ...(await page.locator('#liuyao-result .hex-svg-wrap text').allInnerTexts()),
