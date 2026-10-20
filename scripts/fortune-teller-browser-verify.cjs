@@ -243,6 +243,32 @@ const check = (name, ok, detail = '') => {
       JSON.stringify(englishElementNames) === JSON.stringify(['Wood', 'Fire', 'Earth', 'Metal', 'Water']) &&
       englishElementStatuses.every(label => ['Abundant', 'Balanced', 'Weak', 'Missing'].includes(label)),
       englishElementNames.join(', ') + ' | ' + englishElementStatuses.join(', '));
+    const englishPillarStems = await page.locator('#bazi-result .stems-row .stem').allInnerTexts();
+    const englishPillarBranches = await page.locator('#bazi-result .branches-row .branch').allInnerTexts();
+    const englishPillarZodiacs = await page.locator('#bazi-result .branches-row small').allInnerTexts();
+    check('BaZi pillars and zodiac follow bilingual UI',
+      JSON.stringify(englishPillarStems) === JSON.stringify(['Geng', 'Xin', 'Geng', 'Gui']) &&
+      JSON.stringify(englishPillarBranches) === JSON.stringify(['Wu', 'Si', 'Chen', 'Wei']) &&
+      JSON.stringify(englishPillarZodiacs) === JSON.stringify(['Horse', 'Snake', 'Dragon', 'Goat']),
+      englishPillarStems.join(', ') + ' | ' + englishPillarBranches.join(', ') + ' | ' + englishPillarZodiacs.join(', '));
+    const englishTenGods = await page.locator('#bazi-result .ten-god-label, #bazi-result .hidden-row sub').allInnerTexts();
+    check('BaZi Ten Gods follow bilingual UI',
+      englishTenGods.includes('Companion') &&
+      englishTenGods.includes('Rob Wealth') &&
+      englishTenGods.includes('Day Master') &&
+      englishTenGods.includes('Hurting Officer') &&
+      englishTenGods.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishTenGods.join(', '));
+    const englishLuckStems = await page.locator('#bazi-result .lp-stem').allInnerTexts();
+    const englishLuckBranches = await page.locator('#bazi-result .lp-branch').allInnerTexts();
+    const englishFlowPillars = await page.locator('#bazi-result .fy-gz').allInnerTexts();
+    const englishFlowTenGods = await page.locator('#bazi-result .fy-tg').allInnerTexts();
+    check('BaZi luck pillars and flow years follow bilingual UI',
+      englishLuckStems.every(label => /^[A-Za-z]+$/.test(label)) &&
+      englishLuckBranches.every(label => /^[A-Za-z]+$/.test(label)) &&
+      englishFlowPillars.every(label => /^[A-Za-z]+$/.test(label)) &&
+      englishFlowTenGods.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishLuckStems.join(', ') + ' | ' + englishLuckBranches.join(', ') + ' | ' + englishFlowPillars.join(', '));
     const englishBoundary = await page.locator('#interpretation-boundary').innerText();
     check('interpretation boundary follows bilingual UI',
       englishBoundary.includes('not verifiable predictions of the future') &&
