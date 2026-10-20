@@ -1522,6 +1522,38 @@ const TianjiApp = (function () {
     }, 1800);
   }
 
+  function parseSharedInteger(value, min, max) {
+    if ((typeof value !== 'string' && typeof value !== 'number') ||
+        String(value).trim() === '' || !/^-?\d+$/.test(String(value))) return null;
+    var parsed = Number(value);
+    return Number.isInteger(parsed) && parsed >= min && parsed <= max ? parsed : null;
+  }
+
+  function isValidSharedSolarDate(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    var parts = value.split('-').map(Number);
+    var parsed = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+    return parts[0] >= 1900 && parts[0] <= 2100 &&
+      parsed.getUTCFullYear() === parts[0] &&
+      parsed.getUTCMonth() === parts[1] - 1 &&
+      parsed.getUTCDate() === parts[2];
+  }
+
+  function isValidSharedGender(value) {
+    return value === 'male' || value === 'female';
+  }
+
+  function isValidSharedLunarDate(year, month, day) {
+    try {
+      var solarDate = Calendar.lunarToSolar(year, month, day, false);
+      var lunar = Calendar.solarToLunar(solarDate.year, solarDate.month, solarDate.day);
+      return lunar.year === year && lunar.month === month && lunar.day === day &&
+        lunar.isLeap === false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /** Parse URL hash and restore state if present. */
   function parseShareHash() {
     var hash = window.location.hash;
@@ -1541,22 +1573,33 @@ const TianjiApp = (function () {
         if (languageButton) languageButton.textContent = decoded.lang === 'zh' ? 'EN' : '中';
       }
       if (decoded.tab === 'bazi') {
-        if (decoded.date && $('bazi-date')) $('bazi-date').value = decoded.date;
-        if (decoded.hour && $('bazi-hour')) $('bazi-hour').value = decoded.hour;
-        if (decoded.gender) {
-          var radio = document.querySelector('input[name="bazi-gender"][value="' + decoded.gender + '"]');
-          if (radio) radio.checked = true;
+        var sharedBaziHour = parseSharedInteger(decoded.hour, 0, 11);
+        if (!isValidSharedSolarDate(decoded.date) || sharedBaziHour === null ||
+            !isValidSharedGender(decoded.gender)) {
+          throw new Error('Invalid shared BaZi inputs');
         }
+        if ($('bazi-date')) $('bazi-date').value = decoded.date;
+        if ($('bazi-hour')) $('bazi-hour').value = String(sharedBaziHour);
+        var radio = document.querySelector('input[name="bazi-gender"][value="' + decoded.gender + '"]');
+        if (radio) radio.checked = true;
         switchTab('bazi');
       } else if (decoded.tab === 'ziwei') {
-        if (decoded.y && $('ziwei-year')) $('ziwei-year').value = decoded.y;
-        if (decoded.m && $('ziwei-month')) $('ziwei-month').value = decoded.m;
-        if (decoded.d && $('ziwei-day')) $('ziwei-day').value = decoded.d;
-        if (decoded.h && $('ziwei-hour')) $('ziwei-hour').value = decoded.h;
-        if (decoded.gender) {
-          var zwRadio = document.querySelector('input[name="ziwei-gender"][value="' + decoded.gender + '"]');
-          if (zwRadio) zwRadio.checked = true;
+        var sharedZiweiYear = parseSharedInteger(decoded.y, 1900, 2100);
+        var sharedZiweiMonth = parseSharedInteger(decoded.m, 1, 12);
+        var sharedZiweiDay = parseSharedInteger(decoded.d, 1, 30);
+        var sharedZiweiHour = parseSharedInteger(decoded.h, 0, 11);
+        if (sharedZiweiYear === null || sharedZiweiMonth === null ||
+            sharedZiweiDay === null || sharedZiweiHour === null ||
+            !isValidSharedGender(decoded.gender) ||
+            !isValidSharedLunarDate(sharedZiweiYear, sharedZiweiMonth, sharedZiweiDay)) {
+          throw new Error('Invalid shared Zi Wei inputs');
         }
+        if ($('ziwei-year')) $('ziwei-year').value = String(sharedZiweiYear);
+        if ($('ziwei-month')) $('ziwei-month').value = String(sharedZiweiMonth);
+        if ($('ziwei-day')) $('ziwei-day').value = String(sharedZiweiDay);
+        if ($('ziwei-hour')) $('ziwei-hour').value = String(sharedZiweiHour);
+        var zwRadio = document.querySelector('input[name="ziwei-gender"][value="' + decoded.gender + '"]');
+        if (zwRadio) zwRadio.checked = true;
         switchTab('ziwei');
       } else if (decoded.tab === 'liuyao') {
         var method = ['time', 'number', 'coin'].indexOf(decoded.method) >= 0 ? decoded.method : 'time';
