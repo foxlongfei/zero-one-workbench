@@ -436,8 +436,8 @@ const check = (name, ok, detail = '') => {
       '#liuyao-result .hex-lines-table tbody tr.moving-row td:first-child'
     ).allInnerTexts();
     check('Liu Yao coin values follow traditional 6/7/8/9 semantics',
-      coinResult.includes('涣') &&
-      coinResult.includes('井') &&
+      coinResult.includes('Dispersion') &&
+      coinResult.includes('The Well') &&
       JSON.stringify(deterministicMovingLines) === JSON.stringify(['Line 4', 'Line 1']),
       coinResult.slice(0, 400));
     await page.locator('#share-btn').click();
