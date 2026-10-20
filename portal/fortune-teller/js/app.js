@@ -1564,12 +1564,16 @@ const TianjiApp = (function () {
         if (decoded.n1 !== undefined && $('liuyao-num1')) $('liuyao-num1').value = decoded.n1;
         if (decoded.n2 !== undefined && $('liuyao-num2')) $('liuyao-num2').value = decoded.n2;
         if (decoded.n3 !== undefined && $('liuyao-num3')) $('liuyao-num3').value = decoded.n3;
-        if (typeof decoded.lines === 'string') {
+        if (decoded.lines !== undefined) {
+          if (typeof decoded.lines !== 'string') {
+            throw new Error('Invalid shared Liu Yao lines');
+          }
           var restoredLines = decoded.lines.split(',').map(function (value) { return Number(value); });
           var validLines = restoredLines.length === 6 && restoredLines.every(function (value) {
             return value === 6 || value === 7 || value === 8 || value === 9;
           });
-          if (validLines) pendingSharedLiuYaoLines = restoredLines;
+          if (!validLines) throw new Error('Invalid shared Liu Yao lines');
+          pendingSharedLiuYaoLines = restoredLines;
         }
         updateLiuyaoInputs();
         switchTab('liuyao');
