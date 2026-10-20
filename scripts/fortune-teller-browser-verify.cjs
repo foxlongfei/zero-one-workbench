@@ -517,6 +517,19 @@ const check = (name, ok, detail = '') => {
        invalidShareToast.includes('分享链接无效或已损坏')),
       invalidShareToast);
 
+    const malformedLiuYaoShare = await page.evaluate(() => {
+      const payload = { tab: 'liuyao', lang: 'en', method: 'coin', lines: '6,7' };
+      return window.location.origin + window.location.pathname + '#' + btoa(JSON.stringify(payload));
+    });
+    await page.goto(malformedLiuYaoShare, { waitUntil: 'networkidle' });
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    const malformedLiuYaoToast = await page.locator('.toast').innerText();
+    check('malformed Liu Yao share payload is rejected instead of showing a blank chart',
+      await page.evaluate(() => window.location.hash === '') &&
+      malformedLiuYaoToast.includes('invalid or damaged') &&
+      await page.locator('#liuyao-result .hex-header').count() === 0,
+      malformedLiuYaoToast);
+
     const mobilePage = await browser.newPage({ viewport: { width: 375, height: 812 } });
     await mobilePage.goto(base + '/portal/fortune-teller/index.html', { waitUntil: 'networkidle' });
     const mobileHeaderActions = mobilePage.locator(
