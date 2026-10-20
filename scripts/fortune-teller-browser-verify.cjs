@@ -241,10 +241,10 @@ const check = (name, ok, detail = '') => {
       !/(强弱分析详情|起运|顺行|逆行)/.test(englishStrengthDetails + ' ' + englishLuckDirection),
       englishStrengthDetails + ' | ' + englishLuckDirection);
     const englishBaziDate = await page.locator('#bazi-result .bazi-date-info').innerText();
-    check('BaZi date labels follow bilingual UI',
+    check('BaZi date labels and lunar value follow bilingual UI',
       englishBaziDate.includes('Gregorian 1990-05-15') &&
-      englishBaziDate.includes('Lunar Date') &&
-      !englishBaziDate.includes('阳历'),
+      englishBaziDate.includes('Lunar Date 1990 · 4th Lunar Month · Day 21') &&
+      !/[\u4e00-\u9fff]/.test(englishBaziDate),
       englishBaziDate);
     const englishBaziLabels = await page.locator(
       '#bazi-result .tm-label, #bazi-result .shensha-section h3, #bazi-result .pattern-section h3, #bazi-result .favorable-section h3'
