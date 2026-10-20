@@ -678,9 +678,12 @@ const TianjiApp = (function () {
 
     // 1. 日期信息 (Solar + Lunar)
     html += '<div class="bazi-date-info">';
-    html += '<span>阳历 ' + year + '年' + month + '月' + day + '日</span>';
+    var gregorianValue = I18n.getLang() === 'zh'
+      ? year + '年' + month + '月' + day + '日'
+      : year + '-' + String(month).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+    html += '<span>' + I18n.t('gregorianDate') + ' ' + gregorianValue + '</span>';
     html += ' <span class="date-sep">/</span> ';
-    html += '<span>' + lunar.traditional + '</span>';
+    html += '<span>' + I18n.t('lunarDate') + ' ' + lunar.traditional.replace(/^农历/, '') + '</span>';
     html += '</div>';
 
     // 2. 四柱表格 (含纳音)
@@ -763,17 +766,17 @@ const TianjiApp = (function () {
 
     // 4. 胎元 + 命宫
     html += '<div class="taiyuan-minggong">';
-    html += '<div class="tm-item"><span class="tm-label">胎元</span>';
+    html += '<div class="tm-item"><span class="tm-label">' + I18n.t('fetalOrigin') + '</span>';
     html += '<span class="tm-value">' + taiyuan.char + '</span>';
     html += '<span class="tm-nayin">' + taiyuan.nayin + '</span></div>';
-    html += '<div class="tm-item"><span class="tm-label">命宫</span>';
+    html += '<div class="tm-item"><span class="tm-label">' + I18n.t('destinyPalace') + '</span>';
     html += '<span class="tm-value">' + minggong.char + '</span>';
     html += '<span class="tm-nayin">' + minggong.nayin + '</span></div>';
     html += '</div>';
 
     // 5. 神煞
     if (shensha.length > 0) {
-      html += '<div class="shensha-section"><h3>神煞</h3><div class="shensha-tags">';
+      html += '<div class="shensha-section"><h3>' + I18n.t('auxiliaryStars') + '</h3><div class="shensha-tags">';
       shensha.forEach(function (ss) {
         var cls = 'shensha-tag';
         // 吉神用金色, 凶神用红色
@@ -785,16 +788,16 @@ const TianjiApp = (function () {
     }
 
     // 6. 格局分析
-    html += '<div class="pattern-section"><h3>格局</h3>';
+    html += '<div class="pattern-section"><h3>' + I18n.t('patternAnalysis') + '</h3>';
     html += '<div class="pattern-name">' + pattern.pattern + '</div>';
     html += '<p class="pattern-desc">' + pattern.description + '</p>';
     html += '</div>';
 
     // 7. 用神忌神
-    html += '<div class="favorable-section"><h3>用神忌神</h3>';
-    html += '<div class="fav-row"><span class="fav-label">用神:</span> ';
+    html += '<div class="favorable-section"><h3>' + I18n.t('favorableAnalysis') + '</h3>';
+    html += '<div class="fav-row"><span class="fav-label">' + I18n.t('favorableLabel') + ':</span> ';
     html += '<span class="fav-good">' + favorable.favorable.join('、') + '</span></div>';
-    html += '<div class="fav-row"><span class="fav-label">忌神:</span> ';
+    html += '<div class="fav-row"><span class="fav-label">' + I18n.t('unfavorableLabel') + ':</span> ';
     html += '<span class="fav-bad">' + favorable.unfavorable.join('、') + '</span></div>';
     html += '<p class="fav-suggestion">' + favorable.suggestion + '</p>';
     html += '</div>';
@@ -813,15 +816,21 @@ const TianjiApp = (function () {
     elements.details.forEach(function (d) {
       var barW = elements.total > 0 ? (d.score / elements.total * 100) : 0;
       html += '<div class="el-row">';
-      html += '<span class="el-name" style="color:' + ELEMENT_COLORS[d.element] + '">' + d.element + '</span>';
+      var detailElementKey = { '木': 'wood', '火': 'fire', '土': 'earth', '金': 'metal', '水': 'water' }[d.element];
+      html += '<span class="el-name" style="color:' + ELEMENT_COLORS[d.element] + '">' + I18n.t(detailElementKey || d.element) + '</span>';
       html += '<div class="el-bar-bg"><div class="el-bar" style="width:' + barW + '%;background:' + ELEMENT_COLORS[d.element] + '"></div></div>';
       html += '<span class="el-score">' + d.score.toFixed(1) + '</span>';
-      html += '<span class="el-status el-status-' + d.status + '">' + d.status + '</span>';
+      var detailStatusKey = { '旺': 'elementAbundant', '中': 'elementBalanced', '弱': 'elementWeak', '缺': 'elementMissing' }[d.status];
+      html += '<span class="el-status el-status-' + d.status + '">' + I18n.t(detailStatusKey || d.status) + '</span>';
       html += '</div>';
     });
     if (elements.missing.length > 0) {
       var missingNames = elements.missing.map(function (i) { return ['木', '火', '土', '金', '水'][i]; });
-      html += '<div class="el-missing">缺: ' + missingNames.join('、') + '</div>';
+      var localizedMissing = missingNames.map(function (name) {
+        var key = { '木': 'wood', '火': 'fire', '土': 'earth', '金': 'metal', '水': 'water' }[name];
+        return I18n.t(key || name);
+      });
+      html += '<div class="el-missing">' + I18n.t('missingLabel') + ': ' + localizedMissing.join(', ') + '</div>';
     }
     html += '</div></div>';
 
