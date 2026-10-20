@@ -123,6 +123,8 @@ const TianjiApp = (function () {
   let darkTheme = false;
   let lastLiuYaoResult = null;
   let pendingSharedLiuYaoLines = null;
+  let liuYaoStatusMessageKey = null;
+  let liuYaoStatusIsAlert = false;
 
   // -----------------------------------------------------------------------
   //  Helpers
@@ -575,6 +577,9 @@ const TianjiApp = (function () {
     // Language is global, so refresh every existing result, including hidden tabs.
     calculateBazi();
     if (lastLiuYaoResult) renderLiuyaoResult(lastLiuYaoResult);
+    else if (liuYaoStatusMessageKey) {
+      clearLiuyaoResult(liuYaoStatusMessageKey, liuYaoStatusIsAlert);
+    }
     calculateZiwei();
   }
 
@@ -1138,6 +1143,8 @@ const TianjiApp = (function () {
   function clearLiuyaoResult(messageKey, isAlert) {
     lastLiuYaoResult = null;
     pendingSharedLiuYaoLines = null;
+    liuYaoStatusMessageKey = messageKey || 'noData';
+    liuYaoStatusIsAlert = Boolean(isAlert);
     var area = $('liuyao-result');
     if (!area) return;
     area.innerHTML = '<p class="empty-state"' + (isAlert ? ' role="alert"' : '') + '>' +
@@ -1215,6 +1222,8 @@ const TianjiApp = (function () {
     if (!area) return;
 
     lastLiuYaoResult = result;
+    liuYaoStatusMessageKey = null;
+    liuYaoStatusIsAlert = false;
 
     var html = '';
 
