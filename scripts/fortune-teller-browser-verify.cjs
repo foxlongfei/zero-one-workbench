@@ -224,6 +224,25 @@ const check = (name, ok, detail = '') => {
       /(Forward|Backward)/.test(englishLuckDirection) &&
       !/(强弱分析详情|起运|顺行|逆行)/.test(englishStrengthDetails + ' ' + englishLuckDirection),
       englishStrengthDetails + ' | ' + englishLuckDirection);
+    const englishBaziDate = await page.locator('#bazi-result .bazi-date-info').innerText();
+    check('BaZi date labels follow bilingual UI',
+      englishBaziDate.includes('Gregorian 1990-05-15') &&
+      englishBaziDate.includes('Lunar Date') &&
+      !englishBaziDate.includes('阳历'),
+      englishBaziDate);
+    const englishBaziLabels = await page.locator(
+      '#bazi-result .tm-label, #bazi-result .shensha-section h3, #bazi-result .pattern-section h3, #bazi-result .favorable-section h3'
+    ).allInnerTexts();
+    check('BaZi core result sections follow bilingual UI',
+      ['Fetal Origin', 'Destiny Palace', 'Auxiliary Stars', 'Pattern Analysis', 'Favorable Elements']
+        .every(label => englishBaziLabels.includes(label)),
+      englishBaziLabels.join(', '));
+    const englishElementNames = await page.locator('#bazi-result .el-name').allInnerTexts();
+    const englishElementStatuses = await page.locator('#bazi-result .el-status').allInnerTexts();
+    check('BaZi five-element details follow bilingual UI',
+      JSON.stringify(englishElementNames) === JSON.stringify(['Wood', 'Fire', 'Earth', 'Metal', 'Water']) &&
+      englishElementStatuses.every(label => ['Abundant', 'Balanced', 'Weak', 'Missing'].includes(label)),
+      englishElementNames.join(', ') + ' | ' + englishElementStatuses.join(', '));
     const englishBoundary = await page.locator('#interpretation-boundary').innerText();
     check('interpretation boundary follows bilingual UI',
       englishBoundary.includes('not verifiable predictions of the future') &&
