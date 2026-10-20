@@ -530,6 +530,34 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-result .hex-header').count() === 0,
       malformedLiuYaoToast);
 
+    const malformedBaziPayload = Buffer.from(JSON.stringify({
+      tab: 'bazi', lang: 'en', date: '2026-02-31', hour: '4', gender: 'male',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-bazi-share-test=1#' + malformedBaziPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    const malformedBaziToast = await page.locator('.toast').innerText();
+    check('impossible BaZi date in share payload is rejected',
+      await page.evaluate(() => window.location.hash === '') &&
+      malformedBaziToast.includes('invalid or damaged'),
+      malformedBaziToast);
+
+    const malformedZiweiPayload = Buffer.from(JSON.stringify({
+      tab: 'ziwei', lang: 'en', y: '2200', m: '1', d: '1', h: '0', gender: 'male',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-ziwei-share-test=1#' + malformedZiweiPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    const malformedZiweiToast = await page.locator('.toast').innerText();
+    check('out-of-range Zi Wei date in share payload is rejected',
+      await page.evaluate(() => window.location.hash === '') &&
+      malformedZiweiToast.includes('invalid or damaged'),
+      malformedZiweiToast);
+
     const mobilePage = await browser.newPage({ viewport: { width: 375, height: 812 } });
     await mobilePage.goto(base + '/portal/fortune-teller/index.html', { waitUntil: 'networkidle' });
     const mobileHeaderActions = mobilePage.locator(
