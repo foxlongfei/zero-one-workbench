@@ -672,6 +672,21 @@ const TianjiApp = (function () {
     // Shorthand lookups
     function stemColor(sIdx) { return ELEMENT_COLORS[STEM_ELEMENT[sIdx]]; }
     function branchColor(bIdx) { return ELEMENT_COLORS[BRANCH_ELEMENT[bIdx]]; }
+    var stemI18nKeys = ['stemJia','stemYi','stemBing','stemDing','stemWu','stemJi','stemGeng','stemXin','stemRen','stemGui'];
+    var branchI18nKeys = ['branchZi','branchChou','branchYin','branchMao','branchChen','branchSi','branchWu2','branchWei','branchShen','branchYou','branchXu','branchHai'];
+    var zodiacI18nKeys = ['rat','ox','tiger','rabbit','dragon','snake','horse','goat','monkey','rooster','dog','pig'];
+    var tenGodI18nKeys = {
+      '比肩':'bijian', '劫财':'jiecai', '食神':'shishen', '伤官':'shangguan',
+      '偏财':'piancai', '正财':'zhengcai', '七杀':'qisha', '正官':'zhengguan',
+      '偏印':'pianyin', '正印':'zhengyin'
+    };
+    function localizedStem(index) { return I18n.t(stemI18nKeys[index]); }
+    function localizedBranch(index) { return I18n.t(branchI18nKeys[index]); }
+    function localizedZodiac(index) { return I18n.t(zodiacI18nKeys[index]); }
+    function localizedTenGod(name) {
+      var key = tenGodI18nKeys[name];
+      return key ? I18n.t(key) : name;
+    }
 
     // ── Build HTML ──
     var html = '';
@@ -699,7 +714,7 @@ const TianjiApp = (function () {
       if (ti === 2) { tgName = I18n.t('dayMaster'); }
       else {
         var key = ['年干', '月干', '', '时干'][ti];
-        tgName = tenGods[key] ? tenGods[key].god : '';
+        tgName = tenGods[key] ? localizedTenGod(tenGods[key].god) : '';
       }
       html += '<td><small class="ten-god-label">' + tgName + '</small></td>';
     }
@@ -709,7 +724,7 @@ const TianjiApp = (function () {
     html += '<tr class="stems-row">';
     pillars.forEach(function (p) {
       html += '<td><span class="stem" style="color:' + stemColor(p.stemIndex) + '">' +
-        STEMS[p.stemIndex] + '</span></td>';
+        localizedStem(p.stemIndex) + '</span></td>';
     });
     html += '</tr>';
 
@@ -717,8 +732,8 @@ const TianjiApp = (function () {
     html += '<tr class="branches-row">';
     pillars.forEach(function (p) {
       html += '<td><span class="branch" style="color:' + branchColor(p.branchIndex) + '">' +
-        BRANCHES[p.branchIndex] + '</span>' +
-        '<br><small>' + ZODIAC[p.branchIndex] + '</small></td>';
+        localizedBranch(p.branchIndex) + '</span>' +
+        '<br><small>' + localizedZodiac(p.branchIndex) + '</small></td>';
     });
     html += '</tr>';
 
@@ -729,7 +744,8 @@ const TianjiApp = (function () {
       var hiddenArr = tenGods[branchLabels[hi]] || [];
       var hiddenParts = hiddenArr.map(function (h) {
         var c = ELEMENT_COLORS[STEM_ELEMENT[h.stemIndex]];
-        return '<span style="color:' + c + '">' + h.stem + '</span><sub>' + h.god + '</sub>';
+        var hiddenStemIndex = STEMS.indexOf(h.stem);
+        return '<span style="color:' + c + '">' + localizedStem(hiddenStemIndex) + '</span><sub>' + localizedTenGod(h.god) + '</sub>';
       });
       html += '<td>' + (hiddenParts.length > 0 ? hiddenParts.join(' ') : '-') + '</td>';
     }
@@ -747,7 +763,7 @@ const TianjiApp = (function () {
     // 3. 日主信息 + 强弱
     html += '<div class="day-master-info">';
     html += '<strong>' + I18n.t('dayMaster') + ':</strong> ';
-    html += '<span style="color:' + ELEMENT_COLORS[dmElement] + ';font-size:1.3em">' + dmChar + '</span> ';
+    html += '<span style="color:' + ELEMENT_COLORS[dmElement] + ';font-size:1.3em">' + localizedStem(chart.dayPillar.stemIndex) + '</span> ';
     var elKey = { '木': 'wood', '火': 'fire', '土': 'earth', '金': 'metal', '水': 'water' }[dmElement];
     html += '(' + I18n.t(elKey) + ')';
     var strengthLevelKey = { '极旺': 'veryStrong', '身强': 'strong', '中和': 'neutral', '身弱': 'weak', '极弱': 'veryWeak' }[strength.level];
@@ -854,8 +870,8 @@ const TianjiApp = (function () {
       html += '<div class="luck-pillar-card">';
       html += '<div class="lp-age">' + lp.startAge + '-' + lp.endAge + I18n.t('age') + '</div>';
       html += '<div class="lp-year">' + lp.startYear + '-' + lp.endYear + '</div>';
-      html += '<div class="lp-stem" style="color:' + stemColor(lp.stemIndex) + '">' + STEMS[lp.stemIndex] + '</div>';
-      html += '<div class="lp-branch" style="color:' + branchColor(lp.branchIndex) + '">' + BRANCHES[lp.branchIndex] + '</div>';
+      html += '<div class="lp-stem" style="color:' + stemColor(lp.stemIndex) + '">' + localizedStem(lp.stemIndex) + '</div>';
+      html += '<div class="lp-branch" style="color:' + branchColor(lp.branchIndex) + '">' + localizedBranch(lp.branchIndex) + '</div>';
       html += '<div class="lp-nayin">' + lp.nayin + '</div>';
       html += '</div>';
     });
@@ -869,8 +885,8 @@ const TianjiApp = (function () {
     flowYears.forEach(function (fy) {
       html += '<div class="flow-year-cell">';
       html += '<div class="fy-year">' + fy.year + '</div>';
-      html += '<div class="fy-gz" style="color:' + stemColor(fy.stemIndex) + '">' + fy.char + '</div>';
-      html += '<div class="fy-tg">' + fy.tenGod + '</div>';
+      html += '<div class="fy-gz" style="color:' + stemColor(fy.stemIndex) + '">' + localizedStem(fy.stemIndex) + localizedBranch(fy.branchIndex) + '</div>';
+      html += '<div class="fy-tg">' + localizedTenGod(fy.tenGod) + '</div>';
       html += '<div class="fy-nayin">' + fy.nayin + '</div>';
       html += '</div>';
     });
