@@ -254,6 +254,16 @@ const check = (name, ok, detail = '') => {
       englishNayinValues.includes('Earth by the Road') &&
       englishNayinValues.every(label => !/[\u4e00-\u9fff]/.test(label)),
       englishNayinValues.join(', '));
+    const englishAuxiliaryPillars = await page.locator('#bazi-result .tm-value').allInnerTexts();
+    const englishAuxiliaryStars = await page.locator('#bazi-result .shensha-tag').allInnerTexts();
+    const englishAuxiliaryText = englishAuxiliaryPillars.concat(englishAuxiliaryStars).join(' | ');
+    check('BaZi conception, destiny and auxiliary-star values follow bilingual UI',
+      JSON.stringify(englishAuxiliaryPillars) === JSON.stringify(['RenShen', 'GuiWei']) &&
+      ['Heavenly Noble', 'Canopy Star', 'General Star', 'Heavenly Virtue', 'Monthly Virtue']
+        .every(label => englishAuxiliaryText.includes(label)) &&
+      ['Year', 'Month', 'Day', 'Hour'].every(label => englishAuxiliaryText.includes(label)) &&
+      !/[\u4e00-\u9fff]/.test(englishAuxiliaryText),
+      englishAuxiliaryText);
     const englishBaziLabels = await page.locator(
       '#bazi-result .tm-label, #bazi-result .shensha-section h3, #bazi-result .pattern-section h3, #bazi-result .favorable-section h3'
     ).allInnerTexts();
