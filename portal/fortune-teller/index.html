@@ -15,7 +15,7 @@
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
   <!-- Skip link for accessibility -->
-  <a href="#main-content" class="skip-link">跳到主要内容</a>
+  <a href="#main-content" class="skip-link" data-i18n="skipToMain">跳到主要内容</a>
 
   <!-- Header -->
   <header class="app-header" role="banner">
@@ -36,11 +36,11 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero" aria-label="天机介绍">
+  <section class="hero" data-i18n-aria="heroIntro" aria-label="天机介绍">
     <div class="hero-taiji" aria-hidden="true">☯</div>
     <h2 class="hero-title" data-i18n="appTitle">天机</h2>
     <p class="hero-subtitle" data-i18n="appSubtitle">中国传统玄学计算</p>
-    <button id="hero-cta-btn" class="hero-cta" data-i18n="quickStart" aria-label="快速开始">
+    <button id="hero-cta-btn" class="hero-cta" data-i18n="quickStart" data-i18n-aria="quickStart" aria-label="快速开始">
       快速开始
     </button>
   </section>
@@ -49,7 +49,7 @@
   <div class="divider-ornament" aria-hidden="true">易 · 道 · 术</div>
 
   <!-- Tab Navigation (Desktop) -->
-  <nav class="tab-nav" role="tablist" aria-label="功能选项">
+  <nav class="tab-nav" role="tablist" data-i18n-aria="featureOptions" aria-label="功能选项">
     <div class="container">
       <button id="tab-bazi" class="tab active" role="tab" aria-selected="true" aria-controls="panel-bazi" data-panel="panel-bazi" data-i18n="tabBazi">八字排盘</button>
       <button id="tab-liuyao" class="tab" role="tab" aria-selected="false" aria-controls="panel-liuyao" data-panel="panel-liuyao" data-i18n="tabLiuyao">六爻占卜</button>
@@ -91,7 +91,7 @@
             </div>
             <div class="form-group">
               <label data-i18n="gender">性别</label>
-              <div class="radio-group" role="radiogroup" aria-label="性别">
+              <div class="radio-group" role="radiogroup" data-i18n-aria="genderGroup" aria-label="性别">
                 <label><input type="radio" name="bazi-gender" id="bazi-gender-male" value="male" checked> <span data-i18n="male">男</span></label>
                 <label><input type="radio" name="bazi-gender" id="bazi-gender-female" value="female"> <span data-i18n="female">女</span></label>
               </div>
@@ -100,7 +100,7 @@
         </div>
       </div>
       <div id="bazi-result" class="stagger" aria-live="polite">
-        <canvas id="five-elements-chart" width="300" height="300" aria-label="五行力量雷达图"></canvas>
+        <canvas id="five-elements-chart" width="300" height="300" data-i18n-aria="fiveElementsChart" aria-label="五行力量雷达图"></canvas>
       </div>
     </section>
 
@@ -197,7 +197,7 @@
             </div>
             <div class="form-group">
               <label data-i18n="gender">性别</label>
-              <div class="radio-group" role="radiogroup" aria-label="性别">
+              <div class="radio-group" role="radiogroup" data-i18n-aria="genderGroup" aria-label="性别">
                 <label><input type="radio" name="ziwei-gender" id="ziwei-gender-male" value="male" checked> <span data-i18n="male">男</span></label>
                 <label><input type="radio" name="ziwei-gender" id="ziwei-gender-female" value="female"> <span data-i18n="female">女</span></label>
               </div>
@@ -231,7 +231,7 @@
   </footer>
 
   <!-- Mobile Bottom Navigation -->
-  <nav class="bottom-nav" role="tablist" aria-label="底部导航">
+  <nav class="bottom-nav" role="tablist" data-i18n-aria="bottomNavigation" aria-label="底部导航">
     <ul class="bottom-nav-items">
       <li>
         <button class="bottom-nav-item active" data-tab="bazi" role="tab" aria-selected="true" aria-controls="panel-bazi">
@@ -255,15 +255,15 @@
   </nav>
 
   <!-- Share Modal -->
-  <div id="share-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="分享" style="display:none;">
+  <div id="share-modal" class="modal-overlay" role="dialog" aria-modal="true" data-i18n-aria="shareChart" aria-label="分享当前排盘" style="display:none;">
     <div class="modal">
       <div class="modal-header">
         <h3 data-i18n="share">分享</h3>
-        <button id="share-modal-close" class="modal-close" aria-label="关闭">✕</button>
+        <button id="share-modal-close" class="modal-close" data-i18n-aria="closeDialog" aria-label="关闭分享弹窗">✕</button>
       </div>
       <div class="modal-body">
         <div class="share-url">
-          <input type="text" id="share-url" readonly aria-label="分享链接">
+          <input type="text" id="share-url" readonly data-i18n-aria="shareLink" aria-label="分享链接">
           <button id="copy-url-btn" class="btn btn-primary btn-sm" data-i18n="copyLink">复制链接</button>
         </div>
       </div>
