@@ -744,13 +744,14 @@ const TianjiApp = (function () {
     html += '<span style="color:' + ELEMENT_COLORS[dmElement] + ';font-size:1.3em">' + dmChar + '</span> ';
     var elKey = { '木': 'wood', '火': 'fire', '土': 'earth', '金': 'metal', '水': 'water' }[dmElement];
     html += '(' + I18n.t(elKey) + ')';
-    html += ' &mdash; ' + I18n.t('dayMasterStrength') + ': <strong>' + strength.level + '</strong>';
-    html += ' (得分: ' + strength.score.toFixed(1) + ')';
+    var strengthLevelKey = { '极旺': 'veryStrong', '身强': 'strong', '中和': 'neutral', '身弱': 'weak', '极弱': 'veryWeak' }[strength.level];
+    html += ' &mdash; ' + I18n.t('dayMasterStrength') + ': <strong>' + I18n.t(strengthLevelKey || strength.level) + '</strong>';
+    html += ' (' + I18n.t('score') + ': ' + strength.score.toFixed(1) + ')';
     html += '</div>';
 
     // 强弱因素
     if (strength.factors.length > 0) {
-      html += '<div class="strength-factors"><details><summary>强弱分析详情</summary><ul>';
+      html += '<div class="strength-factors"><details><summary>' + I18n.t('strengthDetails') + '</summary><ul>';
       strength.factors.forEach(function (f) {
         html += '<li>' + f + '</li>';
       });
@@ -834,7 +835,8 @@ const TianjiApp = (function () {
     // 10. 大运
     var lps = luck.pillars;
     html += '<div class="luck-pillars-section"><h3>' + I18n.t('luckPillars') + '</h3>';
-    html += '<div class="luck-direction">起运: ' + luck.startAge + '岁 (' + luck.direction + ')</div>';
+    var luckDirectionKey = { '顺行': 'forward', '逆行': 'backward' }[luck.direction];
+    html += '<div class="luck-direction">' + I18n.t('startAge') + ': ' + luck.startAge + I18n.t('age') + ' (' + I18n.t(luckDirectionKey || luck.direction) + ')</div>';
     html += '<div class="luck-pillars-scroll"><div class="luck-pillars-track">';
     lps.forEach(function (lp) {
       html += '<div class="luck-pillar-card">';
