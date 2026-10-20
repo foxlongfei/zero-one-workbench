@@ -303,6 +303,15 @@ const check = (name, ok, detail = '') => {
       englishFlowPillars.every(label => /^[A-Za-z]+$/.test(label)) &&
       englishFlowTenGods.every(label => !/[\u4e00-\u9fff]/.test(label)),
       englishLuckStems.join(', ') + ' | ' + englishLuckBranches.join(', ') + ' | ' + englishFlowPillars.join(', '));
+    const englishBaziNarratives = await page.locator(
+      '#bazi-result .strength-factors, #bazi-result .pattern-section, #bazi-result .favorable-section, #bazi-result .relationships-section'
+    ).allInnerTexts();
+    const fullEnglishBazi = await page.locator('#bazi-result').innerText();
+    check('BaZi narrative analysis follows bilingual UI',
+      englishBaziNarratives.length >= 3 &&
+      englishBaziNarratives.every(text => text.trim().length > 0 && !/[\u3400-\u9fff]/.test(text)) &&
+      !/[\u3400-\u9fff]/.test(fullEnglishBazi),
+      englishBaziNarratives.join(' | '));
     const englishBoundary = await page.locator('#interpretation-boundary').innerText();
     check('interpretation boundary follows bilingual UI',
       englishBoundary.includes('not verifiable predictions of the future') &&
