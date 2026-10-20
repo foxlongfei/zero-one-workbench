@@ -1135,6 +1135,20 @@ const TianjiApp = (function () {
     if (input) input.value = input.defaultValue;
   }
 
+  function clearLiuyaoResult(messageKey, isAlert) {
+    lastLiuYaoResult = null;
+    pendingSharedLiuYaoLines = null;
+    var area = $('liuyao-result');
+    if (!area) return;
+    area.innerHTML = '<p class="empty-state"' + (isAlert ? ' role="alert"' : '') + '>' +
+      I18n.t(messageKey || 'noData') + '</p>';
+  }
+
+  function handleLiuyaoMethodChange() {
+    updateLiuyaoInputs();
+    clearLiuyaoResult();
+  }
+
   function clearSharedChartHash() {
     if (!window.location.hash) return;
     window.history.replaceState(null, '', window.location.pathname + window.location.search);
@@ -1145,12 +1159,8 @@ const TianjiApp = (function () {
     if (activeTab === 'liuyao') {
       resetSelectToDefault('liuyao-method');
       ['liuyao-num1', 'liuyao-num2', 'liuyao-num3'].forEach(resetInputToDefault);
-      lastLiuYaoResult = null;
-      pendingSharedLiuYaoLines = null;
       updateLiuyaoInputs();
-      if ($('liuyao-result')) {
-        $('liuyao-result').innerHTML = '<p class="empty-state">' + I18n.t('noData') + '</p>';
-      }
+      clearLiuyaoResult();
       return;
     }
 
@@ -1189,10 +1199,7 @@ const TianjiApp = (function () {
         Number.isInteger(n2) && n2 >= 1 && n2 <= 999 &&
         (n3 === null || (Number.isInteger(n3) && n3 >= 1 && n3 <= 999));
       if (!validNumbers) {
-        var numberResult = $('liuyao-result');
-        if (numberResult) {
-          numberResult.innerHTML = '<p class="empty-state" role="alert">' + I18n.t('invalidNumbers') + '</p>';
-        }
+        clearLiuyaoResult('invalidNumbers', true);
         return;
       }
       result = liuYaoCastByNumber(n1, n2, n3);
@@ -1720,7 +1727,7 @@ const TianjiApp = (function () {
 
     // Liu Yao
     if ($('liuyao-method')) {
-      $('liuyao-method').addEventListener('change', updateLiuyaoInputs);
+      $('liuyao-method').addEventListener('change', handleLiuyaoMethodChange);
       updateLiuyaoInputs();
     }
     if ($('liuyao-cast-btn')) $('liuyao-cast-btn').addEventListener('click', castLiuyao);
