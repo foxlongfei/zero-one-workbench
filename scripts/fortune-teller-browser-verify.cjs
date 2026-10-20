@@ -370,6 +370,13 @@ const check = (name, ok, detail = '') => {
       englishZiweiBranches.length === 12 &&
       englishZiweiBranches.every(label => !/[\u4e00-\u9fff]/.test(label)),
       englishZiweiBranches.join(', '));
+    const fullEnglishZiwei = await page.locator('#ziwei-result').innerText();
+    check('entire Zi Wei result follows bilingual UI',
+      fullEnglishZiwei.trim().length > 80 && !/[\u4e00-\u9fff]/.test(fullEnglishZiwei),
+      fullEnglishZiwei.slice(0, 400));
+    check('footer resource links follow bilingual UI',
+      await page.locator('#local-license-link').innerText() === 'MIT License' &&
+      await page.locator('#contribution-guide-link').innerText() === 'Contribution Guide');
     check('print action follows bilingual UI',
       await page.locator('#print-btn').innerText() === 'Print/PDF');
     await page.evaluate(() => {
@@ -440,6 +447,9 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-result .hex-header').count() === 1 &&
       await page.locator('#liuyao-result .hex-lines-table').count() === 1,
       restoredLiuyao.slice(0, 300));
+    check('entire Liu Yao result follows bilingual UI',
+      !/[\u4e00-\u9fff]/.test(restoredLiuyao),
+      restoredLiuyao.slice(0, 400));
 
     if (await page.locator('#share-modal').isVisible()) {
       await page.locator('#share-modal-close').click();
