@@ -782,6 +782,114 @@ const TianjiApp = (function () {
       return { '年': 'Year', '月': 'Month', '日': 'Day', '时': 'Hour' }[name] || name;
     }
 
+    function localizedElementWithRole(value) {
+      if (I18n.getLang() !== 'en') return value;
+      var match = /^([木火土金水])(?:\((官杀|食伤|财|印|比劫)\))?$/.exec(value);
+      if (!match) return value;
+      var elementKey = { '木': 'wood', '火': 'fire', '土': 'earth', '金': 'metal', '水': 'water' }[match[1]];
+      var role = {
+        '官杀': 'Officer / Power', '食伤': 'Output', '财': 'Wealth',
+        '印': 'Resource', '比劫': 'Peers'
+      }[match[2]];
+      return I18n.t(elementKey) + (role ? ' (' + role + ')' : '');
+    }
+
+    function localizedStrengthFactor(factor) {
+      if (I18n.getLang() !== 'en') return factor;
+      var match = /^(得令|失令): ([子丑寅卯辰巳午未申酉戌亥])月(生|克)([木火土金水]) \(([+-]?\d+(?:\.\d+)?)\)$/.exec(factor);
+      if (match) {
+        var month = localizedBranch(BRANCHES.indexOf(match[2]));
+        var element = localizedElementWithRole(match[4]);
+        return (match[1] === '得令' ? 'Seasonal support: ' : 'Seasonal restraint: ') +
+          month + ' month ' + (match[3] === '生' ? 'supports ' : 'controls ') + element +
+          ' (' + match[5] + ')';
+      }
+      match = /^得地: (年支|日支|时支)([子丑寅卯辰巳午未申酉戌亥])藏([甲乙丙丁戊己庚辛壬癸])\(([木火土金水])\) \(([+-]?\d+(?:\.\d+)?)\)$/.exec(factor);
+      if (match) {
+        var branchPlace = { '年支': 'Year branch', '日支': 'Day branch', '时支': 'Hour branch' }[match[1]];
+        return 'Root support: ' + branchPlace + ' ' + localizedBranch(BRANCHES.indexOf(match[2])) +
+          ' contains ' + localizedStem(STEMS.indexOf(match[3])) + ' (' + localizedElementWithRole(match[4]) +
+          ') (' + match[5] + ')';
+      }
+      match = /^得地: (年支|日支|时支)藏干生日主 \(([+-]?\d+(?:\.\d+)?)\)$/.exec(factor);
+      if (match) {
+        return 'Root support: ' + { '年支': 'Year branch', '日支': 'Day branch', '时支': 'Hour branch' }[match[1]] +
+          ' contains a stem that supports the Day Master (' + match[2] + ')';
+      }
+      match = /^得势: (年干|月干|时干)([甲乙丙丁戊己庚辛壬癸])(比劫|生日主) \(([+-]?\d+(?:\.\d+)?)\)$/.exec(factor);
+      if (match) {
+        var stemPlace = { '年干': 'Year stem', '月干': 'Month stem', '时干': 'Hour stem' }[match[1]];
+        return 'Peer support: ' + stemPlace + ' ' + localizedStem(STEMS.indexOf(match[2])) +
+          (match[3] === '比劫' ? ' is a peer of the Day Master' : ' supports the Day Master') +
+          ' (' + match[4] + ')';
+      }
+      return 'Strength factor';
+    }
+
+    function localizedPatternName(name) {
+      if (I18n.getLang() !== 'en') return name;
+      var special = { '建禄格': 'Prosperity Pattern', '羊刃格': 'Yang Blade Pattern', '杂气格': 'Mixed Qi Pattern' };
+      if (special[name]) return special[name];
+      if (/格$/.test(name)) return localizedTenGod(name.slice(0, -1)) + ' Pattern';
+      return 'Chart Pattern';
+    }
+
+    function localizedPatternDescription(name) {
+      if (I18n.getLang() !== 'en') return pattern.description;
+      var descriptions = {
+        '建禄格': 'The month branch is the Day Master’s prosperity position. The chart is strong and benefits from Wealth and Officer influences.',
+        '羊刃格': 'The month branch is the Day Master’s Yang Blade. Strong drive benefits from disciplined Officer or Power influence.',
+        '杂气格': 'The pattern is mixed and should be evaluated with the full chart.',
+        '比肩格': 'Companion energy leads the month. Independence is strong; Officer, Power, and Wealth influences can provide balance.',
+        '劫财格': 'Rob Wealth energy is prominent. Competition is strong and benefits from Officer or Power restraint.',
+        '食神格': 'Eating God channels Power and supports fluent expression, refinement, and talent.',
+        '伤官格': 'Hurting Officer can conflict with Officer energy, while its link to Wealth can support achievement.',
+        '偏财格': 'Indirect Wealth favors generosity, initiative, and flexible resource management.',
+        '正财格': 'Direct Wealth favors diligence, stability, and careful stewardship.',
+        '七杀格': 'Seven Killings favors decisiveness and authority, with Eating God providing useful restraint.',
+        '正官格': 'Direct Officer favors discipline, propriety, and structured responsibility.',
+        '偏印格': 'Indirect Resource favors insight and reflection, though it can also increase hesitation.',
+        '正印格': 'Direct Resource favors learning, generosity, and sustained support.'
+      };
+      return descriptions[name] || 'This pattern should be evaluated in the context of the full chart.';
+    }
+
+    function localizedFavorableSuggestion(suggestion) {
+      if (I18n.getLang() !== 'en') return suggestion;
+      var match = /^日主偏(强|弱)，宜用(.+)(克泄耗之|生扶助之)。$/.exec(suggestion);
+      if (!match) return 'Review favorable elements together with the full chart.';
+      var terms = match[2].split('、').map(localizedElementWithRole).join(', ');
+      return match[1] === '强'
+        ? 'The Day Master is relatively strong; favor ' + terms + ' to regulate it through control, expression, and expenditure.'
+        : 'The Day Master is relatively weak; favor ' + terms + ' to strengthen it through support and nourishment.';
+    }
+
+    function localizedRelationshipKind(kind) {
+      if (I18n.getLang() !== 'en') return kind;
+      return {
+        '六合': 'Six Harmony', '三合': 'Three Harmony', '半三合': 'Half Three Harmony',
+        '六冲': 'Six Clash', '三刑': 'Triple Punishment', '自刑': 'Self-Punishment',
+        '相刑': 'Punishment', '六害': 'Six Harm'
+      }[kind] || 'Branch Relationship';
+    }
+
+    function localizedRelationshipDescription(relationship) {
+      if (I18n.getLang() !== 'en') return relationship.description;
+      var branches = (relationship.branches || []).map(function (branch) {
+        return localizedBranch(BRANCHES.indexOf(branch));
+      });
+      var resultElement = relationship.resultElement ? localizedElementWithRole(relationship.resultElement) : '';
+      if (relationship.kind === '六合') return branches.join(' and ') + ' form a Six Harmony combination toward ' + resultElement + '.';
+      if (relationship.kind === '三合') return branches.join(', ') + ' form a Three Harmony combination of ' + resultElement + '.';
+      if (relationship.kind === '半三合') return branches.join(' and ') + ' form a partial Three Harmony combination of ' + resultElement + '.';
+      if (relationship.kind === '六冲') return branches.join(' and ') + ' clash.';
+      if (relationship.kind === '三刑') return branches.join(', ') + ' form a Triple Punishment.';
+      if (relationship.kind === '自刑') return branches[0] + ' forms a Self-Punishment.';
+      if (relationship.kind === '相刑') return branches.join(' and ') + ' form a Punishment.';
+      if (relationship.kind === '六害') return branches.join(' and ') + ' form a Six Harm relationship.';
+      return 'A branch relationship is present.';
+    }
+
     // ── Build HTML ──
     var html = '';
 
@@ -869,7 +977,7 @@ const TianjiApp = (function () {
     if (strength.factors.length > 0) {
       html += '<div class="strength-factors"><details><summary>' + I18n.t('strengthDetails') + '</summary><ul>';
       strength.factors.forEach(function (f) {
-        html += '<li>' + f + '</li>';
+        html += '<li>' + localizedStrengthFactor(f) + '</li>';
       });
       html += '</ul></details></div>';
     }
@@ -899,17 +1007,17 @@ const TianjiApp = (function () {
 
     // 6. 格局分析
     html += '<div class="pattern-section"><h3>' + I18n.t('patternAnalysis') + '</h3>';
-    html += '<div class="pattern-name">' + pattern.pattern + '</div>';
-    html += '<p class="pattern-desc">' + pattern.description + '</p>';
+    html += '<div class="pattern-name">' + localizedPatternName(pattern.pattern) + '</div>';
+    html += '<p class="pattern-desc">' + localizedPatternDescription(pattern.pattern) + '</p>';
     html += '</div>';
 
     // 7. 用神忌神
     html += '<div class="favorable-section"><h3>' + I18n.t('favorableAnalysis') + '</h3>';
     html += '<div class="fav-row"><span class="fav-label">' + I18n.t('favorableLabel') + ':</span> ';
-    html += '<span class="fav-good">' + favorable.favorable.join('、') + '</span></div>';
+    html += '<span class="fav-good">' + favorable.favorable.map(localizedElementWithRole).join(I18n.getLang() === 'en' ? ', ' : '、') + '</span></div>';
     html += '<div class="fav-row"><span class="fav-label">' + I18n.t('unfavorableLabel') + ':</span> ';
-    html += '<span class="fav-bad">' + favorable.unfavorable.join('、') + '</span></div>';
-    html += '<p class="fav-suggestion">' + favorable.suggestion + '</p>';
+    html += '<span class="fav-bad">' + favorable.unfavorable.map(localizedElementWithRole).join(I18n.getLang() === 'en' ? ', ' : '、') + '</span></div>';
+    html += '<p class="fav-suggestion">' + localizedFavorableSuggestion(favorable.suggestion) + '</p>';
     html += '</div>';
 
     // 8. 五行雷达图 + 详情
@@ -949,7 +1057,7 @@ const TianjiApp = (function () {
     if (rels.length > 0) {
       html += '<div class="relationships-section"><h3>' + I18n.t('relationships') + '</h3><ul>';
       rels.forEach(function (r) {
-        html += '<li><strong>' + r.kind + ':</strong> ' + r.description + '</li>';
+        html += '<li><strong>' + localizedRelationshipKind(r.kind) + ':</strong> ' + localizedRelationshipDescription(r) + '</li>';
       });
       html += '</ul></div>';
     }
