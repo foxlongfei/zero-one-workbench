@@ -530,6 +530,36 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-result .hex-header').count() === 0,
       malformedLiuYaoToast);
 
+    const invalidLiuYaoMethodPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'unknown', lines: '6,7,8,9,6,7',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-liuyao-method-test=1#' +
+        invalidLiuYaoMethodPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    const invalidLiuYaoMethodToast = await page.locator('.toast').innerText();
+    check('unknown Liu Yao share method is rejected instead of silently using time casting',
+      await page.evaluate(() => window.location.hash === '') &&
+      invalidLiuYaoMethodToast.includes('invalid or damaged'),
+      invalidLiuYaoMethodToast);
+
+    const invalidLiuYaoNumbersPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'number', n1: '0', n2: '7', n3: '',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-liuyao-numbers-test=1#' +
+        invalidLiuYaoNumbersPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    const invalidLiuYaoNumbersToast = await page.locator('.toast').innerText();
+    check('out-of-range Liu Yao share numbers are rejected before casting',
+      await page.evaluate(() => window.location.hash === '') &&
+      invalidLiuYaoNumbersToast.includes('invalid or damaged'),
+      invalidLiuYaoNumbersToast);
+
     const malformedBaziPayload = Buffer.from(JSON.stringify({
       tab: 'bazi', lang: 'en', date: '2026-02-31', hour: '4', gender: 'male',
     })).toString('base64');
