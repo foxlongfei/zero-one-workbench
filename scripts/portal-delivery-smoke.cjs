@@ -24,6 +24,8 @@ const targets = [
     for(const href of ['movement-mediapipe.html','fortune-teller/index.html','reader-integrated.html','watch-world.html']){
      if(await page.locator('a[href="'+href+'"]').count()!==1)errors.push('missing/duplicate product link '+href);
     }
+    const fortuneStatus=await page.locator('a[href="fortune-teller/index.html"]').evaluate(element=>element.closest('article')?.textContent||'');
+    if(!fortuneStatus.includes('已发布到主线')||fortuneStatus.includes('未经授权'))errors.push('fortune teller publication status is stale');
    }
    if(target.name==='watch-world'){
     const response=await page.request.get(base+'/portal/watch-world-sources.json');
