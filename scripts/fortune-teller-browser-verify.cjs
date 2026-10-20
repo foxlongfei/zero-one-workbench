@@ -133,6 +133,11 @@ const check = (name, ok, detail = '') => {
       !Object.prototype.hasOwnProperty.call(invalidNumberPayload, 'lines'),
       JSON.stringify(invalidNumberPayload));
     await page.locator('#share-modal-close').click();
+    await page.locator('#lang-toggle').click();
+    check('Liu Yao validation status follows language switch',
+      (await page.locator('#liuyao-result').innerText()).includes('Number casting needs two integers') &&
+      await page.locator('#liuyao-result [role="alert"]').count() === 1);
+    await page.locator('#lang-toggle').click();
     await page.locator('#liuyao-num1').fill('3');
     await page.locator('#liuyao-num2').fill('7');
     await page.locator('#liuyao-num3').fill('5');
