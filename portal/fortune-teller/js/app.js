@@ -1602,11 +1602,24 @@ const TianjiApp = (function () {
         if (zwRadio) zwRadio.checked = true;
         switchTab('ziwei');
       } else if (decoded.tab === 'liuyao') {
-        var method = ['time', 'number', 'coin'].indexOf(decoded.method) >= 0 ? decoded.method : 'time';
+        if (['time', 'number', 'coin'].indexOf(decoded.method) < 0) {
+          throw new Error('Invalid shared Liu Yao method');
+        }
+        var method = decoded.method;
+        if (method === 'number') {
+          var sharedN1 = parseSharedInteger(decoded.n1, 1, 999);
+          var sharedN2 = parseSharedInteger(decoded.n2, 1, 999);
+          var sharedN3 = decoded.n3 === '' || decoded.n3 === undefined
+            ? null : parseSharedInteger(decoded.n3, 1, 999);
+          if (sharedN1 === null || sharedN2 === null ||
+              (decoded.n3 !== '' && decoded.n3 !== undefined && sharedN3 === null)) {
+            throw new Error('Invalid shared Liu Yao numbers');
+          }
+          if ($('liuyao-num1')) $('liuyao-num1').value = String(sharedN1);
+          if ($('liuyao-num2')) $('liuyao-num2').value = String(sharedN2);
+          if ($('liuyao-num3')) $('liuyao-num3').value = sharedN3 === null ? '' : String(sharedN3);
+        }
         if ($('liuyao-method')) $('liuyao-method').value = method;
-        if (decoded.n1 !== undefined && $('liuyao-num1')) $('liuyao-num1').value = decoded.n1;
-        if (decoded.n2 !== undefined && $('liuyao-num2')) $('liuyao-num2').value = decoded.n2;
-        if (decoded.n3 !== undefined && $('liuyao-num3')) $('liuyao-num3').value = decoded.n3;
         if (decoded.lines !== undefined) {
           if (typeof decoded.lines !== 'string') {
             throw new Error('Invalid shared Liu Yao lines');
