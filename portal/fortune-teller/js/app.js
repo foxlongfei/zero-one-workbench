@@ -757,6 +757,30 @@ const TianjiApp = (function () {
       var key = tenGodI18nKeys[name];
       return key ? I18n.t(key) : name;
     }
+    function localizedGanzhi(value) {
+      if (I18n.getLang() !== 'en') return value;
+      return value.split('').map(function (char) {
+        var stemIndex = STEMS.indexOf(char);
+        if (stemIndex !== -1) return localizedStem(stemIndex);
+        var branchIndex = BRANCHES.indexOf(char);
+        return branchIndex !== -1 ? localizedBranch(branchIndex) : char;
+      }).join('');
+    }
+    function localizedShenshaName(name) {
+      if (I18n.getLang() !== 'en') return name;
+      var names = {
+        '天乙贵人': 'Heavenly Noble', '文昌贵人': 'Literary Star',
+        '驿马': 'Traveling Horse', '桃花': 'Peach Blossom',
+        '华盖': 'Canopy Star', '将星': 'General Star',
+        '天德': 'Heavenly Virtue', '月德': 'Monthly Virtue',
+        '禄神': 'Prosperity Star', '羊刃': 'Yang Blade'
+      };
+      return names[name] || name;
+    }
+    function localizedPillarName(name) {
+      if (I18n.getLang() !== 'en') return name;
+      return { '年': 'Year', '月': 'Month', '日': 'Day', '时': 'Hour' }[name] || name;
+    }
 
     // ── Build HTML ──
     var html = '';
@@ -853,10 +877,10 @@ const TianjiApp = (function () {
     // 4. 胎元 + 命宫
     html += '<div class="taiyuan-minggong">';
     html += '<div class="tm-item"><span class="tm-label">' + I18n.t('fetalOrigin') + '</span>';
-    html += '<span class="tm-value">' + taiyuan.char + '</span>';
+    html += '<span class="tm-value">' + localizedGanzhi(taiyuan.char) + '</span>';
     html += '<span class="tm-nayin">' + localizedNayin(taiyuan.nayin) + '</span></div>';
     html += '<div class="tm-item"><span class="tm-label">' + I18n.t('destinyPalace') + '</span>';
-    html += '<span class="tm-value">' + minggong.char + '</span>';
+    html += '<span class="tm-value">' + localizedGanzhi(minggong.char) + '</span>';
     html += '<span class="tm-nayin">' + localizedNayin(minggong.nayin) + '</span></div>';
     html += '</div>';
 
@@ -868,7 +892,7 @@ const TianjiApp = (function () {
         // 吉神用金色, 凶神用红色
         var auspicious = ['天乙贵人', '文昌贵人', '天德', '月德', '禄神', '将星'].indexOf(ss.name) !== -1;
         cls += auspicious ? ' shensha-good' : ' shensha-neutral';
-        html += '<span class="' + cls + '">' + ss.name + '<sub>' + ss.pillar + '</sub></span>';
+        html += '<span class="' + cls + '">' + localizedShenshaName(ss.name) + '<sub>' + localizedPillarName(ss.pillar) + '</sub></span>';
       });
       html += '</div></div>';
     }
