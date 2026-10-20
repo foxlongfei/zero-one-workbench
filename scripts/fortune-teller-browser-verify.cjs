@@ -46,6 +46,8 @@ const check = (name, ok, detail = '') => {
       chineseBoundary.includes('不是可证实的未来预测') &&
       chineseBoundary.includes('不能替代医疗、法律、财务'),
       chineseBoundary);
+    check('quick-start action is localized instead of exposing a missing key',
+      await page.locator('#hero-cta-btn').innerText() === '快速开始');
 
     await page.locator('#bazi-date').fill('1990-05-15');
     await page.locator('#bazi-hour').selectOption('7');
@@ -230,6 +232,21 @@ const check = (name, ok, detail = '') => {
     check('language and theme hover hints follow bilingual UI',
       await page.locator('#lang-toggle').getAttribute('title') === 'Switch language' &&
       await page.locator('#theme-toggle').getAttribute('title') === 'Toggle theme');
+    const englishSupportingLabels = await page.locator(
+      '.hero, .tab-nav, .radio-group, #five-elements-chart, .bottom-nav, #share-modal, #share-modal-close, #share-url'
+    ).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')));
+    check('supporting navigation, chart and share controls follow bilingual accessibility',
+      (await page.locator('.skip-link').innerText()) === 'Skip to main content' &&
+      (await page.locator('#hero-cta-btn').innerText()) === 'Quick start' &&
+      englishSupportingLabels.includes('Tianji introduction') &&
+      englishSupportingLabels.includes('Feature options') &&
+      englishSupportingLabels.filter(label => label === 'Gender').length === 2 &&
+      englishSupportingLabels.includes('Five-elements strength radar chart') &&
+      englishSupportingLabels.includes('Bottom navigation') &&
+      englishSupportingLabels.includes('Share current chart') &&
+      englishSupportingLabels.includes('Close share dialog') &&
+      englishSupportingLabels.includes('Share link'),
+      englishSupportingLabels.join(', '));
     check('Liu Yao number labels follow bilingual UI',
       await page.locator('label[for="liuyao-num1"]').innerText() === 'Number 1' &&
       await page.locator('label[for="liuyao-num2"]').innerText() === 'Number 2' &&
