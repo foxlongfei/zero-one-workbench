@@ -803,7 +803,7 @@ const TianjiApp = (function () {
       elCounts[elName] = elements.scores[ei];
     }
     html += '<div class="radar-section"><h3>' + I18n.t('fiveElements') + '</h3>';
-    html += '<canvas id="radar-canvas" width="300" height="300"></canvas>';
+    html += '<canvas id="radar-canvas" width="300" height="300" data-i18n-aria="fiveElementsChart" aria-label="' + I18n.t('fiveElementsChart') + '"></canvas>';
     // 五行详情
     html += '<div class="elements-detail">';
     elements.details.forEach(function (d) {
