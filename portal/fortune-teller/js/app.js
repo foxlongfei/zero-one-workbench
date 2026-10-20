@@ -172,6 +172,29 @@ const TianjiApp = (function () {
       I18n.t('lunarDay') + ' ' + lunar.day;
   }
 
+  /** Localized traditional Nayin name without changing the bundled BaZi engine. */
+  function localizedNayin(name) {
+    if (I18n.getLang() !== 'en') return name;
+    var names = {
+      '海中金': 'Metal in the Sea', '炉中火': 'Fire in the Furnace',
+      '大林木': 'Wood of the Great Forest', '路旁土': 'Earth by the Road',
+      '剑锋金': 'Metal of the Sword Edge', '山头火': 'Fire on the Mountain',
+      '涧下水': 'Water in the Ravine', '城头土': 'Earth on the City Wall',
+      '白蜡金': 'White Wax Metal', '杨柳木': 'Willow Wood',
+      '泉中水': 'Water in the Spring', '屋上土': 'Earth on the Roof',
+      '霹雳火': 'Thunderbolt Fire', '松柏木': 'Pine and Cypress Wood',
+      '长流水': 'Long-Flowing Water', '沙中金': 'Metal in the Sand',
+      '山下火': 'Fire below the Mountain', '平地木': 'Wood on the Plain',
+      '壁上土': 'Earth on the Wall', '金箔金': 'Gold Foil Metal',
+      '佛灯火': 'Lamp Fire', '天河水': 'Water of the Milky Way',
+      '大驿土': 'Earth of the Great Post Road', '钗钏金': 'Hairpin and Bracelet Metal',
+      '桑柘木': 'Mulberry Wood', '大溪水': 'Water of the Great Stream',
+      '沙中土': 'Earth in the Sand', '天上火': 'Fire in the Sky',
+      '石榴木': 'Pomegranate Wood', '大海水': 'Water of the Great Sea'
+    };
+    return names[name] || name;
+  }
+
   // (BaZi engine functions removed — now delegated to bazi.js)
 
   // -----------------------------------------------------------------------
@@ -801,7 +824,7 @@ const TianjiApp = (function () {
     // 纳音 row
     html += '<tr class="nayin-row">';
     nayinArr.forEach(function (n) {
-      html += '<td><small class="nayin-label">' + n.nayin + '</small></td>';
+      html += '<td><small class="nayin-label">' + localizedNayin(n.nayin) + '</small></td>';
     });
     html += '</tr>';
 
@@ -831,10 +854,10 @@ const TianjiApp = (function () {
     html += '<div class="taiyuan-minggong">';
     html += '<div class="tm-item"><span class="tm-label">' + I18n.t('fetalOrigin') + '</span>';
     html += '<span class="tm-value">' + taiyuan.char + '</span>';
-    html += '<span class="tm-nayin">' + taiyuan.nayin + '</span></div>';
+    html += '<span class="tm-nayin">' + localizedNayin(taiyuan.nayin) + '</span></div>';
     html += '<div class="tm-item"><span class="tm-label">' + I18n.t('destinyPalace') + '</span>';
     html += '<span class="tm-value">' + minggong.char + '</span>';
-    html += '<span class="tm-nayin">' + minggong.nayin + '</span></div>';
+    html += '<span class="tm-nayin">' + localizedNayin(minggong.nayin) + '</span></div>';
     html += '</div>';
 
     // 5. 神煞
@@ -919,7 +942,7 @@ const TianjiApp = (function () {
       html += '<div class="lp-year">' + lp.startYear + '-' + lp.endYear + '</div>';
       html += '<div class="lp-stem" style="color:' + stemColor(lp.stemIndex) + '">' + localizedStem(lp.stemIndex) + '</div>';
       html += '<div class="lp-branch" style="color:' + branchColor(lp.branchIndex) + '">' + localizedBranch(lp.branchIndex) + '</div>';
-      html += '<div class="lp-nayin">' + lp.nayin + '</div>';
+      html += '<div class="lp-nayin">' + localizedNayin(lp.nayin) + '</div>';
       html += '</div>';
     });
     html += '</div></div></div>';
@@ -934,7 +957,7 @@ const TianjiApp = (function () {
       html += '<div class="fy-year">' + fy.year + '</div>';
       html += '<div class="fy-gz" style="color:' + stemColor(fy.stemIndex) + '">' + localizedStem(fy.stemIndex) + localizedBranch(fy.branchIndex) + '</div>';
       html += '<div class="fy-tg">' + localizedTenGod(fy.tenGod) + '</div>';
-      html += '<div class="fy-nayin">' + fy.nayin + '</div>';
+      html += '<div class="fy-nayin">' + localizedNayin(fy.nayin) + '</div>';
       html += '</div>';
     });
     html += '</div></div>';
