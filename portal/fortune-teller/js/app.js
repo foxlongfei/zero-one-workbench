@@ -76,6 +76,31 @@ const TianjiApp = (function () {
     [61,'中孚','䷼',3,6,'泽上有风，中孚'],[62,'小过','䷽',4,1,'山上有雷，小过'],
     [63,'既济','䷾',2,5,'水在火上，既济'],[64,'未济','䷿',5,2,'火在水上，未济'],
   ];
+  /** Conventional English titles in King Wen sequence order. */
+  const HEXAGRAM_EN_NAMES = [
+    null,
+    'The Creative', 'The Receptive', 'Difficulty at the Beginning', 'Youthful Folly',
+    'Waiting', 'Conflict', 'The Army', 'Holding Together',
+    'The Taming Power of the Small', 'Treading', 'Peace', 'Standstill',
+    'Fellowship with Others', 'Possession in Great Measure', 'Modesty', 'Enthusiasm',
+    'Following', 'Work on What Has Been Spoiled', 'Approach', 'Contemplation',
+    'Biting Through', 'Grace', 'Splitting Apart', 'Return',
+    'Innocence', 'The Taming Power of the Great', 'The Corners of the Mouth',
+    'Preponderance of the Great', 'The Abysmal', 'The Clinging', 'Influence', 'Duration',
+    'Retreat', 'The Power of the Great', 'Progress', 'Darkening of the Light',
+    'The Family', 'Opposition', 'Obstruction', 'Deliverance',
+    'Decrease', 'Increase', 'Breakthrough', 'Coming to Meet',
+    'Gathering Together', 'Pushing Upward', 'Oppression', 'The Well',
+    'Revolution', 'The Cauldron', 'The Arousing', 'Keeping Still',
+    'Development', 'The Marrying Maiden', 'Abundance', 'The Wanderer',
+    'The Gentle', 'The Joyous', 'Dispersion', 'Limitation',
+    'Inner Truth', 'Preponderance of the Small', 'After Completion', 'Before Completion'
+  ];
+  const TRIGRAM_EN_NATURE = {
+    7: 'Heaven', 6: 'Lake', 5: 'Fire', 4: 'Thunder',
+    3: 'Wind', 2: 'Water', 1: 'Mountain', 0: 'Earth'
+  };
+
   /** Lookup hex by (upper, lower) codes. */
   const HEX_BY_TRIGRAMS = {};
   HEX_DATA.forEach(function (h) { HEX_BY_TRIGRAMS[h[3] + ',' + h[4]] = h; });
@@ -123,6 +148,19 @@ const TianjiApp = (function () {
   /** Localized Liu Yao line position, with an optional compact SVG label. */
   function linePositionLabel(index, compact) {
     return I18n.t((compact ? 'linePositionShort' : 'linePosition') + (index + 1));
+  }
+
+  /** Localized hexagram title without changing the bundled casting engine data. */
+  function localizedHexagramName(hexagram) {
+    if (I18n.getLang() !== 'en') return hexagram[1];
+    return HEXAGRAM_EN_NAMES[hexagram[0]] || ('Hexagram ' + hexagram[0]);
+  }
+
+  /** Plain structural description derived from the existing upper/lower trigrams. */
+  function localizedHexagramDescription(hexagram) {
+    if (I18n.getLang() !== 'en') return hexagram[5];
+    return TRIGRAM_EN_NATURE[hexagram[3]] + ' over ' +
+      TRIGRAM_EN_NATURE[hexagram[4]] + '.';
   }
 
   // (BaZi engine functions removed — now delegated to bazi.js)
@@ -1014,16 +1052,16 @@ const TianjiApp = (function () {
     html += '<div class="hex-header">';
     html += '<div class="hex-primary"><h3>' + I18n.t('primaryHex') + '</h3>';
     html += '<div class="hex-symbol">' + ph[2] + '</div>';
-    html += '<div class="hex-name">' + ph[1] + ' (' + I18n.t('hexagram') + ' ' + ph[0] + ')</div>';
-    html += '<div class="hex-desc">' + ph[5] + '</div></div>';
+    html += '<div class="hex-name">' + localizedHexagramName(ph) + ' (' + I18n.t('hexagram') + ' ' + ph[0] + ')</div>';
+    html += '<div class="hex-desc">' + localizedHexagramDescription(ph) + '</div></div>';
 
     if (result.changedHex) {
       var ch = result.changedHex;
       html += '<div class="hex-arrow">&rarr;</div>';
       html += '<div class="hex-changed"><h3>' + I18n.t('changedHex') + '</h3>';
       html += '<div class="hex-symbol">' + ch[2] + '</div>';
-      html += '<div class="hex-name">' + ch[1] + ' (' + I18n.t('hexagram') + ' ' + ch[0] + ')</div>';
-      html += '<div class="hex-desc">' + ch[5] + '</div></div>';
+      html += '<div class="hex-name">' + localizedHexagramName(ch) + ' (' + I18n.t('hexagram') + ' ' + ch[0] + ')</div>';
+      html += '<div class="hex-desc">' + localizedHexagramDescription(ch) + '</div></div>';
     }
     html += '</div>';
 
