@@ -6,12 +6,14 @@ on:
     paths:
       - 'portal/**'
       - 'scripts/portal-delivery-smoke.cjs'
+      - 'scripts/fortune-teller-browser-verify.cjs'
       - '.github/workflows/portal-delivery.yml'
   pull_request:
     branches: [main]
     paths:
       - 'portal/**'
       - 'scripts/portal-delivery-smoke.cjs'
+      - 'scripts/fortune-teller-browser-verify.cjs'
       - '.github/workflows/portal-delivery.yml'
 permissions:
   contents: read
@@ -44,6 +46,10 @@ jobs:
         run: |
           mkdir -p artifacts/portal-delivery
           node scripts/portal-delivery-smoke.cjs
+      - name: Verify fortune-teller product journeys
+        env:
+          FORTUNE_BASE_URL: http://127.0.0.1:4173
+        run: node scripts/fortune-teller-browser-verify.cjs
       - name: Save screenshots and machine-readable results
         if: always()
         uses: actions/upload-artifact@v4
