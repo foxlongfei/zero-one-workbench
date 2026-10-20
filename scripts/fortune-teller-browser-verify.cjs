@@ -233,7 +233,7 @@ const check = (name, ok, detail = '') => {
       await page.locator('#lang-toggle').getAttribute('title') === 'Switch language' &&
       await page.locator('#theme-toggle').getAttribute('title') === 'Toggle theme');
     const englishSupportingLabels = await page.locator(
-      '.hero, .tab-nav, .radio-group, #five-elements-chart, .bottom-nav, #share-modal, #share-modal-close, #share-url'
+      '.hero, .tab-nav, .radio-group, #five-elements-chart, #radar-canvas, .bottom-nav, #share-modal, #share-modal-close, #share-url'
     ).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')));
     check('supporting navigation, chart and share controls follow bilingual accessibility',
       (await page.locator('.skip-link').innerText()) === 'Skip to main content' &&
