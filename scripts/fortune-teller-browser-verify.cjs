@@ -124,6 +124,15 @@ const check = (name, ok, detail = '') => {
     check('Liu Yao rejects out-of-range number input',
       await page.locator('#liuyao-result [role="alert"]').count() === 1 &&
       (await page.locator('#liuyao-result').innerText()).includes('1—999'));
+    await page.locator('#share-btn').click();
+    const invalidNumberShareUrl = await page.locator('#share-url').inputValue();
+    const invalidNumberPayload = JSON.parse(
+      Buffer.from(invalidNumberShareUrl.split('#')[1], 'base64').toString('utf8')
+    );
+    check('invalid Liu Yao input cannot share a stale previous cast',
+      !Object.prototype.hasOwnProperty.call(invalidNumberPayload, 'lines'),
+      JSON.stringify(invalidNumberPayload));
+    await page.locator('#share-modal-close').click();
     await page.locator('#liuyao-num1').fill('3');
     await page.locator('#liuyao-num2').fill('7');
     await page.locator('#liuyao-num3').fill('5');
@@ -455,6 +464,9 @@ const check = (name, ok, detail = '') => {
       await page.locator('#share-modal-close').click();
     }
     await page.locator('#liuyao-method').selectOption('coin');
+    check('changing Liu Yao method clears the previous method result',
+      (await page.locator('#liuyao-result').innerText()) === 'No data' &&
+      await page.locator('#liuyao-result .hex-header').count() === 0);
     await page.evaluate(() => {
       const sequence = [
         0.1, 0.1, 0.1,
