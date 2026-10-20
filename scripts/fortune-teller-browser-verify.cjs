@@ -209,6 +209,21 @@ const check = (name, ok, detail = '') => {
 
     await page.locator('#lang-toggle').click();
     check('bilingual UI switches', (await page.locator('#tab-bazi').innerText()).toLowerCase().includes('bazi'));
+    const englishStrength = await page.locator('#bazi-result .day-master-info').innerText();
+    check('BaZi strength summary follows bilingual UI',
+      englishStrength.includes('Neutral') &&
+      englishStrength.includes('Score') &&
+      !/(中和|得分)/.test(englishStrength),
+      englishStrength);
+    const englishStrengthDetails = await page.locator('#bazi-result .strength-factors summary').innerText();
+    const englishLuckDirection = await page.locator('#bazi-result .luck-direction').innerText();
+    check('BaZi strength details and luck direction follow bilingual UI',
+      englishStrengthDetails === 'Strength analysis details' &&
+      englishLuckDirection.includes('Start Age') &&
+      englishLuckDirection.includes('yrs') &&
+      /(Forward|Backward)/.test(englishLuckDirection) &&
+      !/(强弱分析详情|起运|顺行|逆行)/.test(englishStrengthDetails + ' ' + englishLuckDirection),
+      englishStrengthDetails + ' | ' + englishLuckDirection);
     const englishBoundary = await page.locator('#interpretation-boundary').innerText();
     check('interpretation boundary follows bilingual UI',
       englishBoundary.includes('not verifiable predictions of the future') &&
