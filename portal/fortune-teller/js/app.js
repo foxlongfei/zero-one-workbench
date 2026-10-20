@@ -502,7 +502,10 @@ const TianjiApp = (function () {
     applyI18n();
     rebuildHourSelector();
     rebuildZiweiSelectors();
-    refreshActiveTab();
+    // Language is global, so refresh every existing result, including hidden tabs.
+    calculateBazi();
+    if (lastLiuYaoResult) renderLiuyaoResult(lastLiuYaoResult);
+    calculateZiwei();
   }
 
   /** Switch active tab — syncs desktop tabs, mobile bottom nav, and panels. */
