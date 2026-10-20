@@ -252,7 +252,7 @@ const check = (name, ok, detail = '') => {
     check('BaZi Nayin values follow bilingual UI',
       englishNayinValues.length >= 24 &&
       englishNayinValues.includes('Earth by the Road') &&
-      englishNayinValues.every(label => !/[\\u4e00-\\u9fff]/.test(label)),
+      englishNayinValues.every(label => !/[\u4e00-\u9fff]/.test(label)),
       englishNayinValues.join(', '));
     const englishBaziLabels = await page.locator(
       '#bazi-result .tm-label, #bazi-result .shensha-section h3, #bazi-result .pattern-section h3, #bazi-result .favorable-section h3'
