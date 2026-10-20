@@ -163,6 +163,15 @@ const TianjiApp = (function () {
       TRIGRAM_EN_NATURE[hexagram[4]] + '.';
   }
 
+  /** Localized lunar date value from the calendar engine's structured result. */
+  function localizedLunarDate(lunar) {
+    if (I18n.getLang() !== 'en') return lunar.traditional.replace(/^农历/, '');
+    var month = I18n.t('lunarMonthName' + lunar.month);
+    var leap = lunar.isLeap ? I18n.t('leapMonth') + ' · ' : '';
+    return lunar.year + ' · ' + leap + month + ' · ' +
+      I18n.t('lunarDay') + ' ' + lunar.day;
+  }
+
   // (BaZi engine functions removed — now delegated to bazi.js)
 
   // -----------------------------------------------------------------------
@@ -736,7 +745,7 @@ const TianjiApp = (function () {
       : year + '-' + String(month).padStart(2, '0') + '-' + String(day).padStart(2, '0');
     html += '<span>' + I18n.t('gregorianDate') + ' ' + gregorianValue + '</span>';
     html += ' <span class="date-sep">/</span> ';
-    html += '<span>' + I18n.t('lunarDate') + ' ' + lunar.traditional.replace(/^农历/, '') + '</span>';
+    html += '<span>' + I18n.t('lunarDate') + ' ' + localizedLunarDate(lunar) + '</span>';
     html += '</div>';
 
     // 2. 四柱表格 (含纳音)
