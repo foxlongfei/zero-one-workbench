@@ -1475,6 +1475,13 @@ const TianjiApp = (function () {
     var modal = $('share-modal');
     var input = $('share-url');
     if (!modal || !input) return;
+    if (activeTab === 'liuyao') {
+      var method = $('liuyao-method') ? $('liuyao-method').value : 'time';
+      if (!lastLiuYaoResult || lastLiuYaoResult.method !== method) {
+        showToast(I18n.t('noData'));
+        return;
+      }
+    }
     input.value = generateShareUrl();
     modal.style.display = 'flex';
     var closeBtn = $('share-modal-close');
@@ -1811,6 +1818,14 @@ const TianjiApp = (function () {
       updateLiuyaoInputs();
     }
     if ($('liuyao-cast-btn')) $('liuyao-cast-btn').addEventListener('click', castLiuyao);
+    ['liuyao-num1', 'liuyao-num2', 'liuyao-num3'].forEach(function (id) {
+      if ($(id)) {
+        $(id).addEventListener('input', function () {
+          var method = $('liuyao-method') ? $('liuyao-method').value : 'time';
+          if (method === 'number' && lastLiuYaoResult) clearLiuyaoResult();
+        });
+      }
+    });
 
     // Zi Wei real-time calculation
     ['ziwei-year','ziwei-month','ziwei-day','ziwei-hour'].forEach(function (id) {
