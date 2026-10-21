@@ -1660,6 +1660,13 @@ const TianjiApp = (function () {
           if ($('liuyao-num3')) $('liuyao-num3').value = sharedN3 === null ? '' : String(sharedN3);
         }
         if ($('liuyao-method')) $('liuyao-method').value = method;
+        // Time and coin casts cannot be reconstructed from inputs alone. Every
+        // share URL generated for those methods includes the exact six lines,
+        // so accepting a payload without them would open an empty chart while
+        // presenting the link as valid.
+        if ((method === 'time' || method === 'coin') && decoded.lines === undefined) {
+          throw new Error('Shared Liu Yao lines are required');
+        }
         if (decoded.lines !== undefined) {
           if (typeof decoded.lines !== 'string') {
             throw new Error('Invalid shared Liu Yao lines');
