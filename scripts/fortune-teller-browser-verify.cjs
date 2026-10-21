@@ -467,10 +467,11 @@ const check = (name, ok, detail = '') => {
       (await page.locator('#liuyao-result').innerText()) === 'No data' &&
       await page.locator('#liuyao-result .hex-header').count() === 0);
     await page.locator('#share-btn').click();
-    await page.locator('.toast').waitFor({ state: 'visible' });
+    const blockedShareToast = page.locator('.toast').last();
+    await blockedShareToast.waitFor({ state: 'visible' });
     check('sharing is blocked without a current Liu Yao result',
       !(await page.locator('#share-modal').isVisible()) &&
-      (await page.locator('.toast').innerText()).trim().length > 0);
+      (await blockedShareToast.innerText()).trim().length > 0);
 
     if (await page.locator('#share-modal').isVisible()) {
       await page.locator('#share-modal-close').click();
