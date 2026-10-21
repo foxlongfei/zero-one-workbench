@@ -125,14 +125,10 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-result [role="alert"]').count() === 1 &&
       (await page.locator('#liuyao-result').innerText()).includes('1—999'));
     await page.locator('#share-btn').click();
-    const invalidNumberShareUrl = await page.locator('#share-url').inputValue();
-    const invalidNumberPayload = JSON.parse(
-      Buffer.from(invalidNumberShareUrl.split('#')[1], 'base64').toString('utf8')
-    );
+    await page.locator('.toast').waitFor({ state: 'visible' });
     check('invalid Liu Yao input cannot share a stale previous cast',
-      !Object.prototype.hasOwnProperty.call(invalidNumberPayload, 'lines'),
-      JSON.stringify(invalidNumberPayload));
-    await page.locator('#share-modal-close').click();
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await page.locator('.toast').innerText()).trim().length > 0);
     await page.locator('#lang-toggle').click();
     check('Liu Yao validation status follows language switch',
       (await page.locator('#liuyao-result').innerText()).includes('Number casting needs two integers') &&
