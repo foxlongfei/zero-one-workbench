@@ -1574,11 +1574,20 @@ const TianjiApp = (function () {
       }
       showToast(I18n.t(copied ? 'copied' : 'copyFailed'));
     }
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(function () {
+    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+      fallbackCopy();
+      return;
+    }
+    try {
+      var copyRequest = navigator.clipboard.writeText(url);
+      if (!copyRequest || typeof copyRequest.then !== 'function') {
+        fallbackCopy();
+        return;
+      }
+      copyRequest.then(function () {
         showToast(I18n.t('copied'));
       }).catch(fallbackCopy);
-    } else {
+    } catch (error) {
       fallbackCopy();
     }
   }
