@@ -507,6 +507,37 @@ const check = (name, ok, detail = '') => {
     check('same-tab share navigation renders the restored Liu Yao lines',
       await page.locator('#liuyao-result .hex-lines-table tbody tr.moving-row').count() === 1);
 
+    await page.goBack({ waitUntil: 'networkidle' });
+    check('browser Back restores the preceding Liu Yao share',
+      await page.locator('#panel-liuyao').isVisible() &&
+      await page.locator('#liuyao-num1').inputValue() === '11' &&
+      await page.locator('#liuyao-num2').inputValue() === '22');
+    await page.goBack({ waitUntil: 'networkidle' });
+    check('browser Back restores the preceding shared BaZi chart',
+      await page.locator('#panel-bazi').isVisible() &&
+      await page.locator('#bazi-date').inputValue() === '1991-06-16' &&
+      await page.locator('#bazi-gender-female').isChecked());
+    await page.goBack({ waitUntil: 'networkidle' });
+    check('browser Back to the plain URL clears the shared chart state',
+      await page.evaluate(() => window.location.hash === '') &&
+      await page.locator('#panel-bazi').isVisible() &&
+      await page.locator('#bazi-gender-male').isChecked() &&
+      await page.locator('#bazi-hour').inputValue() === '0');
+    await page.goForward({ waitUntil: 'networkidle' });
+    check('browser Forward restores the BaZi share again',
+      await page.locator('#bazi-date').inputValue() === '1991-06-16' &&
+      await page.locator('#bazi-gender-female').isChecked());
+    await page.goForward({ waitUntil: 'networkidle' });
+    check('browser Forward restores the first Liu Yao share again',
+      await page.locator('#panel-liuyao').isVisible() &&
+      await page.locator('#liuyao-num1').inputValue() === '11' &&
+      await page.locator('#liuyao-num2').inputValue() === '22');
+    await page.goForward({ waitUntil: 'networkidle' });
+    check('browser Forward restores the Liu Yao share again',
+      await page.locator('#panel-liuyao').isVisible() &&
+      await page.locator('#liuyao-num1').inputValue() === '8' &&
+      await page.locator('#liuyao-result .hex-lines-table tbody tr.moving-row').count() === 1);
+
     await page.locator('#liuyao-num1').fill('12');
     check('editing number-cast inputs invalidates the stale result',
       (await page.locator('#liuyao-result').innerText()) === 'No data' &&
