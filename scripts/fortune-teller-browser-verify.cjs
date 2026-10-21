@@ -434,6 +434,14 @@ const isInvalidShareFeedback = text =>
     await page.locator('#share-modal-close').click();
     check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
     await page.locator('#share-btn').click();
+    check('share modal initially owns keyboard focus',
+      await page.evaluate(() => document.activeElement.id === 'share-modal-close'));
+    await page.keyboard.press('Shift+Tab');
+    check('share modal traps backward keyboard focus',
+      await page.evaluate(() => document.activeElement.id === 'copy-url-btn'));
+    await page.keyboard.press('Tab');
+    check('share modal traps forward keyboard focus',
+      await page.evaluate(() => document.activeElement.id === 'share-modal-close'));
     await page.keyboard.press('Escape');
     check('share modal closes by Escape', !(await page.locator('#share-modal').isVisible()));
 
