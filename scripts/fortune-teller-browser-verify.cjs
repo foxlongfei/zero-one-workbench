@@ -73,6 +73,12 @@ const check = (name, ok, detail = '') => {
     check('BaZi rejects out-of-range date',
       await page.locator('#bazi-result [role="alert"]').count() === 1 &&
       (await page.locator('#bazi-result').innerText()).includes('日期无效'));
+    await page.locator('#share-btn').click();
+    const invalidBaziShareToast = page.locator('.toast').last();
+    await invalidBaziShareToast.waitFor({ state: 'visible' });
+    check('BaZi sharing is blocked while the chart input is invalid',
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await invalidBaziShareToast.innerText()).includes('日期无效'));
     await page.locator('#bazi-date').fill('1990-05-15');
     await page.locator('#bazi-date').press('Tab');
     const repeatedBazi = await page.locator('#bazi-result').innerText();
@@ -202,6 +208,12 @@ const check = (name, ok, detail = '') => {
     check('Zi Wei rejects invalid lunar day',
       await page.locator('#ziwei-result [role="alert"]').count() === 1 &&
       (await page.locator('#ziwei-result').innerText()).includes('日期无效'));
+    await page.locator('#share-btn').click();
+    const invalidZiweiShareToast = page.locator('.toast').last();
+    await invalidZiweiShareToast.waitFor({ state: 'visible' });
+    check('Zi Wei sharing is blocked while the chart input is invalid',
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await invalidZiweiShareToast.innerText()).includes('日期无效'));
     await page.locator('#ziwei-day').fill('21');
     await page.locator('#ziwei-day').press('Tab');
     check('Zi Wei recovers after invalid input',
