@@ -1629,6 +1629,17 @@ const TianjiApp = (function () {
             return value === 6 || value === 7 || value === 8 || value === 9;
           });
           if (!validLines) throw new Error('Invalid shared Liu Yao lines');
+          if (method === 'number') {
+            var expectedNumberLines = liuYaoCastByNumber(
+              sharedN1, sharedN2, sharedN3
+            ).rawLines;
+            var matchesSharedNumbers = restoredLines.every(function (value, index) {
+              return value === expectedNumberLines[index];
+            });
+            if (!matchesSharedNumbers) {
+              throw new Error('Shared Liu Yao lines do not match the supplied numbers');
+            }
+          }
           pendingSharedLiuYaoLines = restoredLines;
         }
         updateLiuyaoInputs();
