@@ -8,6 +8,8 @@ const check = (name, ok, detail = '') => {
   checks.push({ name, status: ok ? 'PASS' : 'FAIL', detail });
   if (!ok) throw new Error(name + ': ' + detail);
 };
+const isInvalidShareFeedback = text =>
+  text.includes('invalid or damaged') || text.includes('分享链接无效或已损坏');
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
@@ -73,6 +75,12 @@ const check = (name, ok, detail = '') => {
     check('BaZi rejects out-of-range date',
       await page.locator('#bazi-result [role="alert"]').count() === 1 &&
       (await page.locator('#bazi-result').innerText()).includes('日期无效'));
+    await page.locator('#share-btn').click();
+    const invalidBaziShareToast = page.locator('.toast').last();
+    await invalidBaziShareToast.waitFor({ state: 'visible' });
+    check('BaZi sharing is blocked while the chart input is invalid',
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await invalidBaziShareToast.innerText()).includes('日期无效'));
     await page.locator('#bazi-date').fill('1990-05-15');
     await page.locator('#bazi-date').press('Tab');
     const repeatedBazi = await page.locator('#bazi-result').innerText();
@@ -124,6 +132,16 @@ const check = (name, ok, detail = '') => {
     check('Liu Yao rejects out-of-range number input',
       await page.locator('#liuyao-result [role="alert"]').count() === 1 &&
       (await page.locator('#liuyao-result').innerText()).includes('1—999'));
+    await page.locator('#share-btn').click();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    check('invalid Liu Yao input cannot share a stale previous cast',
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await page.locator('.toast').last().innerText()).trim().length > 0);
+    await page.locator('#lang-toggle').click();
+    check('Liu Yao validation status follows language switch',
+      (await page.locator('#liuyao-result').innerText()).includes('Number casting needs two integers') &&
+      await page.locator('#liuyao-result [role="alert"]').count() === 1);
+    await page.locator('#lang-toggle').click();
     await page.locator('#liuyao-num1').fill('3');
     await page.locator('#liuyao-num2').fill('7');
     await page.locator('#liuyao-num3').fill('5');
@@ -137,6 +155,22 @@ const check = (name, ok, detail = '') => {
     check('Liu Yao rendered result follows language switch',
       englishLiuyao.includes('Primary') && englishLiuyao.includes('Moving Lines'),
       englishLiuyao.slice(0, 300));
+    const englishHexagramNames = await page.locator('#liuyao-result .hex-name').allInnerTexts();
+    const englishHexagramDescriptions = await page.locator('#liuyao-result .hex-desc').allInnerTexts();
+    check('Liu Yao hexagram names follow bilingual UI',
+      JSON.stringify(englishHexagramNames) === JSON.stringify([
+        'The Wanderer (Hexagram 56)',
+        'Retreat (Hexagram 33)',
+      ]) &&
+      englishHexagramNames.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishHexagramNames.join(' | '));
+    check('Liu Yao hexagram descriptions follow bilingual UI',
+      JSON.stringify(englishHexagramDescriptions) === JSON.stringify([
+        'Fire over Mountain.',
+        'Heaven over Mountain.',
+      ]) &&
+      englishHexagramDescriptions.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishHexagramDescriptions.join(' | '));
     const englishLineLabels = [
       ...(await page.locator('#liuyao-result .hex-lines-table tbody td:first-child').allInnerTexts()),
       ...(await page.locator('#liuyao-result .hex-svg-wrap text').allInnerTexts()),
@@ -176,6 +210,12 @@ const check = (name, ok, detail = '') => {
     check('Zi Wei rejects invalid lunar day',
       await page.locator('#ziwei-result [role="alert"]').count() === 1 &&
       (await page.locator('#ziwei-result').innerText()).includes('日期无效'));
+    await page.locator('#share-btn').click();
+    const invalidZiweiShareToast = page.locator('.toast').last();
+    await invalidZiweiShareToast.waitFor({ state: 'visible' });
+    check('Zi Wei sharing is blocked while the chart input is invalid',
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await invalidZiweiShareToast.innerText()).includes('日期无效'));
     await page.locator('#ziwei-day').fill('21');
     await page.locator('#ziwei-day').press('Tab');
     check('Zi Wei recovers after invalid input',
@@ -209,6 +249,93 @@ const check = (name, ok, detail = '') => {
 
     await page.locator('#lang-toggle').click();
     check('bilingual UI switches', (await page.locator('#tab-bazi').innerText()).toLowerCase().includes('bazi'));
+    const englishStrength = await page.locator('#bazi-result .day-master-info').innerText();
+    check('BaZi strength summary follows bilingual UI',
+      englishStrength.includes('Neutral') &&
+      englishStrength.includes('Score') &&
+      !/(中和|得分)/.test(englishStrength),
+      englishStrength);
+    const englishStrengthDetails = await page.locator('#bazi-result .strength-factors summary').innerText();
+    const englishLuckDirection = await page.locator('#bazi-result .luck-direction').innerText();
+    check('BaZi strength details and luck direction follow bilingual UI',
+      englishStrengthDetails === 'Strength analysis details' &&
+      englishLuckDirection.includes('Start Age') &&
+      englishLuckDirection.includes('yrs') &&
+      /(Forward|Backward)/.test(englishLuckDirection) &&
+      !/(强弱分析详情|起运|顺行|逆行)/.test(englishStrengthDetails + ' ' + englishLuckDirection),
+      englishStrengthDetails + ' | ' + englishLuckDirection);
+    const englishBaziDate = await page.locator('#bazi-result .bazi-date-info').innerText();
+    check('BaZi date labels and lunar value follow bilingual UI',
+      englishBaziDate.includes('Gregorian 1990-05-15') &&
+      englishBaziDate.includes('Lunar Date 1990 · 4th Lunar Month · Day 21') &&
+      !/[\u4e00-\u9fff]/.test(englishBaziDate),
+      englishBaziDate);
+    const englishNayinValues = await page.locator(
+      '#bazi-result .nayin-label, #bazi-result .tm-nayin, #bazi-result .lp-nayin, #bazi-result .fy-nayin'
+    ).allInnerTexts();
+    check('BaZi Nayin values follow bilingual UI',
+      englishNayinValues.length >= 24 &&
+      englishNayinValues.includes('Earth by the Road') &&
+      englishNayinValues.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishNayinValues.join(', '));
+    const englishAuxiliaryPillars = await page.locator('#bazi-result .tm-value').allInnerTexts();
+    const englishAuxiliaryStars = await page.locator('#bazi-result .shensha-tag').allInnerTexts();
+    const englishAuxiliaryText = englishAuxiliaryPillars.concat(englishAuxiliaryStars).join(' | ');
+    check('BaZi conception, destiny and auxiliary-star values follow bilingual UI',
+      JSON.stringify(englishAuxiliaryPillars) === JSON.stringify(['RenShen', 'GuiWei']) &&
+      ['Heavenly Noble', 'Canopy Star', 'General Star', 'Heavenly Virtue', 'Monthly Virtue']
+        .every(label => englishAuxiliaryText.includes(label)) &&
+      ['Year', 'Month', 'Day', 'Hour'].every(label => englishAuxiliaryText.includes(label)) &&
+      !/[\u4e00-\u9fff]/.test(englishAuxiliaryText),
+      englishAuxiliaryText);
+    const englishBaziLabels = await page.locator(
+      '#bazi-result .tm-label, #bazi-result .shensha-section h3, #bazi-result .pattern-section h3, #bazi-result .favorable-section h3'
+    ).allInnerTexts();
+    check('BaZi core result sections follow bilingual UI',
+      ['Fetal Origin', 'Destiny Palace', 'Auxiliary Stars', 'Pattern Analysis', 'Favorable Elements']
+        .every(label => englishBaziLabels.includes(label)),
+      englishBaziLabels.join(', '));
+    const englishElementNames = await page.locator('#bazi-result .el-name').allInnerTexts();
+    const englishElementStatuses = await page.locator('#bazi-result .el-status').allInnerTexts();
+    check('BaZi five-element details follow bilingual UI',
+      JSON.stringify(englishElementNames) === JSON.stringify(['Wood', 'Fire', 'Earth', 'Metal', 'Water']) &&
+      englishElementStatuses.every(label => ['Abundant', 'Balanced', 'Weak', 'Missing'].includes(label)),
+      englishElementNames.join(', ') + ' | ' + englishElementStatuses.join(', '));
+    const englishPillarStems = await page.locator('#bazi-result .stems-row .stem').allInnerTexts();
+    const englishPillarBranches = await page.locator('#bazi-result .branches-row .branch').allInnerTexts();
+    const englishPillarZodiacs = await page.locator('#bazi-result .branches-row small').allInnerTexts();
+    check('BaZi pillars and zodiac follow bilingual UI',
+      JSON.stringify(englishPillarStems) === JSON.stringify(['Geng', 'Xin', 'Geng', 'Gui']) &&
+      JSON.stringify(englishPillarBranches) === JSON.stringify(['Wu', 'Si', 'Chen', 'Wei']) &&
+      JSON.stringify(englishPillarZodiacs) === JSON.stringify(['Horse', 'Snake', 'Dragon', 'Goat']),
+      englishPillarStems.join(', ') + ' | ' + englishPillarBranches.join(', ') + ' | ' + englishPillarZodiacs.join(', '));
+    const englishTenGods = await page.locator('#bazi-result .ten-god-label, #bazi-result .hidden-row sub').allInnerTexts();
+    check('BaZi Ten Gods follow bilingual UI',
+      englishTenGods.includes('Companion') &&
+      englishTenGods.includes('Rob Wealth') &&
+      englishTenGods.includes('Day Master') &&
+      englishTenGods.includes('Hurting Officer') &&
+      englishTenGods.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishTenGods.join(', '));
+    const englishLuckStems = await page.locator('#bazi-result .lp-stem').allInnerTexts();
+    const englishLuckBranches = await page.locator('#bazi-result .lp-branch').allInnerTexts();
+    const englishFlowPillars = await page.locator('#bazi-result .fy-gz').allInnerTexts();
+    const englishFlowTenGods = await page.locator('#bazi-result .fy-tg').allInnerTexts();
+    check('BaZi luck pillars and flow years follow bilingual UI',
+      englishLuckStems.every(label => /^[A-Za-z]+$/.test(label)) &&
+      englishLuckBranches.every(label => /^[A-Za-z]+$/.test(label)) &&
+      englishFlowPillars.every(label => /^[A-Za-z]+$/.test(label)) &&
+      englishFlowTenGods.every(label => !/[\u4e00-\u9fff]/.test(label)),
+      englishLuckStems.join(', ') + ' | ' + englishLuckBranches.join(', ') + ' | ' + englishFlowPillars.join(', '));
+    const englishBaziNarratives = await page.locator(
+      '#bazi-result .strength-factors, #bazi-result .pattern-section, #bazi-result .favorable-section, #bazi-result .relationships-section'
+    ).allInnerTexts();
+    const fullEnglishBazi = await page.locator('#bazi-result').innerText();
+    check('BaZi narrative analysis follows bilingual UI',
+      englishBaziNarratives.length >= 3 &&
+      englishBaziNarratives.every(text => text.trim().length > 0 && !/[\u3400-\u9fff]/.test(text)) &&
+      !/[\u3400-\u9fff]/.test(fullEnglishBazi),
+      englishBaziNarratives.join(' | '));
     const englishBoundary = await page.locator('#interpretation-boundary').innerText();
     check('interpretation boundary follows bilingual UI',
       englishBoundary.includes('not verifiable predictions of the future') &&
@@ -267,6 +394,13 @@ const check = (name, ok, detail = '') => {
       englishZiweiBranches.length === 12 &&
       englishZiweiBranches.every(label => !/[\u4e00-\u9fff]/.test(label)),
       englishZiweiBranches.join(', '));
+    const fullEnglishZiwei = await page.locator('#ziwei-result').innerText();
+    check('entire Zi Wei result follows bilingual UI',
+      fullEnglishZiwei.trim().length > 80 && !/[\u4e00-\u9fff]/.test(fullEnglishZiwei),
+      fullEnglishZiwei.slice(0, 400));
+    check('footer resource links follow bilingual UI',
+      await page.locator('#local-license-link').innerText() === 'MIT License' &&
+      await page.locator('#contribution-guide-link').innerText() === 'Contribution Guide');
     check('print action follows bilingual UI',
       await page.locator('#print-btn').innerText() === 'Print/PDF');
     await page.evaluate(() => {
@@ -293,13 +427,129 @@ const check = (name, ok, detail = '') => {
     await page.locator('#ziwei-gender-female').check();
     await page.locator('#share-btn').click();
     check('share modal opens', await page.locator('#share-modal').isVisible());
+    check('share modal makes the background inert to assistive technology',
+      await page.evaluate(() => Array.from(document.body.children).filter(element =>
+        element.id !== 'share-modal' && element.tagName !== 'SCRIPT'
+      ).every(element => element.hasAttribute('inert') &&
+        element.getAttribute('aria-hidden') === 'true')));
+    check('share modal locks background page scrolling',
+      await page.evaluate(() => document.body.style.overflow === 'hidden'));
     check('share URL is prepared', (await page.locator('#share-url').inputValue()).includes('#'));
     await page.locator('#copy-url-btn').click();
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    check('share link copies', (await page.locator('.toast').innerText()).trim().length > 0);
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    check('share link copies', (await page.locator('.toast').last().innerText()).trim().length > 0);
+    await page.evaluate(() => {
+      window.__clipboardGetterFallbackInvoked = false;
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        get: () => { throw new Error('clipboard access blocked'); }
+      });
+      document.execCommand = command => {
+        if (command === 'copy') window.__clipboardGetterFallbackInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
+    check('throwing Clipboard API getter uses the safe fallback',
+      await page.evaluate(() =>
+        window.__clipboardGetterFallbackInvoked === true &&
+        document.activeElement.id === 'copy-url-btn' &&
+        document.querySelectorAll('textarea').length === 0));
+    await page.evaluate(() => {
+      window.__syncClipboardFallbackInvoked = false;
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText: () => { throw new Error('synchronous permission failure'); } }
+      });
+      document.execCommand = command => {
+        if (command === 'copy') window.__syncClipboardFallbackInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
+    check('synchronous Clipboard API failure uses the safe fallback',
+      await page.evaluate(() =>
+        window.__syncClipboardFallbackInvoked === true &&
+        document.activeElement.id === 'copy-url-btn' &&
+        document.querySelectorAll('textarea').length === 0));
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+      window.__fallbackCopyInvoked = false;
+      document.execCommand = command => {
+        if (command === 'copy') window.__fallbackCopyInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
+    check('fallback copy stays inside the modal and restores focus',
+      await page.evaluate(() =>
+        window.__fallbackCopyInvoked === true &&
+        document.activeElement.id === 'copy-url-btn' &&
+        document.querySelectorAll('textarea').length === 0 &&
+        Array.from(document.body.children).filter(element =>
+          element.id !== 'share-modal' && element.tagName !== 'SCRIPT' && !element.classList.contains('toast')
+        ).every(element => element.hasAttribute('inert') &&
+          element.getAttribute('aria-hidden') === 'true')));
+    await page.evaluate(() => {
+      document.execCommand = () => { throw new Error('clipboard denied'); };
+    });
+    await page.locator('#copy-url-btn').click();
+    const failedCopyToast = page.locator('.toast').last();
+    await failedCopyToast.waitFor({ state: 'visible' });
+    check('fallback copy failure is truthful and leaves no temporary control',
+      await page.evaluate(() =>
+        document.querySelectorAll('textarea').length === 0) &&
+      /复制失败|Unable to copy/.test(await failedCopyToast.innerText()));
+    check('fallback copy failure selects the share link for manual copying',
+      await page.evaluate(() => {
+        const input = document.getElementById('share-url');
+        return document.activeElement === input &&
+          input.selectionStart === 0 &&
+          input.selectionEnd === input.value.length;
+      }));
+    await page.evaluate(() => {
+      window.__lateClipboardFallbackInvoked = false;
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: {
+          writeText: () => new Promise((resolve, reject) => {
+            window.__rejectPendingClipboardWrite = reject;
+          })
+        }
+      });
+      document.execCommand = command => {
+        if (command === 'copy') window.__lateClipboardFallbackInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
     await page.locator('#share-modal-close').click();
+    await page.evaluate(() => window.__rejectPendingClipboardWrite(new Error('late permission denial')));
+    await page.waitForTimeout(50);
+    check('closing the share modal cancels a late clipboard fallback',
+      await page.evaluate(() =>
+        window.__lateClipboardFallbackInvoked === false &&
+        document.activeElement.id === 'share-btn' &&
+        document.querySelectorAll('textarea').length === 0));
     check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
+    check('closing share modal restores background accessibility',
+      await page.evaluate(() => {
+        const main = document.getElementById('main-content');
+        const header = document.querySelector('header');
+        return !main.hasAttribute('inert') && !main.hasAttribute('aria-hidden') &&
+          !header.hasAttribute('inert') && !header.hasAttribute('aria-hidden');
+      }));
+    check('closing share modal restores background page scrolling',
+      await page.evaluate(() => document.body.style.overflow === ''));
     await page.locator('#share-btn').click();
+    check('share modal initially owns keyboard focus',
+      await page.evaluate(() => document.activeElement.id === 'share-modal-close'));
+    await page.keyboard.press('Shift+Tab');
+    check('share modal traps backward keyboard focus',
+      await page.evaluate(() => document.activeElement.id === 'copy-url-btn'));
+    await page.keyboard.press('Tab');
+    check('share modal traps forward keyboard focus',
+      await page.evaluate(() => document.activeElement.id === 'share-modal-close'));
     await page.keyboard.press('Escape');
     check('share modal closes by Escape', !(await page.locator('#share-modal').isVisible()));
 
@@ -317,6 +567,23 @@ const check = (name, ok, detail = '') => {
       await page.locator('#ziwei-hour').inputValue() === '7' &&
       await page.locator('#ziwei-gender-male').isChecked());
 
+    const sameTabBaziPayload = Buffer.from(JSON.stringify({
+      tab: 'bazi', lang: 'en', date: '1991-06-16', hour: '3', gender: 'female'
+    }), 'utf8').toString('base64');
+    await page.evaluate(payload => { window.location.hash = payload; }, sameTabBaziPayload);
+    await page.waitForFunction(() =>
+      document.getElementById('bazi-date').value === '1991-06-16' &&
+      document.getElementById('panel-bazi').style.display === 'block'
+    );
+    check('same-tab share navigation restores a different BaZi input',
+      await page.locator('#bazi-date').inputValue() === '1991-06-16' &&
+      await page.locator('#bazi-hour').inputValue() === '3' &&
+      await page.locator('#bazi-gender-female').isChecked());
+    check('same-tab share navigation recalculates the BaZi chart',
+      await page.locator('#bazi-result [role="alert"]').count() === 0 &&
+      await page.locator('#bazi-result .stems-row .stem').count() === 4 &&
+      await page.locator('#bazi-result .branches-row .branch').count() === 4);
+
     await page.locator('#tab-liuyao').click();
     await page.locator('#liuyao-method').selectOption('number');
     await page.locator('#liuyao-num1').fill('11');
@@ -325,6 +592,7 @@ const check = (name, ok, detail = '') => {
     await page.locator('#liuyao-cast-btn').click();
     await page.locator('#share-btn').click();
     const liuyaoShareUrl = await page.locator('#share-url').inputValue();
+    await page.locator('#share-modal-close').click();
     await page.goto(liuyaoShareUrl, { waitUntil: 'networkidle' });
     check('Liu Yao share restores number inputs',
       await page.locator('#liuyao-method').inputValue() === 'number' &&
@@ -337,11 +605,105 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-result .hex-header').count() === 1 &&
       await page.locator('#liuyao-result .hex-lines-table').count() === 1,
       restoredLiuyao.slice(0, 300));
+    check('entire Liu Yao result follows bilingual UI',
+      !/[\u4e00-\u9fff]/.test(restoredLiuyao),
+      restoredLiuyao.slice(0, 400));
+
+    const sameTabLiuyaoPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'number',
+      n1: '8', n2: '8', n3: '6', lines: '8,8,8,8,8,6'
+    }), 'utf8').toString('base64');
+    await page.evaluate(payload => { window.location.hash = payload; }, sameTabLiuyaoPayload);
+    await page.waitForFunction(() =>
+      document.getElementById('liuyao-num1').value === '8' &&
+      document.querySelectorAll('#liuyao-result .hex-header').length === 1
+    );
+    check('same-tab share navigation restores different Liu Yao numbers',
+      await page.locator('#liuyao-num1').inputValue() === '8' &&
+      await page.locator('#liuyao-num2').inputValue() === '8' &&
+      await page.locator('#liuyao-num3').inputValue() === '6');
+    check('same-tab share navigation renders the restored Liu Yao lines',
+      await page.locator('#liuyao-result .hex-lines-table tbody tr.moving-row').count() === 1);
+
+    await page.goBack({ waitUntil: 'networkidle' });
+    check('browser Back restores the preceding Liu Yao share',
+      await page.locator('#panel-liuyao').isVisible() &&
+      await page.locator('#liuyao-num1').inputValue() === '11' &&
+      await page.locator('#liuyao-num2').inputValue() === '22');
+    await page.goBack({ waitUntil: 'networkidle' });
+    check('browser Back restores the preceding shared BaZi chart',
+      await page.locator('#panel-bazi').isVisible() &&
+      await page.locator('#bazi-date').inputValue() === '1991-06-16' &&
+      await page.locator('#bazi-gender-female').isChecked());
+    await page.goBack({ waitUntil: 'networkidle' });
+    check('browser Back to the plain URL clears the shared chart state',
+      await page.evaluate(() => window.location.hash === '') &&
+      await page.locator('#panel-bazi').isVisible() &&
+      await page.locator('#bazi-gender-male').isChecked() &&
+      await page.locator('#bazi-hour').inputValue() === '0');
+    await page.goForward({ waitUntil: 'networkidle' });
+    check('browser Forward restores the BaZi share again',
+      await page.locator('#bazi-date').inputValue() === '1991-06-16' &&
+      await page.locator('#bazi-gender-female').isChecked());
+    await page.goForward({ waitUntil: 'networkidle' });
+    check('browser Forward restores the first Liu Yao share again',
+      await page.locator('#panel-liuyao').isVisible() &&
+      await page.locator('#liuyao-num1').inputValue() === '11' &&
+      await page.locator('#liuyao-num2').inputValue() === '22');
+    await page.goForward({ waitUntil: 'networkidle' });
+    check('browser Forward restores the Liu Yao share again',
+      await page.locator('#panel-liuyao').isVisible() &&
+      await page.locator('#liuyao-num1').inputValue() === '8' &&
+      await page.locator('#liuyao-result .hex-lines-table tbody tr.moving-row').count() === 1);
+
+    const partiallyValidDamagedShare = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'zh', method: 'number',
+      n1: '9', n2: '9', n3: '6', lines: '8,8,8,8,8,6'
+    }), 'utf8').toString('base64');
+    await page.evaluate(payload => { window.location.hash = payload; }, partiallyValidDamagedShare);
+    const sameTabInvalidShareToast = page.locator('.toast').last();
+    await sameTabInvalidShareToast.waitFor({ state: 'visible' });
+    check('same-tab damaged share clears the preceding valid chart',
+      await page.evaluate(() => window.location.hash === '') &&
+      await page.locator('#panel-bazi').isVisible() &&
+      await page.locator('#bazi-gender-male').isChecked() &&
+      await page.locator('#bazi-hour').inputValue() === '0' &&
+      !(await page.locator('#panel-liuyao').isVisible()));
+    check('damaged share cannot change the current language',
+      await page.locator('html').getAttribute('lang') === 'en' &&
+      await page.locator('#lang-toggle').innerText() === '中');
+    await page.locator('#tab-liuyao').click();
+    check('damaged share clears hidden Liu Yao inputs and result',
+      await page.locator('#liuyao-method').inputValue() === 'time' &&
+      await page.locator('#liuyao-num1').inputValue() === '3' &&
+      await page.locator('#liuyao-num2').inputValue() === '7' &&
+      await page.locator('#liuyao-num3').inputValue() === '' &&
+      (await page.locator('#liuyao-result').innerText()) === 'No data');
+
+    await page.evaluate(payload => { window.location.hash = payload; }, sameTabLiuyaoPayload);
+    await page.waitForFunction(() =>
+      document.getElementById('liuyao-num1').value === '8' &&
+      document.querySelectorAll('#liuyao-result .hex-header').length === 1
+    );
+
+    await page.locator('#liuyao-num1').fill('12');
+    check('editing number-cast inputs invalidates the stale result',
+      (await page.locator('#liuyao-result').innerText()) === 'No data' &&
+      await page.locator('#liuyao-result .hex-header').count() === 0);
+    await page.locator('#share-btn').click();
+    const blockedShareToast = page.locator('.toast').last();
+    await blockedShareToast.waitFor({ state: 'visible' });
+    check('sharing is blocked without a current Liu Yao result',
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await blockedShareToast.innerText()).trim().length > 0);
 
     if (await page.locator('#share-modal').isVisible()) {
       await page.locator('#share-modal-close').click();
     }
     await page.locator('#liuyao-method').selectOption('coin');
+    check('changing Liu Yao method clears the previous method result',
+      (await page.locator('#liuyao-result').innerText()) === 'No data' &&
+      await page.locator('#liuyao-result .hex-header').count() === 0);
     await page.evaluate(() => {
       const sequence = [
         0.1, 0.1, 0.1,
@@ -360,8 +722,8 @@ const check = (name, ok, detail = '') => {
       '#liuyao-result .hex-lines-table tbody tr.moving-row td:first-child'
     ).allInnerTexts();
     check('Liu Yao coin values follow traditional 6/7/8/9 semantics',
-      coinResult.includes('涣') &&
-      coinResult.includes('井') &&
+      coinResult.includes('Dispersion') &&
+      coinResult.includes('The Well') &&
       JSON.stringify(deterministicMovingLines) === JSON.stringify(['Line 4', 'Line 1']),
       coinResult.slice(0, 400));
     await page.locator('#share-btn').click();
@@ -379,13 +741,134 @@ const check = (name, ok, detail = '') => {
     await page.goto(base + '/portal/fortune-teller/index.html?invalid-share-test=1#damaged-share-state', {
       waitUntil: 'networkidle',
     });
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const invalidShareToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidShareToast = await page.locator('.toast').last().innerText();
     check('invalid share link is cleared with actionable feedback',
       await page.evaluate(() => window.location.hash === '') &&
-      (invalidShareToast.includes('invalid or damaged') ||
-       invalidShareToast.includes('分享链接无效或已损坏')),
+      isInvalidShareFeedback(invalidShareToast),
       invalidShareToast);
+
+    const invalidShareLanguagePayload = Buffer.from(JSON.stringify({
+      tab: 'bazi', lang: 'fr', date: '1990-05-15', hour: '7', gender: 'male',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-share-language-test=1#' +
+        invalidShareLanguagePayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidShareLanguageToast = await page.locator('.toast').last().innerText();
+    check('share payload with an unsupported language is rejected instead of silently changing semantics',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(invalidShareLanguageToast) &&
+      await page.locator('html').getAttribute('lang') === 'zh-CN',
+      invalidShareLanguageToast);
+
+    const malformedLiuYaoShare = await page.evaluate(() => {
+      const payload = { tab: 'liuyao', lang: 'en', method: 'coin', lines: '6,7' };
+      return window.location.origin + window.location.pathname + '#' + btoa(JSON.stringify(payload));
+    });
+    await page.goto(malformedLiuYaoShare, { waitUntil: 'networkidle' });
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const malformedLiuYaoToast = await page.locator('.toast').last().innerText();
+    check('malformed Liu Yao share payload is rejected instead of showing a blank chart',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(malformedLiuYaoToast) &&
+      await page.locator('html').getAttribute('lang') === 'zh-CN' &&
+      await page.locator('#liuyao-result .hex-header').count() === 0,
+      malformedLiuYaoToast);
+
+    for (const method of ['time', 'coin']) {
+      const missingLinesPayload = Buffer.from(JSON.stringify({
+        tab: 'liuyao', lang: 'en', method,
+      })).toString('base64');
+      await page.goto(
+        base + '/portal/fortune-teller/index.html?missing-liuyao-lines-test=' + method + '#' +
+          missingLinesPayload,
+        { waitUntil: 'networkidle' }
+      );
+      await page.locator('.toast').last().waitFor({ state: 'visible' });
+      const missingLinesToast = await page.locator('.toast').last().innerText();
+      check(method + ' share without exact lines is rejected instead of opening an empty chart',
+        await page.evaluate(() => window.location.hash === '') &&
+        isInvalidShareFeedback(missingLinesToast) &&
+        await page.locator('#liuyao-result .hex-header').count() === 0,
+        missingLinesToast);
+    }
+
+    const invalidLiuYaoMethodPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'unknown', lines: '6,7,8,9,6,7',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-liuyao-method-test=1#' +
+        invalidLiuYaoMethodPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidLiuYaoMethodToast = await page.locator('.toast').last().innerText();
+    check('unknown Liu Yao share method is rejected instead of silently using time casting',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(invalidLiuYaoMethodToast),
+      invalidLiuYaoMethodToast);
+
+    const invalidLiuYaoNumbersPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'number', n1: '0', n2: '7', n3: '',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-liuyao-numbers-test=1#' +
+        invalidLiuYaoNumbersPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidLiuYaoNumbersToast = await page.locator('.toast').last().innerText();
+    check('out-of-range Liu Yao share numbers are rejected before casting',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(invalidLiuYaoNumbersToast),
+      invalidLiuYaoNumbersToast);
+
+    const mismatchedLiuYaoNumberLinesPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'number',
+      n1: '3', n2: '7', n3: '', lines: '7,7,7,7,7,7',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?mismatched-liuyao-number-lines-test=1#' +
+        mismatchedLiuYaoNumberLinesPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const mismatchedLiuYaoNumberLinesToast = await page.locator('.toast').last().innerText();
+    check('number-cast share lines must match the supplied numbers',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(mismatchedLiuYaoNumberLinesToast),
+      mismatchedLiuYaoNumberLinesToast);
+
+    const malformedBaziPayload = Buffer.from(JSON.stringify({
+      tab: 'bazi', lang: 'en', date: '2026-02-31', hour: '4', gender: 'male',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-bazi-share-test=1#' + malformedBaziPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const malformedBaziToast = await page.locator('.toast').last().innerText();
+    check('impossible BaZi date in share payload is rejected',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(malformedBaziToast),
+      malformedBaziToast);
+
+    const malformedZiweiPayload = Buffer.from(JSON.stringify({
+      tab: 'ziwei', lang: 'en', y: '2200', m: '1', d: '1', h: '0', gender: 'male',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-ziwei-share-test=1#' + malformedZiweiPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const malformedZiweiToast = await page.locator('.toast').last().innerText();
+    check('out-of-range Zi Wei date in share payload is rejected',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(malformedZiweiToast),
+      malformedZiweiToast);
 
     const mobilePage = await browser.newPage({ viewport: { width: 375, height: 812 } });
     await mobilePage.goto(base + '/portal/fortune-teller/index.html', { waitUntil: 'networkidle' });
