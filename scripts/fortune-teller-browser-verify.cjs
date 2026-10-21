@@ -538,6 +538,22 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-num1').inputValue() === '8' &&
       await page.locator('#liuyao-result .hex-lines-table tbody tr.moving-row').count() === 1);
 
+    await page.evaluate(() => { window.location.hash = 'damaged-share-state'; });
+    const sameTabInvalidShareToast = page.locator('.toast').last();
+    await sameTabInvalidShareToast.waitFor({ state: 'visible' });
+    check('same-tab damaged share clears the preceding valid chart',
+      await page.evaluate(() => window.location.hash === '') &&
+      await page.locator('#panel-bazi').isVisible() &&
+      await page.locator('#bazi-gender-male').isChecked() &&
+      await page.locator('#bazi-hour').inputValue() === '0' &&
+      !(await page.locator('#panel-liuyao').isVisible()));
+
+    await page.evaluate(payload => { window.location.hash = payload; }, sameTabLiuyaoPayload);
+    await page.waitForFunction(() =>
+      document.getElementById('liuyao-num1').value === '8' &&
+      document.querySelectorAll('#liuyao-result .hex-header').length === 1
+    );
+
     await page.locator('#liuyao-num1').fill('12');
     check('editing number-cast inputs invalidates the stale result',
       (await page.locator('#liuyao-result').innerText()) === 'No data' &&
