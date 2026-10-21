@@ -1579,7 +1579,13 @@ const TianjiApp = (function () {
         copied = false;
       } finally {
         ta.remove();
-        if (previousFocus && previousFocus.isConnected && typeof previousFocus.focus === 'function') {
+        if (!copied && input && input.isConnected) {
+          // The failure message asks the user to copy manually. Put the
+          // actual share URL in an immediately copyable state instead of
+          // making them find and select it again.
+          input.focus();
+          input.select();
+        } else if (previousFocus && previousFocus.isConnected && typeof previousFocus.focus === 'function') {
           previousFocus.focus();
         }
       }
