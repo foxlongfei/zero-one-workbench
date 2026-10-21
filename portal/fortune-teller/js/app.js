@@ -1548,12 +1548,24 @@ const TianjiApp = (function () {
     var input = $('share-url');
     var url = input && input.value ? input.value : generateShareUrl();
     function fallbackCopy() {
+      var modal = $('share-modal');
+      var previousFocus = document.activeElement;
       var ta = document.createElement('textarea');
       ta.value = url;
-      document.body.appendChild(ta);
+      ta.setAttribute('readonly', '');
+      ta.setAttribute('tabindex', '-1');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '0';
+      ta.style.opacity = '0';
+      ta.style.pointerEvents = 'none';
+      (modal || document.body).appendChild(ta);
       ta.select();
       document.execCommand('copy');
-      document.body.removeChild(ta);
+      ta.remove();
+      if (previousFocus && previousFocus.isConnected && typeof previousFocus.focus === 'function') {
+        previousFocus.focus();
+      }
       showToast(I18n.t('copied'));
     }
     if (navigator.clipboard) {
