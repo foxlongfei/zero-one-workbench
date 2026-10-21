@@ -127,6 +127,7 @@ const TianjiApp = (function () {
   let liuYaoStatusIsAlert = false;
   let shareModalBackgroundState = [];
   let shareModalBodyOverflow = null;
+  let shareCopyRequestId = 0;
 
   // -----------------------------------------------------------------------
   //  Helpers
@@ -1528,6 +1529,10 @@ const TianjiApp = (function () {
   function closeShareModal() {
     var modal = $('share-modal');
     if (!modal) return;
+    // Ignore clipboard promises that settle after the dialog has closed.
+    // Otherwise a delayed permission rejection can run fallback copy inside
+    // the hidden dialog and steal focus back from the page.
+    shareCopyRequestId += 1;
     modal.style.display = 'none';
     shareModalBackgroundState.forEach(function (state) {
       if (!state.element.isConnected) return;
@@ -1547,7 +1552,13 @@ const TianjiApp = (function () {
   function copyShareLink() {
     var input = $('share-url');
     var url = input && input.value ? input.value : generateShareUrl();
+    var requestId = ++shareCopyRequestId;
+    function isCurrentCopyRequest() {
+      var modal = $('share-modal');
+      return requestId === shareCopyRequestId && modal && modal.style.display !== 'none';
+    }
     function fallbackCopy() {
+      if (!isCurrentCopyRequest()) return;
       var modal = $('share-modal');
       var previousFocus = document.activeElement;
       var ta = document.createElement('textarea');
@@ -1585,7 +1596,7 @@ const TianjiApp = (function () {
         return;
       }
       copyRequest.then(function () {
-        showToast(I18n.t('copied'));
+        if (isCurrentCopyRequest()) showToast(I18n.t('copied'));
       }).catch(fallbackCopy);
     } catch (error) {
       fallbackCopy();
