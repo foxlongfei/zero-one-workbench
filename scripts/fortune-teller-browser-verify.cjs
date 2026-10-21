@@ -632,6 +632,22 @@ const isInvalidShareFeedback = text =>
       isInvalidShareFeedback(invalidShareToast),
       invalidShareToast);
 
+    const invalidShareLanguagePayload = Buffer.from(JSON.stringify({
+      tab: 'bazi', lang: 'fr', date: '1990-05-15', hour: '7', gender: 'male',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?invalid-share-language-test=1#' +
+        invalidShareLanguagePayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidShareLanguageToast = await page.locator('.toast').last().innerText();
+    check('share payload with an unsupported language is rejected instead of silently changing semantics',
+      await page.evaluate(() => window.location.hash === '') &&
+      isInvalidShareFeedback(invalidShareLanguageToast) &&
+      await page.locator('html').getAttribute('lang') === 'zh-CN',
+      invalidShareLanguageToast);
+
     const malformedLiuYaoShare = await page.evaluate(() => {
       const payload = { tab: 'liuyao', lang: 'en', method: 'coin', lines: '6,7' };
       return window.location.origin + window.location.pathname + '#' + btoa(JSON.stringify(payload));
