@@ -449,6 +449,22 @@ const check = (name, ok, detail = '') => {
       await page.locator('#ziwei-hour').inputValue() === '7' &&
       await page.locator('#ziwei-gender-male').isChecked());
 
+    const sameTabBaziPayload = Buffer.from(JSON.stringify({
+      tab: 'bazi', lang: 'en', date: '1991-06-16', hour: '3', gender: 'female'
+    }), 'utf8').toString('base64');
+    await page.evaluate(payload => { window.location.hash = payload; }, sameTabBaziPayload);
+    await page.waitForFunction(() =>
+      document.getElementById('bazi-date').value === '1991-06-16' &&
+      document.getElementById('panel-bazi').style.display === 'block'
+    );
+    check('same-tab share navigation restores a different BaZi input',
+      await page.locator('#bazi-date').inputValue() === '1991-06-16' &&
+      await page.locator('#bazi-hour').inputValue() === '3' &&
+      await page.locator('#bazi-gender-female').isChecked());
+    check('same-tab share navigation recalculates the BaZi chart',
+      await page.locator('#bazi-result [role="alert"]').count() === 0 &&
+      await page.locator('#bazi-result .pillar').count() >= 4);
+
     await page.locator('#tab-liuyao').click();
     await page.locator('#liuyao-method').selectOption('number');
     await page.locator('#liuyao-num1').fill('11');
@@ -473,6 +489,22 @@ const check = (name, ok, detail = '') => {
     check('entire Liu Yao result follows bilingual UI',
       !/[\u4e00-\u9fff]/.test(restoredLiuyao),
       restoredLiuyao.slice(0, 400));
+
+    const sameTabLiuyaoPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'number',
+      n1: '8', n2: '8', n3: '6', lines: '8,8,8,8,8,6'
+    }), 'utf8').toString('base64');
+    await page.evaluate(payload => { window.location.hash = payload; }, sameTabLiuyaoPayload);
+    await page.waitForFunction(() =>
+      document.getElementById('liuyao-num1').value === '8' &&
+      document.querySelectorAll('#liuyao-result .hex-header').length === 1
+    );
+    check('same-tab share navigation restores different Liu Yao numbers',
+      await page.locator('#liuyao-num1').inputValue() === '8' &&
+      await page.locator('#liuyao-num2').inputValue() === '8' &&
+      await page.locator('#liuyao-num3').inputValue() === '6');
+    check('same-tab share navigation renders the restored Liu Yao lines',
+      await page.locator('#liuyao-result .hex-lines-table tbody tr.moving-row').count() === 1);
 
     await page.locator('#liuyao-num1').fill('12');
     check('editing number-cast inputs invalidates the stale result',
