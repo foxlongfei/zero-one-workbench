@@ -538,7 +538,11 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-num1').inputValue() === '8' &&
       await page.locator('#liuyao-result .hex-lines-table tbody tr.moving-row').count() === 1);
 
-    await page.evaluate(() => { window.location.hash = 'damaged-share-state'; });
+    const partiallyValidDamagedShare = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'zh', method: 'number',
+      n1: '9', n2: '9', n3: '6', lines: '8,8,8,8,8,6'
+    }), 'utf8').toString('base64');
+    await page.evaluate(payload => { window.location.hash = payload; }, partiallyValidDamagedShare);
     const sameTabInvalidShareToast = page.locator('.toast').last();
     await sameTabInvalidShareToast.waitFor({ state: 'visible' });
     check('same-tab damaged share clears the preceding valid chart',
@@ -547,6 +551,16 @@ const check = (name, ok, detail = '') => {
       await page.locator('#bazi-gender-male').isChecked() &&
       await page.locator('#bazi-hour').inputValue() === '0' &&
       !(await page.locator('#panel-liuyao').isVisible()));
+    check('damaged share cannot change the current language',
+      await page.locator('html').getAttribute('lang') === 'en' &&
+      await page.locator('#lang-toggle').innerText() === '中');
+    await page.locator('#tab-liuyao').click();
+    check('damaged share clears hidden Liu Yao inputs and result',
+      await page.locator('#liuyao-method').inputValue() === 'time' &&
+      await page.locator('#liuyao-num1').inputValue() === '3' &&
+      await page.locator('#liuyao-num2').inputValue() === '7' &&
+      await page.locator('#liuyao-num3').inputValue() === '' &&
+      (await page.locator('#liuyao-result').innerText()) === 'No data');
 
     await page.evaluate(payload => { window.location.hash = payload; }, sameTabLiuyaoPayload);
     await page.waitForFunction(() =>
