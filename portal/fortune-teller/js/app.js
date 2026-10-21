@@ -1908,8 +1908,34 @@ const TianjiApp = (function () {
       });
     }
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && shareModal && shareModal.style.display !== 'none') {
+      if (!shareModal || shareModal.style.display === 'none') return;
+      if (event.key === 'Escape') {
         closeShareModal();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      var focusable = Array.prototype.slice.call(shareModal.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+        'textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      )).filter(function (element) {
+        return element.offsetParent !== null;
+      });
+      if (!focusable.length) {
+        event.preventDefault();
+        return;
+      }
+
+      var firstFocusable = focusable[0];
+      var lastFocusable = focusable[focusable.length - 1];
+      var focusOutsideModal = !shareModal.contains(document.activeElement);
+      if (event.shiftKey && (document.activeElement === firstFocusable || focusOutsideModal)) {
+        event.preventDefault();
+        lastFocusable.focus();
+      } else if (!event.shiftKey &&
+                 (document.activeElement === lastFocusable || focusOutsideModal)) {
+        event.preventDefault();
+        firstFocusable.focus();
       }
     });
 
