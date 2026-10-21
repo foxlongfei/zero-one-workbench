@@ -1481,6 +1481,13 @@ const TianjiApp = (function () {
         showToast(I18n.t('noData'));
         return;
       }
+    } else {
+      var resultArea = $(activeTab + '-result');
+      var unavailableState = resultArea && resultArea.querySelector('.empty-state');
+      if (unavailableState) {
+        showToast(unavailableState.textContent || I18n.t('noData'));
+        return;
+      }
     }
     input.value = generateShareUrl();
     modal.style.display = 'flex';
