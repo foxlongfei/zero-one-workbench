@@ -427,12 +427,24 @@ const isInvalidShareFeedback = text =>
     await page.locator('#ziwei-gender-female').check();
     await page.locator('#share-btn').click();
     check('share modal opens', await page.locator('#share-modal').isVisible());
+    check('share modal makes the background inert to assistive technology',
+      await page.evaluate(() => Array.from(document.body.children).filter(element =>
+        element.id !== 'share-modal' && element.tagName !== 'SCRIPT'
+      ).every(element => element.hasAttribute('inert') &&
+        element.getAttribute('aria-hidden') === 'true')));
     check('share URL is prepared', (await page.locator('#share-url').inputValue()).includes('#'));
     await page.locator('#copy-url-btn').click();
     await page.locator('.toast').last().waitFor({ state: 'visible' });
     check('share link copies', (await page.locator('.toast').last().innerText()).trim().length > 0);
     await page.locator('#share-modal-close').click();
     check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
+    check('closing share modal restores background accessibility',
+      await page.evaluate(() => {
+        const main = document.getElementById('main-content');
+        const header = document.querySelector('header');
+        return !main.hasAttribute('inert') && !main.hasAttribute('aria-hidden') &&
+          !header.hasAttribute('inert') && !header.hasAttribute('aria-hidden');
+      }));
     await page.locator('#share-btn').click();
     check('share modal initially owns keyboard focus',
       await page.evaluate(() => document.activeElement.id === 'share-modal-close'));
