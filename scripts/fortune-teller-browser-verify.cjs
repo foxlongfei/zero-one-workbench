@@ -463,7 +463,8 @@ const check = (name, ok, detail = '') => {
       await page.locator('#bazi-gender-female').isChecked());
     check('same-tab share navigation recalculates the BaZi chart',
       await page.locator('#bazi-result [role="alert"]').count() === 0 &&
-      await page.locator('#bazi-result .pillar').count() >= 4);
+      await page.locator('#bazi-result .stems-row .stem').count() === 4 &&
+      await page.locator('#bazi-result .branches-row .branch').count() === 4);
 
     await page.locator('#tab-liuyao').click();
     await page.locator('#liuyao-method').selectOption('number');
