@@ -1551,6 +1551,7 @@ const TianjiApp = (function () {
       var modal = $('share-modal');
       var previousFocus = document.activeElement;
       var ta = document.createElement('textarea');
+      var copied = false;
       ta.value = url;
       ta.setAttribute('readonly', '');
       ta.setAttribute('tabindex', '-1');
@@ -1560,13 +1561,18 @@ const TianjiApp = (function () {
       ta.style.opacity = '0';
       ta.style.pointerEvents = 'none';
       (modal || document.body).appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-      if (previousFocus && previousFocus.isConnected && typeof previousFocus.focus === 'function') {
-        previousFocus.focus();
+      try {
+        ta.select();
+        copied = document.execCommand('copy') !== false;
+      } catch (error) {
+        copied = false;
+      } finally {
+        ta.remove();
+        if (previousFocus && previousFocus.isConnected && typeof previousFocus.focus === 'function') {
+          previousFocus.focus();
+        }
       }
-      showToast(I18n.t('copied'));
+      showToast(I18n.t(copied ? 'copied' : 'copyFailed'));
     }
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url).then(function () {
