@@ -438,6 +438,24 @@ const isInvalidShareFeedback = text =>
     await page.locator('#copy-url-btn').click();
     await page.locator('.toast').last().waitFor({ state: 'visible' });
     check('share link copies', (await page.locator('.toast').last().innerText()).trim().length > 0);
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+      window.__fallbackCopyInvoked = false;
+      document.execCommand = command => {
+        if (command === 'copy') window.__fallbackCopyInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
+    check('fallback copy stays inside the modal and restores focus',
+      await page.evaluate(() =>
+        window.__fallbackCopyInvoked === true &&
+        document.activeElement.id === 'copy-url-btn' &&
+        document.querySelectorAll('textarea').length === 0 &&
+        Array.from(document.body.children).filter(element =>
+          element.id !== 'share-modal' && element.tagName !== 'SCRIPT' && !element.classList.contains('toast')
+        ).every(element => element.hasAttribute('inert') &&
+          element.getAttribute('aria-hidden') === 'true')));
     await page.locator('#share-modal-close').click();
     check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
     check('closing share modal restores background accessibility',
