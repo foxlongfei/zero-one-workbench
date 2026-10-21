@@ -125,6 +125,7 @@ const TianjiApp = (function () {
   let pendingSharedLiuYaoLines = null;
   let liuYaoStatusMessageKey = null;
   let liuYaoStatusIsAlert = false;
+  let shareModalBackgroundState = [];
 
   // -----------------------------------------------------------------------
   //  Helpers
@@ -1500,6 +1501,17 @@ const TianjiApp = (function () {
       }
     }
     input.value = generateShareUrl();
+    shareModalBackgroundState = [];
+    Array.prototype.forEach.call(document.body.children, function (element) {
+      if (element === modal || element.tagName === 'SCRIPT') return;
+      shareModalBackgroundState.push({
+        element: element,
+        inert: element.hasAttribute('inert'),
+        ariaHidden: element.getAttribute('aria-hidden')
+      });
+      element.setAttribute('inert', '');
+      element.setAttribute('aria-hidden', 'true');
+    });
     modal.style.display = 'flex';
     var closeBtn = $('share-modal-close');
     if (closeBtn) closeBtn.focus();
@@ -1509,6 +1521,13 @@ const TianjiApp = (function () {
     var modal = $('share-modal');
     if (!modal) return;
     modal.style.display = 'none';
+    shareModalBackgroundState.forEach(function (state) {
+      if (!state.element.isConnected) return;
+      if (!state.inert) state.element.removeAttribute('inert');
+      if (state.ariaHidden === null) state.element.removeAttribute('aria-hidden');
+      else state.element.setAttribute('aria-hidden', state.ariaHidden);
+    });
+    shareModalBackgroundState = [];
     var shareBtn = $('share-btn');
     if (shareBtn) shareBtn.focus();
   }
