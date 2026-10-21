@@ -8,6 +8,8 @@ const check = (name, ok, detail = '') => {
   checks.push({ name, status: ok ? 'PASS' : 'FAIL', detail });
   if (!ok) throw new Error(name + ': ' + detail);
 };
+const isInvalidShareFeedback = text =>
+  text.includes('invalid or damaged') || text.includes('分享链接无效或已损坏');
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
@@ -627,8 +629,7 @@ const check = (name, ok, detail = '') => {
     const invalidShareToast = await page.locator('.toast').last().innerText();
     check('invalid share link is cleared with actionable feedback',
       await page.evaluate(() => window.location.hash === '') &&
-      (invalidShareToast.includes('invalid or damaged') ||
-       invalidShareToast.includes('分享链接无效或已损坏')),
+      isInvalidShareFeedback(invalidShareToast),
       invalidShareToast);
 
     const malformedLiuYaoShare = await page.evaluate(() => {
@@ -640,7 +641,8 @@ const check = (name, ok, detail = '') => {
     const malformedLiuYaoToast = await page.locator('.toast').last().innerText();
     check('malformed Liu Yao share payload is rejected instead of showing a blank chart',
       await page.evaluate(() => window.location.hash === '') &&
-      malformedLiuYaoToast.includes('invalid or damaged') &&
+      isInvalidShareFeedback(malformedLiuYaoToast) &&
+      await page.locator('html').getAttribute('lang') === 'zh-CN' &&
       await page.locator('#liuyao-result .hex-header').count() === 0,
       malformedLiuYaoToast);
 
@@ -656,7 +658,7 @@ const check = (name, ok, detail = '') => {
     const invalidLiuYaoMethodToast = await page.locator('.toast').last().innerText();
     check('unknown Liu Yao share method is rejected instead of silently using time casting',
       await page.evaluate(() => window.location.hash === '') &&
-      invalidLiuYaoMethodToast.includes('invalid or damaged'),
+      isInvalidShareFeedback(invalidLiuYaoMethodToast),
       invalidLiuYaoMethodToast);
 
     const invalidLiuYaoNumbersPayload = Buffer.from(JSON.stringify({
@@ -671,7 +673,7 @@ const check = (name, ok, detail = '') => {
     const invalidLiuYaoNumbersToast = await page.locator('.toast').last().innerText();
     check('out-of-range Liu Yao share numbers are rejected before casting',
       await page.evaluate(() => window.location.hash === '') &&
-      invalidLiuYaoNumbersToast.includes('invalid or damaged'),
+      isInvalidShareFeedback(invalidLiuYaoNumbersToast),
       invalidLiuYaoNumbersToast);
 
     const mismatchedLiuYaoNumberLinesPayload = Buffer.from(JSON.stringify({
@@ -687,7 +689,7 @@ const check = (name, ok, detail = '') => {
     const mismatchedLiuYaoNumberLinesToast = await page.locator('.toast').last().innerText();
     check('number-cast share lines must match the supplied numbers',
       await page.evaluate(() => window.location.hash === '') &&
-      mismatchedLiuYaoNumberLinesToast.includes('invalid or damaged'),
+      isInvalidShareFeedback(mismatchedLiuYaoNumberLinesToast),
       mismatchedLiuYaoNumberLinesToast);
 
     const malformedBaziPayload = Buffer.from(JSON.stringify({
@@ -701,7 +703,7 @@ const check = (name, ok, detail = '') => {
     const malformedBaziToast = await page.locator('.toast').last().innerText();
     check('impossible BaZi date in share payload is rejected',
       await page.evaluate(() => window.location.hash === '') &&
-      malformedBaziToast.includes('invalid or damaged'),
+      isInvalidShareFeedback(malformedBaziToast),
       malformedBaziToast);
 
     const malformedZiweiPayload = Buffer.from(JSON.stringify({
@@ -715,7 +717,7 @@ const check = (name, ok, detail = '') => {
     const malformedZiweiToast = await page.locator('.toast').last().innerText();
     check('out-of-range Zi Wei date in share payload is rejected',
       await page.evaluate(() => window.location.hash === '') &&
-      malformedZiweiToast.includes('invalid or damaged'),
+      isInvalidShareFeedback(malformedZiweiToast),
       malformedZiweiToast);
 
     const mobilePage = await browser.newPage({ viewport: { width: 375, height: 812 } });
