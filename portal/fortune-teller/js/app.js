@@ -1585,12 +1585,16 @@ const TianjiApp = (function () {
       }
       showToast(I18n.t(copied ? 'copied' : 'copyFailed'));
     }
-    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
-      fallbackCopy();
-      return;
-    }
     try {
-      var copyRequest = navigator.clipboard.writeText(url);
+      // Reading navigator.clipboard can itself throw in restricted WebViews
+      // or hardened browser policies, so feature detection belongs inside
+      // the same protected path as writeText().
+      var clipboard = navigator.clipboard;
+      if (!clipboard || typeof clipboard.writeText !== 'function') {
+        fallbackCopy();
+        return;
+      }
+      var copyRequest = clipboard.writeText(url);
       if (!copyRequest || typeof copyRequest.then !== 'function') {
         fallbackCopy();
         return;
