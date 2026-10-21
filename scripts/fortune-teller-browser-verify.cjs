@@ -445,6 +445,7 @@ const check = (name, ok, detail = '') => {
     await page.locator('#liuyao-cast-btn').click();
     await page.locator('#share-btn').click();
     const liuyaoShareUrl = await page.locator('#share-url').inputValue();
+    await page.locator('#share-modal-close').click();
     await page.goto(liuyaoShareUrl, { waitUntil: 'networkidle' });
     check('Liu Yao share restores number inputs',
       await page.locator('#liuyao-method').inputValue() === 'number' &&
