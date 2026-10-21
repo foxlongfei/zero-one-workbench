@@ -456,6 +456,17 @@ const isInvalidShareFeedback = text =>
           element.id !== 'share-modal' && element.tagName !== 'SCRIPT' && !element.classList.contains('toast')
         ).every(element => element.hasAttribute('inert') &&
           element.getAttribute('aria-hidden') === 'true')));
+    await page.evaluate(() => {
+      document.execCommand = () => { throw new Error('clipboard denied'); };
+    });
+    await page.locator('#copy-url-btn').click();
+    const failedCopyToast = page.locator('.toast').last();
+    await failedCopyToast.waitFor({ state: 'visible' });
+    check('fallback copy failure is truthful and still restores modal focus',
+      await page.evaluate(() =>
+        document.activeElement.id === 'copy-url-btn' &&
+        document.querySelectorAll('textarea').length === 0) &&
+      /复制失败|Unable to copy/.test(await failedCopyToast.innerText()));
     await page.locator('#share-modal-close').click();
     check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
     check('closing share modal restores background accessibility',
