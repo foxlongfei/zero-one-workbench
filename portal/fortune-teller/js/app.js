@@ -1188,6 +1188,16 @@ const TianjiApp = (function () {
     calculateBazi();
   }
 
+  /** Discard every chart after a damaged share, including hidden tab state. */
+  function resetAllChartState(dateStr) {
+    switchTab('liuyao');
+    resetActiveTab(dateStr);
+    switchTab('ziwei');
+    resetActiveTab(dateStr);
+    switchTab('bazi');
+    resetActiveTab(dateStr);
+  }
+
   function castLiuyao() {
     var method = $('liuyao-method') ? $('liuyao-method').value : 'time';
     var result;
@@ -1587,6 +1597,7 @@ const TianjiApp = (function () {
   function parseShareHash(dateStr) {
     var hash = window.location.hash;
     if (!hash || hash.length < 2) return;
+    var previousLang = I18n.getLang();
     try {
       var decoded = JSON.parse(atob(hash.substring(1)));
       if (!decoded || typeof decoded !== 'object' ||
@@ -1676,10 +1687,20 @@ const TianjiApp = (function () {
       }
     } catch (e) {
       clearSharedChartHash();
-      // A damaged link must never leave the preceding valid chart visible.
-      // Otherwise the stale result can be mistaken for the bad link's output.
-      switchTab('bazi');
-      resetActiveTab(dateStr);
+      // Validation can fail after a payload has changed language or populated
+      // hidden inputs. Restore the previous language and discard every chart,
+      // so stale or partially applied share data cannot reappear later.
+      if (I18n.getLang() !== previousLang) {
+        I18n.setLang(previousLang);
+        applyI18n();
+        rebuildHourSelector();
+        rebuildZiweiSelectors();
+        var restoredLanguageButton = $('lang-toggle');
+        if (restoredLanguageButton) {
+          restoredLanguageButton.textContent = previousLang === 'zh' ? 'EN' : '中';
+        }
+      }
+      resetAllChartState(dateStr);
       showToast(I18n.t('invalidShareLink'));
     }
   }
