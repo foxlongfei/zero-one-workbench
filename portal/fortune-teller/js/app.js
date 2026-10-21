@@ -1604,14 +1604,18 @@ const TianjiApp = (function () {
           ['bazi', 'ziwei', 'liuyao'].indexOf(decoded.tab) === -1) {
         throw new Error('Invalid shared chart payload');
       }
-      if (decoded.lang === 'zh' || decoded.lang === 'en') {
-        I18n.setLang(decoded.lang);
-        applyI18n();
-        rebuildHourSelector();
-        rebuildZiweiSelectors();
-        var languageButton = $('lang-toggle');
-        if (languageButton) languageButton.textContent = decoded.lang === 'zh' ? 'EN' : '中';
+      // Every generated share records one of the two supported languages.
+      // Silently accepting an unknown value would make a damaged link appear
+      // valid while restoring a different language than the sender shared.
+      if (decoded.lang !== 'zh' && decoded.lang !== 'en') {
+        throw new Error('Invalid shared chart language');
       }
+      I18n.setLang(decoded.lang);
+      applyI18n();
+      rebuildHourSelector();
+      rebuildZiweiSelectors();
+      var languageButton = $('lang-toggle');
+      if (languageButton) languageButton.textContent = decoded.lang === 'zh' ? 'EN' : '中';
       if (decoded.tab === 'bazi') {
         var sharedBaziHour = parseSharedInteger(decoded.hour, 0, 11);
         if (!isValidSharedSolarDate(decoded.date) || sharedBaziHour === null ||
