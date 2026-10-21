@@ -496,11 +496,17 @@ const isInvalidShareFeedback = text =>
     await page.locator('#copy-url-btn').click();
     const failedCopyToast = page.locator('.toast').last();
     await failedCopyToast.waitFor({ state: 'visible' });
-    check('fallback copy failure is truthful and still restores modal focus',
+    check('fallback copy failure is truthful and leaves no temporary control',
       await page.evaluate(() =>
-        document.activeElement.id === 'copy-url-btn' &&
         document.querySelectorAll('textarea').length === 0) &&
       /复制失败|Unable to copy/.test(await failedCopyToast.innerText()));
+    check('fallback copy failure selects the share link for manual copying',
+      await page.evaluate(() => {
+        const input = document.getElementById('share-url');
+        return document.activeElement === input &&
+          input.selectionStart === 0 &&
+          input.selectionEnd === input.value.length;
+      }));
     await page.evaluate(() => {
       window.__lateClipboardFallbackInvoked = false;
       Object.defineProperty(navigator, 'clipboard', {
