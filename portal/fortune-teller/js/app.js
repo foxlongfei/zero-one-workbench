@@ -1584,7 +1584,7 @@ const TianjiApp = (function () {
   }
 
   /** Parse URL hash and restore state if present. */
-  function parseShareHash() {
+  function parseShareHash(dateStr) {
     var hash = window.location.hash;
     if (!hash || hash.length < 2) return;
     try {
@@ -1676,6 +1676,10 @@ const TianjiApp = (function () {
       }
     } catch (e) {
       clearSharedChartHash();
+      // A damaged link must never leave the preceding valid chart visible.
+      // Otherwise the stale result can be mistaken for the bad link's output.
+      switchTab('bazi');
+      resetActiveTab(dateStr);
       showToast(I18n.t('invalidShareLink'));
     }
   }
@@ -1899,10 +1903,10 @@ const TianjiApp = (function () {
         resetActiveTab(dateStr);
         return;
       }
-      parseShareHash();
+      parseShareHash(dateStr);
       renderPendingSharedLiuYao();
     });
-    parseShareHash();
+    parseShareHash(dateStr);
 
     // Initial tab
     switchTab(activeTab);
