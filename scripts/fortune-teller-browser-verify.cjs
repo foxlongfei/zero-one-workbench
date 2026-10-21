@@ -439,6 +439,23 @@ const isInvalidShareFeedback = text =>
     await page.locator('.toast').last().waitFor({ state: 'visible' });
     check('share link copies', (await page.locator('.toast').last().innerText()).trim().length > 0);
     await page.evaluate(() => {
+      window.__syncClipboardFallbackInvoked = false;
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText: () => { throw new Error('synchronous permission failure'); } }
+      });
+      document.execCommand = command => {
+        if (command === 'copy') window.__syncClipboardFallbackInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
+    check('synchronous Clipboard API failure uses the safe fallback',
+      await page.evaluate(() =>
+        window.__syncClipboardFallbackInvoked === true &&
+        document.activeElement.id === 'copy-url-btn' &&
+        document.querySelectorAll('textarea').length === 0));
+    await page.evaluate(() => {
       Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
       window.__fallbackCopyInvoked = false;
       document.execCommand = command => {
