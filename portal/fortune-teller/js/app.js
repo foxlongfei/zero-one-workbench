@@ -1568,6 +1568,21 @@ const TianjiApp = (function () {
     }
   }
 
+  function renderPendingSharedLiuYao() {
+    if (activeTab !== 'liuyao') return;
+    if (pendingSharedLiuYaoLines) {
+      renderLiuyaoResult(_buildCoinResult(
+        pendingSharedLiuYaoLines,
+        $('liuyao-method') ? $('liuyao-method').value : 'coin'
+      ));
+      pendingSharedLiuYaoLines = null;
+    } else if ($('liuyao-method') &&
+        $('liuyao-method').value === 'number' &&
+        $('liuyao-num1').value && $('liuyao-num2').value) {
+      castLiuyao();
+    }
+  }
+
   /** Parse URL hash and restore state if present. */
   function parseShareHash() {
     var hash = window.location.hash;
@@ -1872,24 +1887,20 @@ const TianjiApp = (function () {
     // Apply translations
     applyI18n();
 
-    // Parse URL hash for shared charts
+    // Restore shared charts both on first load and when another share URL
+    // is opened in the same tab or reached with browser back/forward.
+    window.addEventListener('hashchange', function () {
+      if (!window.location.hash) return;
+      parseShareHash();
+      renderPendingSharedLiuYao();
+    });
     parseShareHash();
 
     // Initial tab
     switchTab(activeTab);
-    // Recalculate deterministic shared Liu Yao only after all initialization
-    // has completed; earlier rendering is overwritten by the final tab setup.
-    if (activeTab === 'liuyao' && pendingSharedLiuYaoLines) {
-      renderLiuyaoResult(_buildCoinResult(
-        pendingSharedLiuYaoLines,
-        $('liuyao-method') ? $('liuyao-method').value : 'coin'
-      ));
-      pendingSharedLiuYaoLines = null;
-    } else if (activeTab === 'liuyao' && $('liuyao-method') &&
-        $('liuyao-method').value === 'number' &&
-        $('liuyao-num1').value && $('liuyao-num2').value) {
-      castLiuyao();
-    }
+    // Liu Yao restoration is finalized after tab initialization so its
+    // deterministic lines are not overwritten by the initial refresh.
+    renderPendingSharedLiuYao();
 
     // Enable drag scroll on any existing luck pillar containers
     var luckScroll = document.querySelector('.luck-pillars-scroll');
