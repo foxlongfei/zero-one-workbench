@@ -465,6 +465,16 @@ const check = (name, ok, detail = '') => {
       !/[\u4e00-\u9fff]/.test(restoredLiuyao),
       restoredLiuyao.slice(0, 400));
 
+    await page.locator('#liuyao-num1').fill('12');
+    check('editing number-cast inputs invalidates the stale result',
+      (await page.locator('#liuyao-result').innerText()) === 'No data' &&
+      await page.locator('#liuyao-result .hex-header').count() === 0);
+    await page.locator('#share-btn').click();
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    check('sharing is blocked without a current Liu Yao result',
+      !(await page.locator('#share-modal').isVisible()) &&
+      (await page.locator('.toast').innerText()).trim().length > 0);
+
     if (await page.locator('#share-modal').isVisible()) {
       await page.locator('#share-modal-close').click();
     }
