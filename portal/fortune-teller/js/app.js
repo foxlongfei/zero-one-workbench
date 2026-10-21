@@ -1890,7 +1890,15 @@ const TianjiApp = (function () {
     // Restore shared charts both on first load and when another share URL
     // is opened in the same tab or reached with browser back/forward.
     window.addEventListener('hashchange', function () {
-      if (!window.location.hash) return;
+      if (!window.location.hash) {
+        // Returning from a shared chart to the plain product URL should also
+        // restore the same clean state as opening that URL directly.  Without
+        // this branch, browser Back left the last shared chart on screen even
+        // though the address no longer represented it.
+        switchTab('bazi');
+        resetActiveTab(dateStr);
+        return;
+      }
       parseShareHash();
       renderPendingSharedLiuYao();
     });
