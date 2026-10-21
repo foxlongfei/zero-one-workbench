@@ -131,10 +131,10 @@ const check = (name, ok, detail = '') => {
       await page.locator('#liuyao-result [role="alert"]').count() === 1 &&
       (await page.locator('#liuyao-result').innerText()).includes('1—999'));
     await page.locator('#share-btn').click();
-    await page.locator('.toast').waitFor({ state: 'visible' });
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
     check('invalid Liu Yao input cannot share a stale previous cast',
       !(await page.locator('#share-modal').isVisible()) &&
-      (await page.locator('.toast').innerText()).trim().length > 0);
+      (await page.locator('.toast').last().innerText()).trim().length > 0);
     await page.locator('#lang-toggle').click();
     check('Liu Yao validation status follows language switch',
       (await page.locator('#liuyao-result').innerText()).includes('Number casting needs two integers') &&
@@ -427,8 +427,8 @@ const check = (name, ok, detail = '') => {
     check('share modal opens', await page.locator('#share-modal').isVisible());
     check('share URL is prepared', (await page.locator('#share-url').inputValue()).includes('#'));
     await page.locator('#copy-url-btn').click();
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    check('share link copies', (await page.locator('.toast').innerText()).trim().length > 0);
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    check('share link copies', (await page.locator('.toast').last().innerText()).trim().length > 0);
     await page.locator('#share-modal-close').click();
     check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
     await page.locator('#share-btn').click();
@@ -609,8 +609,8 @@ const check = (name, ok, detail = '') => {
     await page.goto(base + '/portal/fortune-teller/index.html?invalid-share-test=1#damaged-share-state', {
       waitUntil: 'networkidle',
     });
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const invalidShareToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidShareToast = await page.locator('.toast').last().innerText();
     check('invalid share link is cleared with actionable feedback',
       await page.evaluate(() => window.location.hash === '') &&
       (invalidShareToast.includes('invalid or damaged') ||
@@ -622,8 +622,8 @@ const check = (name, ok, detail = '') => {
       return window.location.origin + window.location.pathname + '#' + btoa(JSON.stringify(payload));
     });
     await page.goto(malformedLiuYaoShare, { waitUntil: 'networkidle' });
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const malformedLiuYaoToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const malformedLiuYaoToast = await page.locator('.toast').last().innerText();
     check('malformed Liu Yao share payload is rejected instead of showing a blank chart',
       await page.evaluate(() => window.location.hash === '') &&
       malformedLiuYaoToast.includes('invalid or damaged') &&
@@ -638,8 +638,8 @@ const check = (name, ok, detail = '') => {
         invalidLiuYaoMethodPayload,
       { waitUntil: 'networkidle' }
     );
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const invalidLiuYaoMethodToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidLiuYaoMethodToast = await page.locator('.toast').last().innerText();
     check('unknown Liu Yao share method is rejected instead of silently using time casting',
       await page.evaluate(() => window.location.hash === '') &&
       invalidLiuYaoMethodToast.includes('invalid or damaged'),
@@ -653,8 +653,8 @@ const check = (name, ok, detail = '') => {
         invalidLiuYaoNumbersPayload,
       { waitUntil: 'networkidle' }
     );
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const invalidLiuYaoNumbersToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const invalidLiuYaoNumbersToast = await page.locator('.toast').last().innerText();
     check('out-of-range Liu Yao share numbers are rejected before casting',
       await page.evaluate(() => window.location.hash === '') &&
       invalidLiuYaoNumbersToast.includes('invalid or damaged'),
@@ -669,8 +669,8 @@ const check = (name, ok, detail = '') => {
         mismatchedLiuYaoNumberLinesPayload,
       { waitUntil: 'networkidle' }
     );
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const mismatchedLiuYaoNumberLinesToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const mismatchedLiuYaoNumberLinesToast = await page.locator('.toast').last().innerText();
     check('number-cast share lines must match the supplied numbers',
       await page.evaluate(() => window.location.hash === '') &&
       mismatchedLiuYaoNumberLinesToast.includes('invalid or damaged'),
@@ -683,8 +683,8 @@ const check = (name, ok, detail = '') => {
       base + '/portal/fortune-teller/index.html?invalid-bazi-share-test=1#' + malformedBaziPayload,
       { waitUntil: 'networkidle' }
     );
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const malformedBaziToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const malformedBaziToast = await page.locator('.toast').last().innerText();
     check('impossible BaZi date in share payload is rejected',
       await page.evaluate(() => window.location.hash === '') &&
       malformedBaziToast.includes('invalid or damaged'),
@@ -697,8 +697,8 @@ const check = (name, ok, detail = '') => {
       base + '/portal/fortune-teller/index.html?invalid-ziwei-share-test=1#' + malformedZiweiPayload,
       { waitUntil: 'networkidle' }
     );
-    await page.locator('.toast').waitFor({ state: 'visible' });
-    const malformedZiweiToast = await page.locator('.toast').innerText();
+    await page.locator('.toast').last().waitFor({ state: 'visible' });
+    const malformedZiweiToast = await page.locator('.toast').last().innerText();
     check('out-of-range Zi Wei date in share payload is rejected',
       await page.evaluate(() => window.location.hash === '') &&
       malformedZiweiToast.includes('invalid or damaged'),
