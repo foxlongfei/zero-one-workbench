@@ -646,6 +646,24 @@ const isInvalidShareFeedback = text =>
       await page.locator('#liuyao-result .hex-header').count() === 0,
       malformedLiuYaoToast);
 
+    for (const method of ['time', 'coin']) {
+      const missingLinesPayload = Buffer.from(JSON.stringify({
+        tab: 'liuyao', lang: 'en', method,
+      })).toString('base64');
+      await page.goto(
+        base + '/portal/fortune-teller/index.html?missing-liuyao-lines-test=' + method + '#' +
+          missingLinesPayload,
+        { waitUntil: 'networkidle' }
+      );
+      await page.locator('.toast').last().waitFor({ state: 'visible' });
+      const missingLinesToast = await page.locator('.toast').last().innerText();
+      check(method + ' share without exact lines is rejected instead of opening an empty chart',
+        await page.evaluate(() => window.location.hash === '') &&
+        isInvalidShareFeedback(missingLinesToast) &&
+        await page.locator('#liuyao-result .hex-header').count() === 0,
+        missingLinesToast);
+    }
+
     const invalidLiuYaoMethodPayload = Buffer.from(JSON.stringify({
       tab: 'liuyao', lang: 'en', method: 'unknown', lines: '6,7,8,9,6,7',
     })).toString('base64');
