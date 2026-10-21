@@ -560,6 +560,22 @@ const check = (name, ok, detail = '') => {
       invalidLiuYaoNumbersToast.includes('invalid or damaged'),
       invalidLiuYaoNumbersToast);
 
+    const mismatchedLiuYaoNumberLinesPayload = Buffer.from(JSON.stringify({
+      tab: 'liuyao', lang: 'en', method: 'number',
+      n1: '3', n2: '7', n3: '', lines: '7,7,7,7,7,7',
+    })).toString('base64');
+    await page.goto(
+      base + '/portal/fortune-teller/index.html?mismatched-liuyao-number-lines-test=1#' +
+        mismatchedLiuYaoNumberLinesPayload,
+      { waitUntil: 'networkidle' }
+    );
+    await page.locator('.toast').waitFor({ state: 'visible' });
+    const mismatchedLiuYaoNumberLinesToast = await page.locator('.toast').innerText();
+    check('number-cast share lines must match the supplied numbers',
+      await page.evaluate(() => window.location.hash === '') &&
+      mismatchedLiuYaoNumberLinesToast.includes('invalid or damaged'),
+      mismatchedLiuYaoNumberLinesToast);
+
     const malformedBaziPayload = Buffer.from(JSON.stringify({
       tab: 'bazi', lang: 'en', date: '2026-02-31', hour: '4', gender: 'male',
     })).toString('base64');
