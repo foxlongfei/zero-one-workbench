@@ -484,7 +484,30 @@ const isInvalidShareFeedback = text =>
         document.activeElement.id === 'copy-url-btn' &&
         document.querySelectorAll('textarea').length === 0) &&
       /复制失败|Unable to copy/.test(await failedCopyToast.innerText()));
+    await page.evaluate(() => {
+      window.__lateClipboardFallbackInvoked = false;
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: {
+          writeText: () => new Promise((resolve, reject) => {
+            window.__rejectPendingClipboardWrite = reject;
+          })
+        }
+      });
+      document.execCommand = command => {
+        if (command === 'copy') window.__lateClipboardFallbackInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
     await page.locator('#share-modal-close').click();
+    await page.evaluate(() => window.__rejectPendingClipboardWrite(new Error('late permission denial')));
+    await page.waitForTimeout(50);
+    check('closing the share modal cancels a late clipboard fallback',
+      await page.evaluate(() =>
+        window.__lateClipboardFallbackInvoked === false &&
+        document.activeElement.id === 'share-btn' &&
+        document.querySelectorAll('textarea').length === 0));
     check('share modal closes by button', !(await page.locator('#share-modal').isVisible()));
     check('closing share modal restores background accessibility',
       await page.evaluate(() => {
