@@ -432,6 +432,8 @@ const isInvalidShareFeedback = text =>
         element.id !== 'share-modal' && element.tagName !== 'SCRIPT'
       ).every(element => element.hasAttribute('inert') &&
         element.getAttribute('aria-hidden') === 'true')));
+    check('share modal locks background page scrolling',
+      await page.evaluate(() => document.body.style.overflow === 'hidden'));
     check('share URL is prepared', (await page.locator('#share-url').inputValue()).includes('#'));
     await page.locator('#copy-url-btn').click();
     await page.locator('.toast').last().waitFor({ state: 'visible' });
@@ -445,6 +447,8 @@ const isInvalidShareFeedback = text =>
         return !main.hasAttribute('inert') && !main.hasAttribute('aria-hidden') &&
           !header.hasAttribute('inert') && !header.hasAttribute('aria-hidden');
       }));
+    check('closing share modal restores background page scrolling',
+      await page.evaluate(() => document.body.style.overflow === ''));
     await page.locator('#share-btn').click();
     check('share modal initially owns keyboard focus',
       await page.evaluate(() => document.activeElement.id === 'share-modal-close'));
