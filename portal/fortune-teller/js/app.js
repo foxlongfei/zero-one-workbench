@@ -126,6 +126,7 @@ const TianjiApp = (function () {
   let liuYaoStatusMessageKey = null;
   let liuYaoStatusIsAlert = false;
   let shareModalBackgroundState = [];
+  let shareModalBodyOverflow = null;
 
   // -----------------------------------------------------------------------
   //  Helpers
@@ -1501,6 +1502,11 @@ const TianjiApp = (function () {
       }
     }
     input.value = generateShareUrl();
+    if (modal.style.display !== 'none') {
+      var existingCloseBtn = $('share-modal-close');
+      if (existingCloseBtn) existingCloseBtn.focus();
+      return;
+    }
     shareModalBackgroundState = [];
     Array.prototype.forEach.call(document.body.children, function (element) {
       if (element === modal || element.tagName === 'SCRIPT') return;
@@ -1512,6 +1518,8 @@ const TianjiApp = (function () {
       element.setAttribute('inert', '');
       element.setAttribute('aria-hidden', 'true');
     });
+    shareModalBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     modal.style.display = 'flex';
     var closeBtn = $('share-modal-close');
     if (closeBtn) closeBtn.focus();
@@ -1528,6 +1536,10 @@ const TianjiApp = (function () {
       else state.element.setAttribute('aria-hidden', state.ariaHidden);
     });
     shareModalBackgroundState = [];
+    if (shareModalBodyOverflow !== null) {
+      document.body.style.overflow = shareModalBodyOverflow;
+      shareModalBodyOverflow = null;
+    }
     var shareBtn = $('share-btn');
     if (shareBtn) shareBtn.focus();
   }
