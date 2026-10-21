@@ -439,6 +439,23 @@ const isInvalidShareFeedback = text =>
     await page.locator('.toast').last().waitFor({ state: 'visible' });
     check('share link copies', (await page.locator('.toast').last().innerText()).trim().length > 0);
     await page.evaluate(() => {
+      window.__clipboardGetterFallbackInvoked = false;
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        get: () => { throw new Error('clipboard access blocked'); }
+      });
+      document.execCommand = command => {
+        if (command === 'copy') window.__clipboardGetterFallbackInvoked = true;
+        return command === 'copy';
+      };
+    });
+    await page.locator('#copy-url-btn').click();
+    check('throwing Clipboard API getter uses the safe fallback',
+      await page.evaluate(() =>
+        window.__clipboardGetterFallbackInvoked === true &&
+        document.activeElement.id === 'copy-url-btn' &&
+        document.querySelectorAll('textarea').length === 0));
+    await page.evaluate(() => {
       window.__syncClipboardFallbackInvoked = false;
       Object.defineProperty(navigator, 'clipboard', {
         configurable: true,
