@@ -1,52 +1,19 @@
-# 双项目 CURRENT｜2026-10-04 09:58 +08:00
+# 双项目 CURRENT｜2026-10-22 22:04 +08:00
 
-本页只记录真实执行状态。**实物 → 对应 Pages 接入 → Pages 发布 → 公开运行/读回 → 总首页/CURRENT/Drive 同步**；任一门缺失即 **NOT_CLOSED**，不提高完成度。
+## 零一空间研究
+- V0.2 B01—B04 用户验收 **0/4**。B01进行中，B02—B04待前项；保留 [#3](https://github.com/foxlongfei/zero-one-workbench/issues/3) 与 [#21](https://github.com/foxlongfei/zero-one-workbench/issues/21)。
+- 今日 [PR #34](https://github.com/foxlongfei/zero-one-workbench/pull/34) 和 [PR #37](https://github.com/foxlongfei/zero-one-workbench/pull/37) 合并成熟应用现有集成及修复，完整产品仍未验收。
+- 阅读辅线 C01 的 [PR #36](https://github.com/foxlongfei/zero-one-workbench/pull/36) 已合并候选代码，用户操作及声音授权功能未验收。旧暂停说明与用户当前要求冲突。
+- Z05/Z05-B、Z04、TEMP-E01/M01/MODEL-01 等沿用原编号；来源未核实的结论继续阻断。
 
-## 1｜零一空间研究
+## 动起来
+- V0.2 A01—A04 用户验收 **0/4**。A01进行中，A02—A04待前项；保留 [#3](https://github.com/foxlongfei/zero-one-workbench/issues/3) 与 [#22](https://github.com/foxlongfei/zero-one-workbench/issues/22)。
+- 今日 [PR #38](https://github.com/foxlongfei/zero-one-workbench/pull/38) 已合并完整 openGym 上游部署脚本和说明，**尚无实际公网部署、HTTPS手机端训练、持久化读回或用户验收**。
+- MediaPipe现有页面仅局部原型。BICEPS视觉审计、历史M03/M04、TEMP-YOUTH/CLUB/TESTSET保持原状态，不能用新编号覆盖。
 
-### MAIN｜Z05 古代技术可运行重建｜EXECUTING
-**当前节点：Z05-B｜SOURCE_BINDING → RULE_TABLE / DECISION_NODES / 真实输入运行**
-
-- [公开古代技术实验台](k02-board.html)
-- 本轮实质增量：新增 D07 SOURCE_BOUND_OPERATION_GATE。只有注册操作且存在冻结来源绑定时才允许执行；环境操作缺少作品/页叶/栏位绑定时统一返回 `BLOCKED_NO_SOURCE_BINDING`，不生成环境或吉凶结论。
-- `DIRECTION_NORMALIZATION` 仅以已冻结的二十四山名称/组成/循环次序为非环境工程操作，返回 `EXECUTION_ALLOWED_NON_ENVIRONMENTAL`；主要开口、道路、水体、坡向四类环境操作继续阻塞。
-- 验证器 6/6 PASS；页面接入 D07 后与 D01–D06 同步输出真实决策轨迹。
-- [D07 结构化门](../research/zero-one/z05-b-source-bound-operation-gate-v0.3.json) · [验证器](../scripts/validate-z05-operation-gate.mjs) · [页面提交](https://github.com/foxlongfei/zero-one-workbench/commit/b140bfce60d3de0d0084cbd6db5294027ebc583a) · [公开运行证据](../docs/v0.1/evidence/z05-b/public-operation-gate-verification-v0.3.json)
-- 公开 Pages 已发布并读回：182.4°/住宅A 的 `DIRECTION_NORMALIZATION` 返回 `EXECUTION_ALLOWED_NON_ENVIRONMENTAL`；同输入切换 `ENV_WATER_RELATION` 返回 `BLOCKED_NO_SOURCE_BINDING`，且未输出环境或吉凶判断。本轮 D07 增量硬门 **PASS**。
-- 有效性边界：用户输入不能创建或升级可信来源绑定；Z05-B 整体仍 **NOT_CLOSED**。
-- 精确断点：定位首个具有作品、页叶和栏位的环境操作证据；命中前 D07 保持阻塞。
-
-### SUPPORT / PAUSED
-- Z05 问题路由器｜ACTIVE_SUPPORT；SUPPORT_LIBRARY｜ON_DEMAND。
-- TEMP-MODEL-01｜已恢复的可运行研究工具，不替代 MAIN。
-- Z04/K02-03-HXL-01、TEMP-M01、TEMP-E01｜PAUSED_SUPPORT。
-
-## 2｜动起来
-
-### MAIN｜严格状态
-- M01｜COMPLETED
-- M02｜ACCEPTED_L1_CANDIDATE_ONLY
-- M03｜BLOCKED_CLEAN_CONTEXT
-- M04｜BLOCKED_BY_M03
-
-本轮发现并纠正并发状态漂移：真实图片姿态与 OpenSim 产物可作为能力证据保留，但不得在没有新鲜隔离 D 上下文时重开或关闭正式 M03/M04。
-
-### SUB｜COMMON-HUMAN-COORDINATE / HUMAN-3D｜EXECUTING
-**当前节点：BICEPS-DYNAMIC-3D-V0.7｜NOT_CLOSED / PUBLIC_VISUAL_GATE_FAILED**
-
-- [公开运动页面](movement.html)
-- 实物存在：右肱骨、桡骨、尺骨、肱二头肌长/短头真实 OBJ 可见；视角变化和屈肘响应可见。
-- 本轮新增人工视觉解剖审计：现有功能证据绑定旧 `gitSha=41a87a0b`，且 CENTERED_LOCAL_WRAPPER 没有近端/远端锚点或端点距离不变量，因此截图不能证明肌肉附着连续、关节面约束或碰撞安全。
-- [V0.7 视觉审计](../docs/v0.1/evidence/m2/biceps-visual-anatomy-audit-v0.7.json) · [状态与页面纠正](https://github.com/foxlongfei/zero-one-workbench/commit/879e6853beb85e221183f1589b4f74d118637893)
-- TEMP-YOUTH / TEMP-CLUB / TESTSET｜QUEUED。
-- 精确断点：为肱二头肌两头建立近端/远端锚点跟踪和连续性不变量；随后针对同一部署版本重新截取伸展、中段、峰值三图并人工复核。
-
-## 3｜ZERO-CORE｜公共基础设施 SUB
-不替代两项目 MAIN；REMOTE_DEPLOY 未发生。
-
-## 4｜本轮角色、成果与验收
-- D：Z05 D07 来源绑定操作门；BICEPS 视觉证据审计。
-- Q：Z05 六个正常/反例；BICEPS 版本新鲜度、锚点连续、关节约束边界。
-- C：并发状态冲突处理；Pages、CURRENT、总首页与 Drive 同步。
-- 最近一次真实成果变化：2026-10-04 09:58 +08:00。
-- 本周期结论：**Z05 的 D07 本轮增量完成公开硬门，但 Z05-B 整体仍 NOT_CLOSED；动起来形成新的否决性视觉证据与公开验收边界，未提高完成度。**
+## 当日裁决
+- 新增正式用户验收 **0**；CI、合并、静态页面均不代表产品交付。
+- [#23 独立盲测](https://github.com/foxlongfei/zero-one-workbench/issues/23) 和 [#24 整机交付](https://github.com/foxlongfei/zero-one-workbench/issues/24) 仍OPEN。
+- 执行原则：优先完整成熟开源产品，先真实部署、操作、保存读回，再优化；不删减需求或上游功能。研究和运动长期思想内核未见正式升级。
+- 下一步：动起来部署完整训练系统并手机验证；研究项目完成完整应用与连续案例；阅读辅线继续整书与声音授权验证；均须独立验收。
+- 结论：今日有工程提交，**V0.2 整机 NOT_ACCEPTED**。本状态同步不计产品开发进度。
