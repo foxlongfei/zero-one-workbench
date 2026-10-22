@@ -1,7 +1,7 @@
 name: C01 real book browser integration
 on:
-  push:
-    branches: [c01-foliate-reader-integration]
+  pull_request:
+    branches: [main]
     paths:
       - 'portal/read-with-you-v01.html'
       - 'portal/reader-integrated.js'
@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validate product and browser test syntax
+        run: node --check portal/reader-integrated.js && node --check tests/c01-reader/check.mjs
       - run: npm install --no-save playwright@1.56.1
       - run: npx playwright install --with-deps chromium
       - run: python3 tests/c01-reader/make-books.py
