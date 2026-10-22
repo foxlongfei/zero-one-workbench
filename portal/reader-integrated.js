@@ -51,6 +51,7 @@ $('prev').onclick=()=>page(-1);$('next').onclick=()=>page(1);
 function voices(){try{return synth?.getVoices()||[]}catch{return[]}}
 const VOICE_KEY='zero-one-reader-voice-v1';
 const RATE_KEY='zero-one-reader-speech-rate-v1';
+const MUSIC_VOLUME_KEY='zero-one-reader-music-volume-v1';
 function savedVoiceURI(){try{return localStorage.getItem(VOICE_KEY)||''}catch{return''}}
 function refreshVoices(){const all=voices();$('voice').replaceChildren(...all.map((v,i)=>new Option(v.name+' · '+v.lang,String(i))));const saved=all.findIndex(v=>v.voiceURI===savedVoiceURI()),zh=all.findIndex(v=>v.lang.toLowerCase().startsWith('zh')),preferred=saved>=0?saved:zh>=0?zh:0;if(all.length)$('voice').value=String(preferred)}
 refreshVoices();synth?.addEventListener?.('voiceschanged',refreshVoices);
@@ -66,7 +67,9 @@ function setMusicSource(blob,name){const audio=$('music');if(audio.dataset.url)U
 async function restoreMusic(){const saved=await request(settingsTx().get('background-audio'));if(saved?.blob instanceof Blob&&saved.blob.size)setMusicSource(saved.blob,saved.name)}
 $('musicFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{await libraryReady;await request(settingsTx('readwrite').put({id:'background-audio',name:f.name,type:f.type,blob:f,updatedAt:Date.now()}));setMusicSource(f,f.name);status(`背景音“${f.name}”已保存在本机，下次打开仍可使用`)}catch(err){status(`背景音保存失败：${err.message}`)}finally{e.target.value=''}};
 $('clearMusic').onclick=async()=>{try{await request(settingsTx('readwrite').delete('background-audio'));const audio=$('music');audio.pause();if(audio.dataset.url)URL.revokeObjectURL(audio.dataset.url);delete audio.dataset.url;audio.removeAttribute('src');audio.load();$('musicName').textContent='尚未选择背景音';$('clearMusic').hidden=true;status('已清除本机背景音')}catch(err){status(`背景音清除失败：${err.message}`)}};
-$('volume').oninput=syncMusicVolume;$('ducking').checked=localStorage.getItem('reader-music-ducking')!=='off';$('ducking').onchange=()=>{localStorage.setItem('reader-music-ducking',$('ducking').checked?'on':'off');syncMusicVolume()};syncMusicVolume();
+function validMusicVolume(value){const input=$('volume'),number=Number(value);return Number.isFinite(number)&&number>=Number(input.min)&&number<=Number(input.max)}
+try{const savedVolume=localStorage.getItem(MUSIC_VOLUME_KEY);if(savedVolume&&validMusicVolume(savedVolume))$('volume').value=savedVolume}catch{}
+$('volume').oninput=()=>{try{if(validMusicVolume($('volume').value))localStorage.setItem(MUSIC_VOLUME_KEY,$('volume').value)}catch{}syncMusicVolume()};$('ducking').checked=localStorage.getItem('reader-music-ducking')!=='off';$('ducking').onchange=()=>{localStorage.setItem('reader-music-ducking',$('ducking').checked?'on':'off');syncMusicVolume()};syncMusicVolume();
 window.addEventListener('pagehide',()=>{stop();clearCoverURLs();if($('music').dataset.url)URL.revokeObjectURL($('music').dataset.url)});
 libraryReady=openDB().then(async()=>{await refresh();await restoreMusic()}).then(()=>{$('importButton').disabled=false;$('importButton').textContent='＋ 添加电子书'});
 libraryReady.catch(e=>status('书库不可用：'+e.message));
