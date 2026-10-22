@@ -50,10 +50,14 @@ async function page(direction){stop();if(view){const target=view,label=direction
 $('prev').onclick=()=>page(-1);$('next').onclick=()=>page(1);
 function voices(){return synth?.getVoices()||[]}
 const VOICE_KEY='zero-one-reader-voice-v1';
+const RATE_KEY='zero-one-reader-speech-rate-v1';
 function savedVoiceURI(){try{return localStorage.getItem(VOICE_KEY)||''}catch{return''}}
 function refreshVoices(){const all=voices();$('voice').replaceChildren(...all.map((v,i)=>new Option(v.name+' · '+v.lang,String(i))));const saved=all.findIndex(v=>v.voiceURI===savedVoiceURI()),zh=all.findIndex(v=>v.lang.toLowerCase().startsWith('zh')),preferred=saved>=0?saved:zh>=0?zh:0;if(all.length)$('voice').value=String(preferred)}
 refreshVoices();synth?.addEventListener?.('voiceschanged',refreshVoices);
 $('voice').addEventListener('change',()=>{const voice=voices()[Number($('voice').value)];try{if(voice?.voiceURI)localStorage.setItem(VOICE_KEY,voice.voiceURI)}catch{}});
+function validRate(value){const input=$('rate'),number=Number(value);if(!Number.isFinite(number))return false;if(input.tagName==='SELECT')return[...input.options].some(option=>option.value===value);return number>=Number(input.min)&&number<=Number(input.max)}
+try{const savedRate=localStorage.getItem(RATE_KEY);if(savedRate&&validRate(savedRate))$('rate').value=savedRate}catch{}
+$('rate').addEventListener('input',()=>{try{if(validRate($('rate').value))localStorage.setItem(RATE_KEY,$('rate').value)}catch{}});
 function speechFailure(e){stop();status(`连续朗读中断：${e.message||e}；可重试、使用目录或返回书架`)}
 function speechLanguage(text,voice){if(voice?.lang)return voice.lang;return /[\u3400-\u9fff]/.test(text)?'zh-CN':'en-US'}
 async function speakSection(index,run){if(run!==token||!active)return;let txt='';if(view){const section=view.book?.sections[index];if(!section){stop();status('已朗读到结尾');return}await view.goTo(index);const doc=await section.createDocument();doc.querySelectorAll('script,style,nav').forEach(x=>x.remove());txt=(doc.body||doc.documentElement)?.textContent||''}else{if(index>=textPages.length){stop();status('已朗读到结尾');return}textIndex=index;renderText();txt=textPages[index]}if(run!==token)return;txt=txt.replace(/\s+/g,' ').trim();if(!txt){await speakSection(index+1,run);return}let offset=0;const pieces=txt.match(/[\s\S]{1,550}/g)||[];function nextPiece(){if(run!==token)return;if(offset>=pieces.length){speakSection(index+1,run).catch(speechFailure);return}const u=new SpeechSynthesisUtterance(pieces[offset++]);utter=u;const v=voices()[Number($('voice').value)];u.lang=speechLanguage(txt,v);u.rate=Number($('rate').value);if(v)u.voice=v;u.onend=nextPiece;u.onerror=e=>{stop();status('朗读失败：'+e.error)};synth.speak(u)}nextPiece()}

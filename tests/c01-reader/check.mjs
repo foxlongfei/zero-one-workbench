@@ -13,9 +13,10 @@ page.on('pageerror',e=>evidence.errors.push(e.message));
 await page.addInitScript(()=>{
 window.__spoken=[];
 window.__spokenLanguages=[];
+window.__spokenRates=[];
 class Utterance{constructor(text){this.text=text;this.rate=1}}
 window.SpeechSynthesisUtterance=Utterance;
-Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,cancel(){this.paused=false},pause(){this.paused=true},resume(){this.paused=false},getVoices(){return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}]},addEventListener(){},speak(u){window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);setTimeout(()=>u.onend?.(),120)}}});
+Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,cancel(){this.paused=false},pause(){this.paused=true},resume(){this.paused=false},getVoices(){return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}]},addEventListener(){},speak(u){window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>u.onend?.(),120)}}});
 });
 await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
@@ -225,9 +226,11 @@ await page.waitForTimeout(250);
 check('latest rapid-open request owns title and body',(await page.locator('#bookTitle').innerText())==='fast-second'&&(await page.locator('#textView').innerText()).includes('FAST SECOND CONTENT')&&!(await page.locator('#textView').innerText()).includes('SLOW FIRST CONTENT'),`${await page.locator('#bookTitle').innerText()} | ${(await page.locator('#textView').innerText()).slice(0,80)}`);
 await page.locator('#settingsButton').click();
 await page.locator('#voice').selectOption('1');
+await page.locator('#rate').evaluate(input=>{input.value='1.5';input.dispatchEvent(new Event('input',{bubbles:true}))});
 await page.locator('#speak').click();
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已朗读到结尾');
 check('selected English voice marks utterance as English',await page.evaluate(()=>window.__spokenLanguages.at(-1)==='en-US'),await page.evaluate(()=>window.__spokenLanguages.join(',')));
+check('selected speech rate reaches utterance',await page.evaluate(()=>window.__spokenRates.at(-1)===1.5),await page.evaluate(()=>window.__spokenRates.join(',')));
 await page.locator('#back').click();
 await page.locator('#files').setInputFiles({name:'broken.epub',mimeType:'application/epub+zip',buffer:Buffer.from('not a valid epub archive')});
 await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===5);
@@ -239,6 +242,7 @@ check('failed book remains manageable',(await broken.count())===1&&(await page.l
 await page.reload();
 await page.waitForSelector('#importButton:enabled');
 check('selected voice persists across reload',(await page.locator('#voice').inputValue())==='1',await page.locator('#voice').inputValue());
+check('selected speech rate persists across reload',(await page.locator('#rate').inputValue())==='1.5',await page.locator('#rate').inputValue());
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
