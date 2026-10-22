@@ -1,0 +1,66 @@
+name: Movement V0.2 upstream integration gate
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 4 * * *'
+  push:
+    paths:
+      - 'deploy/movement-v02/**'
+      - '.github/workflows/movement-v02-upstream.yml'
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: movement-v02-upstream
+  cancel-in-progress: false
+jobs:
+  upstream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check local integration script
+        run: bash -n deploy/movement-v02/bootstrap.sh
+      - name: Retrieve full upstream
+        run: |
+          git clone --depth 1 https://github.com/DuarteSantos8/openGym.git /tmp/opengym
+          cd /tmp/opengym
+          git rev-parse HEAD | tee "$GITHUB_WORKSPACE/upstream-revision.txt"
+          test -f docker-compose.yml -o -f compose.yml -o -f compose.yaml -o -f docker-compose.yaml
+      - name: Validate upstream compose
+        run: |
+          cd /tmp/opengym
+          if [ -f .env.example ]; then cp .env.example .env; fi
+          docker compose config --quiet
+      - name: Start full upstream containers
+        run: |
+          cd /tmp/opengym
+          docker compose up -d --wait --wait-timeout 180
+          docker compose ps
+      - name: Smoke test full service
+        run: |
+          set -e
+          curl --fail --retry 10 --retry-delay 3 --retry-connrefused http://localhost:8080/api/health
+      - name: Capture evidence and logs
+        if: always()
+        run: |
+          mkdir -p evidence
+          cp upstream-revision.txt evidence/ 2>/dev/null || true
+          if [ -d /tmp/opengym ]; then
+            (cd /tmp/opengym && docker compose ps && docker compose logs --tail=150) > evidence/compose.txt 2>&1 || true
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: movement-v02-integration-evidence
+          path: evidence/
+          retention-days: 14
+      - name: Open or update failure issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title='[V0.2] Upstream deployment gate failed'
+          body="Automatic upstream deployment check failed: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. Inspect logs and evidence artifact. This is NOT a public deployment."
+          existing=$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "$title" --body "$body" --label bug || gh issue create --title "$title" --body "$body"; fi
