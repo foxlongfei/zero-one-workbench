@@ -48,7 +48,7 @@ $('bookmarkAdd').onclick=addBookmark;
 $('settingsButton').onclick=()=>$('settings').hidden=!$('settings').hidden;
 async function page(direction){stop();if(view){const target=view,label=direction>0?'下一页':'上一页';try{await(direction>0?target.next():target.prev());if(view===target)status('已翻到'+label)}catch(e){if(view===target)status(`${label}加载失败：${e.message}；可重试、使用目录或返回书架`)}}else if(active){textIndex=Math.min(textPages.length-1,Math.max(0,textIndex+direction));renderText()}}
 $('prev').onclick=()=>page(-1);$('next').onclick=()=>page(1);
-function voices(){return synth?.getVoices()||[]}
+function voices(){try{return synth?.getVoices()||[]}catch{return[]}}
 const VOICE_KEY='zero-one-reader-voice-v1';
 const RATE_KEY='zero-one-reader-speech-rate-v1';
 function savedVoiceURI(){try{return localStorage.getItem(VOICE_KEY)||''}catch{return''}}
