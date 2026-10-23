@@ -218,8 +218,9 @@ check('shelf search has empty result feedback',(await page.locator('#shelf').inn
 await page.locator('#shelfSearch').fill('');
 check('clearing search restores all books',await page.locator('#shelf .book').count()===2,await page.locator('#shelf').innerText());
 check('clearing search preserves recent order',(await page.locator('#shelf .book').first().getAttribute('data-book-id'))===reimportedEpubId,await page.locator('#shelf').innerText());
+const sentenceAwareSpeechText='SLOW FIRST CONTENT。'+Array.from({length:90},(_,i)=>`第${i+1}句应当完整朗读，不在句中停顿。`).join('');
 await page.locator('#files').setInputFiles([
-  {name:'slow-first.txt',mimeType:'text/plain',buffer:Buffer.from('SLOW FIRST CONTENT\n'.repeat(400))},
+  {name:'slow-first.txt',mimeType:'text/plain',buffer:Buffer.from(sentenceAwareSpeechText)},
   {name:'fast-second.txt',mimeType:'text/plain',buffer:Buffer.from('FAST SECOND CONTENT')}
 ]);
 await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===4);
@@ -279,6 +280,18 @@ await page.waitForFunction(count=>window.__spokenLanguages.length>count,spokenBe
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已朗读到结尾');
 check('blocked voice enumeration keeps fallback speech usable',await page.evaluate(()=>window.__spokenLanguages.at(-1)==='en-US'),await page.evaluate(()=>window.__spokenLanguages.join(',')));
 await page.locator('#back').click();
+await slow.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#bookTitle')?.textContent==='slow-first'&&document.querySelector('#status')?.textContent==='已打开 slow-first');
+await page.evaluate(()=>window.__speechDelay=5);
+const spokenBeforeSentenceTest=await page.evaluate(()=>window.__spoken.length);
+await page.locator('#speak').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已朗读到结尾');
+const sentenceSpeech=await page.evaluate(start=>{const chunks=window.__spoken.slice(start);return{chunks,spoken:chunks.join('').replace(/\s+/g,''),visible:document.querySelector('#textView').textContent.replace(/\s+/g,'')}},spokenBeforeSentenceTest);
+check('long speech uses multiple chunks',sentenceSpeech.chunks.length>=2,String(sentenceSpeech.chunks.length));
+check('speech chunks prefer sentence boundaries',sentenceSpeech.chunks.slice(0,-1).every(chunk=>/[。！？!?；;]$/.test(chunk)),sentenceSpeech.chunks.map(chunk=>chunk.slice(-12)).join(' | '));
+check('sentence-aware chunks preserve whole text',sentenceSpeech.spoken===sentenceSpeech.visible,`${sentenceSpeech.spoken.length} / ${sentenceSpeech.visible.length}`);
+await page.locator('#back').click();
+await page.evaluate(()=>window.__speechDelay=120);
 await page.locator('#files').setInputFiles({name:'broken.epub',mimeType:'application/epub+zip',buffer:Buffer.from('not a valid epub archive')});
 await page.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===5);
 const broken=page.locator('#shelf .book').filter({hasText:'broken'});
