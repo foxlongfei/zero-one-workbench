@@ -17,9 +17,10 @@ window.__spokenRates=[];
 window.__reverseVoices=false;
 window.__voiceSubset='all';
 window.__speechDelay=120;
+window.__speakFailureAt=null;
 class Utterance{constructor(text){this.text=text;this.rate=1}}
 window.SpeechSynthesisUtterance=Utterance;
-Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,_current:null,cancel(){if(window.__cancelFailures>0){window.__cancelFailures--;throw Error('cancel blocked')}this.paused=false;const current=this._current;this._current=null;if(current)setTimeout(()=>current.onerror?.({error:'interrupted'}),0)},pause(){if(window.__pauseFailures>0){window.__pauseFailures--;throw Error('pause blocked')}this.paused=true},resume(){if(window.__resumeFailures>0){window.__resumeFailures--;throw Error('resume blocked')}this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}const result=[{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}],available=window.__voiceSubset==='mandarin'?result.slice(0,1):result;return window.__reverseVoices?available.reverse():available},addEventListener(name,handler){if(name==='voiceschanged')window.__voiceChanged=handler},speak(u){this._current=u;window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>{if(this._current===u){this._current=null;u.onend?.()}},window.__speechDelay)}}});
+Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,_current:null,cancel(){if(window.__cancelFailures>0){window.__cancelFailures--;throw Error('cancel blocked')}this.paused=false;const current=this._current;this._current=null;if(current)setTimeout(()=>current.onerror?.({error:'interrupted'}),0)},pause(){if(window.__pauseFailures>0){window.__pauseFailures--;throw Error('pause blocked')}this.paused=true},resume(){if(window.__resumeFailures>0){window.__resumeFailures--;throw Error('resume blocked')}this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}const result=[{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}],available=window.__voiceSubset==='mandarin'?result.slice(0,1):result;return window.__reverseVoices?available.reverse():available},addEventListener(name,handler){if(name==='voiceschanged')window.__voiceChanged=handler},speak(u){if(window.__speakFailureAt===window.__spoken.length){window.__speakFailureAt=null;throw Error('speak blocked')}this._current=u;window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>{if(this._current===u){this._current=null;u.onend?.()}},window.__speechDelay)}}});
 });
 await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
@@ -290,6 +291,14 @@ const sentenceSpeech=await page.evaluate(start=>{const chunks=window.__spoken.sl
 check('long speech uses multiple chunks',sentenceSpeech.chunks.length>=2,String(sentenceSpeech.chunks.length));
 check('speech chunks prefer sentence boundaries',sentenceSpeech.chunks.slice(0,-1).every(chunk=>/[。！？!?；;]$/.test(chunk)),sentenceSpeech.chunks.map(chunk=>chunk.slice(-12)).join(' | '));
 check('sentence-aware chunks preserve whole text',sentenceSpeech.spoken===sentenceSpeech.visible,`${sentenceSpeech.spoken.length} / ${sentenceSpeech.visible.length}`);
+await page.locator('#back').click();
+await slow.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#bookTitle')?.textContent==='slow-first'&&document.querySelector('#status')?.textContent==='已打开 slow-first');
+const spokenBeforeDelayedFailure=await page.evaluate(()=>window.__spoken.length);
+await page.evaluate(failureAt=>window.__speakFailureAt=failureAt,spokenBeforeDelayedFailure+1);
+await page.locator('#speak').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('连续朗读中断：speak blocked'));
+check('later speech chunk failure is recoverable',await page.locator('#readerScreen').isVisible()&&(await page.locator('#speak').innerText()).includes('朗读'),await page.locator('#status').innerText());
 await page.locator('#back').click();
 await page.evaluate(()=>window.__speechDelay=120);
 await page.locator('#files').setInputFiles({name:'broken.epub',mimeType:'application/epub+zip',buffer:Buffer.from('not a valid epub archive')});
