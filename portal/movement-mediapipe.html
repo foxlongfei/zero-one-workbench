@@ -118,6 +118,7 @@
       const serialized=JSON.stringify(records.slice(-30));
       try{localStorage.setItem(STORAGE_KEY,serialized);return localStorage.getItem(STORAGE_KEY)===serialized}catch{return false}
     }
+    function historyRecordKey(record){try{return JSON.stringify(record)}catch{return ''}}
     function csvCell(value){return '"'+String(value??'').replaceAll('"','""')+'"'}
     function buildHistoryCsv(records=readHistory()){
       const columns=['记录时间','动作','人工确认次数','练习时长（秒）','识别帧','总帧','人体跟踪覆盖率（%）','反馈'];
@@ -137,12 +138,14 @@
         for(const [label,value] of [['人工确认次数',record.reps+' 次'],['练习时长',record.durationSec+' 秒'],['识别帧',tracked+' / '+total],['人体跟踪覆盖率',record.coverage+'%'],['反馈',record.feedback]]){
           const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;facts.append(dt,dd)
         }
-        remove.type='button';remove.className='danger';remove.textContent='删除这条记录';remove.dataset.recordIndex=String(storageIndex);
+        remove.type='button';remove.className='danger';remove.textContent='删除这条记录';remove.dataset.recordIndex=String(storageIndex);remove.dataset.recordKey=historyRecordKey(record);
         details.append(summary,facts,remove);li.append(details);list.append(li)
       })
     }
-    function deleteRecord(index){
-      const records=readHistory(),record=records[index];if(!record)return false;
+    function deleteRecord(index,expectedKey){
+      const records=readHistory(),record=records[index];
+      if(expectedKey!==undefined&&(!record||historyRecordKey(record)!==expectedKey)){renderHistory();$('historyNotice').textContent='练习历史已在其他页面更新，列表已刷新；请确认后重新删除。';return false}
+      if(!record)return false;
       const label=`${new Date(record.date).toLocaleString('zh-CN',{hour12:false})} 的“${record.exercise}”记录`;
       if(!window.confirm(`确定删除${label}吗？删除后无法恢复。`)){$('historyNotice').textContent='已取消删除，记录保持不变。';return false}
       records.splice(index,1);if(!writeHistory(records)){$('historyNotice').textContent='删除失败：当前浏览器无法保存练习历史，请检查本机存储权限后重试。';return false}renderHistory();
@@ -299,8 +302,9 @@
     }
     $('exercise').addEventListener('change',event=>{$('instruction').textContent=instructions[event.target.value]});
     $('startCamera').addEventListener('click',startCamera);$('stopCamera').addEventListener('click',cancelOrStopCamera);$('startPractice').addEventListener('click',startPractice);$('finishPractice').addEventListener('click',finishPractice);$('saveRecord').addEventListener('click',saveRecord);$('exportHistory').addEventListener('click',exportHistory);
-    $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex))});
-    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,shouldCancelPracticeForPoseLoss,shouldHandleCameraTrackEnd,handleCameraTrackEnd,createPracticeCountdown,readHistory,writeHistory,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame,getRuntimeUrls,loadMediaPipe};renderHistory();
+    $('historyList').addEventListener('click',event=>{const button=event.target.closest('button[data-record-index]');if(button)deleteRecord(Number(button.dataset.recordIndex),button.dataset.recordKey)});
+    window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY){renderHistory();$('historyNotice').textContent='练习历史已从其他页面同步更新。'}});
+    window.addEventListener('pagehide',()=>stopCamera({discardPractice:true,status:'页面已离开，摄像头已停止；未完成练习未保存。'}));window.A01Practice={assessCoverage,canStartPractice,hasUsablePracticeFrames,shouldCancelPracticeForPoseLoss,shouldHandleCameraTrackEnd,handleCameraTrackEnd,createPracticeCountdown,readHistory,writeHistory,historyRecordKey,renderHistory,buildHistoryCsv,deleteRecord,cameraErrorMessage,withTimeout,waitForVideoFrame,getRuntimeUrls,loadMediaPipe};renderHistory();
   })();
   </script>
 </body>
