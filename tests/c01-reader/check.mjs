@@ -268,6 +268,12 @@ check('blocked local storage still permits opening stored books',await page.loca
 check('blocked local storage is disclosed when a book opens',(await page.locator('#status').innerText()).includes('不会保存阅读位置或书签'),await page.locator('#status').innerText());
 await page.locator('#bookmarkAdd').click();
 check('blocked local storage never reports a false bookmark success',(await page.locator('#status').innerText()).includes('无法保存书签或阅读位置')&&await page.locator('#bookmarkList li').count()===0,await page.locator('#status').innerText());
+await page.locator('#back').click();
+page.once('dialog',dialog=>dialog.accept());
+await restrictedFast.locator('[data-action="delete"]').click();
+await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已从本机书架删除'));
+check('blocked storage still permits removing a book from the shelf',await restrictedFast.count()===0,await page.locator('#shelfScreen').innerText());
+check('blocked storage deletion discloses residual data risk',(await page.locator('#status').innerText()).includes('未允许清除可能残留的阅读位置或书签'),await page.locator('#status').innerText());
 const silentPage=await browser.newPage({viewport:{width:1200,height:900}});
 silentPage.on('pageerror',e=>evidence.errors.push(e.message));
 await silentPage.addInitScript(()=>Object.defineProperty(window,'localStorage',{configurable:true,value:{getItem(){return null},setItem(){},removeItem(){}}}));
