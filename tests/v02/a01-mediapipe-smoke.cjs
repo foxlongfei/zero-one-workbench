@@ -169,6 +169,31 @@ const fs=require('fs'),path=require('path'),http=require('http');
     if(!(await page.locator('#historyNotice').innerText()).includes('已取消删除'))throw Error('delete cancel feedback missing');
     if((await page.locator('#historyList details').count())!==2)throw Error('cancelled delete changed history');
 
+    await page.evaluate(()=>{
+      const records=A01Practice.readHistory();
+      records.unshift({date:'2026-10-15T15:30:00.000Z',exercise:'深蹲',reps:3,durationSec:15,trackedFrames:20,totalFrames:25,coverage:80,feedback:'其他页面新增'});
+      localStorage.setItem('a01-mediapipe-practice-v2',JSON.stringify(records));
+    });
+    await page.locator('button[data-record-index="1"]').click();
+    if(!(await page.locator('#historyNotice').innerText()).includes('其他页面更新'))throw Error('stale history deletion was not blocked');
+    if((await page.locator('#historyList details').count())!==3)throw Error('stale history deletion changed records');
+    await page.evaluate(()=>{
+      const records=A01Practice.readHistory().filter(record=>record.feedback!=='其他页面新增');
+      localStorage.setItem('a01-mediapipe-practice-v2',JSON.stringify(records));
+      A01Practice.renderHistory();
+    });
+    await page.locator('#historyList details').first().click();
+
+    await page.evaluate(()=>{
+      window.__nativeHistorySetItem=Storage.prototype.setItem;
+      Storage.prototype.setItem=function(key,value){if(key==='a01-mediapipe-practice-v2')return;return window.__nativeHistorySetItem.call(this,key,value)};
+    });
+    page.once('dialog',dialog=>dialog.accept());
+    await page.locator('button[data-record-index="1"]').click();
+    if(!(await page.locator('#historyNotice').innerText()).includes('删除失败'))throw Error('discarded history write did not report delete failure');
+    if((await page.locator('#historyList details').count())!==2)throw Error('failed history delete changed visible records');
+    await page.evaluate(()=>{Storage.prototype.setItem=window.__nativeHistorySetItem;delete window.__nativeHistorySetItem});
+
     page.once('dialog',dialog=>dialog.accept());
     await page.locator('button[data-record-index="1"]').click();
     if(!(await page.locator('#historyNotice').innerText()).includes('已删除'))throw Error('delete success feedback missing');
@@ -185,7 +210,7 @@ const fs=require('fs'),path=require('path'),http=require('http');
     fs.writeFileSync('reports/v02/a01-mediapipe-smoke.json',JSON.stringify({
       status:'PASS',
       test_type:'browser_logic_smoke_not_camera_hardware_not_double_blind',
-      checks:['same-origin runtime URL gate','no external runtime requests','MediaPipe WASM and pose model initialization','pre-camera gate','coverage feedback bands','two-second stable pose readiness gate','zero-frame practice record gate','sustained pose loss cancels active practice','stale camera track end isolation','current camera track end invokes discard controller','pose-loss cancels practice countdown','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','confirmed record deletion','CSV excludes deleted record','reload persistence']
+      checks:['same-origin runtime URL gate','no external runtime requests','MediaPipe WASM and pose model initialization','pre-camera gate','coverage feedback bands','two-second stable pose readiness gate','zero-frame practice record gate','sustained pose loss cancels active practice','stale camera track end isolation','current camera track end invokes discard controller','pose-loss cancels practice countdown','startup timeout guard','first video frame gate','first video frame timeout','cancel pending startup','permission denial guidance','camera retry','missing-device guidance','exercise teaching switch','history evidence detail','CSV export','delete cancel protection','cross-tab stale delete protection','discarded history write recovery','confirmed record deletion','CSV excludes deleted record','reload persistence']
     },null,2));
     console.log('A01 MediaPipe browser logic: PASS');
   }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
