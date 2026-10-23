@@ -76,6 +76,10 @@ jobs:
           print('D博士修改文件:',changed)
           
           PY
+      - name: Install C01 browser test dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install chromium --with-deps
       - name: Run existing C01 tests
         run: |
           node tests/c01-reader/check.mjs
