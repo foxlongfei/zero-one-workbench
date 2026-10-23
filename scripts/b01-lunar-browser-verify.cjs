@@ -1,11 +1,95 @@
 'use strict';
-const fs=require('node:fs');const path=require('node:path');const {chromium}=require('playwright');
-(async()=>{const out=path.resolve('artifacts/b01-lunar');fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1280,height:900}});const base=process.env.B01_BASE_URL||'http://127.0.0.1:4173';const checks=[];const check=(name,ok,detail='')=>{checks.push({name,status:ok?'PASS':'FAIL',detail});if(!ok)throw new Error(name+': '+detail)};
-try{await page.goto(base+'/portal/traditional-lunar-engine.html',{waitUntil:'networkidle'});check('complete engine loaded',await page.evaluate(()=>typeof Solar!=='undefined'&&typeof Solar.fromYmdHms==='function'&&typeof B01LunarCase==='object'));
-await page.fill('#itemName','钥匙');await page.click('#runCase');check('missing inputs trigger follow-up',(await page.textContent('#status')).includes('最后见到的日期时间'));
-await page.click('#fillExample');await page.waitForSelector('#resultCard:not([hidden])');const receipt=await page.evaluate(()=>({id:document.querySelector('#caseId').textContent,calendar:document.querySelector('#calendarOutput').textContent,method:document.querySelector('#methodOutput').textContent,boundary:document.querySelector('#boundary').textContent,follow:document.querySelectorAll('#followUp li').length,plan:document.querySelectorAll('#searchPlan li').length}));check('stable case id',/^LOST-20240210-[0-9a-f]{8}$/.test(receipt.id),receipt.id);check('known lunar date',receipt.calendar.includes('正月初一'),receipt.calendar);check('known ganzhi year',receipt.calendar.includes('甲辰'),receipt.calendar);check('method trace names upstream',receipt.method.includes('6tail/lunar-javascript')&&receipt.method.includes('Solar.fromYmdHms'),receipt.method);check('follow-up and search plan',receipt.follow===3&&receipt.plan===3,JSON.stringify(receipt));check('no prediction claim',receipt.boundary.includes('不是失物位置预测'),receipt.boundary);
-// Independent negative-path regression samples (not a substitute for human blind review).
-await page.click('#resetCase');await page.fill('#itemName','证件');await page.fill('#lastSeenAt','2024-02-10T09:30');await page.fill('#lastSeenPlace','车站');await page.fill('#searchedPlaces','售票处');check('invalid calendar day rejected by calculator',await page.evaluate(()=>{try{B01LunarCase.parseLocalDateTime('2024-02-30T09:30');return false}catch(e){return e.message.includes('日期时间不存在')}}));
-await page.fill('#lastSeenAt','2024-02-10T09:30');await page.click('#runCase');const first=await page.textContent('#caseId');await page.click('#runCase');check('same inputs deterministic',(await page.textContent('#caseId'))===first);
-await page.click('#fillExample');await page.click('#saveCase');await page.reload({waitUntil:'networkidle'});check('saved case restores from history',(await page.locator('#history button').count())===1);await page.locator('#history button').click();check('restored calculation visible',!(await page.locator('#resultCard').getAttribute('hidden')));await page.screenshot({path:path.join(out,'b01-lunar-flow.png'),fullPage:true});fs.writeFileSync(path.join(out,'result.json'),JSON.stringify({status:'PASS',checks,receipt},null,2));console.log(JSON.stringify({status:'PASS',checks:checks.length,caseId:receipt.id}));}
-catch(error){fs.writeFileSync(path.join(out,'result.json'),JSON.stringify({status:'FAIL',checks,error:error.stack},null,2));console.error(error);process.exitCode=1;}finally{await browser.close();}})();
+
+const fs = require('node:fs');
+const path = require('node:path');
+const { chromium } = require('playwright');
+
+(async () => {
+  const out = path.resolve('artifacts/b01-lunar');
+  fs.mkdirSync(out, { recursive: true });
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const base = process.env.B01_BASE_URL || 'http://127.0.0.1:4173';
+  const checks = [];
+  const check = (name, ok, detail = '') => {
+    checks.push({ name, status: ok ? 'PASS' : 'FAIL', detail });
+    if (!ok) throw new Error(`${name}: ${detail}`);
+  };
+
+  try {
+    await page.goto(`${base}/portal/traditional-lunar-engine.html`, { waitUntil: 'networkidle' });
+    await page.evaluate(() => localStorage.clear());
+    check('complete engine loaded', await page.evaluate(() => typeof Solar !== 'undefined' && typeof Solar.fromYmdHms === 'function' && typeof B01LunarCase === 'object'));
+
+    await page.fill('#itemName', '钥匙');
+    await page.click('#runCase');
+    check('missing inputs trigger follow-up', (await page.textContent('#status')).includes('最后见到的日期时间'));
+
+    await page.click('#fillExample');
+    await page.waitForSelector('#resultCard:not([hidden])');
+    const receipt = await page.evaluate(() => ({
+      id: document.querySelector('#caseId').textContent,
+      calendar: document.querySelector('#calendarOutput').textContent,
+      method: document.querySelector('#methodOutput').textContent,
+      boundary: document.querySelector('#boundary').textContent,
+      follow: document.querySelectorAll('#followUp li').length,
+      plan: document.querySelectorAll('#searchPlan li').length
+    }));
+    check('stable case id', /^LOST-20240210-[0-9a-f]{8}$/.test(receipt.id), receipt.id);
+    check('known lunar date', receipt.calendar.includes('正月初一'), receipt.calendar);
+    check('known ganzhi year', receipt.calendar.includes('甲辰'), receipt.calendar);
+    check('method trace names upstream', receipt.method.includes('6tail/lunar-javascript') && receipt.method.includes('Solar.fromYmdHms'), receipt.method);
+    check('follow-up and search plan', receipt.follow === 3 && receipt.plan === 3, JSON.stringify(receipt));
+    check('no prediction claim', receipt.boundary.includes('不是失物位置预测'), receipt.boundary);
+
+    // Independent negative-path regression samples (not a substitute for human blind review).
+    await page.click('#resetCase');
+    await page.fill('#itemName', '证件');
+    await page.fill('#lastSeenAt', '2024-02-10T09:30');
+    await page.fill('#lastSeenPlace', '车站');
+    await page.fill('#searchedPlaces', '售票处');
+    check('invalid calendar day rejected by calculator', await page.evaluate(() => {
+      try {
+        B01LunarCase.parseLocalDateTime('2024-02-30T09:30');
+        return false;
+      } catch (error) {
+        return error.message.includes('日期时间不存在');
+      }
+    }));
+    await page.click('#runCase');
+    const first = await page.textContent('#caseId');
+    await page.click('#runCase');
+    check('same inputs deterministic', (await page.textContent('#caseId')) === first);
+
+    await page.click('#fillExample');
+    await page.evaluate(() => {
+      window.__b01OriginalSetItem = Storage.prototype.setItem;
+      Storage.prototype.setItem = () => {};
+    });
+    await page.click('#saveCase');
+    check('silent storage rejection is visible', (await page.textContent('#status')).includes('保存失败：案例未能写入本机存储'));
+    check('silent storage rejection does not create history', (await page.locator('#history button').count()) === 0);
+    await page.evaluate(() => {
+      Storage.prototype.setItem = window.__b01OriginalSetItem;
+      delete window.__b01OriginalSetItem;
+    });
+
+    await page.click('#saveCase');
+    await page.click('#saveCase');
+    check('repeat save replaces instead of duplicating', (await page.locator('#history button').count()) === 1);
+    await page.reload({ waitUntil: 'networkidle' });
+    check('saved case restores from history', (await page.locator('#history button').count()) === 1);
+    await page.locator('#history button').click();
+    check('restored calculation visible', !(await page.locator('#resultCard').getAttribute('hidden')));
+
+    await page.screenshot({ path: path.join(out, 'b01-lunar-flow.png'), fullPage: true });
+    fs.writeFileSync(path.join(out, 'result.json'), JSON.stringify({ status: 'PASS', checks, receipt }, null, 2));
+    console.log(JSON.stringify({ status: 'PASS', checks: checks.length, caseId: receipt.id }));
+  } catch (error) {
+    fs.writeFileSync(path.join(out, 'result.json'), JSON.stringify({ status: 'FAIL', checks, error: error.stack }, null, 2));
+    console.error(error);
+    process.exitCode = 1;
+  } finally {
+    await browser.close();
+  }
+})();

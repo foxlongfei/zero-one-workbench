@@ -48,11 +48,22 @@ adapter.saveCase(storage, first);
 adapter.saveCase(storage, repeated);
 assert.equal(adapter.readCases(storage).length, 1, 'repeated calculation must replace, not duplicate, the same case');
 
+const discardedWrites = {
+  getItem: () => null,
+  setItem: () => {}
+};
+assert.throws(
+  () => adapter.saveCase(discardedWrites, first),
+  /未能写入本机存储/,
+  'silent storage write rejection must be reported instead of claiming success'
+);
+
 console.log(JSON.stringify({
   status: 'PASS',
   timezone: process.env.TZ || 'system-default',
   fixedDate: baseInput.lastSeenAt,
   caseId: first.caseId,
   invalidDates: 5,
-  savedCasesAfterRepeat: adapter.readCases(storage).length
+  savedCasesAfterRepeat: adapter.readCases(storage).length,
+  silentWriteRejected: true
 }));
