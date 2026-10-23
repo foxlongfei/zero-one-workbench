@@ -120,8 +120,13 @@
     if (!item || item.status !== 'CALCULATED') throw new Error('只有完成计算的案例才能保存');
     const cases = readCases(storage).filter(existing => existing.caseId !== item.caseId);
     cases.unshift(item);
-    storage.setItem(STORAGE_KEY, JSON.stringify(cases.slice(0, 30)));
-    return cases.slice(0, 30);
+    const nextCases = cases.slice(0, 30);
+    const serialized = JSON.stringify(nextCases);
+    storage.setItem(STORAGE_KEY, serialized);
+    if (storage.getItem(STORAGE_KEY) !== serialized) {
+      throw new Error('案例未能写入本机存储，请检查浏览器存储权限后重试');
+    }
+    return nextCases;
   }
 
   global.B01LunarCase = { STORAGE_KEY, missingFields, parseLocalDateTime, calculate, readCases, saveCase };
