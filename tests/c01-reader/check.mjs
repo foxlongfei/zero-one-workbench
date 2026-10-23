@@ -15,9 +15,10 @@ window.__spoken=[];
 window.__spokenLanguages=[];
 window.__spokenRates=[];
 window.__reverseVoices=false;
+window.__voiceSubset='all';
 class Utterance{constructor(text){this.text=text;this.rate=1}}
 window.SpeechSynthesisUtterance=Utterance;
-Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,_current:null,cancel(){if(window.__cancelFailures>0){window.__cancelFailures--;throw Error('cancel blocked')}this.paused=false;const current=this._current;this._current=null;if(current)setTimeout(()=>current.onerror?.({error:'interrupted'}),0)},pause(){this.paused=true},resume(){this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}const result=[{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}];return window.__reverseVoices?result.reverse():result},addEventListener(name,handler){if(name==='voiceschanged')window.__voiceChanged=handler},speak(u){this._current=u;window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>{if(this._current===u){this._current=null;u.onend?.()}},120)}}});
+Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,_current:null,cancel(){if(window.__cancelFailures>0){window.__cancelFailures--;throw Error('cancel blocked')}this.paused=false;const current=this._current;this._current=null;if(current)setTimeout(()=>current.onerror?.({error:'interrupted'}),0)},pause(){this.paused=true},resume(){this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}const result=[{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}],available=window.__voiceSubset==='mandarin'?result.slice(0,1):result;return window.__reverseVoices?available.reverse():available},addEventListener(name,handler){if(name==='voiceschanged')window.__voiceChanged=handler},speak(u){this._current=u;window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>{if(this._current===u){this._current=null;u.onend?.()}},120)}}});
 });
 await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
@@ -245,6 +246,10 @@ await page.waitForFunction(()=>document.querySelector('#bookTitle')?.textContent
 await page.locator('#settingsButton').click();
 await page.locator('#voice').selectOption('1');
 await page.locator('#rate').evaluate(input=>{input.value='1.5';input.dispatchEvent(new Event('input',{bubbles:true}))});
+await page.evaluate(()=>{window.__voiceSubset='mandarin';window.__voiceChanged()});
+check('temporary voice loss uses available fallback',await page.locator('#voice').inputValue()==='0',await page.locator('#voice').inputValue());
+await page.evaluate(()=>{window.__voiceSubset='all';window.__voiceChanged()});
+check('preferred voice returns after temporary voice loss',await page.locator('#voice').inputValue()==='1',await page.locator('#voice').inputValue());
 await page.evaluate(()=>window.__reverseVoices=true);
 await page.evaluate(()=>document.querySelector('#status').textContent='');
 await page.locator('#speak').click();
