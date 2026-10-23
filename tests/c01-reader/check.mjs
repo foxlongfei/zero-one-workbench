@@ -16,7 +16,7 @@ window.__spokenLanguages=[];
 window.__spokenRates=[];
 class Utterance{constructor(text){this.text=text;this.rate=1}}
 window.SpeechSynthesisUtterance=Utterance;
-Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,cancel(){this.paused=false},pause(){this.paused=true},resume(){this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}]},addEventListener(){},speak(u){window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>u.onend?.(),120)}}});
+Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,cancel(){this.paused=false},pause(){this.paused=true},resume(){this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}]},addEventListener(name,handler){if(name==='voiceschanged')window.__voiceChanged=handler},speak(u){window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>u.onend?.(),120)}}});
 });
 await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
@@ -268,6 +268,10 @@ check('blocked local storage still permits opening stored books',await page.loca
 check('blocked local storage is disclosed when a book opens',(await page.locator('#status').innerText()).includes('不会保存阅读位置或书签'),await page.locator('#status').innerText());
 await page.locator('#bookmarkAdd').click();
 check('blocked local storage never reports a false bookmark success',(await page.locator('#status').innerText()).includes('无法保存书签或阅读位置')&&await page.locator('#bookmarkList li').count()===0,await page.locator('#status').innerText());
+await page.locator('#settingsButton').click();
+await page.locator('#voice').selectOption('1');
+await page.evaluate(()=>window.__voiceChanged());
+check('blocked storage keeps session voice across voice-list refresh',(await page.locator('#voice').inputValue())==='1',await page.locator('#voice').inputValue());
 await page.locator('#back').click();
 page.once('dialog',dialog=>dialog.accept());
 await restrictedFast.locator('[data-action="delete"]').click();

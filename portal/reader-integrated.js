@@ -59,9 +59,10 @@ const VOICE_KEY='zero-one-reader-voice-v1';
 const RATE_KEY='zero-one-reader-speech-rate-v1';
 const MUSIC_VOLUME_KEY='zero-one-reader-music-volume-v1';
 function savedVoiceURI(){return storageGet(VOICE_KEY)||''}
-function refreshVoices(){const all=voices();$('voice').replaceChildren(...all.map((v,i)=>new Option(v.name+' · '+v.lang,String(i))));const saved=all.findIndex(v=>v.voiceURI===savedVoiceURI()),zh=all.findIndex(v=>v.lang.toLowerCase().startsWith('zh')),preferred=saved>=0?saved:zh>=0?zh:0;if(all.length)$('voice').value=String(preferred)}
+let selectedVoiceURI=savedVoiceURI();
+function refreshVoices(){const all=voices();$('voice').replaceChildren(...all.map((v,i)=>new Option(v.name+' · '+v.lang,String(i))));const selected=all.findIndex(v=>v.voiceURI===selectedVoiceURI),zh=all.findIndex(v=>v.lang.toLowerCase().startsWith('zh')),preferred=selected>=0?selected:zh>=0?zh:0;if(all.length){$('voice').value=String(preferred);selectedVoiceURI=all[preferred]?.voiceURI||''}}
 refreshVoices();synth?.addEventListener?.('voiceschanged',refreshVoices);
-$('voice').addEventListener('change',()=>{const voice=voices()[Number($('voice').value)];if(voice?.voiceURI)storageSet(VOICE_KEY,voice.voiceURI)});
+$('voice').addEventListener('change',()=>{const voice=voices()[Number($('voice').value)];if(voice?.voiceURI){selectedVoiceURI=voice.voiceURI;storageSet(VOICE_KEY,voice.voiceURI)}});
 function validRate(value){const input=$('rate'),number=Number(value);if(!Number.isFinite(number))return false;if(input.tagName==='SELECT')return[...input.options].some(option=>option.value===value);return number>=Number(input.min)&&number<=Number(input.max)}
 const savedRate=storageGet(RATE_KEY);if(savedRate&&validRate(savedRate))$('rate').value=savedRate;
 $('rate').addEventListener('input',()=>{if(validRate($('rate').value))storageSet(RATE_KEY,$('rate').value)});
