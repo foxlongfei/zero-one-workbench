@@ -265,6 +265,9 @@ const restrictedFast=page.locator('#shelf .book').filter({hasText:'fast-second'}
 await restrictedFast.locator('[data-action="open"]').click();
 await page.waitForFunction(()=>document.querySelector('#textView')?.textContent.includes('FAST SECOND CONTENT'));
 check('blocked local storage still permits opening stored books',await page.locator('#readerScreen').isVisible()&&await page.locator('#textView').innerText()==='FAST SECOND CONTENT',await page.locator('#readerScreen').innerText());
+check('blocked local storage is disclosed when a book opens',(await page.locator('#status').innerText()).includes('不会保存阅读位置或书签'),await page.locator('#status').innerText());
+await page.locator('#bookmarkAdd').click();
+check('blocked local storage never reports a false bookmark success',(await page.locator('#status').innerText()).includes('无法保存书签或阅读位置')&&await page.locator('#bookmarkList li').count()===0,await page.locator('#status').innerText());
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
