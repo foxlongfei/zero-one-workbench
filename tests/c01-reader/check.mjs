@@ -14,9 +14,10 @@ await page.addInitScript(()=>{
 window.__spoken=[];
 window.__spokenLanguages=[];
 window.__spokenRates=[];
+window.__reverseVoices=false;
 class Utterance{constructor(text){this.text=text;this.rate=1}}
 window.SpeechSynthesisUtterance=Utterance;
-Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,cancel(){this.paused=false},pause(){this.paused=true},resume(){this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}return [{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}]},addEventListener(name,handler){if(name==='voiceschanged')window.__voiceChanged=handler},speak(u){window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>u.onend?.(),120)}}});
+Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{paused:false,cancel(){this.paused=false},pause(){this.paused=true},resume(){this.paused=false},getVoices(){if(window.__voiceListFailures>0){window.__voiceListFailures--;throw Error('voice list blocked')}const result=[{name:'Test Mandarin',lang:'zh-CN',voiceURI:'test-zh'},{name:'Test English',lang:'en-US',voiceURI:'test-en'}];return window.__reverseVoices?result.reverse():result},addEventListener(name,handler){if(name==='voiceschanged')window.__voiceChanged=handler},speak(u){window.__spoken.push(u.text);window.__spokenLanguages.push(u.lang);window.__spokenRates.push(u.rate);setTimeout(()=>u.onend?.(),120)}}});
 });
 await page.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
 await page.waitForSelector('#importButton:enabled');
@@ -230,9 +231,11 @@ check('latest rapid-open request owns title and body',(await page.locator('#book
 await page.locator('#settingsButton').click();
 await page.locator('#voice').selectOption('1');
 await page.locator('#rate').evaluate(input=>{input.value='1.5';input.dispatchEvent(new Event('input',{bubbles:true}))});
+await page.evaluate(()=>window.__reverseVoices=true);
 await page.evaluate(()=>document.querySelector('#status').textContent='');
 await page.locator('#speak').click();
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='已朗读到结尾');
+check('selected voice survives silent browser voice reordering',await page.evaluate(()=>window.__spokenLanguages.at(-1)==='en-US'),await page.evaluate(()=>window.__spokenLanguages.join(',')));
 check('selected English voice marks utterance as English',await page.evaluate(()=>window.__spokenLanguages.at(-1)==='en-US'),await page.evaluate(()=>window.__spokenLanguages.join(',')));
 check('selected speech rate reaches utterance',await page.evaluate(()=>window.__spokenRates.at(-1)===1.5),await page.evaluate(()=>window.__spokenRates.join(',')));
 await page.locator('#back').click();
