@@ -268,6 +268,21 @@ check('blocked local storage still permits opening stored books',await page.loca
 check('blocked local storage is disclosed when a book opens',(await page.locator('#status').innerText()).includes('不会保存阅读位置或书签'),await page.locator('#status').innerText());
 await page.locator('#bookmarkAdd').click();
 check('blocked local storage never reports a false bookmark success',(await page.locator('#status').innerText()).includes('无法保存书签或阅读位置')&&await page.locator('#bookmarkList li').count()===0,await page.locator('#status').innerText());
+const silentPage=await browser.newPage({viewport:{width:1200,height:900}});
+silentPage.on('pageerror',e=>evidence.errors.push(e.message));
+await silentPage.addInitScript(()=>Object.defineProperty(window,'localStorage',{configurable:true,value:{getItem(){return null},setItem(){},removeItem(){}}}));
+await silentPage.goto('http://127.0.0.1:8765/portal/reader-integrated.html');
+await silentPage.waitForSelector('#importButton:enabled');
+await silentPage.locator('#files').setInputFiles({name:'silent-storage.txt',mimeType:'text/plain',buffer:Buffer.from('SILENT STORAGE CONTENT')});
+await silentPage.waitForFunction(()=>document.querySelectorAll('#shelf .book').length===1);
+check('reader detects silently discarded local storage writes',await silentPage.locator('#shelf .book').count()===1,await silentPage.locator('#shelfScreen').innerText());
+const silentFast=silentPage.locator('#shelf .book').filter({hasText:'silent-storage'});
+await silentFast.locator('[data-action="open"]').click();
+await silentPage.waitForFunction(()=>document.querySelector('#textView')?.textContent.includes('SILENT STORAGE CONTENT'));
+check('silent storage failure is disclosed when a book opens',(await silentPage.locator('#status').innerText()).includes('不会保存阅读位置或书签'),await silentPage.locator('#status').innerText());
+await silentPage.locator('#bookmarkAdd').click();
+check('silent storage failure never reports a false bookmark success',(await silentPage.locator('#status').innerText()).includes('无法保存书签或阅读位置'),await silentPage.locator('#status').innerText());
+await silentPage.close();
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
