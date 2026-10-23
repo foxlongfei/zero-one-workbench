@@ -257,6 +257,14 @@ await page.reload();
 await page.waitForSelector('#importButton:enabled');
 check('selected voice persists across reload',(await page.locator('#voice').inputValue())==='1',await page.locator('#voice').inputValue());
 check('selected speech rate persists across reload',(await page.locator('#rate').inputValue())==='1.5',await page.locator('#rate').inputValue());
+await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{configurable:true,get(){throw new DOMException('local storage blocked','SecurityError')}}));
+await page.reload();
+await page.waitForSelector('#importButton:enabled');
+check('reader initializes when local storage is blocked',await page.locator('#shelfScreen').isVisible()&&await page.locator('#shelf .book').count()===5,await page.locator('#shelfScreen').innerText());
+const restrictedFast=page.locator('#shelf .book').filter({hasText:'fast-second'});
+await restrictedFast.locator('[data-action="open"]').click();
+await page.waitForFunction(()=>document.querySelector('#textView')?.textContent.includes('FAST SECOND CONTENT'));
+check('blocked local storage still permits opening stored books',await page.locator('#readerScreen').isVisible()&&await page.locator('#textView').innerText()==='FAST SECOND CONTENT',await page.locator('#readerScreen').innerText());
 await page.screenshot({path:'tests/c01-reader/evidence/reader.png',fullPage:true});
 check('no JS runtime errors',evidence.errors.length===0,evidence.errors.join('; '));
 } catch(e){evidence.failure=String(e);throw e}finally{await mkdir('tests/c01-reader/evidence',{recursive:true});await writeFile('tests/c01-reader/evidence/results.json',JSON.stringify(evidence,null,2));await browser.close();server.kill()}
