@@ -48,15 +48,57 @@ jobs:
           gh issue view 3 --json title,body,comments > /tmp/dq-movement/issue-3.json
           git ls-files > /tmp/dq-movement/repository-files.txt
 
-      - name: ${{ matrix.actor }} independently designs and implements Movement
-        if: github.event_name != 'push' || matrix.provider == 'q'
+      - name: Set up the historically proven Q execution path
+        if: matrix.provider == 'q'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install pinned Aider for Q博士
+        if: matrix.provider == 'q'
+        run: python -m pip install 'aider-chat==0.86.1'
+
+      - name: Q博士 independently designs and implements Movement
+        if: matrix.provider == 'q'
+        env:
+          OPENAI_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          OPENAI_API_BASE: ${{ matrix.base_url }}
+          AIDER_ANALYTICS: 'false'
+          AIDER_CHECK_UPDATE: 'false'
+        run: |
+          cat > /tmp/q-movement-prompt.txt <<'PROMPT'
+          You are Q博士, an independent product and engineering owner of “动起来 / Movement”.
+          Read /tmp/dq-movement/issue-3.json in full, including the latest user correction, then inspect the
+          whole repository and its history. The full project is not a MediaPipe demo and is not limited to an
+          old A01 PR, push-ups, a fixed engine, a prescribed sequence, or C博士's test-count loop.
+
+          You have full authority over product design, architecture, mature open-source foundations,
+          dependencies, user experience, implementation order, and tests. You may preserve, replace, remove,
+          or rebuild existing Movement code. Do not ask C博士 to approve technical choices. Independently
+          implement a substantial user-operable product increment toward the complete Movement vision for
+          real people and long-term physical practice. Do not return only a plan, audit, tiny patch,
+          documentation-only change, or another test-count loop. You may edit or create any application,
+          server, dependency, asset, documentation, or test files needed and run checks you judge appropriate.
+
+          The only non-product boundaries are repository and user safety: do not read or expose secrets; do
+          not edit .github workflows, permissions, branch protection, credentials, or automatic merging; do
+          not present medical diagnosis or fabricate model/data results; preserve applicable licenses and
+          personal-data consent. Raise product trade-offs to the user, not C博士.
+          PROMPT
+          test -n "$OPENAI_API_KEY" || { echo "::error::DASHSCOPE_API_KEY is missing"; exit 1; }
+          timeout 1500s aider --model "openai/${{ matrix.model }}" --message-file /tmp/q-movement-prompt.txt \
+            --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
+            --map-tokens 8192 --no-check-update --no-show-model-warnings
+
+      - name: D博士 independently designs and implements Movement
+        if: matrix.provider == 'd' && github.event_name != 'push'
         uses: QwenLM/qwen-code-action@v1
         with:
-          openai_api_key: ${{ matrix.provider == 'q' && secrets.DASHSCOPE_API_KEY || secrets.DEEPSEEK_API_KEY }}
+          openai_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           openai_base_url: ${{ matrix.base_url }}
           openai_model: ${{ matrix.model }}
           prompt: |
-            You are ${{ matrix.actor }}, an independent product and engineering owner of “动起来 / Movement”.
+            You are D博士, an independent product and engineering owner of “动起来 / Movement”.
             Read /tmp/dq-movement/issue-3.json in full, including the latest user correction, then inspect the
             whole repository and its history. The full project is not a MediaPipe demo and is not limited to an
             old A01 PR, push-ups, a fixed engine, a prescribed sequence, or C博士's test-count loop.
