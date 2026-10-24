@@ -1,0 +1,355 @@
+{
+  "checks": [
+    {
+      "name": "shelf visible",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "background audio saved locally",
+      "pass": true,
+      "details": "背景音“forest.wav”已保存在本机，下次打开仍可使用"
+    },
+    {
+      "name": "background audio restored after reload",
+      "pass": true,
+      "details": "forest.wav"
+    },
+    {
+      "name": "cleared background audio stays removed",
+      "pass": true,
+      "details": "尚未选择背景音"
+    },
+    {
+      "name": "blank TXT is rejected before shelf import",
+      "pass": true,
+      "details": "已导入 0 本；跳过 1 本空白 TXT"
+    },
+    {
+      "name": "blank TXT rejection is explicit",
+      "pass": true,
+      "details": "已导入 0 本；跳过 1 本空白 TXT"
+    },
+    {
+      "name": "EPUB imported once",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n尚未开始\n阅读\n从书架删除"
+    },
+    {
+      "name": "EPUB metadata title replaces filename",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n尚未开始\n阅读\n从书架删除"
+    },
+    {
+      "name": "EPUB author appears on shelf",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n尚未开始\n阅读\n从书架删除"
+    },
+    {
+      "name": "EPUB embedded cover appears on shelf",
+      "pass": true,
+      "details": "<img src=\"blob:http://127.0.0.1:8765/7412f6b2-9824-4406-bd77-36e3691864c1\" alt=\"\" loading=\"lazy\">"
+    },
+    {
+      "name": "duplicate EPUB not added",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n尚未开始\n阅读\n从书架删除"
+    },
+    {
+      "name": "duplicate import receipt",
+      "pass": true,
+      "details": "已导入 0 本；1 本已在书架，未重复添加"
+    },
+    {
+      "name": "EPUB opened",
+      "pass": true,
+      "details": "已打开 实际章节测试书"
+    },
+    {
+      "name": "EPUB no open error",
+      "pass": true,
+      "details": "已打开 实际章节测试书"
+    },
+    {
+      "name": "TOC has chapters",
+      "pass": true,
+      "details": "第一章 早晨\n第二章 夜晚"
+    },
+    {
+      "name": "broken chapter keeps reader usable",
+      "pass": true,
+      "details": "目录“第一章 早晨”跳转失败：test broken chapter；可选择其他章节或返回书架"
+    },
+    {
+      "name": "broken chapter offers recovery choices",
+      "pass": true,
+      "details": "目录“第一章 早晨”跳转失败：test broken chapter；可选择其他章节或返回书架"
+    },
+    {
+      "name": "chapter navigation",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "EPUB bookmark saved",
+      "pass": true,
+      "details": "本书书签\n第一章 早晨删除"
+    },
+    {
+      "name": "EPUB bookmark returns to saved chapter",
+      "pass": true,
+      "details": "第一章 早晨"
+    },
+    {
+      "name": "EPUB bookmark can be deleted",
+      "pass": true,
+      "details": "本书书签\n\n还没有书签。"
+    },
+    {
+      "name": "page failure keeps reader usable",
+      "pass": true,
+      "details": "下一页加载失败：test broken next page；可重试、使用目录或返回书架"
+    },
+    {
+      "name": "page recovery clears stale error",
+      "pass": true,
+      "details": "已翻到下一页"
+    },
+    {
+      "name": "background audio ducks during speech",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "background audio restores while speech pauses",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "background audio ducks again when speech resumes",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "background audio restores after speech ends",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "whole-book speech crosses chapters",
+      "pass": true,
+      "details": "第一章 早晨太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起。太阳升起"
+    },
+    {
+      "name": "speech chapter failure resets controls",
+      "pass": true,
+      "details": "连续朗读中断：test broken speech chapter；可重试、使用目录或返回书架"
+    },
+    {
+      "name": "speech chapter failure offers recovery choices",
+      "pass": true,
+      "details": "连续朗读中断：test broken speech chapter；可重试、使用目录或返回书架"
+    },
+    {
+      "name": "speech restarts after chapter failure",
+      "pass": true,
+      "details": "已朗读到结尾"
+    },
+    {
+      "name": "EPUB shelf exposes resume action",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n已读到第二章 夜晚\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "EPUB shelf shows chapter progress",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n已读到第二章 夜晚\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "EPUB reopen without error",
+      "pass": true,
+      "details": "已打开 实际章节测试书"
+    },
+    {
+      "name": "EPUB position restored",
+      "pass": true,
+      "details": "第二章 夜晚"
+    },
+    {
+      "name": "stale EPUB position falls back to book start",
+      "pass": true,
+      "details": "保存的阅读位置已失效，已从书首打开 实际章节测试书 | 第一章 早晨"
+    },
+    {
+      "name": "stale EPUB position is replaced",
+      "pass": true,
+      "details": "{\"cfi\":\"epubcfi(/6/2!/4,/2,/4/1:350)\",\"label\":\"第一章 早晨\",\"lastReadAt\":1792814515328}"
+    },
+    {
+      "name": "EPUB position exists before delete",
+      "pass": true,
+      "details": "local-93609e2e-8357-48dc-be7b-3fa6d7ded618"
+    },
+    {
+      "name": "delete cancellation receipt",
+      "pass": true,
+      "details": "已取消删除《实际章节测试书》，书籍、阅读位置和书签保持不变"
+    },
+    {
+      "name": "cancelled delete keeps EPUB on shelf",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n已读到第一章 早晨\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "cancelled delete keeps EPUB position",
+      "pass": true,
+      "details": "local-93609e2e-8357-48dc-be7b-3fa6d7ded618"
+    },
+    {
+      "name": "EPUB removed from shelf",
+      "pass": true,
+      "details": "书架还是空的。点击「添加电子书」开始。"
+    },
+    {
+      "name": "EPUB position removed with book",
+      "pass": true,
+      "details": "local-93609e2e-8357-48dc-be7b-3fa6d7ded618"
+    },
+    {
+      "name": "deleted EPUB stays removed after reload",
+      "pass": true,
+      "details": "书架还是空的。点击「添加电子书」开始。"
+    },
+    {
+      "name": "reimport creates a clean EPUB record",
+      "pass": true,
+      "details": "local-93609e2e-8357-48dc-be7b-3fa6d7ded618 -> local-cf0b7995-36df-4050-8627-9a5263ce2bbb"
+    },
+    {
+      "name": "reimport does not inherit deleted position",
+      "pass": true,
+      "details": "第一章 早晨"
+    },
+    {
+      "name": "TXT opened",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "TXT pagination",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "most recently read book sorts first",
+      "pass": true,
+      "details": "real-book\nTXT\nreal-book\nTXT\n已读到第 2 页\n继续阅读\n从头开始\n从书架删除\n实际章节测试书\n零一测试作者 · EPUB\n已读到第一章 早晨\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "TXT shelf exposes resume action",
+      "pass": true,
+      "details": "real-book\nTXT\nreal-book\nTXT\n已读到第 2 页\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "TXT shelf shows page progress",
+      "pass": true,
+      "details": "real-book\nTXT\nreal-book\nTXT\n已读到第 2 页\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "TXT resume",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "stale TXT position falls back to first page",
+      "pass": true,
+      "details": "保存的 TXT 阅读位置已失效，已从第一页打开 real-book | 第 1 / 3 页"
+    },
+    {
+      "name": "stale TXT position is replaced",
+      "pass": true,
+      "details": "{\"index\":0,\"lastReadAt\":1792814516145}"
+    },
+    {
+      "name": "reset cancellation receipt",
+      "pass": true,
+      "details": "已取消重置《real-book》，阅读位置保持不变"
+    },
+    {
+      "name": "cancelled reset keeps TXT position",
+      "pass": true,
+      "details": "real-book\nTXT\nreal-book\nTXT\n已读到第 2 页\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "reset clears saved TXT position",
+      "pass": true,
+      "details": "local-33a921b8-c44d-4b0c-b88d-739c30da8a58"
+    },
+    {
+      "name": "reset restores fresh shelf state",
+      "pass": true,
+      "details": "real-book\nTXT\nreal-book\nTXT\n尚未开始\n阅读\n从书架删除"
+    },
+    {
+      "name": "reset action hides without progress",
+      "pass": true,
+      "details": "real-book\nTXT\nreal-book\nTXT\n尚未开始\n阅读\n从书架删除"
+    },
+    {
+      "name": "TXT restarts from first page",
+      "pass": true,
+      "details": "第 1 / 3 页"
+    },
+    {
+      "name": "returning to shelf promotes latest book",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n已读到第一章 早晨\n继续阅读\n从头开始\n从书架删除\nreal-book\nTXT\nreal-book\nTXT\n已读到第 1 页\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "shelf search filters by format",
+      "pass": true,
+      "details": "我的书架 · 封面书架 / 本机藏书\n＋ 添加电子书\n搜索书籍 \n找到 1 / 2 本\n实际章节测试书\n零一测试作者 · EPUB\n已读到第一章 早晨\n继续阅读\n从头开始\n从书架删除\n\n双击书籍封面或点击「阅读」进入整书阅读。书籍只保存在当前浏览器中，请保留原文件。"
+    },
+    {
+      "name": "search reports filtered count",
+      "pass": true,
+      "details": "找到 1 / 2 本"
+    },
+    {
+      "name": "shelf search has empty result feedback",
+      "pass": true,
+      "details": "没有找到“不存在的书”"
+    },
+    {
+      "name": "clearing search restores all books",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n已读到第一章 早晨\n继续阅读\n从头开始\n从书架删除\nreal-book\nTXT\nreal-book\nTXT\n已读到第 1 页\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "clearing search preserves recent order",
+      "pass": true,
+      "details": "实际章节测试书\n零一测试作者 · EPUB\n已读到第一章 早晨\n继续阅读\n从头开始\n从书架删除\nreal-book\nTXT\nreal-book\nTXT\n已读到第 1 页\n继续阅读\n从头开始\n从书架删除"
+    },
+    {
+      "name": "latest rapid-open request owns title and body",
+      "pass": true,
+      "details": "fast-second | FAST SECOND CONTENT"
+    },
+    {
+      "name": "invalid EPUB returns to usable shelf",
+      "pass": true,
+      "details": "打开《broken》失败：File type not supported；书籍仍保留在书架，可重新导入或删除"
+    },
+    {
+      "name": "failed book remains manageable",
+      "pass": true,
+      "details": "打开《broken》失败：File type not supported；书籍仍保留在书架，可重新导入或删除"
+    },
+    {
+      "name": "no JS runtime errors",
+      "pass": true,
+      "details": ""
+    }
+  ],
+  "errors": []
+}
