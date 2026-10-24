@@ -1,4 +1,5 @@
 name: D博士 independent Read With You delivery
+# activation: 2026-10-24 independent product channel
 
 on:
   workflow_dispatch:
