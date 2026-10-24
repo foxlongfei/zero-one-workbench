@@ -1,0 +1,16 @@
+{
+  "name": "read-with-you",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "陪你读书 / Read With You — whole-book reading and listening, local-first",
+  "scripts": {
+    "test:unit": "node tests/read-with-you/unit.test.mjs",
+    "test:e2e": "node tests/read-with-you/e2e.test.mjs",
+    "test": "node tests/read-with-you/unit.test.mjs && node tests/read-with-you/e2e.test.mjs",
+    "serve": "node scripts/read-with-you/serve.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.55.0"
+  }
+}
