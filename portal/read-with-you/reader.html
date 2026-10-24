@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>陪你读书 · 阅读</title>
+  <link rel="stylesheet" href="./app.css">
+  <link rel="stylesheet" href="./reader.css">
+</head>
+<body class="reader">
+  <div class="reader-app">
+    <header class="rw-topbar">
+      <button id="backButton" type="button" class="ghost" aria-label="返回书库">← <span class="label-wide">书库</span></button>
+      <div class="rw-title">
+        <strong id="bookTitle">正在打开…</strong>
+        <small id="bookMeta"></small>
+      </div>
+      <button id="tocButton" type="button" aria-label="目录">目录</button>
+      <button id="bookmarkButton" type="button" aria-label="书签和批注">书签</button>
+      <button id="notesButton" type="button" aria-label="读伴：看见与讨论">读伴</button>
+      <button id="settingsButton" type="button" aria-label="阅读与朗读设置">设置</button>
+    </header>
+
+    <div class="rw-progress" role="progressbar" aria-label="全书进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><i id="progressFill"></i></div>
+
+    <main class="rw-stage" id="stage">
+      <div class="rw-book" id="bookHost" hidden></div>
+      <div class="rw-plain" id="plainHost" hidden></div>
+
+      <aside class="rw-panel" id="panel" aria-hidden="true" aria-label="阅读面板">
+        <header>
+          <h2 id="panelTitle">面板</h2>
+          <button type="button" class="ghost" id="panelClose" aria-label="关闭面板">✕</button>
+        </header>
+        <div class="panel-body" id="panelBody"></div>
+      </aside>
+    </main>
+
+    <section class="rw-narrate" id="narrate" data-state="idle" aria-label="朗读控制">
+      <div class="controls">
+        <button type="button" id="prevChapter" aria-label="上一章" title="上一章">⏮</button>
+        <button type="button" id="rewind" aria-label="后退十秒" title="后退约十秒">↺10</button>
+        <button type="button" id="playPause" class="main" aria-label="开始朗读" title="开始朗读（空格）">▶</button>
+        <button type="button" id="forward" aria-label="前进十秒" title="前进约十秒">10↻</button>
+        <button type="button" id="nextChapter" aria-label="下一章" title="下一章">⏭</button>
+      </div>
+      <div class="rw-now">
+        <strong id="nowText">按播放，让我接着给你读</strong>
+        <small id="nowMeta">朗读会跨章连续，关掉页面也会记住位置</small>
+      </div>
+      <div class="controls">
+        <button type="button" id="voiceQuick" aria-label="朗读声音" title="朗读声音">🎙</button>
+        <button type="button" id="ambienceButton" aria-label="背景声音" title="背景声音">♪</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="rw-ambience" id="ambienceChip" hidden>
+    <span id="ambienceName">背景声音</span>
+    <input type="range" id="ambienceVolume" min="0" max="100" value="40" aria-label="背景音量">
+    <button type="button" id="ambienceStop" aria-label="停止背景声音">✕</button>
+  </div>
+
+  <audio id="ambienceAudio" loop preload="none"></audio>
+
+  <script type="module" src="./reader.js"></script>
+</body>
+</html>
