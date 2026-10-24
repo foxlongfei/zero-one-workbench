@@ -2,3 +2,6 @@
 portal/vendor/mediapipe/vision_bundle.mjs
 portal/vendor/mediapipe/wasm/
 portal/vendor/mediapipe/models/
+
+# Voice library runtime data (consenting family voice samples; never commit).
+server/voice-library/data/
