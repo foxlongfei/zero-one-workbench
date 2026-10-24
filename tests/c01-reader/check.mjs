@@ -51,6 +51,8 @@ check('EPUB imported once',await epub.count()===1,await page.locator('#shelf').i
 check('EPUB metadata title replaces filename',(await epub.locator('strong').innerText())==='实际章节测试书',await epub.innerText());
 check('EPUB author appears on shelf',(await epub.innerText()).includes('零一测试作者'),await epub.innerText());
 check('EPUB embedded cover appears on shelf',await epub.locator('.book-cover.has-image img').count()===1,await epub.locator('.book-cover').innerHTML());
+const corruptedBookmarkEpubId=await epub.getAttribute('data-book-id');
+await page.evaluate(id=>localStorage.setItem('reader-bookmarks-'+id,JSON.stringify({legacy:'not-an-array'})),corruptedBookmarkEpubId);
 await page.locator('#files').setInputFiles(resolve('tests/c01-reader/fixtures/real-book.epub'));
 await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('已在书架，未重复添加'));
 check('duplicate EPUB not added',await epub.count()===1,await page.locator('#shelf').innerText());
@@ -59,6 +61,9 @@ await epub.locator('[data-action="open"]').click();
 await page.waitForTimeout(1800);
 check('EPUB opened',await page.locator('foliate-view').count()===1,await page.locator('#status').innerText());
 check('EPUB no open error',!(await page.locator('#status').innerText()).includes('打开失败'),await page.locator('#status').innerText());
+await page.locator('#bookmarkButton').click();
+check('malformed legacy bookmarks cannot block opening a book',await page.locator('#readerScreen').isVisible()&&await page.locator('#bookmarkEmpty').isVisible(),await page.locator('#bookmarkPanel').innerText());
+await page.locator('#bookmarkButton').click();
 await page.locator('#tocButton').click();
 check('TOC has chapters',await page.locator('#tocList button').count()>=2,await page.locator('#tocList').innerText());
 await page.locator('foliate-view').evaluate(el=>{el.__testGoTo=el.goTo.bind(el);el.goTo=async()=>{throw Error('test broken chapter')}});
