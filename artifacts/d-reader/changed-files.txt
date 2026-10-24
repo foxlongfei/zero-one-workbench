@@ -1,0 +1,3 @@
+qwen-artifacts/stderr.log
+qwen-artifacts/stdout.log
+qwen-artifacts/telemetry.log
