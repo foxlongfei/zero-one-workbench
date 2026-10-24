@@ -1,4 +1,5 @@
 name: D and Q independent Movement delivery
+# activation: 2026-10-24 independent product channels
 
 on:
   workflow_dispatch:
