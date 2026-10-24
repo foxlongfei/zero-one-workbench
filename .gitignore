@@ -2,3 +2,6 @@
 portal/vendor/mediapipe/vision_bundle.mjs
 portal/vendor/mediapipe/wasm/
 portal/vendor/mediapipe/models/
+node_modules/
+reports/
+.qwen/
