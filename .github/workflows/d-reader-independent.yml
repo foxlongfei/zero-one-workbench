@@ -1,13 +1,11 @@
 name: D博士 independent Read With You delivery
-# activation: 2026-10-24 independent product channel
+# continuation: 2026-10-24; D owns product decisions, C only repairs the execution channel
 
 on:
   workflow_dispatch:
   push:
     paths:
       - '.github/workflows/d-reader-independent.yml'
-  schedule:
-    - cron: '23 3 * * *'
 
 permissions:
   contents: write
