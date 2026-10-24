@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');const {calculate,position}=require('../../portal/assets/b01-housing-solar.js');
+const base={name:'test',lat:56.95,lon:24.1,day:'2026-06-21',tz:3,face:180,obstruction:0,step:10};
+const summer=calculate(base);assert(summer.metrics.daylightMinutes>900,'Riga summer daylight');assert(summer.metrics.directMinutes>0);
+const winter=calculate({...base,day:'2026-12-21'});assert(winter.metrics.daylightMinutes<summer.metrics.daylightMinutes);
+const north=calculate({...base,face:0});assert(north.metrics.directMinutes<summer.metrics.directMinutes);
+const blocked=calculate({...base,obstruction:89});assert.equal(blocked.metrics.directMinutes,0);
+const same=calculate(base);assert.deepEqual(same.metrics,summer.metrics);
+for(const day of ['2026-02-30','2026-13-01','abc'])assert.throws(()=>calculate({...base,day}));
+for(const lat of [90,-90,NaN])assert.throws(()=>calculate({...base,lat}));
+assert.throws(()=>calculate({...base,tz:''}));
+const equinox=position(0,0,2026,80,720,0);assert(equinox.altitude>85);
+console.log('B01 housing solar: 10 checks passed');
