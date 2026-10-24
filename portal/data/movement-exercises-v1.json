@@ -1,0 +1,4539 @@
+{
+  "schema": "zero-one.movement.exercises.v1",
+  "irVersion": "zero-one.movement.exercise.v1",
+  "generatedAt": "2026-10-24",
+  "curator": "动起来 / Movement",
+  "note": "一个动作 = 一份可执行描述。教学图、跟练节拍、照片/视频分析、容量档案都读这一份。",
+  "sources": [
+    {
+      "id": "wger",
+      "name": "wger Workout Manager",
+      "license": "CC-BY-SA 4.0",
+      "url": "https://wger.de",
+      "used": "动作事实、要点与常见错误的通用描述",
+      "shareAlike": "由 wger 文字改写的段落同样以 CC-BY-SA 4.0 提供"
+    },
+    {
+      "id": "free-exercise-db",
+      "name": "free-exercise-db",
+      "license": "Public Domain",
+      "url": "https://github.com/yuhonas/free-exercise-db",
+      "used": "动作家族划分与器械分类参考"
+    },
+    {
+      "id": "bodyparts3d",
+      "name": "BodyParts3D 4.0 (Human Atlas)",
+      "license": "CC BY 4.0",
+      "url": "https://lifesciencedb.jp/bp3d/",
+      "used": "教学人体网格与关节位置，署名见 portal/anatomy/ATTRIBUTION.md"
+    },
+    {
+      "id": "project-curation",
+      "name": "本项目整理",
+      "license": "CC-BY-SA 4.0",
+      "used": "肌群角色、关键提示、退阶/进阶关系、尺度分级、不同人群改动"
+    }
+  ],
+  "conventions": {
+    "frame": "角色坐标系：+X 角色自身左侧，+Y 上，+Z 前，米，原点在两脚之间地面。",
+    "pose": "每个相位只写变化；省略的键继承上一相位，第一相位继承 neutral。",
+    "joints": "world-space 关节位置覆盖；未写的关节由躯干与两骨 IK 求解。夹紧、伸直用近共线点表达，不需要额外的 flag。",
+    "ground": "声明与地面接触的部件，solver 用它把整体高度落到位。",
+    "muscleRoles": "primary/secondary/stabilizers/antagonist 为本项目整理，非教材原文。",
+    "honesty": "次数与秒数是练习建议不是处方；疼痛、眩晕、麻木应立即停止，本产品不做诊断。"
+  },
+  "families": {
+    "horizontal_push": {
+      "zh": "水平推",
+      "en": "Horizontal push"
+    },
+    "vertical_push": {
+      "zh": "垂直推",
+      "en": "Vertical push"
+    },
+    "vertical_pull": {
+      "zh": "垂直拉",
+      "en": "Vertical pull"
+    },
+    "horizontal_pull": {
+      "zh": "水平拉",
+      "en": "Horizontal pull"
+    },
+    "squat": {
+      "zh": "深蹲",
+      "en": "Squat"
+    },
+    "hinge": {
+      "zh": "髋铰链",
+      "en": "Hinge"
+    },
+    "lunge": {
+      "zh": "弓步与单腿",
+      "en": "Lunge & single leg"
+    },
+    "core": {
+      "zh": "核心支撑",
+      "en": "Core / bracing"
+    },
+    "calf": {
+      "zh": "小腿与足踝",
+      "en": "Calf & ankle"
+    }
+  },
+  "levels": [
+    {
+      "id": "entry",
+      "zh": "入门"
+    },
+    {
+      "id": "steady",
+      "zh": "稳定"
+    },
+    {
+      "id": "strong",
+      "zh": "进阶"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "none",
+      "zh": "徒手"
+    },
+    {
+      "id": "wall",
+      "zh": "墙面"
+    },
+    {
+      "id": "chair",
+      "zh": "椅子/台阶"
+    },
+    {
+      "id": "bar",
+      "zh": "单杠"
+    },
+    {
+      "id": "low_bar",
+      "zh": "低杠/肋木"
+    },
+    {
+      "id": "band",
+      "zh": "弹力带"
+    },
+    {
+      "id": "mat",
+      "zh": "垫子"
+    },
+    {
+      "id": "table",
+      "zh": "桌子"
+    }
+  ],
+  "environments": [
+    {
+      "id": "home",
+      "zh": "家里"
+    },
+    {
+      "id": "gym",
+      "zh": "健身房/公园"
+    },
+    {
+      "id": "outdoor",
+      "zh": "户外"
+    },
+    {
+      "id": "office",
+      "zh": "办公室"
+    }
+  ],
+  "safetyScope": {
+    "pain": "任何尖锐疼痛、关节刺痛、麻木、眩晕、胸闷 → 立即停止，必要时就医。",
+    "notMedical": "本产品的角度、次数、负荷记录只用于练习反馈，不做医疗诊断或康复处方。",
+    "olderAdults": "65 岁以上或有跌倒史：扶稳物体、缩短支撑时间，先保留稳定性再谈次数。",
+    "children": "未成年人以动作质量与趣味为标准，不做负重极限。"
+  },
+  "poseTemplates": {
+    "neutral": {
+      "trunkUp": [
+        0,
+        1,
+        0
+      ],
+      "trunkFwd": [
+        0,
+        0,
+        1
+      ],
+      "joints": {},
+      "ik": {
+        "armPole_l": [
+          0,
+          -0.2,
+          -1
+        ],
+        "armPole_r": [
+          0,
+          -0.2,
+          -1
+        ],
+        "legPole_l": [
+          0,
+          0.35,
+          1
+        ],
+        "legPole_r": [
+          0,
+          0.35,
+          1
+        ]
+      },
+      "hands": {
+        "l": {
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            -1.3,
+            0,
+            0
+          ]
+        },
+        "r": {
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            -1.3,
+            0,
+            0
+          ]
+        }
+      },
+      "ground": [
+        {
+          "part": "foot",
+          "side": "l",
+          "contact": "LINE"
+        },
+        {
+          "part": "foot",
+          "side": "r",
+          "contact": "LINE"
+        }
+      ]
+    },
+    "quadruped": {
+      "root": [
+        0,
+        0.62,
+        0
+      ],
+      "trunkUp": [
+        0,
+        0.72,
+        -0.7
+      ],
+      "trunkFwd": [
+        0,
+        0.7,
+        0.72
+      ],
+      "ik": {
+        "armPole_l": [
+          0.4,
+          0,
+          -1
+        ],
+        "armPole_r": [
+          -0.4,
+          0,
+          -1
+        ],
+        "legPole_l": [
+          0,
+          0.3,
+          -1
+        ],
+        "legPole_r": [
+          0,
+          0.3,
+          -1
+        ]
+      },
+      "hands": {
+        "l": {
+          "offset": [
+            0,
+            -0.02,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "r": {
+          "offset": [
+            0,
+            -0.02,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "ground": [
+        {
+          "part": "hand",
+          "side": "l",
+          "contact": "CIRCLE"
+        },
+        {
+          "part": "hand",
+          "side": "r",
+          "contact": "CIRCLE"
+        },
+        {
+          "part": "foot",
+          "side": "l",
+          "contact": "CIRCLE"
+        },
+        {
+          "part": "foot",
+          "side": "r",
+          "contact": "CIRCLE"
+        }
+      ]
+    }
+  },
+  "exercises": [
+    {
+      "id": "push-up",
+      "slug": "push-up",
+      "name": {
+        "zh": "俯卧撑",
+        "en": "Push-up"
+      },
+      "aliases": [
+        "标准俯卧撑",
+        "press-up"
+      ],
+      "family": "horizontal_push",
+      "pattern": "push",
+      "level": "steady",
+      "risk": "shoulder-wrist-load",
+      "skillTags": [
+        "支撑",
+        "上肢推",
+        "核心抗伸"
+      ],
+      "environment": [
+        "home",
+        "gym",
+        "outdoor",
+        "office"
+      ],
+      "equipment": [
+        "none",
+        "mat"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "push-up",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "手掌撑地略宽于肩，身体成一条直线，胸口降到接近地面再推起。它是衡量上肢水平推力最直接的自重动作。",
+        "en": "Hands slightly wider than the shoulders, body in one line, chest to just above the floor, then press away."
+      },
+      "steps": [
+        "手掌落在肩正下方略宽，指尖向前，虎口吃住地面。",
+        "脚掌前脚掌踩地，收紧臀部与腹部，把肋骨往回收。",
+        "屈肘下放，肘与身体约成 45°，胸口降到手背高度。",
+        "掌根发力推起，肩胛在顶端自然前伸，不塌腰。"
+      ],
+      "cues": [
+        "身体从后脑到脚跟是一条线",
+        "下放时感觉肩胛向后向下收",
+        "推起时呼气"
+      ],
+      "commonErrors": [
+        {
+          "zh": "塌腰，腰先掉下去",
+          "fix": "先减少次数，把臀部收起来；用跪姿或墙姿重建直线。"
+        },
+        {
+          "zh": "肘完全向两侧打开成 90°",
+          "fix": "肘尖朝后内侧约 45°，保护肩前侧。"
+        },
+        {
+          "zh": "只做上半程",
+          "fix": "降低难度（手撑高），保证胸口真的下到手背高度。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "胸大肌",
+            "origin": "水平推的主要动力"
+          },
+          {
+            "name": "肱三头肌",
+            "origin": "伸肘"
+          },
+          {
+            "name": "三角肌前束",
+            "origin": "肩屈"
+          }
+        ],
+        "secondary": [
+          {
+            "name": "前锯肌",
+            "origin": "顶端肩胛前伸"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "腹直肌与腹斜肌",
+            "origin": "抗腰椎过伸"
+          },
+          {
+            "name": "臀大肌",
+            "origin": "维持髋伸展"
+          }
+        ],
+        "antagonist": [
+          {
+            "name": "菱形肌与中下斜方肌",
+            "origin": "下放阶段离心制动"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "shoulder": "屈曲 0°→约 60° 再伸展推回",
+        "elbow": "伸 180°→屈约 90°",
+        "scapula": "后缩下沉→前伸"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "肘角与胸口高度",
+        "rangeOfMotion": "肘 160°→90°"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.64,
+        "rangeOfMotion": 1,
+        "depthMetric": "elbow"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 3,
+          "reps": 5,
+          "restSeconds": 75,
+          "note": "跪姿或手撑高处，保证轨迹"
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 8,
+          "restSeconds": 75
+        },
+        "strong": {
+          "sets": 4,
+          "reps": 12,
+          "restSeconds": 90
+        }
+      },
+      "sets": 3,
+      "reps": {
+        "source": "elbow-angle",
+        "bottom": 100,
+        "top": 150
+      },
+      "restSeconds": 75,
+      "phaseDurations": [
+        2,
+        1.4
+      ],
+      "poses": [
+        {
+          "label": "支撑位",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              0.686,
+              0.228
+            ],
+            "trunkUp": [
+              0,
+              -0.6,
+              -0.8
+            ],
+            "trunkFwd": [
+              0,
+              0.8,
+              -0.6
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.08,
+                0.1
+              ],
+              "wrist_r": [
+                0,
+                0.08,
+                0.1
+              ],
+              "ankle_l": [
+                -0.1,
+                0.14,
+                -0.66
+              ],
+              "ankle_r": [
+                0,
+                0.14,
+                -0.66
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  -0.54
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.081,
+                  -0.061
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "下放位",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.6,
+              0.227
+            ],
+            "trunkUp": [
+              0,
+              -0.646,
+              -0.763
+            ],
+            "trunkFwd": [
+              0,
+              0.763,
+              -0.646
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.08,
+                0.05
+              ],
+              "wrist_r": [
+                0,
+                0.08,
+                0.05
+              ],
+              "ankle_l": [
+                -0.1,
+                0.14,
+                -0.66
+              ],
+              "ankle_r": [
+                0,
+                0.14,
+                -0.66
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  -0.54
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.077,
+                  -0.065
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "回到支撑位",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              0.686,
+              0.228
+            ],
+            "trunkUp": [
+              0,
+              -0.6,
+              -0.8
+            ],
+            "trunkFwd": [
+              0,
+              0.8,
+              -0.6
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.08,
+                0.1
+              ],
+              "wrist_r": [
+                0,
+                0.08,
+                0.1
+              ],
+              "ankle_l": [
+                -0.1,
+                0.14,
+                -0.66
+              ],
+              "ankle_r": [
+                0,
+                0.14,
+                -0.66
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  -0.54
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.081,
+                  -0.061
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.42,
+            0.2
+          ],
+          "elevation": 18,
+          "label": "侧面 45°：看身体是否成一直线"
+        },
+        {
+          "seq": 1,
+          "target": [
+            0,
+            0.42,
+            0.2
+          ],
+          "elevation": 18,
+          "label": "同上，保持同一机位方便对比"
+        }
+      ],
+      "progressionOf": null,
+      "regressionOf": null,
+      "childChanges": "儿童与青少年用跪姿或手撑台阶，重点在身体直线与肩胛控制；不做憋气极限组。",
+      "olderChanges": "手撑墙面或台面做斜俯卧撑，脚后撤更多；每组 5–8 次，间歇 90s，核心是保持支撑稳定。",
+      "rehabNotes": "肩前侧疼痛时把手垫高、缩小幅度；手腕不适可用拳撑或把手放在台沿。任何尖锐疼痛停止。",
+      "risks": [
+        "手腕与肩前侧负荷",
+        "塌腰时腰椎过伸"
+      ],
+      "evidence": {
+        "level": "consensus",
+        "note": "自重水平推的通用教学要点；具体剂量因人而异。"
+      }
+    },
+    {
+      "id": "push-up-wall",
+      "slug": "push-up-wall",
+      "name": {
+        "zh": "墙式俯卧撑",
+        "en": "Wall push-up"
+      },
+      "aliases": [
+        "推墙"
+      ],
+      "family": "horizontal_push",
+      "pattern": "push",
+      "level": "entry",
+      "risk": "low",
+      "skillTags": [
+        "支撑",
+        "上肢推"
+      ],
+      "environment": [
+        "home",
+        "office"
+      ],
+      "equipment": [
+        "wall"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "面对墙站立，双手撑墙做俯卧撑。负荷最小、最容易保持身体直线，是所有人进入推的训练入口。",
+        "en": "Stand facing a wall and push away from it."
+      },
+      "steps": [
+        "面对墙站立，一臂半距离，双手与肩同宽撑墙，掌心与肩齐高。",
+        "脚跟不离地，身体保持一条线，屈肘让胸口靠近墙面。",
+        "推回到手肘接近伸直，肩胛自然前伸。"
+      ],
+      "cues": [
+        "脚跟不抬",
+        "胸口靠近墙而不是头靠近墙",
+        "推回时呼气"
+      ],
+      "commonErrors": [
+        {
+          "zh": "只屈肘不动躯干",
+          "fix": "让整个身体一起靠近墙，像一块斜板。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "胸大肌",
+            "origin": "水平推主要动力"
+          },
+          {
+            "name": "肱三头肌",
+            "origin": "伸肘"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "腹部肌群",
+            "origin": "维持躯干直线"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "elbow": "伸 170°→屈约 100°"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "肘角"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.18,
+        "rangeOfMotion": 0.8,
+        "depthMetric": "elbow"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 2,
+          "reps": 12,
+          "restSeconds": 45
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 15,
+          "restSeconds": 45
+        },
+        "strong": {
+          "sets": 3,
+          "reps": 20,
+          "restSeconds": 45
+        }
+      },
+      "sets": 2,
+      "reps": {
+        "source": "elbow-angle",
+        "bottom": 105,
+        "top": 160
+      },
+      "restSeconds": 45,
+      "phaseDurations": [
+        2,
+        1.2
+      ],
+      "poses": [
+        {
+          "label": "起始",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              1,
+              -0.12
+            ],
+            "trunkUp": [
+              0,
+              1,
+              0
+            ],
+            "trunkFwd": [
+              0,
+              0,
+              1
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.6,
+                -1
+              ],
+              "armPole_r": [
+                0,
+                -0.6,
+                -1
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                1.2,
+                0.12
+              ],
+              "wrist_r": [
+                0,
+                1.2,
+                0.12
+              ],
+              "ankle_l": [
+                -0.09,
+                0.09,
+                -0.24
+              ],
+              "ankle_r": [
+                0,
+                0.09,
+                -0.24
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.02,
+                  -0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0,
+                  0.101
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "贴近墙",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.983,
+              -0.093
+            ],
+            "trunkUp": [
+              0,
+              0.99,
+              0.14
+            ],
+            "trunkFwd": [
+              0,
+              -0.14,
+              0.99
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.6,
+                -1
+              ],
+              "armPole_r": [
+                0,
+                -0.6,
+                -1
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                1.2,
+                0.12
+              ],
+              "wrist_r": [
+                0,
+                1.2,
+                0.12
+              ],
+              "ankle_l": [
+                -0.09,
+                0.09,
+                -0.24
+              ],
+              "ankle_r": [
+                0,
+                0.09,
+                -0.24
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.02,
+                  -0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  -0.014,
+                  0.1
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "回起始",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              1,
+              -0.12
+            ],
+            "trunkUp": [
+              0,
+              1,
+              0
+            ],
+            "trunkFwd": [
+              0,
+              0,
+              1
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.6,
+                -1
+              ],
+              "armPole_r": [
+                0,
+                -0.6,
+                -1
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                1.2,
+                0.12
+              ],
+              "wrist_r": [
+                0,
+                1.2,
+                0.12
+              ],
+              "ankle_l": [
+                -0.09,
+                0.09,
+                -0.24
+              ],
+              "ankle_r": [
+                0,
+                0.09,
+                -0.24
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.02,
+                  -0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0,
+                  0.101
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            1.1,
+            0
+          ],
+          "elevation": 8,
+          "label": "侧面：看身体是不是整体一起动"
+        }
+      ],
+      "progressionOf": null,
+      "regressionOf": null,
+      "childChanges": "适合作为儿童入门第一课，10 次一组，强调脚跟与直线。",
+      "olderChanges": "非常适合作为日常维持训练：2 组 × 10 次，扶墙脚步可再近一些，避免低头。",
+      "rehabNotes": "肩部活动受限时缩短行程，只做一半幅度并保持无痛。",
+      "risks": [
+        "无显著风险"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "push-up-knee",
+      "slug": "push-up-knee",
+      "name": {
+        "zh": "跪姿俯卧撑",
+        "en": "Knee push-up"
+      },
+      "aliases": [
+        "女性俯卧撑"
+      ],
+      "family": "horizontal_push",
+      "pattern": "push",
+      "level": "entry",
+      "risk": "shoulder-wrist-load",
+      "skillTags": [
+        "支撑",
+        "上肢推"
+      ],
+      "environment": [
+        "home",
+        "gym",
+        "mat"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "push-up",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "膝盖着地的俯卧撑：减少下身重量，仍然保持躯干到膝是一条线。是从墙式过渡到标准俯卧撑的中间台阶。",
+        "en": "Push-up from the knees, keeping one line from head to knees."
+      },
+      "steps": [
+        "手与标准俯卧撑同宽，膝落在髋后方。",
+        "臀部收紧，头到膝成一条线，不要翘臀。",
+        "屈肘下放到胸口接近手背高度，再推起。"
+      ],
+      "cues": [
+        "膝就是支点，身体不能折在髋部",
+        "脚跟自然抬起"
+      ],
+      "commonErrors": [
+        {
+          "zh": "臀部翘起变成倒 V",
+          "fix": "把骨盆向前送，让大腿与躯干对齐。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "胸大肌",
+            "origin": "水平推"
+          },
+          {
+            "name": "肱三头肌",
+            "origin": "伸肘"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "臀大肌",
+            "origin": "防止塌腰翘臀"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "elbow": "伸 175°→屈约 95°"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "肘角"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.42,
+        "rangeOfMotion": 0.95,
+        "depthMetric": "elbow"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 3,
+          "reps": 6,
+          "restSeconds": 60
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 10,
+          "restSeconds": 60
+        },
+        "strong": {
+          "sets": 3,
+          "reps": 15,
+          "restSeconds": 60
+        }
+      },
+      "sets": 3,
+      "reps": {
+        "source": "elbow-angle",
+        "bottom": 100,
+        "top": 155
+      },
+      "restSeconds": 60,
+      "phaseDurations": [
+        2,
+        1.2
+      ],
+      "poses": [
+        {
+          "label": "支撑位",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              0.602,
+              0.519
+            ],
+            "trunkUp": [
+              0,
+              -0.263,
+              -0.965
+            ],
+            "trunkFwd": [
+              0,
+              0.965,
+              -0.263
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.08,
+                0.3
+              ],
+              "wrist_r": [
+                0,
+                0.08,
+                0.3
+              ],
+              "ankle_l": [
+                -0.1,
+                0.2,
+                -0.16
+              ],
+              "ankle_r": [
+                0,
+                0.2,
+                -0.16
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  -0.04
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.098,
+                  -0.027
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "knee",
+                "side": "l",
+                "contact": "CIRCLE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "下放位",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.514,
+              0.515
+            ],
+            "trunkUp": [
+              0,
+              -0.303,
+              -0.953
+            ],
+            "trunkFwd": [
+              0,
+              0.953,
+              -0.303
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.08,
+                0.25
+              ],
+              "wrist_r": [
+                0,
+                0.08,
+                0.25
+              ],
+              "ankle_l": [
+                -0.1,
+                0.2,
+                -0.16
+              ],
+              "ankle_r": [
+                0,
+                0.2,
+                -0.16
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  -0.04
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.096,
+                  -0.031
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "knee",
+                "side": "l",
+                "contact": "CIRCLE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "推起位",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              0.602,
+              0.519
+            ],
+            "trunkUp": [
+              0,
+              -0.263,
+              -0.965
+            ],
+            "trunkFwd": [
+              0,
+              0.965,
+              -0.263
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.08,
+                0.3
+              ],
+              "wrist_r": [
+                0,
+                0.08,
+                0.3
+              ],
+              "ankle_l": [
+                -0.1,
+                0.2,
+                -0.16
+              ],
+              "ankle_r": [
+                0,
+                0.2,
+                -0.16
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  -0.04
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.098,
+                  -0.027
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "knee",
+                "side": "l",
+                "contact": "CIRCLE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.4,
+            0.35
+          ],
+          "elevation": 20,
+          "label": "侧后 30°：髋部是否折线"
+        }
+      ],
+      "progressionOf": "push-up-wall",
+      "regressionOf": null,
+      "childChanges": "10 岁以下可以先用手撑台阶的斜俯卧撑，膝盖不是必须。",
+      "olderChanges": "膝跪地垫软垫，2 组 × 8 次足够；起身时先回跪坐再站，避免头晕。",
+      "rehabNotes": "肩或腕不适时把双手放在稳固台面上做斜俯卧撑。",
+      "risks": [
+        "腕关节负荷",
+        "膝盖压地不适（用垫子）"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "push-up-incline",
+      "slug": "push-up-incline",
+      "name": {
+        "zh": "台下斜俯卧撑",
+        "en": "Incline push-up"
+      },
+      "aliases": [
+        "上斜俯卧撑",
+        "手撑高俯卧撑"
+      ],
+      "family": "horizontal_push",
+      "pattern": "push",
+      "level": "entry",
+      "risk": "shoulder-wrist-load",
+      "skillTags": [
+        "支撑",
+        "上肢推"
+      ],
+      "environment": [
+        "home",
+        "office",
+        "gym"
+      ],
+      "equipment": [
+        "table",
+        "chair",
+        "wall"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "push-up",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "双手撑在桌沿、台阶或窗台上做俯卧撑。支撑面越高，下身承担的重量越少，是办公室里最现实的上肢推训练。",
+        "en": "Hands on a raised surface; the higher the surface, the lighter the load."
+      },
+      "steps": [
+        "选一个稳固、不会滑动的台面，双手与肩同宽。",
+        "脚向后退到身体成一条斜线，收紧核心。",
+        "屈肘让胸口靠近台沿，再推回到肘几乎伸直。"
+      ],
+      "cues": [
+        "台面必须稳",
+        "肩不要耸起到耳朵",
+        "全程脚跟不离地"
+      ],
+      "commonErrors": [
+        {
+          "zh": "支撑面太软或滑动",
+          "fix": "换硬质桌面或靠墙的柜子。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "胸大肌",
+            "origin": "水平推"
+          },
+          {
+            "name": "肱三头肌",
+            "origin": "伸肘"
+          },
+          {
+            "name": "前锯肌",
+            "origin": "顶端肩胛控制"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "腹斜肌",
+            "origin": "抗旋转"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "elbow": "伸 175°→屈约 95°"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "肘角"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.35,
+        "rangeOfMotion": 0.9,
+        "depthMetric": "elbow"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 3,
+          "reps": 8,
+          "restSeconds": 60
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 12,
+          "restSeconds": 60
+        },
+        "strong": {
+          "sets": 4,
+          "reps": 15,
+          "restSeconds": 60
+        }
+      },
+      "sets": 3,
+      "reps": {
+        "source": "elbow-angle",
+        "bottom": 100,
+        "top": 155
+      },
+      "restSeconds": 60,
+      "phaseDurations": [
+        2,
+        1.2
+      ],
+      "poses": [
+        {
+          "label": "支撑位",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              1.018,
+              0.474
+            ],
+            "trunkUp": [
+              0,
+              -0.316,
+              -0.949
+            ],
+            "trunkFwd": [
+              0,
+              0.949,
+              -0.316
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.8,
+                0.24
+              ],
+              "wrist_r": [
+                0,
+                0.8,
+                0.24
+              ],
+              "ankle_l": [
+                -0.09,
+                0.09,
+                -0.62
+              ],
+              "ankle_r": [
+                0,
+                0.09,
+                -0.62
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.02,
+                  -0.5
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.096,
+                  -0.032
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "下放位",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.904,
+              0.493
+            ],
+            "trunkUp": [
+              0,
+              -0.206,
+              -0.979
+            ],
+            "trunkFwd": [
+              0,
+              0.979,
+              -0.206
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.8,
+                0.19
+              ],
+              "wrist_r": [
+                0,
+                0.8,
+                0.19
+              ],
+              "ankle_l": [
+                -0.09,
+                0.09,
+                -0.62
+              ],
+              "ankle_r": [
+                0,
+                0.09,
+                -0.62
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.02,
+                  -0.5
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.099,
+                  -0.021
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "推起位",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              1.018,
+              0.474
+            ],
+            "trunkUp": [
+              0,
+              -0.316,
+              -0.949
+            ],
+            "trunkFwd": [
+              0,
+              0.949,
+              -0.316
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.8,
+                0.24
+              ],
+              "wrist_r": [
+                0,
+                0.8,
+                0.24
+              ],
+              "ankle_l": [
+                -0.09,
+                0.09,
+                -0.62
+              ],
+              "ankle_r": [
+                0,
+                0.09,
+                -0.62
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.02,
+                  -0.5
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.096,
+                  -0.032
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.7,
+            0.1
+          ],
+          "elevation": 10,
+          "label": "侧面：肩—髋—踝是否成直线"
+        }
+      ],
+      "progressionOf": "push-up-wall",
+      "regressionOf": null,
+      "childChanges": "用较低的稳固台阶，让孩子自己找到能完成 8 次的高度。",
+      "olderChanges": "桌沿高度是最稳的选择；2 组 × 10 次，推完站直深呼吸两次再走。",
+      "rehabNotes": "常用于肩部术后回归的中间阶段，但具体进度必须由治疗师决定，本产品不提供处方。",
+      "risks": [
+        "支撑面不稳导致滑倒"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "plank",
+      "slug": "plank",
+      "name": {
+        "zh": "平板支撑",
+        "en": "Front plank"
+      },
+      "aliases": [
+        "撑体"
+      ],
+      "family": "core",
+      "pattern": "brace",
+      "level": "entry",
+      "risk": "low",
+      "skillTags": [
+        "核心抗伸",
+        "支撑"
+      ],
+      "environment": [
+        "home",
+        "gym",
+        "office"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "plank",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "前臂撑地的静态支撑。真正训练的是“不让腰掉下去”，所以时间不是唯一的尺度，能不能保持呼吸和直线更重要。",
+        "en": "Forearm plank: the skill is bracing, not holding your breath."
+      },
+      "steps": [
+        "肘落在肩正下方，前臂平行，拳或掌撑地。",
+        "脚尖踩地，把骨盆微微后倾，收紧臀部与腹部。",
+        "保持后脑—胸椎—骶骨一条线，正常呼吸。"
+      ],
+      "cues": [
+        "肋骨往回收，不要塌腰",
+        "臀部收紧但不要夹到憋气",
+        "感觉先失去直线就结束这一组"
+      ],
+      "commonErrors": [
+        {
+          "zh": "腰部下沉",
+          "fix": "缩短时间，先把骨盆后倾找回来。"
+        },
+        {
+          "zh": "憋气硬撑",
+          "fix": "按秒数换成“能说话”的强度。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "腹直肌",
+            "origin": "抗腰椎过伸"
+          },
+          {
+            "name": "腹斜肌",
+            "origin": "抗旋转与侧屈"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "臀大肌",
+            "origin": "骨盆后倾"
+          },
+          {
+            "name": "前锯肌",
+            "origin": "肩胛稳定"
+          }
+        ],
+        "antagonist": [
+          {
+            "name": "竖脊肌",
+            "origin": "等长协同维持脊柱位置"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "trunk": "保持中立位，无主动屈伸"
+      },
+      "capacity": {
+        "type": "hold",
+        "metric": "保持时间与躯干倾角"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.55,
+        "rangeOfMotion": 0.4,
+        "depthMetric": "hipHeight"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 2,
+          "holdSeconds": 20,
+          "restSeconds": 45
+        },
+        "steady": {
+          "sets": 3,
+          "holdSeconds": 40,
+          "restSeconds": 45
+        },
+        "strong": {
+          "sets": 3,
+          "holdSeconds": 60,
+          "restSeconds": 60
+        }
+      },
+      "sets": 3,
+      "seconds": 40,
+      "restSeconds": 45,
+      "phaseDurations": [
+        0,
+        0
+      ],
+      "poses": [
+        {
+          "label": "支撑保持",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              0.592,
+              0.238
+            ],
+            "trunkUp": [
+              0,
+              -0.555,
+              -0.832
+            ],
+            "trunkFwd": [
+              0,
+              0.832,
+              -0.555
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.16,
+                0.08,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.08,
+                0.06
+              ],
+              "ankle_l": [
+                -0.09,
+                0.1,
+                -0.6
+              ],
+              "ankle_r": [
+                0,
+                0.1,
+                -0.6
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0.005,
+                  0
+                ],
+                "rotation": [
+                  -1.35,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.02,
+                  -0.48
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.084,
+                  -0.056
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.35,
+            0.15
+          ],
+          "elevation": 12,
+          "label": "侧面：腰有没有掉下去"
+        }
+      ],
+      "reps": null,
+      "progressionOf": null,
+      "regressionOf": null,
+      "childChanges": "从 10–15 秒开始，用“像一块木板”的游戏语言；不要比谁撑得久。",
+      "olderChanges": "膝跪地的前臂支撑即可，15–20 秒 × 2；起身先侧卧再撑起。",
+      "rehabNotes": "腰背不适时把膝放下、缩短时间；疼痛加重立即停止。",
+      "risks": [
+        "塌腰时腰椎压力"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "squat",
+      "slug": "squat",
+      "name": {
+        "zh": "徒手深蹲",
+        "en": "Bodyweight squat"
+      },
+      "aliases": [
+        "空气深蹲"
+      ],
+      "family": "squat",
+      "pattern": "squat",
+      "level": "steady",
+      "risk": "knee-load",
+      "skillTags": [
+        "下肢推",
+        "髋膝踝协调"
+      ],
+      "environment": [
+        "home",
+        "gym",
+        "outdoor",
+        "office"
+      ],
+      "equipment": [
+        "none"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "squat",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "从站立蹲下再站起来。它同时练力量、平衡和从坐到站这项最基础的生活能力，是长期训练的地基。",
+        "en": "Stand up and sit down again: strength, balance and the ability to get off a chair."
+      },
+      "steps": [
+        "脚与肩同宽，脚尖略外展 10–15°。",
+        "髋向后下方坐，膝盖顺着脚尖方向前移。",
+        "蹲到大腿接近平行或自身可控的深度，脚掌全程贴地。",
+        "脚跟发力站起，站直时臀部收紧。"
+      ],
+      "cues": [
+        "先坐到身后看不见的椅子上",
+        "膝盖朝脚尖走，不要内扣",
+        "起来时呼气"
+      ],
+      "commonErrors": [
+        {
+          "zh": "脚跟离地",
+          "fix": "脚跟下垫薄物或缩小幅度，先练踝背屈。"
+        },
+        {
+          "zh": "膝盖内扣",
+          "fix": "降低速度，想着把地面推开。"
+        },
+        {
+          "zh": "只顾蹲深不顾腰",
+          "fix": "深度以腰背能保持中立为界。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "股四头肌",
+            "origin": "伸膝"
+          },
+          {
+            "name": "臀大肌",
+            "origin": "伸髋"
+          }
+        ],
+        "secondary": [
+          {
+            "name": "内收大肌",
+            "origin": "髋伸协同"
+          },
+          {
+            "name": "腘绳肌",
+            "origin": "髋伸协同"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "竖脊肌与腹肌",
+            "origin": "保持躯干刚性"
+          },
+          {
+            "name": "小腿三头肌",
+            "origin": "踝稳定"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "hip": "屈约 110°",
+        "knee": "屈至约 100°",
+        "ankle": "背屈 20–30°",
+        "trunk": "前倾约 20–30°"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "膝角与髋高度"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.85,
+        "rangeOfMotion": 1,
+        "depthMetric": "hipHeight"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 2,
+          "reps": 10,
+          "restSeconds": 60,
+          "note": "扶椅子或半蹲"
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 15,
+          "restSeconds": 60
+        },
+        "strong": {
+          "sets": 4,
+          "reps": 20,
+          "restSeconds": 75
+        }
+      },
+      "sets": 3,
+      "reps": {
+        "source": "hip-height",
+        "bottom": 0.62,
+        "top": 0.85
+      },
+      "restSeconds": 60,
+      "phaseDurations": [
+        2,
+        1.2
+      ],
+      "poses": [
+        {
+          "label": "站立",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              0.995,
+              -0.033
+            ],
+            "trunkUp": [
+              0,
+              1,
+              0
+            ],
+            "trunkFwd": [
+              0,
+              0,
+              1
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.14,
+                0.9,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.9,
+                0.06
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0,
+                  0.101
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "下蹲",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.55,
+              0.14
+            ],
+            "trunkUp": [
+              0,
+              0.94,
+              -0.34
+            ],
+            "trunkFwd": [
+              0,
+              0.34,
+              0.94
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.14,
+                1,
+                0.24
+              ],
+              "wrist_r": [
+                0,
+                1,
+                0.24
+              ],
+              "ankle_l": [
+                -0.11,
+                0.09,
+                0.02
+              ],
+              "ankle_r": [
+                0,
+                0.09,
+                0.02
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.034,
+                  0.095
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "站起",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              0.995,
+              -0.033
+            ],
+            "trunkUp": [
+              0,
+              1,
+              0
+            ],
+            "trunkFwd": [
+              0,
+              0,
+              1
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.14,
+                0.9,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.9,
+                0.06
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0,
+                  0.101
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.75,
+            0
+          ],
+          "elevation": 10,
+          "label": "正侧面：膝与脚尖方向、脚跟是否离地"
+        }
+      ],
+      "progressionOf": null,
+      "regressionOf": null,
+      "childChanges": "以游戏化蹲起为主（捡东西、蹲跳），8–12 次，不强调负重。",
+      "olderChanges": "扶椅背做坐站训练（椅子高度递减），2 组 × 8–10 次；先保证不扶也能稳 5 秒。",
+      "rehabNotes": "膝关节疼痛时缩小幅度到无痛范围，重心略前；持续疼痛就医。",
+      "risks": [
+        "膝前痛常见于脚跟离地与内扣",
+        "血压波动人群起身要慢"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "glute-bridge",
+      "slug": "glute-bridge",
+      "name": {
+        "zh": "臀桥",
+        "en": "Glute bridge"
+      },
+      "aliases": [
+        "桥式"
+      ],
+      "family": "hinge",
+      "pattern": "hip-extension",
+      "level": "entry",
+      "risk": "low",
+      "skillTags": [
+        "髋伸",
+        "久坐恢复"
+      ],
+      "environment": [
+        "home",
+        "office",
+        "gym"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "glute-bridge",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "仰卧屈膝，把髋抬到肩—髋—膝一条线。用来找回久坐后失去的髋伸展，也是学习“用臀部而不是腰”的入口。",
+        "en": "Lying hip extension: learn to finish the hip with the glutes, not the lower back."
+      },
+      "steps": [
+        "仰卧，屈膝，脚跟离臀部约一掌距离。",
+        "呼气把髋抬起，直到肩、髋、膝成一条线。",
+        "顶端停一秒，臀部收紧，腰不要顶出去。",
+        "慢慢放下，不要一下砸到底。"
+      ],
+      "cues": [
+        "先收腹再抬髋，避免肋骨外翻",
+        "感觉在臀部下缘",
+        "两个人可以互看：腰有没有拱起来"
+      ],
+      "commonErrors": [
+        {
+          "zh": "用腰把髋顶起来",
+          "fix": "缩短幅度，顶端只到髋伸直，不追求高度。"
+        },
+        {
+          "zh": "脚放太远，变成腘绳肌主导",
+          "fix": "脚跟靠近臀部一点。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "臀大肌",
+            "origin": "伸髋"
+          }
+        ],
+        "secondary": [
+          {
+            "name": "腘绳肌",
+            "origin": "伸髋协同"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "腹部肌群",
+            "origin": "抗腰椎过伸"
+          }
+        ],
+        "antagonist": [
+          {
+            "name": "髂腰肌",
+            "origin": "离心控制髋屈回归"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "hip": "伸 0°→约 15°",
+        "knee": "保持屈约 100°"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "髋高度与骨盆位置"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.5,
+        "rangeOfMotion": 0.5,
+        "depthMetric": "hipHeight"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 2,
+          "reps": 10,
+          "restSeconds": 45
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 15,
+          "restSeconds": 45
+        },
+        "strong": {
+          "sets": 3,
+          "reps": 20,
+          "restSeconds": 60
+        }
+      },
+      "sets": 3,
+      "reps": {
+        "source": "hip-height",
+        "bottom": 0.6,
+        "top": 0.85
+      },
+      "restSeconds": 45,
+      "phaseDurations": [
+        1.2,
+        1.8
+      ],
+      "poses": [
+        {
+          "label": "落地",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              0.128,
+              0.17
+            ],
+            "trunkUp": [
+              0,
+              0.04,
+              -0.999
+            ],
+            "trunkFwd": [
+              0,
+              0.999,
+              0.04
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -1,
+                -0.4
+              ],
+              "armPole_r": [
+                0,
+                -1,
+                -0.4
+              ],
+              "legPole_l": [
+                0,
+                1,
+                0
+              ],
+              "legPole_r": [
+                0,
+                1,
+                0
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.3,
+                0.06,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.06,
+                0.06
+              ],
+              "ankle_l": [
+                -0.14,
+                0.1,
+                0.36
+              ],
+              "ankle_r": [
+                0,
+                0.1,
+                0.36
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.14,
+                  0.02,
+                  0.5
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.101,
+                  0.004
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "抬髋",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.057,
+              0.132
+            ],
+            "trunkUp": [
+              0,
+              0.331,
+              -0.944
+            ],
+            "trunkFwd": [
+              0,
+              0.944,
+              0.331
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -1,
+                -0.4
+              ],
+              "armPole_r": [
+                0,
+                -1,
+                -0.4
+              ],
+              "legPole_l": [
+                0,
+                1,
+                0
+              ],
+              "legPole_r": [
+                0,
+                1,
+                0
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.3,
+                0.06,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.06,
+                0.06
+              ],
+              "ankle_l": [
+                -0.14,
+                0.1,
+                0.36
+              ],
+              "ankle_r": [
+                0,
+                0.1,
+                0.36
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.14,
+                  0.02,
+                  0.5
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.095,
+                  0.033
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "回落",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              0.128,
+              0.17
+            ],
+            "trunkUp": [
+              0,
+              0.04,
+              -0.999
+            ],
+            "trunkFwd": [
+              0,
+              0.999,
+              0.04
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -1,
+                -0.4
+              ],
+              "armPole_r": [
+                0,
+                -1,
+                -0.4
+              ],
+              "legPole_l": [
+                0,
+                1,
+                0
+              ],
+              "legPole_r": [
+                0,
+                1,
+                0
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.3,
+                0.06,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.06,
+                0.06
+              ],
+              "ankle_l": [
+                -0.14,
+                0.1,
+                0.36
+              ],
+              "ankle_r": [
+                0,
+                0.1,
+                0.36
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.14,
+                  0.02,
+                  0.5
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.101,
+                  0.004
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "hand",
+                "side": "l",
+                "contact": "CIRCLE"
+              },
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.2,
+            0.05
+          ],
+          "elevation": 8,
+          "label": "侧面：肩髋膝是否成线，腰有没有顶"
+        }
+      ],
+      "progressionOf": null,
+      "regressionOf": null,
+      "childChanges": "作为热身与身体认知练习，10–15 次，配上“把骨盆像碗一样端平”的比喻。",
+      "olderChanges": "非常适合：2 组 × 10 次，头下垫薄枕，起身前先侧卧。",
+      "rehabNotes": "下背不适时缩小幅度、放慢；出现放射痛停止并就医。",
+      "risks": [
+        "腰椎过伸"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "reverse-lunge",
+      "slug": "reverse-lunge",
+      "name": {
+        "zh": "后撤弓步",
+        "en": "Reverse lunge"
+      },
+      "aliases": [
+        "后撤步蹲"
+      ],
+      "family": "lunge",
+      "pattern": "single-leg",
+      "level": "steady",
+      "risk": "knee-load",
+      "skillTags": [
+        "单腿力量",
+        "平衡"
+      ],
+      "environment": [
+        "home",
+        "gym",
+        "outdoor"
+      ],
+      "equipment": [
+        "none"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "lunge",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "一条腿向后撤步下沉，再用前腿站起。比前弓步对膝盖更友好，也把平衡放进了训练里。",
+        "en": "Step back, sink, and stand on the front leg."
+      },
+      "steps": [
+        "站直，一条腿向后撤一大步。",
+        "双膝同时弯曲下沉，后膝接近地面但不磕地。",
+        "前脚整个脚掌发力站起，回到站立。"
+      ],
+      "cues": [
+        "前膝对准脚尖",
+        "躯干保持直立，不向前扑",
+        "步幅小一点更容易站稳"
+      ],
+      "commonErrors": [
+        {
+          "zh": "步幅太大导致前后失衡",
+          "fix": "缩小步幅，先把下沉与站起做稳。"
+        },
+        {
+          "zh": "前膝内扣",
+          "fix": "降低速度，想象把地面推开。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "股四头肌",
+            "origin": "前腿伸膝"
+          },
+          {
+            "name": "臀大肌",
+            "origin": "前腿伸髋"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "臀中肌",
+            "origin": "骨盆侧向稳定"
+          },
+          {
+            "name": "腹部肌群",
+            "origin": "躯干不晃"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "hip": "前腿屈约 100°，后腿伸约 20°",
+        "knee": "前腿屈至约 95°"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "膝角"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.8,
+        "rangeOfMotion": 0.95,
+        "depthMetric": "hipHeight"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 2,
+          "reps": 6,
+          "restSeconds": 60,
+          "note": "扶墙或椅背"
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 8,
+          "restSeconds": 60
+        },
+        "strong": {
+          "sets": 3,
+          "reps": 12,
+          "restSeconds": 75
+        }
+      },
+      "sets": 3,
+      "reps": {
+        "source": "hip-height",
+        "bottom": 0.62,
+        "top": 0.85
+      },
+      "restSeconds": 60,
+      "phaseDurations": [
+        2,
+        1.2
+      ],
+      "poses": [
+        {
+          "label": "站立",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              0.995,
+              -0.033
+            ],
+            "trunkUp": [
+              0,
+              1,
+              0
+            ],
+            "trunkFwd": [
+              0,
+              0,
+              1
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.14,
+                0.9,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.9,
+                0.06
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0,
+                  0.101
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "后撤下沉",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.75,
+              -0.12
+            ],
+            "trunkUp": [
+              0,
+              0.995,
+              -0.1
+            ],
+            "trunkFwd": [
+              0,
+              0.1,
+              0.995
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.5,
+                -0.6
+              ],
+              "legPole_l": [
+                0,
+                0.3,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.3,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.14,
+                0.9,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.9,
+                0.06
+              ],
+              "ankle_l": [
+                0,
+                0.12,
+                -0.5
+              ],
+              "ankle_r": [
+                0.1,
+                0.12,
+                -0.5
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  0.26
+                ]
+              },
+              "r": {
+                "toe": [
+                  0.1,
+                  0.02,
+                  -0.68
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "toe",
+                "side": "r",
+                "contact": "LINE"
+              },
+              {
+                "part": "knee",
+                "side": "r",
+                "contact": "CIRCLE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "站起",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              0.995,
+              -0.033
+            ],
+            "trunkUp": [
+              0,
+              1,
+              0
+            ],
+            "trunkFwd": [
+              0,
+              0,
+              1
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.2,
+                -0.6
+              ],
+              "armPole_r": [
+                0,
+                -0.2,
+                -0.6
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.14,
+                0.9,
+                0.06
+              ],
+              "wrist_r": [
+                0,
+                0.9,
+                0.06
+              ]
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.1,
+                  0.02,
+                  0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0,
+                  0.101
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.8,
+            -0.2
+          ],
+          "elevation": 8,
+          "label": "侧面 30°：前膝与脚尖、躯干是否直立"
+        }
+      ],
+      "progressionOf": "squat",
+      "regressionOf": null,
+      "childChanges": "先做原地分腿蹲（不撤步），左右各 6–8 次。",
+      "olderChanges": "必须扶稳椅背或墙面；每侧 6 次，间歇 90s，宁可幅度小。",
+      "rehabNotes": "膝盖不适时改为小幅下沉或扶着做，控制在无痛范围。",
+      "risks": [
+        "平衡不足导致摇晃",
+        "膝前侧负荷"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "inverted-row",
+      "slug": "inverted-row",
+      "name": {
+        "zh": "低杠划船",
+        "en": "Inverted row"
+      },
+      "aliases": [
+        "反向划船",
+        "自重划船"
+      ],
+      "family": "horizontal_pull",
+      "pattern": "pull",
+      "level": "steady",
+      "risk": "shoulder-wrist-load",
+      "skillTags": [
+        "水平拉",
+        "肩胛控制"
+      ],
+      "environment": [
+        "gym",
+        "outdoor",
+        "home"
+      ],
+      "equipment": [
+        "low_bar",
+        "table"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "wger",
+          "ref": "inverted-row",
+          "license": "CC-BY-SA 4.0"
+        },
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "身体仰卧在低杠或桌沿下方，握住横杆把胸口拉向杆。推与拉要成对出现，这是没有单杠时最可靠的水平拉动作。",
+        "en": "Row your chest to a low bar while your heels stay on the ground."
+      },
+      "steps": [
+        "横杆高度约在髋部，握住略宽于肩。",
+        "脚跟撑地，身体成一条斜线，收紧臀部。",
+        "先把肩胛向下收，再把胸口拉向横杆。",
+        "有控制地下放到手臂伸直。"
+      ],
+      "cues": [
+        "先让肩胛动，再让手肘弯",
+        "身体是一条线，不塌腰",
+        "下放慢一点"
+      ],
+      "commonErrors": [
+        {
+          "zh": "只用手臂拉，肩膀耸起来",
+          "fix": "先想“把肩膀往后下方放”，再拉。"
+        },
+        {
+          "zh": "腰部下沉",
+          "fix": "收紧臀部，把骨盆提起。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "背阔肌",
+            "origin": "肩内收与伸"
+          },
+          {
+            "name": "菱形肌与中斜方肌",
+            "origin": "肩胛后缩"
+          }
+        ],
+        "secondary": [
+          {
+            "name": "肱二头肌",
+            "origin": "屈肘"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "腹部肌群与臀大肌",
+            "origin": "维持躯干刚性"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "elbow": "伸 175°→屈约 60°",
+        "scapula": "前伸→后缩"
+      },
+      "capacity": {
+        "type": "reps",
+        "metric": "肘角与胸口到杆距离"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.55,
+        "rangeOfMotion": 0.9,
+        "depthMetric": "elbow"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 3,
+          "reps": 6,
+          "restSeconds": 75,
+          "note": "杆调高，身体更直立"
+        },
+        "steady": {
+          "sets": 3,
+          "reps": 10,
+          "restSeconds": 75
+        },
+        "strong": {
+          "sets": 4,
+          "reps": 12,
+          "restSeconds": 90,
+          "note": "降低杆高或脚垫高"
+        }
+      },
+      "sets": 3,
+      "reps": {
+        "source": "elbow-angle",
+        "bottom": 95,
+        "top": 150
+      },
+      "restSeconds": 75,
+      "phaseDurations": [
+        1.6,
+        2
+      ],
+      "poses": [
+        {
+          "label": "挂直",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              0.784,
+              0.545
+            ],
+            "trunkUp": [
+              0,
+              0.181,
+              -0.984
+            ],
+            "trunkFwd": [
+              0,
+              0.984,
+              0.181
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                0.3,
+                1
+              ],
+              "armPole_r": [
+                0,
+                0.3,
+                1
+              ],
+              "legPole_l": [
+                0,
+                1,
+                0
+              ],
+              "legPole_r": [
+                0,
+                1,
+                0
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.86,
+                0.02
+              ],
+              "wrist_r": [
+                0,
+                0.86,
+                0.02
+              ],
+              "ankle_l": [
+                -0.13,
+                0.1,
+                1
+              ],
+              "ankle_r": [
+                0,
+                0.1,
+                1
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  1.57
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  1.57
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.13,
+                  0.02,
+                  0.86
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.099,
+                  0.018
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "拉起",
+          "seq": 0.5,
+          "pose": {
+            "root": [
+              0,
+              0.684,
+              0.365
+            ],
+            "trunkUp": [
+              0,
+              0.181,
+              -0.984
+            ],
+            "trunkFwd": [
+              0,
+              0.984,
+              0.181
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                0.3,
+                1
+              ],
+              "armPole_r": [
+                0,
+                0.3,
+                1
+              ],
+              "legPole_l": [
+                0,
+                1,
+                0
+              ],
+              "legPole_r": [
+                0,
+                1,
+                0
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.86,
+                0.02
+              ],
+              "wrist_r": [
+                0,
+                0.86,
+                0.02
+              ],
+              "ankle_l": [
+                -0.13,
+                0.1,
+                1
+              ],
+              "ankle_r": [
+                0,
+                0.1,
+                1
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  1.57
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  1.57
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.13,
+                  0.02,
+                  0.86
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.099,
+                  0.018
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        },
+        {
+          "label": "下放",
+          "seq": 1,
+          "pose": {
+            "root": [
+              0,
+              0.784,
+              0.545
+            ],
+            "trunkUp": [
+              0,
+              0.181,
+              -0.984
+            ],
+            "trunkFwd": [
+              0,
+              0.984,
+              0.181
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                0.3,
+                1
+              ],
+              "armPole_r": [
+                0,
+                0.3,
+                1
+              ],
+              "legPole_l": [
+                0,
+                1,
+                0
+              ],
+              "legPole_r": [
+                0,
+                1,
+                0
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.2,
+                0.86,
+                0.02
+              ],
+              "wrist_r": [
+                0,
+                0.86,
+                0.02
+              ],
+              "ankle_l": [
+                -0.13,
+                0.1,
+                1
+              ],
+              "ankle_r": [
+                0,
+                0.1,
+                1
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  1.57
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  1.57
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.13,
+                  0.02,
+                  0.86
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0.099,
+                  0.018
+                ]
+              }
+            },
+            "ground": [
+              {
+                "part": "foot",
+                "side": "l",
+                "contact": "LINE"
+              },
+              {
+                "part": "foot",
+                "side": "r",
+                "contact": "LINE"
+              }
+            ]
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            0.55,
+            -0.7
+          ],
+          "elevation": 10,
+          "label": "侧面：肩胛有没有先动"
+        }
+      ],
+      "progressionOf": null,
+      "regressionOf": null,
+      "childChanges": "儿童用肋木或稳固桌沿，重点在“把胸口送到杆前”，6–8 次。",
+      "olderChanges": "杆调高、身体更直立，2 组 × 6 次，注意起身时慢。",
+      "rehabNotes": "肩部不稳时先练等长肩胛后缩，不追求行程。",
+      "risks": [
+        "杆不稳",
+        "肩前侧不适"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    },
+    {
+      "id": "dead-hang",
+      "slug": "dead-hang",
+      "name": {
+        "zh": "悬垂",
+        "en": "Dead hang"
+      },
+      "aliases": [
+        "吊杠"
+      ],
+      "family": "vertical_pull",
+      "pattern": "pull",
+      "level": "entry",
+      "risk": "shoulder-grip-load",
+      "skillTags": [
+        "握力",
+        "肩带减压"
+      ],
+      "environment": [
+        "gym",
+        "outdoor"
+      ],
+      "equipment": [
+        "bar"
+      ],
+      "resistance": "bodyweight",
+      "sources": [
+        {
+          "id": "project-curation"
+        }
+      ],
+      "description": {
+        "zh": "挂在单杠上，肩胛略微收紧，身体自然悬垂。它是引体向上的第一步：先学会安全地挂住自己的身体。",
+        "en": "Hang from the bar: the first step toward any pull-up."
+      },
+      "steps": [
+        "双手略宽于肩握杠，拇指可扣住。",
+        "离开地面，肩胛轻微下沉，不要完全松掉。",
+        "保持正常呼吸，脚不晃动。"
+      ],
+      "cues": [
+        "肩不要耸到耳朵",
+        "手握紧但手臂放松",
+        "感觉握力下降就下杠"
+      ],
+      "commonErrors": [
+        {
+          "zh": "完全松弛导致肩被拉高",
+          "fix": "轻收肩胛，把肩膀从耳朵旁拉开。"
+        }
+      ],
+      "muscleRoles": {
+        "primary": [
+          {
+            "name": "前臂屈肌",
+            "origin": "握力"
+          }
+        ],
+        "stabilizers": [
+          {
+            "name": "斜方肌下束",
+            "origin": "肩胛下沉"
+          },
+          {
+            "name": "肩袖肌群",
+            "origin": "肩稳定"
+          }
+        ]
+      },
+      "jointsMotion": {
+        "shoulder": "接近完全屈曲",
+        "grip": "等长"
+      },
+      "capacity": {
+        "type": "hold",
+        "metric": "悬垂时间"
+      },
+      "capacityLoads": {
+        "bodyweightShare": 0.9,
+        "rangeOfMotion": 0.2,
+        "depthMetric": "elbow"
+      },
+      "scaleLevels": {
+        "entry": {
+          "sets": 3,
+          "holdSeconds": 10,
+          "restSeconds": 60
+        },
+        "steady": {
+          "sets": 3,
+          "holdSeconds": 20,
+          "restSeconds": 60
+        },
+        "strong": {
+          "sets": 4,
+          "holdSeconds": 30,
+          "restSeconds": 90
+        }
+      },
+      "sets": 3,
+      "seconds": 15,
+      "restSeconds": 60,
+      "phaseDurations": [
+        0,
+        0
+      ],
+      "poses": [
+        {
+          "label": "悬垂",
+          "seq": 0,
+          "pose": {
+            "root": [
+              0,
+              1.75,
+              -0.02
+            ],
+            "trunkUp": [
+              0,
+              1,
+              0
+            ],
+            "trunkFwd": [
+              0,
+              0,
+              1
+            ],
+            "ik": {
+              "armPole_l": [
+                0,
+                -0.3,
+                -1
+              ],
+              "armPole_r": [
+                0,
+                -0.3,
+                -1
+              ],
+              "legPole_l": [
+                0,
+                0.35,
+                1
+              ],
+              "legPole_r": [
+                0,
+                0.35,
+                1
+              ]
+            },
+            "joints": {
+              "wrist_l": [
+                -0.24,
+                2.5,
+                -0.02
+              ],
+              "wrist_r": [
+                0,
+                2.5,
+                -0.02
+              ],
+              "ankle_l": [
+                -0.09,
+                0.14,
+                -0.02
+              ],
+              "ankle_r": [
+                0,
+                0.14,
+                -0.02
+              ]
+            },
+            "hands": {
+              "l": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  -1.57,
+                  0,
+                  0
+                ]
+              },
+              "r": {
+                "offset": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  -1.57,
+                  0,
+                  0
+                ]
+              }
+            },
+            "feet": {
+              "l": {
+                "toe": [
+                  -0.09,
+                  0.12,
+                  0.1
+                ]
+              },
+              "r": {
+                "toe": [
+                  0,
+                  0,
+                  0.101
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "camera": [
+        {
+          "seq": 0,
+          "target": [
+            0,
+            1.6,
+            0
+          ],
+          "elevation": 6,
+          "label": "正面：肩有没有被拉成耸肩"
+        }
+      ],
+      "reps": null,
+      "progressionOf": null,
+      "regressionOf": null,
+      "childChanges": "只有在杠下有保护且能安全上下时进行；10 秒 × 2 就够。",
+      "olderChanges": "不推荐无保护悬垂；可改为坐姿弹力带下拉维持拉力。",
+      "rehabNotes": "肩部术后不做；有习惯性肩不稳者先咨询专业人员。",
+      "risks": [
+        "掉落",
+        "握力突然失效"
+      ],
+      "evidence": {
+        "level": "consensus"
+      }
+    }
+  ]
+}

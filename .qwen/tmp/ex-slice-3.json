@@ -1,0 +1,123 @@
+{
+  "plank": {
+    "id": "plank",
+    "slug": "plank",
+    "name": {"zh": "平板支撑", "en": "Front plank"},
+    "aliases": ["撑体"],
+    "family": "core",
+    "pattern": "brace",
+    "level": "entry",
+    "risk": "low",
+    "skillTags": ["核心抗伸", "支撑"],
+    "environment": ["home", "gym", "office"],
+    "equipment": ["mat"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "plank", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {"zh": "前臂撑地的静态支撑。真正训练的是“不让腰掉下去”，所以时间不是唯一的尺度，能不能保持呼吸和直线更重要。", "en": "Forearm plank: the skill is bracing, not holding your breath."},
+    "steps": ["肘落在肩正下方，前臂平行，拳或掌撑地。", "脚尖踩地，把骨盆微微后倾，收紧臀部与腹部。", "保持后脑—胸椎—骶骨一条线，正常呼吸。"],
+    "cues": ["肋骨往回收，不要塌腰", "臀部收紧但不要夹到憋气", "感觉先失去直线就结束这一组"],
+    "commonErrors": [{"zh": "腰部下沉", "fix": "缩短时间，先把骨盆后倾找回来。"}, {"zh": "憋气硬撑", "fix": "按秒数换成“能说话”的强度。"}],
+    "muscleRoles": {
+      "primary": [{"name": "腹直肌", "origin": "抗腰椎过伸"}, {"name": "腹斜肌", "origin": "抗旋转与侧屈"}],
+      "stabilizers": [{"name": "臀大肌", "origin": "骨盆后倾"}, {"name": "前锯肌", "origin": "肩胛稳定"}],
+      "antagonist": [{"name": "竖脊肌", "origin": "等长协同维持脊柱位置"}]
+    },
+    "jointsMotion": {"trunk": "保持中立位，无主动屈伸"},
+    "capacity": {"type": "hold", "metric": "保持时间与躯干倾角"},
+    "capacityLoads": {"bodyweightShare": 0.55, "rangeOfMotion": 0.4, "depthMetric": "hipHeight"},
+    "scaleLevels": {
+      "entry": {"sets": 2, "holdSeconds": 20, "restSeconds": 45},
+      "steady": {"sets": 3, "holdSeconds": 40, "restSeconds": 45},
+      "strong": {"sets": 3, "holdSeconds": 60, "restSeconds": 60}
+    },
+    "sets": 3,
+    "seconds": 40,
+    "restSeconds": 45,
+    "phaseDurations": [0, 0],
+    "poses": [
+      {"label": "支撑保持", "seq": 0, "pose": {
+        "root": [0, 0.62, 0],
+        "trunkUp": [0, 0.72, 0.69],
+        "trunkFwd": [0, 0.69, -0.72],
+        "ik": {"armPole_l": [-0.6, 0, -1], "armPole_r": [0.6, 0, -1], "legPole_l": [0, 0.3, 1], "legPole_r": [0, 0.3, 1]},
+        "joints": {"wrist_l": [-0.16, 0.06, 0.56], "wrist_r": [0.16, 0.06, 0.56]},
+        "hands": {"l": {"offset": [0, -0.02, 0]}, "r": {"offset": [0, -0.02, 0]}},
+        "ground": [
+          {"part": "elbow", "side": "l", "contact": "CIRCLE"},
+          {"part": "elbow", "side": "r", "contact": "CIRCLE"},
+          {"part": "foot", "side": "l", "contact": "CIRCLE"},
+          {"part": "foot", "side": "r", "contact": "CIRCLE"}
+        ]
+      }}
+    ],
+    "camera": [{"seq": 0, "target": [0, 0.35, 0.15], "elevation": 12, "label": "侧面：腰有没有掉下去"}],
+    "reps": null,
+    "progressionOf": null,
+    "regressionOf": null,
+    "childChanges": "从 10–15 秒开始，用“像一块木板”的游戏语言；不要比谁撑得久。",
+    "olderChanges": "膝跪地的前臂支撑即可，15–20 秒 × 2；起身先侧卧再撑起。",
+    "rehabNotes": "腰背不适时把膝放下、缩短时间；疼痛加重立即停止。",
+    "risks": ["塌腰时腰椎压力"],
+    "evidence": {"level": "consensus"}
+  },
+  "squat": {
+    "id": "squat",
+    "slug": "squat",
+    "name": {"zh": "徒手深蹲", "en": "Bodyweight squat"},
+    "aliases": ["空气深蹲"],
+    "family": "squat",
+    "pattern": "squat",
+    "level": "steady",
+    "risk": "knee-load",
+    "skillTags": ["下肢推", "髋膝踝协调"],
+    "environment": ["home", "gym", "outdoor", "office"],
+    "equipment": ["none"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "squat", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {"zh": "从站立蹲下再站起来。它同时练力量、平衡和从坐到站这项最基础的生活能力，是长期训练的地基。", "en": "Stand up and sit down again: strength, balance and the ability to get off a chair."},
+    "steps": ["脚与肩同宽，脚尖略外展 10–15°。", "髋向后下方坐，膝盖顺着脚尖方向前移。", "蹲到大腿接近平行或自身可控的深度，脚掌全程贴地。", "脚跟发力站起，站直时臀部收紧。"],
+    "cues": ["先坐到身后看不见的椅子上", "膝盖朝脚尖走，不要内扣", "起来时呼气"],
+    "commonErrors": [
+      {"zh": "脚跟离地", "fix": "脚跟下垫薄物或缩小幅度，先练踝背屈。"},
+      {"zh": "膝盖内扣", "fix": "降低速度，想着把地面推开。"},
+      {"zh": "只顾蹲深不顾腰", "fix": "深度以腰背能保持中立为界。"}
+    ],
+    "muscleRoles": {
+      "primary": [{"name": "股四头肌", "origin": "伸膝"}, {"name": "臀大肌", "origin": "伸髋"}],
+      "secondary": [{"name": "内收大肌", "origin": "髋伸协同"}, {"name": "腘绳肌", "origin": "髋伸协同"}],
+      "stabilizers": [{"name": "竖脊肌与腹肌", "origin": "保持躯干刚性"}, {"name": "小腿三头肌", "origin": "踝稳定"}]
+    },
+    "jointsMotion": {"hip": "屈约 110°", "knee": "屈至约 100°", "ankle": "背屈 20–30°", "trunk": "前倾约 20–30°"},
+    "capacity": {"type": "reps", "metric": "膝角与髋高度"},
+    "capacityLoads": {"bodyweightShare": 0.85, "rangeOfMotion": 1.0, "depthMetric": "hipHeight"},
+    "scaleLevels": {
+      "entry": {"sets": 2, "reps": 10, "restSeconds": 60, "note": "扶椅子或半蹲"},
+      "steady": {"sets": 3, "reps": 15, "restSeconds": 60},
+      "strong": {"sets": 4, "reps": 20, "restSeconds": 75}
+    },
+    "sets": 3,
+    "reps": 15,
+    "restSeconds": 60,
+    "phaseDurations": [2.0, 1.2],
+    "poses": [
+      {"label": "站立", "seq": 0, "pose": {"root": [0, 0.995, -0.033]}},
+      {"label": "下蹲", "seq": 0.5, "pose": {
+        "root": [0, 0.72, -0.08],
+        "trunkUp": [0, 0.94, 0.34],
+        "trunkFwd": [0, 0.34, 0.94],
+        "ik": {"legPole_l": [0.25, 0, 1], "legPole_r": [-0.25, 0, 1], "armPole_l": [0.3, 0.2, 1], "armPole_r": [-0.3, 0.2, 1]},
+        "joints": {"wrist_l": [-0.26, 0.75, 0.32], "wrist_r": [0.26, 0.75, 0.32]}
+      }},
+      {"label": "站起", "seq": 1, "pose": {"root": [0, 0.995, -0.033], "trunkUp": [0, 1, 0]}}
+    ],
+    "camera": [{"seq": 0, "target": [0, 0.75, 0], "elevation": 10, "label": "正侧面：膝与脚尖方向、脚跟是否离地"}],
+    "reps": {"source": "hip-height", "bottom": 0.62, "top": 0.85},
+    "progressionOf": null,
+    "regressionOf": null,
+    "childChanges": "以游戏化蹲起为主（捡东西、蹲跳），8–12 次，不强调负重。",
+    "olderChanges": "扶椅背做坐站训练（椅子高度递减），2 组 × 8–10 次；先保证不扶也能稳 5 秒。",
+    "rehabNotes": "膝关节疼痛时缩小幅度到无痛范围，重心略前；持续疼痛就医。",
+    "risks": ["膝前痛常见于脚跟离地与内扣", "血压波动人群起身要慢"],
+    "evidence": {"level": "consensus"}
+  }
+}

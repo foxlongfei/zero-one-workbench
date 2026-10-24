@@ -1,0 +1,51 @@
+{
+  "schema": "zero-one.movement.joints.v1",
+  "note": "Body/joint registry shared by the teaching figure, the camera guide and the analysis report. IDs are stable; display names are what people read.",
+  "frame": "character: +X left, +Y up, +Z forward, metres",
+  "segments": [
+    {"id": "head", "name": "头部", "bones": ["head"], "atlas": ["FJ3172"]},
+    {"id": "neck", "name": "颈部", "bones": ["neck"]},
+    {"id": "trunk", "name": "躯干", "bones": ["spine_low", "spine_mid", "spine_up"], "atlas": ["FJ3156", "FJ3154", "FJ3173"]},
+    {"id": "pelvis", "name": "骨盆", "bones": ["sacrum"], "atlas": ["FJ3152", "FJ3288", "FJ3393"]},
+    {"id": "upperarm_l", "name": "左上臂", "bones": ["upperarm_l"]},
+    {"id": "upperarm_r", "name": "右上臂", "bones": ["upperarm_r"]},
+    {"id": "forearm_l", "name": "左前臂", "bones": ["forearm_l"]},
+    {"id": "forearm_r", "name": "右前臂", "bones": ["forearm_r"]},
+    {"id": "hand_l", "name": "左手", "bones": ["hand_l"]},
+    {"id": "hand_r", "name": "右手", "bones": ["hand_r"]},
+    {"id": "thigh_l", "name": "左大腿", "bones": ["thigh_l"]},
+    {"id": "thigh_r", "name": "右大腿", "bones": ["thigh_r"]},
+    {"id": "shin_l", "name": "左小腿", "bones": ["shin_l"]},
+    {"id": "shin_r", "name": "右小腿", "bones": ["shin_r"]},
+    {"id": "foot_l", "name": "左脚", "bones": ["foot_l"]},
+    {"id": "foot_r", "name": "右脚", "bones": ["foot_r"]}
+  ],
+  "joints": [
+    {"id": "neck", "name": "颈", "segments": ["head", "trunk"]},
+    {"id": "spine_low", "name": "腰椎", "segments": ["pelvis", "trunk"]},
+    {"id": "spine_mid", "name": "胸椎", "segments": ["trunk"]},
+    {"id": "shoulder_l", "name": "左肩", "segments": ["upperarm_l", "trunk"]},
+    {"id": "shoulder_r", "name": "右肩", "segments": ["upperarm_r", "trunk"]},
+    {"id": "elbow_l", "name": "左肘", "segments": ["upperarm_l", "forearm_l"]},
+    {"id": "elbow_r", "name": "右肘", "segments": ["upperarm_r", "forearm_r"]},
+    {"id": "wrist_l", "name": "左腕", "segments": ["forearm_l", "hand_l"]},
+    {"id": "wrist_r", "name": "右腕", "segments": ["forearm_r", "hand_r"]},
+    {"id": "hip_l", "name": "左髋", "segments": ["thigh_l", "pelvis"]},
+    {"id": "hip_r", "name": "右髋", "segments": ["thigh_r", "pelvis"]},
+    {"id": "knee_l", "name": "左膝", "segments": ["thigh_l", "shin_l"]},
+    {"id": "knee_r", "name": "右膝", "segments": ["thigh_r", "shin_r"]},
+    {"id": "ankle_l", "name": "左踝", "segments": ["shin_l", "foot_l"]},
+    {"id": "ankle_r", "name": "右踝", "segments": ["shin_r", "foot_r"]}
+  ],
+  "angles": [
+    {"id": "elbow", "name": "肘角", "joints": ["shoulder", "elbow", "wrist"]},
+    {"id": "knee", "name": "膝角", "joints": ["hip", "knee", "ankle"]},
+    {"id": "hip", "name": "髋角", "joints": ["shoulder", "hip", "knee"]},
+    {"id": "shoulder", "name": "肩屈伸角", "joints": ["hip", "shoulder", "elbow"]},
+    {"id": "trunk", "name": "躯干倾角", "joints": ["shoulder", "hip", "ankle"], "note": "线与垂直方向的夹角，不是关节内角"}
+  ],
+  "cameraMetrics": {
+    "landmarks": "MediaPipe Pose Landmarker 33 points, mapped to the joints above by proximity",
+    "honesty": "单张照片只给出这一帧的可见角度与线段关系；不做伤病诊断，不推断未被拍到的过程。"
+  }
+}
