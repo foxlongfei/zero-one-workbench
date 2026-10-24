@@ -1,0 +1,36 @@
+{
+  "testedAt": "2026-10-24T04:02:27.238Z",
+  "kind": "browser navigation and catalog smoke test; NOT end-to-end product acceptance",
+  "results": [
+    {
+      "name": "portal",
+      "url": "http://127.0.0.1:4173/portal/index.html",
+      "http": 200,
+      "errors": []
+    },
+    {
+      "name": "A01",
+      "url": "http://127.0.0.1:4173/portal/movement-mediapipe.html",
+      "http": 200,
+      "errors": []
+    },
+    {
+      "name": "fortune-teller",
+      "url": "http://127.0.0.1:4173/portal/fortune-teller/index.html",
+      "http": 200,
+      "errors": []
+    },
+    {
+      "name": "C01",
+      "url": "http://127.0.0.1:4173/portal/reader-integrated.html",
+      "http": 200,
+      "errors": []
+    },
+    {
+      "name": "watch-world",
+      "url": "http://127.0.0.1:4173/portal/watch-world.html",
+      "http": 200,
+      "errors": []
+    }
+  ]
+}
