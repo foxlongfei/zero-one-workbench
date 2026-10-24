@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f3e9">
+<title>陪你读书 V0.3</title>
+<style>
+:root{
+  --paper:#f7f3e9;--card:#fffdf8;--ink:#26342c;--muted:#6b776e;--line:#e3ddd0;
+  --accent:#3f6653;--accent-ink:#fff;--warm:#b4693f;--danger:#a33a32;--ok:#3f7a58;
+  --shadow:0 10px 30px rgba(46,58,48,.09);--radius:16px;
+  --serif:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:.5rem .8rem;min-height:40px;transition:border-color .15s,background .15s}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(63,102,83,.35);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button.ghost{background:transparent;border-color:transparent}
+button.danger{color:var(--danger);border-color:#e6cdc9}
+button.big{font-size:1.15rem;padding:.8rem 1.4rem;min-height:56px;border-radius:999px}
+button[aria-pressed="true"]{background:#e6efe7;border-color:var(--accent)}
+input[type=range]{accent-color:var(--accent);min-height:32px}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0 0 .4rem}
+header{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:1rem clamp(1rem,4vw,2.5rem);border-bottom:1px solid var(--line);background:rgba(247,243,233,.92);position:sticky;top:0;z-index:20;backdrop-filter:blur(10px)}
+header .brand{font-family:var(--serif);font-size:1.5rem;letter-spacing:.04em}
+header .version{font-size:.75rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.05rem .5rem}
+nav.tabs{display:flex;gap:.25rem;margin-left:auto;flex-wrap:wrap}
+nav.tabs button{border-radius:999px;padding:.35rem .9rem;min-height:36px;background:transparent;border-color:transparent}
+nav.tabs button[aria-current="page"]{background:var(--card);border-color:var(--line);box-shadow:var(--shadow)}
+main{max-width:1180px;margin:0 auto;padding:clamp(1rem,3vw,2rem)}
+section[data-screen][hidden]{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow)}
+.row{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.spread{justify-content:space-between}
+.muted{color:var(--muted);font-size:.9rem}
+.status{padding:.6rem .9rem;border-radius:10px;background:#eef3ec;border:1px solid #d7e3d7;font-size:.92rem;min-height:2.4rem}
+.status[data-tone="warn"]{background:#fbf3e6;border-color:#eeddc2}
+.status[data-tone="error"]{background:#fbebea;border-color:#eed3cf}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* shelf */
+.shelf-tools{display:grid;grid-template-columns:1fr auto;gap:.8rem;align-items:center;margin:1.2rem 0 1.6rem}
+.shelf-tools input[type=search]{width:100%;padding:.7rem 1rem;border-radius:12px;border:1px solid var(--line);background:var(--card);min-height:48px}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1.8rem 1.2rem;list-style:none;margin:0;padding:0}
+.book{display:flex;flex-direction:column;gap:.6rem;min-width:0}
+.book .cover{position:relative;aspect-ratio:3/4.15;border-radius:4px 10px 10px 4px;overflow:hidden;background:linear-gradient(145deg,#49685a,#233b35);color:#f6efe0;padding:1.2rem 1rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:inset 6px 0 9px rgba(0,0,0,.18),5px 9px 20px rgba(40,55,43,.16);transition:transform .18s ease}
+.book:nth-child(4n+2) .cover{background:linear-gradient(145deg,#94694f,#4b3130)}
+.book:nth-child(4n+3) .cover{background:linear-gradient(145deg,#6f8298,#33465c)}
+.book:nth-child(4n+4) .cover{background:linear-gradient(145deg,#948859,#585b3c)}
+.book:hover .cover,.book:focus-within .cover{transform:translateY(-4px)}
+.book .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.book .cover .t{font-family:var(--serif);font-size:1.1rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.book .cover .f{font-size:.72rem;letter-spacing:.16em;opacity:.85}
+.book .progress{height:4px;background:#e6e0d3;border-radius:2px;overflow:hidden}
+.book .progress i{display:block;height:100%;background:var(--accent)}
+.book .name{font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.book .actions{display:flex;gap:.4rem;flex-wrap:wrap}
+.book .actions button{font-size:.85rem;padding:.3rem .6rem;min-height:34px}
+.resume-card{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;border-left:4px solid var(--accent)}
+
+/* reader */
+#screen-reader{padding:0}
+.reader-bar{display:flex;gap:.5rem;align-items:center;width:100%}
+.reader-bar .title{font-family:var(--serif);font-size:1.15rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reader-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:1.6rem;align-items:start}
+@media(max-width:980px){.reader-grid{grid-template-columns:1fr}}
+.reader-stage{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);min-height:62vh;padding:clamp(.6rem,2vw,1.6rem);position:relative}
+foliate-view{display:block;height:70vh}
+#txtPage{font-family:var(--serif);font-size:clamp(1.05rem,1.15vw,1.22rem);line-height:2;max-width:38em;margin:0 auto;padding:clamp(1rem,3vw,2.5rem) 0}
+#txtPage .chap{font-size:1.5rem;margin:0 0 1.2rem;text-align:center}
+#txtPage p{margin:0 0 .9em;text-indent:2em}
+#txtPage p.active{background:#f1efe2;border-radius:6px;box-shadow:0 0 0 .35rem #f1efe2}
+.reader-foot{display:flex;gap:.6rem;align-items:center;justify-content:center;padding:.9rem 0 .2rem;flex-wrap:wrap}
+.reader-foot .pos{min-width:9rem;text-align:center;color:var(--muted);font-size:.9rem}
+.player{display:grid;gap:.8rem}
+.player .now{display:flex;gap:.9rem;align-items:center}
+.player .play{width:64px;height:64px;border-radius:50%;font-size:1.5rem;display:grid;place-items:center;padding:0;background:var(--accent);color:#fff;border-color:var(--accent)}
+.player .skip{display:flex;gap:.4rem;flex-wrap:wrap}
+.player .meta{font-size:.9rem;color:var(--muted)}
+.chapter-list{list-style:none;margin:.3rem 0 0;padding:0;max-height:32vh;overflow:auto;border-top:1px solid var(--line)}
+.chapter-list li{margin:0}
+.chapter-list button{width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:.55rem .3rem;font-size:.92rem}
+.chapter-list button[aria-current="true"]{color:var(--accent);font-weight:600;background:#eef3ec}
+.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.panel-title h2{font-size:1.1rem;margin:0}
+details{border-top:1px solid var(--line);padding-top:.7rem}
+details summary{cursor:pointer;font-weight:600;padding:.2rem 0;min-height:36px}
+label.field{display:grid;gap:.25rem;font-size:.9rem;color:var(--muted);margin:.5rem 0}
+label.field input,label.field select,label.field textarea,label.field input[type=range]{width:100%}
+label.field input[type=text],label.field input[type=password],label.field input[type=url],label.field select,label.field textarea{padding:.55rem .7rem;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-height:42px}
+textarea{min-height:80px;resize:vertical}
+.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--warm);border-radius:10px;padding:.7rem .8rem;margin:.6rem 0}
+.note blockquote{margin:.2rem 0 .5rem;color:var(--muted);font-size:.88rem;font-style:italic;max-height:6em;overflow:hidden}
+.note .actions{display:flex;gap:.4rem;flex-wrap:wrap}
+.note .actions button{font-size:.82rem;padding:.2rem .5rem;min-height:32px}
+.chips{display:flex;gap:.4rem;flex-wrap:wrap}
+.chip{font-size:.85rem;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--line);background:#fff}
+.chip[aria-pressed="true"]{background:#e6efe7;border-color:var(--accent)}
+.dialog{border:1px solid var(--line);border-radius:var(--radius);padding:0;max-width:560px;width:calc(100vw - 2rem);box-shadow:0 24px 60px rgba(30,40,33,.25);background:var(--card);color:var(--ink)}
+.dialog::backdrop{background:rgba(30,40,33,.35)}
+.dialog form{padding:1.3rem}
+.badge{font-size:.75rem;border-radius:999px;padding:.1rem .55rem;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.badge.ok{color:var(--ok);border-color:#bcd7c4;background:#eff7f1}
+.badge.warn{color:#8a5a1d;border-color:#ecd6b2;background:#fbf3e6}
+.badge.bad{color:var(--danger);border-color:#e8ccc7;background:#fbebea}
+.voice-card{border:1px solid var(--line);border-radius:12px;padding:.8rem;margin:.6rem 0;background:#fff}
+.voice-card h3{font-size:1rem;margin:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem}
+.stat b{font-family:var(--serif);font-size:1.5rem;display:block}
+.hint{font-size:.85rem;color:var(--muted)}
+footer{padding:2rem clamp(1rem,4vw,2.5rem);color:var(--muted);font-size:.82rem;border-top:1px solid var(--line);margin-top:3rem}
+footer a{color:var(--muted)}
+[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <span class="brand">陪你读书</span>
+  <span class="version">V0.3 原型机</span>
+  <nav class="tabs" aria-label="主导航">
+    <button type="button" data-nav="shelf" aria-current="page">书架</button>
+    <button type="button" data-nav="reader">阅读</button>
+    <button type="button" data-nav="voices">声音</button>
+    <button type="button" data-nav="world">听世界</button>
+  </nav>
+</header>
+
+<main>
+  <div id="status" class="status" role="status" aria-live="polite" data-testid="status">正在载入本机书架……</div>
+
+  <!-- ============ SHELF ============ -->
+  <section data-screen="shelf" id="screen-shelf" aria-label="我的书架">
+    <div class="shelf-tools">
+      <input id="shelfSearch" type="search" placeholder="搜索书名、作者或文件名" aria-label="搜索书架">
+      <button id="importButton" class="primary" type="button" disabled>＋ 导入电子书</button>
+      <input id="files" type="file" accept=".epub,.txt,.mobi,.azw3,.fb2,.cbz" multiple hidden data-testid="import-input">
+    </div>
+    <div id="resumeCard" class="card resume-card" hidden>
+      <div><div class="muted">继续上次</div><div id="resumeTitle" style="font-family:var(--serif);font-size:1.2rem"></div><div id="resumeMeta" class="muted"></div></div>
+      <div class="row"><button id="resumeRead" class="primary" type="button">继续阅读</button><button id="resumeListen" type="button">继续听书</button></div>
+    </div>
+    <h2 style="margin-top:1.6rem">我的书架 <span class="muted" id="shelfCount"></span></h2>
+    <ul class="shelf" id="shelf" aria-label="书列表"></ul>
+    <div id="shelfEmpty" class="card" hidden>
+      <h3>书架还空着</h3>
+      <p class="muted">导入你自己的 EPUB 或 TXT 电子书即可开始。书籍只保存在这台设备的浏览器里，不会上传。请只导入你有权阅读的文件。</p>
+    </div>
+  </section>
+
+  <!-- ============ READER ============ -->
+  <section data-screen="reader" id="screen-reader" aria-label="阅读器" hidden>
+    <div class="reader-bar">
+      <button id="backToShelf" class="ghost" type="button">← 书架</button>
+      <span class="title" id="readerTitle">未打开书籍</span>
+      <span class="badge" id="engineBadge">引擎</span>
+    </div>
+    <div class="reader-grid">
+      <div>
+        <div class="reader-stage" id="readerStage">
+          <div id="bookView"></div>
+          <div id="txtPage" aria-live="off"></div>
+        </div>
+        <div class="reader-foot">
+          <button id="prevPage" type="button" aria-label="上一页">← 上一页</button>
+          <span class="pos" id="position">—</span>
+          <button id="nextPage" type="button" aria-label="下一页">下一页 →</button>
+        </div>
+      </div>
+
+      <aside class="card player" aria-label="听书与设置">
+        <div class="now">
+          <button id="playButton" class="play" type="button" aria-label="开始朗读" data-testid="play">▶</button>
+          <div style="min-width:0">
+            <div id="nowChapter" style="font-weight:600">选一本书开始</div>
+            <div class="meta" id="nowSentence">—</div>
+          </div>
+        </div>
+        <div class="skip">
+          <button id="prevPara" type="button">⏮ 上一段</button>
+          <button id="nextPara" type="button">下一段 ⏭</button>
+          <button id="prevChapter" type="button">上一章</button>
+          <button id="nextChapter" type="button">下一章</button>
+        </div>
+        <div class="meta" id="listenStats" data-testid="listen-stats">今日已听 0 分钟</div>
+
+        <div class="panel-title"><h2>目录</h2><span class="muted" id="chapterCount"></span></div>
+        <ol class="chapter-list" id="chapterList"></ol>
+
+        <details open>
+          <summary>朗读声音</summary>
+          <label class="field">声音来源
+            <select id="engineSelect" aria-label="声音来源"></select>
+          </label>
+          <label class="field" id="fieldBrowserVoice">本机声音<select id="browserVoice" aria-label="本机声音"></select></label>
+          <label class="field" id="fieldRate">语速 <input id="rate" type="range" min=".6" max="1.8" step=".05" value="1"></label>
+          <p class="hint" id="engineHint"></p>
+          <p class="hint"><button id="toVoices" type="button" class="ghost" style="padding:0;min-height:0;text-decoration:underline">声音设置与家庭授权声音 →</button></p>
+        </details>
+
+        <details>
+          <summary>背景音</summary>
+          <label class="field">背景音乐（本机文件）
+            <input id="musicFile" type="file" accept="audio/*">
+          </label>
+          <div class="row spread"><span id="musicName" class="muted">尚未添加背景音乐</span><button id="clearMusic" type="button" hidden>移除</button></div>
+          <label class="field">音量 <input id="musicVolume" type="range" min="0" max="1" step=".05" value=".18"></label>
+          <label class="row" style="gap:.5rem;margin:.3rem 0"><input id="ducking" type="checkbox" checked> 朗读时自动压低背景音</label>
+          <div class="row"><button id="musicPlay" type="button">播放背景音</button><audio id="music" loop preload="auto"></audio></div>
+        </details>
+
+        <details>
+          <summary>笔记 <span class="badge" id="noteCount">0</span></summary>
+          <div id="noteList"></div>
+          <label class="field">写下想法<textarea id="noteText" placeholder="读到这一段的感受、疑问或想和孩子讨论的问题"></textarea></label>
+          <div class="row"><button id="saveNote" class="primary" type="button">保存笔记</button><button id="aiNote" type="button">问 AI 讨论</button></div>
+          <div id="aiAnswer" class="note" hidden></div>
+        </details>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ VOICES ============ -->
+  <section data-screen="voices" id="screen-voices" aria-label="声音设置" hidden>
+    <h1>声音与隐私</h1>
+    <p class="muted">朗读可以完全留在本机，也可以连接你自选的神经网络语音服务，或使用家人授权录制的声音。任何声音克隆都必须由声音本人明确授权；没有授权的声音不能在本系统创建。</p>
+
+    <div class="grid2" style="margin:1.2rem 0">
+      <div class="card">
+        <h2>朗读引擎</h2>
+        <label class="field">当前引擎<select id="voiceEngineSelect"></select></label>
+        <div class="row" style="margin:.6rem 0"><button id="testVoice" class="primary" type="button">试听</button><span class="hint" id="testVoiceResult"></span></div>
+        <div id="engineStatus" class="hint"></div>
+      </div>
+      <div class="card">
+        <h2>神经网络语音服务</h2>
+        <p class="hint">兼容 OpenAI 的 <code>/v1/audio/speech</code> 接口，例如自建或托管的 Kokoro-FastAPI、Piper 网关。地址与密钥只保存在本机浏览器；密钥不会写入代码或公开页面。</p>
+        <label class="field">服务地址（如 https://your-kokoro.example/v1）<input id="endpointUrl" type="url" placeholder="https://…" autocomplete="off"></label>
+        <label class="field">模型 <input id="endpointModel" type="text" placeholder="kokoro" autocomplete="off"></label>
+        <label class="field">声音名 <input id="endpointVoice" type="text" placeholder="af_heart / zf_xiaobei …" autocomplete="off"></label>
+        <label class="field">API 密钥（可选，仅本机）<input id="endpointKey" type="password" autocomplete="off"></label>
+        <div class="row"><button id="saveEndpoint" class="primary" type="button">保存服务</button><button id="clearEndpoint" type="button">清除</button></div>
+      </div>
+      <div class="card">
+        <h2>家庭声音库（服务端）</h2>
+        <p class="hint">由声音库服务生成、验证并留痕授权记录。页面只保存声音 id；撤销或删除由声音本人执行。</p>
+        <label class="field">声音库地址 <input id="libraryUrl" type="url" placeholder="https://voice-library.example" autocomplete="off"></label>
+        <label class="field">访问令牌（可选）<input id="libraryToken" type="password" autocomplete="off"></label>
+        <div class="row"><button id="saveLibrary" class="primary" type="button">保存声音库</button><button id="refreshVoices" type="button">刷新声音列表</button></div>
+      </div>
+      <div class="card">
+        <h2>数据与费用透明</h2>
+        <p class="hint">本机朗读不产生网络流量。神经网络语音按你的服务商计费，每次朗读把一到几句文本发送到该服务；家庭声音库只发送当前朗读的文本。你的书库、进度、笔记永远只在本机。</p>
+        <div id="privacyStats" class="hint"></div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:1.6rem">可用声音</h2>
+    <div id="voiceList" class="card"></div>
+
+    <h2 style="margin-top:2rem">录制家庭声音（须声音本人授权）</h2>
+    <div class="card">
+      <ol class="hint">
+        <li>邀请声音本人在场，阅读下面的授权说明后点击「开始授权录制」。</li>
+        <li>依次朗读屏幕上显示的三段文字，每段约 5–8 秒，保持安静环境。</li>
+        <li>上传到声音库后，声音本人可以随时暂停使用、撤销授权；撤销后系统立即拒绝合成，并可删除样本与音色。</li>
+      </ol>
+      <fieldset style="border:1px solid var(--line);border-radius:12px;padding:.8rem;margin:1rem 0">
+        <legend><strong>授权声明</strong></legend>
+        <label class="row" style="gap:.5rem;align-items:flex-start"><input id="consentCheck" type="checkbox"> <span>我本人是这段声音的主人，或者我已取得声音本人对本系统使用这段声音进行语音合成和试听的明确授权。我了解声音样本会上传到声音库服务，并可以随时撤销授权与删除样本。</span></label>
+        <label class="field">我的名字 / 称呼<input id="consentName" type="text" placeholder="例如：妈妈、爷爷、小雨"></label>
+        <label class="field">关系（可选）<input id="consentRelation" type="text" placeholder="例如：孩子、长辈"></label>
+      </fieldset>
+      <div class="row"><button id="startRecording" class="primary" type="button" disabled>开始授权录制</button><span id="recordStatus" class="hint"></span></div>
+      <div id="recordArea" hidden style="margin-top:1rem">
+        <p id="recordPrompt" style="font-family:var(--serif);font-size:1.25rem;line-height:1.8;background:#fff;border:1px solid var(--line);border-radius:12px;padding:1rem"></p>
+        <div class="row"><button id="recordSample" class="primary" type="button">开始 / 停止录制第 <span id="recordIndex">1</span> 段</button><button id="cancelRecording" type="button">取消</button></div>
+        <audio id="recordPreview" controls hidden style="width:100%;margin-top:.8rem"></audio>
+      </div>
+      <div id="recordDone" hidden style="margin-top:1rem">
+        <p>三段录音已完成，可以上传到声音库，由声音本人确认后生成声音。</p>
+        <label class="field">声音名称<input id="voiceName" type="text" placeholder="例如：妈妈的声音"></label>
+        <button id="uploadVoice" class="primary" type="button">上传并申请生成声音</button>
+        <p class="hint" id="uploadResult"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORLD ============ -->
+  <section data-screen="world" id="screen-world" aria-label="听世界" hidden>
+    <h1>听世界</h1>
+    <p class="muted">读书时可以在身后放一点声音：自备的背景音乐、古典音乐电台、世界电台与播客。本站只链接持权方官方发布的直播地址，不转存、不重新分发音频；版权与归属显示在每条内容下方。</p>
+    <div class="card" style="margin:1rem 0">
+      <div class="row spread">
+        <div><strong>当前时段推荐</strong> <span class="muted" id="daypartLabel"></span></div>
+        <button id="worldPlayButton" class="primary" type="button">播放推荐</button>
+      </div>
+      <p class="hint" id="worldNow">—</p>
+      <audio id="worldAudio" controls preload="none" style="width:100%;margin-top:.5rem"></audio>
+    </div>
+    <div class="chips" id="worldFilters" role="group" aria-label="分类"></div>
+    <div id="worldList" style="margin-top:1rem"></div>
+  </section>
+</main>
+
+<footer>
+  <div>陪你读书 V0.3 · 本机优先的整书阅读与连续听书原型机</div>
+  <div>阅读引擎 <a href="https://github.com/johnfactotum/foliate-js" rel="noreferrer">foliate-js</a>（MIT）· 本站不提供任何受版权保护的书籍或声音素材</div>
+  <div><a href="../reader-integrated.html">旧版阅读器（C01）</a> · <a href="../index.html">返回零一空间</a></div>
+</footer>
+
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>
