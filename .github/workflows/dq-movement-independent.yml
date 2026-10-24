@@ -28,8 +28,8 @@ jobs:
         include:
           - actor: Q博士
             provider: q
-            model: qwen3-coder-plus
-            base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+            model: qwen3.8-flash
+            base_url: https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
           - actor: D博士
             provider: d
             model: deepseek-chat
@@ -108,7 +108,7 @@ jobs:
           git config user.name "${{ matrix.actor }} automation"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           BASE_BRANCH="${GITHUB_REF_NAME}"
-          [[ "$GITHUB_EVENT_NAME" == "schedule" || "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] && BASE_BRANCH=main
+          [[ "${GITHUB_EVENT_NAME}" == "schedule" || "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] && BASE_BRANCH=main
           BRANCH="movement/${{ matrix.provider }}-independent-${GITHUB_RUN_ID}"
           git switch -c "$BRANCH"
           git add -A ':!.github'
