@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>陪你读书 · Read With You</title>
+<meta name="theme-color" content="#22342c">
+<meta name="description" content="整书导入、连续朗读、听书记忆、家庭共读笔记——全文保存在你自己的设备上。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f4d3f'/%3E%3Cpath d='M8 9h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H8zM24 9h-4a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h4z' fill='%23f3efe3'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#f7f3e9;--paper-raised:#fffdf8;--ink:#27322c;--muted:#6d776f;--line:#e3ddd0;
+  --accent:#2f4d3f;--accent-bright:#3f6b55;--accent-soft:#e7efe7;--warm:#b7713f;--danger:#9c4632;
+  --shadow:0 10px 30px rgba(45,58,49,.10);--radius:16px;
+  --font-book:Georgia,"Noto Serif SC","Songti SC","Source Han Serif SC",serif;
+  --font-ui:system-ui,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;
+}
+[data-theme="night"]{--paper:#151a17;--paper-raised:#1d2420;--ink:#e5e8e1;--muted:#9aa79d;--line:#2c352f;--accent:#8fbf9f;--accent-bright:#a9d4b8;--accent-soft:#22302a;--warm:#d9a06f;--shadow:0 10px 30px rgba(0,0,0,.4)}
+[data-theme="sepia"]{--paper:#f2e6cf;--paper-raised:#f9f0de;--ink:#40342a;--muted:#7d6a55;--line:#dfceb0;--accent:#7a5a34;--accent-bright:#8d6a3f;--accent-soft:#eadcc4}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-ui);line-height:1.6;transition:background .2s ease,color .2s ease}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--paper-raised);border-radius:11px;padding:9px 14px;transition:transform .12s ease,border-color .12s ease,background .12s ease}
+button:hover:not(:disabled){border-color:var(--accent)}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--paper-raised)}
+button.primary:hover{background:var(--accent-bright);border-color:var(--accent-bright)}
+button.ghost{background:transparent}
+button.icon{padding:8px 10px;font-size:16px;line-height:1}
+:focus-visible{outline:3px solid var(--accent-bright);outline-offset:2px}
+a{color:var(--accent-bright)}
+[hidden]{display:none!important}
+.muted{color:var(--muted);font-size:14px}
+.eyebrow{margin:0;text-transform:none;letter-spacing:.16em;font-size:11px;color:var(--warm);font-weight:650}
+.app{max-width:1180px;margin:0 auto;padding:clamp(14px,2.6vw,34px)}
+.topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.brand h1{font-family:var(--font-book);font-size:clamp(24px,3vw,32px);font-weight:500;margin:0;letter-spacing:.04em}
+.brand small{display:block;color:var(--muted);font-size:12px;letter-spacing:.08em}
+.brand-mark{width:42px;height:42px;border-radius:13px;background:var(--accent);color:var(--paper-raised);display:grid;place-items:center;font-family:var(--font-book);font-size:20px}
+.server-dot{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:5px 11px;background:var(--paper-raised)}
+.server-dot i{width:8px;height:8px;border-radius:50%;background:#b9b3a5;display:block}
+.server-dot[data-online="true"] i{background:#4c8f5f}
+.server-dot[data-online="false"] i{background:#c08b45}
+.shelf-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;margin:26px 0 8px}
+.continue-card{background:var(--accent);color:var(--paper-raised);border-radius:var(--radius);padding:22px 24px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
+.continue-card .eyebrow{color:#cfe1cd}
+.continue-card h3{font-family:var(--font-book);font-weight:500;font-size:clamp(21px,2.4vw,27px);margin:0;letter-spacing:.02em}
+.continue-card .muted{color:#d6e2d4}
+.continue-card .actions{margin-top:auto;padding-top:10px}
+.continue-card button.primary{background:var(--paper-raised);color:var(--accent);border-color:transparent}
+.continue-card button.ghost{color:#e7efe5;border-color:rgba(255,255,255,.35)}
+.import-card{background:var(--paper-raised);border:1px dashed #c9c0ad;border-radius:var(--radius);padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.import-card h3{margin:0;font-family:var(--font-book);font-weight:500;font-size:20px}
+.dropzone{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dropzone.is-over{outline:3px dashed var(--accent);outline-offset:6px}
+.section-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:34px 0 16px}
+.section-head h2{font-family:var(--font-book);font-weight:500;font-size:24px;margin:0}
+.section-head .count{color:var(--muted);font-size:13px}
+.section-head label{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.section-head input[type=search]{background:transparent;border:0;border-bottom:1px solid var(--line);padding:6px 2px;min-width:180px}
+.shelf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:28px 20px}
+.shelf-card{display:flex;flex-direction:column;gap:10px;min-width:0;cursor:pointer;border-radius:14px}
+.shelf-card:focus-visible{outline-offset:6px}
+.shelf-cover{position:relative;aspect-ratio:3/4.2}
+.shelf-cover .cover-image,.shelf-cover .cover-art{position:absolute;inset:0;border-radius:4px 10px 10px 4px;overflow:hidden;box-shadow:4px 8px 18px rgba(45,58,49,.18),inset 5px 0 8px rgba(0,0,0,.16);transition:transform .18s ease}
+.shelf-card:hover .shelf-cover .cover-image,.shelf-card:hover .shelf-cover .cover-art{transform:translateY(-4px)}
+.cover-image{width:100%;height:100%;object-fit:cover;background:var(--accent-soft)}
+.cover-art{display:flex;flex-direction:column;justify-content:space-between;padding:18px 14px;color:#f6efe0;background:linear-gradient(140deg,#4e6b58,#22382f)}
+.cover-art[data-format="EPUB"]{background:linear-gradient(140deg,#8b614a,#4b3230)}
+.cover-art[data-format="MOBI"],.cover-art[data-format="AZW3"]{background:linear-gradient(140deg,#647389,#334256)}
+.cover-art[data-format="FB2"]{background:linear-gradient(140deg,#8a8158,#4f543b)}
+.cover-art[data-format="CBZ"]{background:linear-gradient(140deg,#7c6479,#43364a)}
+.cover-art span{font-family:var(--font-book);font-size:17px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.cover-art small{font-size:11px;letter-spacing:.2em;color:#eee6d5}
+.cover-badge{position:absolute;top:8px;right:8px;font-size:10px;letter-spacing:.12em;background:rgba(20,30,24,.7);color:#f4efe2;border-radius:6px;padding:2px 6px}
+.shelf-meta{display:grid;gap:2px;min-width:0}
+.shelf-meta strong{font-size:15px;line-height:1.45;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.shelf-meta small{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shelf-actions{display:flex;gap:6px;flex-wrap:wrap}
+.shelf-actions button{font-size:12px;padding:5px 9px;border-radius:9px}
+.shelf-empty{grid-column:1/-1;padding:34px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+.status{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);max-width:min(92vw,620px);background:#22332b;color:#f2eee2;padding:11px 18px;border-radius:99px;box-shadow:var(--shadow);font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:80}
+.status.is-visible{opacity:1}
+.status[data-tone="error"]{background:var(--danger)}
+.voices-strip{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border-radius:var(--radius);padding:16px 20px;margin-top:36px}
+.voices-strip p{margin:0;color:var(--ink)}
+.voices-strip .muted{color:var(--muted)}
+.voices-strip .actions{margin-left:auto}
+.library-foot{margin:36px 0 60px;color:var(--muted);font-size:12px;display:flex;gap:18px;flex-wrap:wrap}
+
+/* ---------------------------------------------------------------- reader */
+#readerScreen{position:fixed;inset:0;background:var(--paper);z-index:40;display:flex;flex-direction:column}
+.reader-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--paper-raised);flex-wrap:wrap}
+.reader-bar .book-id{flex:1;min-width:0;display:grid}
+.reader-bar .book-id strong{font-family:var(--font-book);font-weight:500;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reader-bar .book-id small{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reader-tools{display:flex;gap:6px;flex-wrap:wrap}
+.reader-body{flex:1;min-height:0;display:flex;overflow:hidden}
+.book-area{flex:1;min-width:0;overflow:auto;scroll-behavior:smooth;padding:clamp(18px,4vw,56px) clamp(14px,5vw,60px) 140px}
+.book-flow{max-width:70ch;margin:0 auto;font-size:calc(19px * var(--font-scale,1));line-height:2.05;font-family:var(--font-book)}
+.chapter{margin:0 0 44px}
+.chapter-title{font-size:1.35em;font-weight:600;margin:1.4em 0 .9em;letter-spacing:.04em}
+.chapter-title::after{content:"";display:block;width:52px;height:2px;background:var(--warm);margin-top:.5em;opacity:.6}
+.chapter-body p{margin:0 0 1.05em;text-indent:2em;overflow-wrap:anywhere;border-radius:6px;padding:2px 3px;margin-left:-3px;scroll-margin:40vh 0 40vh;transition:background .25s ease}
+.seg.is-position{background:var(--accent-soft)}
+.seg.is-speaking{background:color-mix(in srgb,var(--accent-soft) 70%,var(--warm) 30%);box-shadow:-3px 0 0 var(--warm)}
+.book-paged{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:24px;max-width:1050px;margin:0 auto;height:100%}
+.paged-toc{list-style:none;margin:0;padding:0 6px 0 0;overflow:auto;border-right:1px solid var(--line)}
+.paged-toc-item{width:100%;text-align:left;border:0;background:transparent;border-radius:8px;padding:8px 10px;font-size:14px;color:var(--muted)}
+.paged-toc-item.is-current{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.paged-page{font-family:var(--font-book);max-width:62ch}
+.paged-heading{font-size:19px;font-weight:600;margin:0 0 18px;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.paged-progress{font-size:12px;color:var(--muted);font-family:var(--font-ui);font-weight:400}
+.paged-seg{font-size:calc(24px * var(--font-scale,1));line-height:1.95;margin:0 0 26px;padding:18px 20px;border-radius:14px;background:var(--paper-raised);box-shadow:var(--shadow);overflow-wrap:anywhere}
+.paged-neighbours{display:grid;gap:8px;color:var(--muted);font-size:14px}
+.paged-neighbour{margin:0;cursor:pointer;padding:8px 10px;border-radius:10px;opacity:.75}
+.paged-neighbour:hover{background:var(--accent-soft);opacity:1}
+.playbar{display:flex;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper-raised);flex-wrap:wrap}
+.playbar .now{flex:1;min-width:150px;display:grid;font-size:12px;color:var(--muted)}
+.playbar .now strong{font-size:14px;color:var(--ink);font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.playbar .engine{padding:3px 9px;border-radius:99px;font-size:11px;background:var(--accent-soft)}
+#speakButton{min-width:104px}
+.progress-line{height:3px;background:var(--line);position:relative}
+.progress-line span{display:block;height:100%;width:0;background:var(--warm);transition:width .3s ease}
+.panel{position:fixed;top:0;right:0;bottom:0;z-index:60;width:min(400px,92vw);max-width:100%;border-left:1px solid var(--line);background:var(--paper-raised);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow)}
+.panel header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.panel header h3{margin:0;font-family:var(--font-book);font-weight:500;font-size:18px;flex:1}
+.panel .panel-body{overflow:auto;padding:14px 16px;flex:1}
+.panel .panel-foot{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px}
+.toc-list{list-style:none;margin:0;padding:0}
+.toc-list button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:9px 10px;border-radius:9px}
+.toc-list button.is-current{background:var(--accent-soft);font-weight:600}
+.note-form{display:grid;gap:8px}
+.note-form textarea{width:100%;min-height:92px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--paper)}
+.quote{cursor:pointer;border-left:3px solid var(--warm);padding:4px 10px;color:var(--muted);font-size:13px;margin:0 0 8px;border-radius:0 8px 8px 0;background:var(--accent-soft)}
+.note-item{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;display:grid;gap:6px}
+.note-item p{margin:0;white-space:pre-wrap}
+.note-item .note-meta{font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.note-item .note-meta button{font-size:11px;padding:2px 7px}
+.setting-row{display:grid;gap:6px;margin-bottom:16px}
+.setting-row label{font-size:13px;font-weight:600}
+.setting-row input[type=range]{width:100%}
+.setting-row .choice{display:flex;gap:6px;flex-wrap:wrap}
+.segmented{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.segmented button{border:0;border-radius:0;padding:6px 11px;font-size:13px;background:transparent}
+.segmented button[aria-pressed="true"]{background:var(--accent);color:var(--paper-raised)}
+.bookmark-item{display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:1px dashed var(--line);padding:9px 0}
+.bookmark-item button{border:0;background:transparent;text-align:left;padding:4px}
+.voice-card{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px;margin-bottom:10px}
+.voice-card .voice-head{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.voice-card[data-status="revoked"],.voice-card[data-status="deleted"]{opacity:.62}
+.voice-actions{display:flex;gap:6px;flex-wrap:wrap}
+.voice-actions button{font-size:12px;padding:5px 9px}
+.consent-form{display:grid;gap:10px}
+.consent-form fieldset{border:1px solid var(--line);border-radius:10px;padding:10px;margin:0;display:grid;gap:6px}
+.consent-form legend{font-size:12px;color:var(--muted);padding:0 4px}
+.consent-form label.check{display:flex;gap:8px;align-items:flex-start;font-size:14px}
+.consent-form input[type=text],.consent-form textarea,.consent-form select{width:100%;border:1px solid var(--line);border-radius:9px;padding:8px;background:var(--paper)}
+.notice{background:var(--accent-soft);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--ink)}
+.notice.warn{background:color-mix(in srgb,var(--warm) 18%,var(--paper-raised))}
+.empty-note{color:var(--muted);font-size:13px;padding:10px 0}
+@media(max-width:900px){
+  .shelf-hero{grid-template-columns:1fr}
+  .panel{position:fixed;inset:auto 0 0 0;width:100%;height:min(78vh,640px);border-left:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:var(--shadow)}
+  .book-paged{grid-template-columns:1fr;height:auto}
+  .paged-toc{display:flex;gap:6px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .paged-toc li{flex:0 0 auto}
+  .paged-toc-item{white-space:nowrap}
+}
+@media(max-width:560px){
+  .shelf-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}
+  .reader-bar{padding:8px 10px;gap:6px}
+  .reader-tools button{padding:7px 8px;font-size:13px}
+  .book-area{padding:16px 14px 150px}
+  .playbar{gap:6px}
+  #speakButton{min-width:88px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">读</div>
+      <div>
+        <h1>陪你读书</h1>
+        <small>Read With You · 本机书库 · 连续朗读</small>
+      </div>
+    </div>
+    <span class="server-dot" id="serverDot" data-online="false" title="家庭服务器连接状态"><i></i><span id="serverLabel">正在检查家庭服务器…</span></span>
+    <a href="index.html" class="muted" style="font-size:13px">← 零一空间</a>
+  </header>
+
+  <section class="shelf-hero" id="shelfHero" aria-live="polite"></section>
+
+  <div class="section-head">
+    <h2>我的书架</h2>
+    <span class="count" id="shelfCount"></span>
+    <label>搜索 <input id="shelfSearch" type="search" placeholder="书名 / 作者 / 格式" autocomplete="off"></label>
+  </div>
+  <section class="shelf-grid" id="shelfGrid" aria-label="书架"></section>
+
+  <section class="voices-strip">
+    <div>
+      <p><strong>家庭声音</strong> <span class="muted">经本人授权才可录制与合成；随时可撤回授权、删除样本。</span></p>
+    </div>
+    <div class="actions"><button type="button" id="openVoices" class="ghost">管理声音与授权 →</button></div>
+  </section>
+
+  <footer class="library-foot">
+    <span>书籍、阅读位置与背景音乐只保存在这台设备。</span>
+    <span>笔记与听书记忆可与家庭服务器同步。</span>
+    <a href="classical-radio.html">听世界 · 电台与播客 →</a>
+    <a href="reader-integrated.html">经典整页阅读器 →</a>
+  </footer>
+</div>
+
+<!-- Panels live outside #readerScreen so the shelf (family voices) and an open
+     book (table of contents, notes, settings) can share them. -->
+<section id="readerScreen" hidden aria-label="阅读器">
+  <div class="progress-line" aria-hidden="true"><span id="readingProgress"></span></div>
+  <div class="reader-bar">
+    <button type="button" id="closeReader" class="icon" aria-label="返回书架">←</button>
+    <div class="book-id">
+      <strong id="readerTitle"></strong>
+      <small id="readerPlace"></small>
+    </div>
+    <div class="reader-tools">
+      <button type="button" id="tocButton" title="目录 (T)">目录</button>
+      <button type="button" id="notesButton" title="笔记 (N)">笔记 <span id="noteCount" class="muted"></span></button>
+      <button type="button" id="bookmarkAdd" title="添加书签 (B)">☆ 书签</button>
+      <button type="button" id="layoutButton" title="切换连续/分页">分页</button>
+      <button type="button" id="settingsButton" title="朗读设置">设置</button>
+    </div>
+  </div>
+  <div class="reader-body">
+    <div class="book-area" id="bookArea" tabindex="0" aria-label="正文">
+      <div id="bookRoot"></div>
+    </div>
+  </div>
+  <div class="playbar">
+    <button type="button" id="prevSegment" class="icon" aria-label="上一段" title="上一段 (←)">⏮</button>
+    <button type="button" id="speakButton" class="primary" aria-label="开始朗读" title="朗读 / 暂停 (1-6 调速)">▶ 朗读</button>
+    <button type="button" id="nextSegment" class="icon" aria-label="下一段" title="下一段 (→)">⏭</button>
+    <div class="now">
+      <strong id="nowTitle">—</strong>
+      <span id="nowDetail">按「朗读」开始，或按键 T 打开目录</span>
+    </div>
+    <span class="engine" id="engineBadge">引擎：检测中</span>
+  </div>
+</section>
+
+<aside class="panel" id="tocPanel" hidden aria-label="目录">
+  <header><h3>目录</h3><button type="button" class="icon" data-close="toc" aria-label="关闭目录">✕</button></header>
+  <div class="panel-body"><ol class="toc-list" id="tocList"></ol></div>
+</aside>
+<aside class="panel" id="notesPanel" hidden aria-label="笔记">
+  <header><h3>笔记与讨论</h3><button type="button" class="icon" data-close="notes" aria-label="关闭笔记">✕</button></header>
+  <div class="panel-body" id="notesBody"></div>
+</aside>
+<aside class="panel" id="settingsPanel" hidden aria-label="朗读设置">
+  <header><h3>朗读与阅读</h3><button type="button" class="icon" data-close="settings" aria-label="关闭设置">✕</button></header>
+  <div class="panel-body" id="settingsBody"></div>
+</aside>
+<aside class="panel" id="voicesPanel" hidden aria-label="家庭声音">
+  <header><h3>家庭声音</h3><button type="button" class="icon" data-close="voices" aria-label="关闭声音面板">✕</button></header>
+  <div class="panel-body" id="voicesBody"></div>
+</aside>
+
+<div class="status" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept=".epub,.mobi,.azw3,.fb2,.cbz,.txt,.text,.md" multiple hidden>
+<input type="file" id="musicInput" accept="audio/*" hidden>
+<script type="module" src="js/read-with-you/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+{
+  "checks": [
+    {
+      "name": "shelf renders import card",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "family server reported online",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "empty shelf explains itself",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "blank TXT refused",
+      "pass": true,
+      "details": "已导入 0 本；跳过 1 本空白 TXT"
+    },
+    {
+      "name": "TXT added to shelf",
+      "pass": true,
+      "details": "sample\nTXT\nTXT\nsample\n本机藏书\n未开始\n阅读\n删除"
+    },
+    {
+      "name": "TXT detected as chapters",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "duplicate TXT not added twice",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "TXT split into front matter + 3 chapters",
+      "pass": true,
+      "details": "卷首 | 第一章 清晨 | 第二章 午后 | 第三章 夜里"
+    },
+    {
+      "name": "TXT chapter heading kept",
+      "pass": true,
+      "details": "卷首 | 第一章 清晨 | 第二章 午后 | 第三章 夜里"
+    },
+    {
+      "name": "segment text rendered",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "progress line starts near zero",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "TOC lists every chapter",
+      "pass": true,
+      "details": "4"
+    },
+    {
+      "name": "TOC jump updates chapter label",
+      "pass": true,
+      "details": "第 4 / 4 章 · 第三章 夜里"
+    },
+    {
+      "name": "TOC panel closes after jump",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "TOC marks the current chapter",
+      "pass": true,
+      "details": "卷首第一章 清晨第二章 午后第三章 夜里"
+    },
+    {
+      "name": "narration starts",
+      "pass": true,
+      "details": "⏸ 暂停"
+    },
+    {
+      "name": "first segment spoken from server fallback",
+      "pass": true,
+      "details": "序 这是一个测试用的家读书稿，用来验证导入、目录与连续朗读。"
+    },
+    {
+      "name": "engine badge reports device voice",
+      "pass": true,
+      "details": "引擎：系统语音"
+    },
+    {
+      "name": "pause changes button to 继续",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "paused narration stops advancing",
+      "pass": true,
+      "details": "1 -> 1"
+    },
+    {
+      "name": "resume restarts narration",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "next-segment while speaking keeps reading",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "reading position persisted to localStorage",
+      "pass": true,
+      "details": "[[\"rwy-pos-local-18c254ff-279e-410f-b99a-030fc97958ad\",\"{\\\"chapter\\\":2,\\\"segment\\\":0,\\\"lastReadAt\\\":1792814489701}\"]]"
+    },
+    {
+      "name": "book registered with the family server",
+      "pass": true,
+      "details": "1"
+    },
+    {
+      "name": "shelf shows chapter progress after reload",
+      "pass": true,
+      "details": "sample\nTXT\nTXT\nsample\n本机藏书\n第二章 午后 · 50%\n继续\n从头\n删除"
+    },
+    {
+      "name": "shelf exposes 继续 after reload",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "reading resumes at saved chapter",
+      "pass": true,
+      "details": "第 1 / 4 章 · 卷首"
+    },
+    {
+      "name": "note saved with quote",
+      "pass": true,
+      "details": "写一条笔记\n\n阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说完的话。阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说完的话。阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说完的话。阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说…\n保存笔记\n\n阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说完的话。阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说完的话。阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说完的话。阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说…\n\n这里想和孩子讨论一下：风铃为什么先醒？\n\n10/24 04:01\n回到原文\n删除"
+    },
+    {
+      "name": "note count shown in toolbar",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "note synced to family server",
+      "pass": true,
+      "details": "{\"notes\":[{\"id\":\"e16129e3-d5eb-4b58-a0e8-f9b9a4ef3515\",\"bookId\":\"local-18c254ff-279e-410f-b99a-030fc97958ad\",\"text\":\"这里想和孩子讨论一下：风铃为什么先醒？\",\"kind\":\"note\",\"quote\":\"阳光斜斜地铺在桌面上，茶杯里的热气慢慢散开，像一句没说完的话。阳光斜斜地铺在桌"
+    },
+    {
+      "name": "bookmark marks current segment",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "duplicate bookmark refused",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "paged layout renders one segment per page",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "paged layout keeps a chapter list",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "paged layout remembers the segment",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "paged layout advances on next",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "keyboard next works in paged layout",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "layout switch persists to settings",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "speed change written to settings",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "theme switch applied to document",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "background music stored and listed",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "music level has a default",
+      "pass": true,
+      "details": "0.18"
+    },
+    {
+      "name": "voices panel explains consent",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "voice registered with consent",
+      "pass": true,
+      "details": "这里只保存\"授权记录\"，不会自动录音。没有本人勾选并签名，任何人都无法用这个声音朗读。\n已登记的声音\n外婆的声音\n有效授权\n\n授权人：声音本人 · 用途：朗读家庭书架里的书\n\n由 外婆 授权的声音\n\n登记时间：10/24 04:01\n\n设为默认\n撤回授权\n删除样本\n登记一个声音\n\n必须由声音本人完成。请如实填写，事后可随时撤回。\n\n声音名称\n授权人（声音本人的姓名或称呼）\n允许的用途（至少一项）\n朗读家庭书架里的书\n给孩子讲故事\n家庭提醒与问候\n本人声明\n我是这个声音的本人，自愿授权按上述用途合成朗读，并知道我可以随时撤回授权、删除样本。\n授权有效期（可选）\n登记并授权"
+    },
+    {
+      "name": "voice card shows the voice name",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "server lists the authorized voice",
+      "pass": true,
+      "details": "{\"voices\":[{\"id\":\"d030f937-19fa-4cab-9e34-038df8631ec6\",\"voiceName\":\"外婆的声音\",\"displayName\":\"由 外婆 授权的声音\",\"languages\":\"zh-CN\",\"provider\":\"pending-training\",\"consent\":{\"authorizedBy\":\"voice-owner\",\"purposes\":[\"read-aloud\"],\"statement\":\"外婆：本人自愿授"
+    },
+    {
+      "name": "server refuses synthesis before training",
+      "pass": true,
+      "details": "pending-training"
+    },
+    {
+      "name": "revoking consent updates the card",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "revoked voice cannot synthesize",
+      "pass": true,
+      "details": "{\"id\":\"d030f937-19fa-4cab-9e34-038df8631ec6\",\"voiceName\":\"外婆的声音\",\"displayName\":\"由 外婆 授权的声音\",\"languages\":\"zh-CN\",\"provider\":\"pending-training\",\"consent\":{\"authorizedBy\":\"voice-owner\",\"purposes\":[\"read-aloud\"],\"statement\":\"外婆：本人自愿授权按上述用途合成朗读，"
+    },
+    {
+      "name": "sample deletion recorded",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "deleted samples cannot be deleted again",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "EPUB metadata title used",
+      "pass": true,
+      "details": "家读样章\nEPUB\nEPUB\n家读样章\n零一\n未开始\n阅读\n删除"
+    },
+    {
+      "name": "EPUB author shown",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "EPUB chapters extracted",
+      "pass": true,
+      "details": "第一章 清晨 | 第二章 午后 | 第三章 夜里"
+    },
+    {
+      "name": "EPUB chapter text extracted",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "EPUB TOC read from nav document",
+      "pass": true,
+      "details": "第一章 清晨\n第二章 午后\n第三章 夜里"
+    },
+    {
+      "name": "EPUB TOC jump works",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "GB18030 text decoded without mojibake",
+      "pass": true,
+      "details": "卷首\n\n序 这是一个测试用的家读书稿，用来验证导入、目录与连续朗读。\n\n第一章 清晨\n\n天还没亮，屋檐下的风铃先醒了。她翻到下一页，念给还没起床的孩子听。天还没"
+    },
+    {
+      "name": "GB18030 headings became chapters",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "GB18030 decoder reports its source",
+      "pass": true,
+      "details": "{\"text\":\"第一章\",\"charset\":\"gb18030\",\"source\":\"native\"}"
+    },
+    {
+      "name": "reader boots in local-only mode",
+      "pass": true,
+      "details": "仅本机模式"
+    },
+    {
+      "name": "local-only mode still opens books",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "no runtime errors in any page",
+      "pass": true,
+      "details": ""
+    }
+  ],
+  "errors": [],
+  "startedAt": "2026-10-24T04:01:27.711Z",
+  "pass": true,
+  "finishedAt": "2026-10-24T04:01:33.561Z"
+}
