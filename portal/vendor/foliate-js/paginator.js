@@ -177,6 +177,7 @@ const setSelectionTo = (target, collapse) => {
 
 const getDirection = doc => {
     const { defaultView } = doc
+    if (!defaultView) return { vertical: false, rtl: false }
     const { writingMode, direction } = defaultView.getComputedStyle(doc.body)
     const vertical = writingMode === 'vertical-rl'
         || writingMode === 'vertical-lr'
@@ -187,10 +188,13 @@ const getDirection = doc => {
 }
 
 const getBackground = doc => {
-    const bodyStyle = doc.defaultView.getComputedStyle(doc.body)
+    // 只挂上了空白 about:blank 的 iframe 没有 defaultView，取不到样式就直接返回空背景。
+    const defaultView = doc?.defaultView
+    if (!defaultView) return ''
+    const bodyStyle = defaultView.getComputedStyle(doc.body)
     return bodyStyle.backgroundColor === 'rgba(0, 0, 0, 0)'
         && bodyStyle.backgroundImage === 'none'
-        ? doc.defaultView.getComputedStyle(doc.documentElement).background
+        ? defaultView.getComputedStyle(doc.documentElement).background
         : bodyStyle.background
 }
 

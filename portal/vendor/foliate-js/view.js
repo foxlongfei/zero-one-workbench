@@ -484,8 +484,9 @@ export class View extends HTMLElement {
         }
     }
     deselect() {
+        // 上一节 iframe 卸载后 defaultView 可能已经是 null，getSelection() 会抛错。
         for (const { doc } of this.renderer.getContents())
-            doc.defaultView.getSelection().removeAllRanges()
+            doc?.defaultView?.getSelection()?.removeAllRanges()
     }
     getSectionFractions() {
         return (this.#sectionProgress?.sectionFractions ?? [])
