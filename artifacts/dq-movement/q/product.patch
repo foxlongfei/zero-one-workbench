@@ -1,0 +1,334 @@
+diff --git a/.gitignore b/.gitignore
+index 2fe9b57..a97c467 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -2,3 +2,4 @@
+ portal/vendor/mediapipe/vision_bundle.mjs
+ portal/vendor/mediapipe/wasm/
+ portal/vendor/mediapipe/models/
++.aider*
+diff --git a/portal/movement/movement-coordinate.js b/portal/movement/movement-coordinate.js
+index e69de29..67b49f8 100644
+--- a/portal/movement/movement-coordinate.js
++++ b/portal/movement/movement-coordinate.js
+@@ -0,0 +1,53 @@
++// ZERO-CORE Movement — common human coordinate engine (browser + Node shared, no DOM, no fs).
++// Real body-language input -> canonical anatomical target -> BP representation references.
++// Asset mesh/obj ids are NEVER fabricated: they stay null until a real crosswalk is supplied.
++export const COORD = {
++  task_id: 'COMMON-HUMAN-COORDINATE',
++  version: 'v0.3',
++  canonical_targets: [
++    { id: 'MUSCLE_BICEPS_BRACHII', kind: 'COMPOSITE_MUSCLE', asset_completeness: 'COMPLETE', right_assets: ['BP5558', 'BP5566'] },
++    { id: 'JOINT_ELBOW', kind: 'ARTICULATION', asset_completeness: 'COMPLETE', right_assets: ['BP9206', 'BP8464', 'BP8233'] },
++    { id: 'REGION_FOREARM', kind: 'ANATOMICAL_REGION', asset_completeness: 'PARTIAL_BONY_SUBSET', right_assets: ['BP8464', 'BP8233'] },
++    { id: 'REGION_UPPER_ARM', kind: 'ANATOMICAL_REGION', asset_completeness: 'PARTIAL_BONY_SUBSET', right_assets: ['BP9206', 'BP5558', 'BP5566'] }
++  ],
++  side_markers: { '左': 'LEFT', '右': 'RIGHT' },
++  goal_markers: { '练': 'STRENGTH', '拉伸': 'MOBILITY', '放松': 'RECOVERY', '活动': 'MOBILITY' },
++  symptom_markers: ['疼', '痛', '麻', '酸', '肿', '伤', '僵'],
++  ambiguous_terms: {
++    '胳膊': ['MUSCLE_BICEPS_BRACHII', 'REGION_UPPER_ARM', 'REGION_FOREARM', 'JOINT_ELBOW'],
++    '手臂': ['MUSCLE_BICEPS_BRACHII', 'REGION_UPPER_ARM', 'REGION_FOREARM', 'JOINT_ELBOW'],
++    '胳膊肘': ['JOINT_ELBOW', 'REGION_UPPER_ARM', 'REGION_FOREARM']
++  },
++  recognized_out_of_sample: ['肩', '手腕', '手指', '胸', '背', '腰', '腿', '膝', '踝'],
++  aliases: {
++    '肱二头肌': 'MUSCLE_BICEPS_BRACHII', '二头肌': 'MUSCLE_BICEPS_BRACHII', '二头': 'MUSCLE_BICEPS_BRACHII', 'biceps': 'MUSCLE_BICEPS_BRACHII',
++    '肘': 'JOINT_ELBOW', '肘关节': 'JOINT_ELBOW', '胳膊肘': 'JOINT_ELBOW', 'elbow': 'JOINT_ELBOW',
++    '前臂': 'REGION_FOREARM', '小臂': 'REGION_FOREARM', 'forearm': 'REGION_FOREARM',
++    '上臂': 'REGION_UPPER_ARM', '大臂': 'REGION_UPPER_ARM', 'upper arm': 'REGION_UPPER_ARM'
++  }
++};
++const targets = Object.fromEntries(COORD.canonical_targets.map(x => [x.id, x]));
++const goalKeys = Object.keys(COORD.goal_markers).sort((a, b) => b.length - a.length);
++export function resolveMovementInput(raw) {
++  let text = String(raw ?? '').normalize('NFKC').replace(/\s+/g, '');
++  if (COORD.symptom_markers.some(x => text.includes(x))) return { status: 'SAFETY_OR_SYMPTOM', target: null, side: 'UNSPECIFIED', goal: 'UNSPECIFIED', reason: '症状语言优先于训练映射，请先确认是否就医，本工具不做诊断。' };
++  let side = 'UNSPECIFIED';
++  for (const mark of Object.keys(COORD.side_markers)) { if (text.startsWith(mark)) { side = COORD.side_markers[mark]; text = text.slice(mark.length); break; } }
++  let goal = 'UNSPECIFIED';
++  for (const mark of goalKeys) { if (text.endsWith(mark)) { goal = COORD.goal_markers[mark]; text = text.slice(0, -mark.length); break; } }
++  if (COORD.ambiguous_terms[text]) return { status: 'ASK_DISAMBIGUATION', target: null, side, goal, choices: COORD.ambiguous_terms[text].map(id => ({ id, kind: targets[id].kind })) };
++  if (COORD.recognized_out_of_sample.includes(text)) return { status: 'DEFER_OUT_OF_SAMPLE', target: null, side, goal };
++  const target = COORD.aliases[text] ?? null;
++  if (!target) return { status: 'NO_MATCH', target: null, side, goal };
++  const spec = targets[target];
++  const assetStatus = side === 'LEFT' ? 'NOT_MAPPED_LEFT' : side === 'RIGHT' ? spec.asset_completeness : 'SIDE_UNSPECIFIED';
++  return { status: side === 'LEFT' ? 'RESOLVED_ASSET_PENDING' : 'RESOLVED', target, side, goal, kind: spec.kind, assets: side === 'RIGHT' ? spec.right_assets : [], asset_status: assetStatus };
++}
++export function decorateMovementReferences(result, crosswalk) {
++  const map = crosswalk instanceof Map ? crosswalk : new Map((crosswalk?.mappings ?? []).map(x => [x.bp_representation_id, x]));
++  const crosswalkAvailable = map.size > 0;
++  const base = { ...result, asset_refs: [], crosswalk_available: crosswalkAvailable };
++  if (result?.status !== 'RESOLVED' || result.side !== 'RIGHT' || !targets[result.target]) return base;
++  return { ...base, asset_refs: targets[result.target].right_assets.map(bp => { const x = map.get(bp); return { bp_representation_id: bp, mesh_element_id: x?.mesh_element_id ?? null, obj_path: x?.obj_path ?? null }; }) };
++}
++export function targetLabel(id) { return targets[id]?.label ?? id; }
+diff --git a/portal/movement/movement-input.html b/portal/movement/movement-input.html
+index e69de29..c84aba3 100644
+--- a/portal/movement/movement-input.html
++++ b/portal/movement/movement-input.html
+@@ -0,0 +1,54 @@
++<!doctype html>
++<html lang="zh-CN">
++<head>
++<meta charset="utf-8" />
++<meta name="viewport" content="width=device-width, initial-scale=1" />
++<title>动起来 · 身体语言输入</title>
++<style>
++  :root { color-scheme: light dark; }
++  body { margin: 0; font: 15px/1.5 system-ui, sans-serif; background: #0f1115; color: #e8eaed; }
++  main { max-width: 720px; margin: 0 auto; padding: 24px 18px 64px; }
++  h1 { font-size: 22px; margin: 0 0 4px; }
++  .sub { color: #9aa0a6; margin: 0 0 18px; }
++  .row { display: flex; gap: 8px; }
++  input[type=text] { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #2a2f3a; background: #171b22; color: inherit; }
++  button { padding: 10px 14px; border-radius: 10px; border: 1px solid #2a2f3a; background: #232a36; color: inherit; cursor: pointer; }
++  button:hover { background: #2c3442; }
++  #result { margin-top: 18px; padding: 16px; border-radius: 12px; background: #171b22; border: 1px solid #2a2f3a; min-height: 60px; }
++  #result .headline { font-weight: 600; margin: 0 0 8px; }
++  #result .reason { color: #f0b429; }
++  #result .note { color: #9aa0a6; font-size: 13px; }
++  #result ul { padding-left: 18px; }
++  #result button { padding: 4px 10px; }
++  .viewer-link { color: #7fd1c0; }
++  .consent { display: flex; align-items: center; gap: 8px; margin: 18px 0 6px; color: #9aa0a6; font-size: 13px; }
++  .log-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0; }
++  #practice-log { list-style: none; margin: 8px 0 0; padding: 0; }
++  #practice-log li { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid #20242c; font-size: 13px; }
++  #practice-log .t { color: #6b7280; } #practice-log .q { color: #e8eaed; } #practice-log .s { color: #7fd1c0; text-align: right; }
++  #status-line { color: #6b7280; font-size: 12px; margin-top: 12px; }
++  code { background: #20242c; padding: 1px 5px; border-radius: 5px; }
++</style>
++</head>
++<body>
++<main>
++  <h1>动起来 · 身体语言输入</h1>
++  <p class="sub">用日常说法描述你想练或感觉不适的部位，系统映射到解剖坐标。本工具不做医疗诊断。</p>
++  <div class="row">
++    <input id="body-input" type="text" placeholder="例如：左二头、胳膊、肘麻、右前臂拉伸" autocomplete="off" />
++    <button id="resolve-btn">解析</button>
++  </div>
++  <div id="result" aria-live="polite"><p class="sub">输入一句话后点解析。</p></div>
++  <label class="consent"><input id="consent" type="checkbox" /> 允许在本机保存练习记录（可随时清除/导出）。</label>
++  <div class="log-tools">
++    <button id="export-log">导出</button>
++    <label><input id="import-log" type="file" accept="application/json" hidden /> 导入</label>
++    <button id="clear-log">清除</button>
++    <span>记录 <span id="log-count">0</span></span>
++  </div>
++  <ul id="practice-log"></ul>
++  <p id="status-line"></p>
++</main>
++<script type="module" src="./movement-input.js"></script>
++</body>
++</html>
+diff --git a/portal/movement/movement-input.js b/portal/movement/movement-input.js
+index e69de29..d76a175 100644
+--- a/portal/movement/movement-input.js
++++ b/portal/movement/movement-input.js
+@@ -0,0 +1,57 @@
++import { COORD, resolveMovementInput, decorateMovementReferences } from './movement-coordinate.js';
++const LOG_KEY = 'movement.practice.log.v1';
++const CONSENT_KEY = 'movement.practice.consent.v1';
++const $ = sel => document.querySelector(sel);
++const el = {
++  input: $('#body-input'), resolve: $('#resolve-btn'), out: $('#result'), log: $('#practice-log'),
++  count: $('#log-count'), consent: $('#consent'), clear: $('#clear-log'), export: $('#export-log'),
++  import: $('#import-log'), status: $('#status-line')
++};
++let crosswalk = null;
++const loadCrosswalk = async () => { try { const r = await fetch('./data/crosswalk.json'); if (r.ok) crosswalk = await r.json(); } catch { crosswalk = null; } };
++const readLog = () => { try { return JSON.parse(localStorage.getItem(LOG_KEY) ?? '[]'); } catch { return []; } };
++const writeLog = entries => { if (localStorage.getItem(CONSENT_KEY) === 'granted') localStorage.setItem(LOG_KEY, JSON.stringify(entries)); };
++const renderLog = () => {
++  const entries = readLog();
++  el.count.textContent = entries.length;
++  el.log.replaceChildren(...entries.slice(0, 24).map(e => {
++    const li = document.createElement('li');
++    li.innerHTML = `<span class="t">${new Date(e.at).toLocaleString()}</span><span class="q">${escapeHtml(e.raw)}</span><span class="s">${e.status}</span>`;
++    return li;
++  }));
++};
++const escapeHtml = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
++const render = result => {
++  const decorated = decorateMovementReferences(result, crosswalk);
++  const statusText = {
++    SAFETY_OR_SYMPTOM: '⚠️ 症状语言', ASK_DISAMBIGUATION: '❓ 需要澄清', DEFER_OUT_OF_SAMPLE: '🚧 暂未纳入样本',
++    NO_MATCH: '🔍 未识别', RESOLVED: '✅ 已定位', RESOLVED_ASSET_PENDING: '🕓 已定位（左侧资产待补）'
++  }[decorated.status] ?? decorated.status;
++  const parts = [];
++  parts.push(`<p class="headline">${statusText}</p>`);
++  if (decorated.reason) parts.push(`<p class="reason">${escapeHtml(decorated.reason)}</p>`);
++  if (decorated.side !== 'UNSPECIFIED') parts.push(`<p>侧别：${decorated.side === 'LEFT' ? '左' : '右'}${decorated.goal !== 'UNSPECIFIED' ? ` · 目标：${decorated.goal}` : ''}</p>`);
++  if (decorated.status === 'ASK_DISAMBIGUATION') parts.push(`<p class="disambig">你是指：</p><ul>${decorated.choices.map(c => `<li><button data-pick="${c.id}">${c.id}（${c.kind}）</button></li>`).join('')}</ul>`);
++  if (decorated.target) {
++    parts.push(`<p>解剖坐标：<strong>${decorated.target}</strong> · ${decorated.kind}</p>`);
++    if (decorated.asset_refs.length) {
++      parts.push(`<p>BP 表示引用：</p><ul>${decorated.asset_refs.map(a => `<li>${a.bp_representation_id}${a.mesh_element_id ? ` → ${a.mesh_element_id}` : ' → <em>网格待补</em>'}${a.obj_path ? ` · ${escapeHtml(a.obj_path)}` : ''}</li>`).join('')}</ul>`);
++      if (!decorated.crosswalk_available) parts.push(`<p class="note">尚未加载真实网格映射，故不显示网格编号（不伪造数据）。可在 <code>portal/movement/data/crosswalk.json</code> 提供后刷新。</p>`);
++    } else if (decorated.status === 'RESOLVED_ASSET_PENDING') parts.push(`<p class="note">该术语已识别，但当前仅映射右侧资产，左侧不借用右侧网格。</p>`);
++    parts.push(`<p><a class="viewer-link" href="../anatomy/index.html?q=${encodeURIComponent(decorated.target)}" target="_blank" rel="noreferrer">在解剖视图中探索 →</a></p>`);
++  }
++  el.out.innerHTML = parts.join('');
++  el.out.querySelectorAll('[data-pick]').forEach(btn => btn.addEventListener('click', () => { el.input.value = btn.dataset.pick; run(); }));
++  if (localStorage.getItem(CONSENT_KEY) === 'granted' && (decorated.target || decorated.status === 'SAFETY_OR_SYMPTOM' || decorated.status === 'ASK_DISAMBIGUATION')) {
++    const entries = readLog(); entries.unshift({ at: Date.now(), raw: el.input.value, status: decorated.status, target: decorated.target }); writeLog(entries.slice(0, 200)); renderLog();
++  }
++  el.status.textContent = `共 ${COORD.canonical_targets.length} 个解剖坐标 · 日志 ${readLog().length} 条`;
++};
++const run = () => { const raw = el.input.value.trim(); if (!raw) return; render(resolveMovementInput(raw)); };
++el.resolve.addEventListener('click', run);
++el.input.addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
++el.consent.addEventListener('change', () => { localStorage.setItem(CONSENT_KEY, el.consent.checked ? 'granted' : 'revoked'); if (!el.consent.checked) { localStorage.removeItem(LOG_KEY); renderLog(); } renderLog(); });
++el.clear.addEventListener('click', () => { writeLog([]); localStorage.removeItem(LOG_KEY); renderLog(); });
++el.export.addEventListener('click', () => { const blob = new Blob([JSON.stringify(readLog(), null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'movement-practice-log.json'; a.click(); });
++el.import.addEventListener('change', async () => { const f = el.import.files[0]; if (!f) return; try { const data = JSON.parse(await f.text()); if (Array.isArray(data)) { writeLog(data); renderLog(); } } catch { /* ignore malformed */ } });
++(async () => { el.consent.checked = localStorage.getItem(CONSENT_KEY) === 'granted'; await loadCrosswalk(); renderLog(); el.status.textContent = `共 ${COORD.canonical_targets.length} 个解剖坐标 · 日志 ${readLog().length} 条`; })();
+diff --git a/research/movement/common-human-coordinate-asset-reference-decorator-v0.2.mjs b/research/movement/common-human-coordinate-asset-reference-decorator-v0.2.mjs
+index c281de4..7437e88 100644
+--- a/research/movement/common-human-coordinate-asset-reference-decorator-v0.2.mjs
++++ b/research/movement/common-human-coordinate-asset-reference-decorator-v0.2.mjs
+@@ -1,15 +1,26 @@
+ import fs from 'node:fs';
++import {pathToFileURL} from 'node:url';
+ const crosswalk=JSON.parse(fs.readFileSync(new URL('./bodyparts3d-upper-limb-id-crosswalk-v0.1.json',import.meta.url),'utf8'));
+ const cases=JSON.parse(fs.readFileSync(new URL('./common-human-coordinate-asset-reference-cases-v0.2.json',import.meta.url),'utf8'));
+ const targetBp={MUSCLE_BICEPS_BRACHII:['BP5558','BP5566'],JOINT_ELBOW:['BP9206','BP8464','BP8233'],REGION_FOREARM:['BP8464','BP8233'],REGION_UPPER_ARM:['BP9206','BP5558','BP5566']};
+-const byBp=new Map(crosswalk.mappings.map(x=>[x.bp_representation_id,x]));
+-export function decorateAssetReferences(result){const base={...result,asset_refs:[]};if(result?.status!=='RESOLVED'||result.side!=='RIGHT'||!targetBp[result.target])return base;return{...base,asset_refs:targetBp[result.target].map(bp=>{const x=byBp.get(bp);return{bp_representation_id:bp,mesh_element_id:x?.mesh_element_id??null,obj_path:x?.obj_path??null}})}}
+-const results=cases.cases.map(c=>{const actual=decorateAssetReferences(c.input);return{id:c.id,pass:actual.asset_refs.length===c.expected_count&&actual.asset_refs.map(x=>x.mesh_element_id).join(',')===c.expected_mesh_ids.join(','),actual}});
+-const checks=[];const check=(name,pass,detail)=>checks.push({name,pass:Boolean(pass),detail});
+-check('four canonical targets covered',Object.keys(targetBp).length===4,targetBp);
+-check('right biceps resolves both heads',decorateAssetReferences({status:'RESOLVED',target:'MUSCLE_BICEPS_BRACHII',side:'RIGHT'}).asset_refs.length===2,null);
+-check('left never borrows right assets',decorateAssetReferences({status:'RESOLVED_ASSET_PENDING',target:'MUSCLE_BICEPS_BRACHII',side:'LEFT'}).asset_refs.length===0,null);
+-check('unspecified side stays asset-free',decorateAssetReferences({status:'RESOLVED',target:'MUSCLE_BICEPS_BRACHII',side:'UNSPECIFIED'}).asset_refs.length===0,null);
+-check('all resolved paths use FJ mesh ids',Object.values(targetBp).flat().every(bp=>/^FJ\d+$/u.test(byBp.get(bp)?.mesh_element_id??'')),crosswalk.mappings);
+-check('six decorator cases pass',results.length===6&&results.every(x=>x.pass),results);
+-const passed=checks.filter(x=>x.pass).length;console.log(JSON.stringify({validator:'COMMON-HUMAN-COORDINATE-ASSET-REFERENCE-DECORATOR-V0.2',passed,total:checks.length,checks,case_results:results},null,2));if(passed!==checks.length)process.exit(1);
++export function createDecorator(sourceCrosswalk){
++  const byBp=new Map(sourceCrosswalk.mappings.map(x=>[x.bp_representation_id,x]));
++  return function decorateAssetReferences(result){
++    const base={...result,asset_refs:[]};
++    if(result?.status!=='RESOLVED'||result.side!=='RIGHT'||!targetBp[result.target])return base;
++    return{...base,asset_refs:targetBp[result.target].map(bp=>{const x=byBp.get(bp);return{bp_representation_id:bp,mesh_element_id:x?.mesh_element_id??null,obj_path:x?.obj_path??null}})};
++  };
++}
++export const decorateAssetReferences=createDecorator(crosswalk);
++function runCli(){
++  const results=cases.cases.map(c=>{const actual=decorateAssetReferences(c.input);return{id:c.id,pass:actual.asset_refs.length===c.expected_count&&actual.asset_refs.map(x=>x.mesh_element_id).join(',')===c.expected_mesh_ids.join(','),actual}});
++  const checks=[];const check=(name,pass,detail)=>checks.push({name,pass:Boolean(pass),detail});
++  check('four canonical targets covered',Object.keys(targetBp).length===4,targetBp);
++  check('right biceps resolves both heads',decorateAssetReferences({status:'RESOLVED',target:'MUSCLE_BICEPS_BRACHII',side:'RIGHT'}).asset_refs.length===2,null);
++  check('left never borrows right assets',decorateAssetReferences({status:'RESOLVED_ASSET_PENDING',target:'MUSCLE_BICEPS_BRACHII',side:'LEFT'}).asset_refs.length===0,null);
++  check('unspecified side stays asset-free',decorateAssetReferences({status:'RESOLVED',target:'MUSCLE_BICEPS_BRACHII',side:'UNSPECIFIED'}).asset_refs.length===0,null);
++  check('all resolved paths use FJ mesh ids',Object.values(targetBp).flat().every(bp=>/^FJ\d+$/u.test(crosswalk.mappings.find(x=>x.bp_representation_id===bp)?.mesh_element_id??'')),crosswalk.mappings);
++  check('six decorator cases pass',results.length===6&&results.every(x=>x.pass),results);
++  const passed=checks.filter(x=>x.pass).length;console.log(JSON.stringify({validator:'COMMON-HUMAN-COORDINATE-ASSET-REFERENCE-DECORATOR-V0.2',passed,total:checks.length,checks,case_results:results},null,2));if(passed!==checks.length)process.exit(1);
++}
++if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)runCli();
+diff --git a/research/movement/common-human-coordinate-upper-limb-resolver-v0.1.mjs b/research/movement/common-human-coordinate-upper-limb-resolver-v0.1.mjs
+index 4e94c9a..e3895d6 100644
+--- a/research/movement/common-human-coordinate-upper-limb-resolver-v0.1.mjs
++++ b/research/movement/common-human-coordinate-upper-limb-resolver-v0.1.mjs
+@@ -1,35 +1,43 @@
+ import fs from 'node:fs';
++import {pathToFileURL} from 'node:url';
+ const map=JSON.parse(fs.readFileSync(new URL('./common-human-coordinate-upper-limb-alias-map-v0.1.json',import.meta.url),'utf8'));
+ const suite=JSON.parse(fs.readFileSync(new URL('./common-human-coordinate-upper-limb-alias-cases-v0.1.json',import.meta.url),'utf8'));
+-const targets=Object.fromEntries(map.canonical_targets.map(x=>[x.id,x]));
+-export function resolveBodyInput(raw){
+-  const original=String(raw??'');let text=original.normalize('NFKC').replace(/\s+/g,'');
+-  if(map.symptom_markers.some(x=>text.includes(x)))return{status:'SAFETY_OR_SYMPTOM',target:null,side:'UNSPECIFIED',goal:'UNSPECIFIED',reason:'symptom language takes precedence over exercise mapping'};
+-  let side='UNSPECIFIED';for(const [mark,value] of Object.entries(map.side_markers)){if(text.startsWith(mark)){side=value;text=text.slice(mark.length);break}}
+-  let goal='UNSPECIFIED';for(const [mark,value] of Object.entries(map.goal_markers)){if(text.endsWith(mark)){goal=value;text=text.slice(0,-mark.length);break}}
+-  if(map.ambiguous_terms[text])return{status:'ASK_DISAMBIGUATION',target:null,side,goal,choices:map.ambiguous_terms[text]};
+-  if(map.recognized_out_of_sample.includes(text))return{status:'DEFER_OUT_OF_SAMPLE',target:null,side,goal};
+-  const target=map.aliases[text]??null;
+-  if(!target)return{status:'NO_MATCH',target:null,side,goal};
+-  const spec=targets[target];
+-  const assetStatus=side==='LEFT'?'NOT_MAPPED_LEFT':side==='RIGHT'?spec.asset_completeness:'SIDE_UNSPECIFIED';
+-  return{status:side==='LEFT'?'RESOLVED_ASSET_PENDING':'RESOLVED',target,side,goal,kind:spec.kind,assets:side==='RIGHT'?spec.right_assets:[],asset_status:assetStatus};
++export function createResolver(sourceMap){
++  const targets=Object.fromEntries(sourceMap.canonical_targets.map(x=>[x.id,x]));
++  return function resolveBodyInput(raw){
++    const original=String(raw??'');let text=original.normalize('NFKC').replace(/\s+/g,'');
++    if(sourceMap.symptom_markers.some(x=>text.includes(x)))return{status:'SAFETY_OR_SYMPTOM',target:null,side:'UNSPECIFIED',goal:'UNSPECIFIED',reason:'symptom language takes precedence over exercise mapping'};
++    let side='UNSPECIFIED';for(const [mark,value] of Object.entries(sourceMap.side_markers)){if(text.startsWith(mark)){side=value;text=text.slice(mark.length);break}}
++    let goal='UNSPECIFIED';for(const [mark,value] of Object.entries(sourceMap.goal_markers)){if(text.endsWith(mark)){goal=value;text=text.slice(0,-mark.length);break}}
++    if(sourceMap.ambiguous_terms[text])return{status:'ASK_DISAMBIGUATION',target:null,side,goal,choices:sourceMap.ambiguous_terms[text]};
++    if(sourceMap.recognized_out_of_sample.includes(text))return{status:'DEFER_OUT_OF_SAMPLE',target:null,side,goal};
++    const target=sourceMap.aliases[text]??null;
++    if(!target)return{status:'NO_MATCH',target:null,side,goal};
++    const spec=targets[target];
++    const assetStatus=side==='LEFT'?'NOT_MAPPED_LEFT':side==='RIGHT'?spec.asset_completeness:'SIDE_UNSPECIFIED';
++    return{status:side==='LEFT'?'RESOLVED_ASSET_PENDING':'RESOLVED',target,side,goal,kind:spec.kind,assets:side==='RIGHT'?spec.right_assets:[],asset_status:assetStatus};
++  };
+ }
+-const results=suite.cases.map(c=>{const actual=resolveBodyInput(c.input);return{id:c.id,input:c.input,expected:{status:c.expected_status,target:c.expected_target,side:c.expected_side,goal:c.expected_goal},actual,pass:actual.status===c.expected_status&&actual.target===c.expected_target&&actual.side===c.expected_side&&actual.goal===c.expected_goal}});
+-const checks=[
+-  {name:'task id preserved',pass:map.task_id==='COMMON-HUMAN-COORDINATE',detail:map.task_id},
+-  {name:'four canonical targets',pass:map.canonical_targets.length===4,detail:map.canonical_targets.map(x=>x.id)},
+-  {name:'biceps is two-head composite',pass:targets.MUSCLE_BICEPS_BRACHII.kind==='COMPOSITE_MUSCLE'&&targets.MUSCLE_BICEPS_BRACHII.right_assets.length===2,detail:targets.MUSCLE_BICEPS_BRACHII},
+-  {name:'forearm is region not muscle',pass:targets.REGION_FOREARM.kind==='ANATOMICAL_REGION'&&targets.REGION_FOREARM.asset_completeness==='PARTIAL_BONY_SUBSET',detail:targets.REGION_FOREARM},
+-  {name:'broad arm terms require disambiguation',pass:['胳膊','手臂'].every(x=>Array.isArray(map.ambiguous_terms[x])),detail:map.ambiguous_terms},
+-  {name:'symptom routing precedes exercise mapping',pass:resolveBodyInput('二头疼').status==='SAFETY_OR_SYMPTOM'&&resolveBodyInput('肘麻').status==='SAFETY_OR_SYMPTOM',detail:[resolveBodyInput('二头疼'),resolveBodyInput('肘麻')]},
+-  {name:'unspecified side stays unspecified',pass:resolveBodyInput('二头').side==='UNSPECIFIED'&&resolveBodyInput('二头').assets.length===0,detail:resolveBodyInput('二头')},
+-  {name:'left known term does not borrow right assets',pass:resolveBodyInput('左肱二头肌').status==='RESOLVED_ASSET_PENDING'&&resolveBodyInput('左肱二头肌').assets.length===0,detail:resolveBodyInput('左肱二头肌')},
+-  {name:'twelve cases executed',pass:results.length===12,detail:results.length},
+-  {name:'all expected outcomes matched',pass:results.every(x=>x.pass),detail:results},
+-  {name:'page integration not falsely claimed',pass:map.acceptance.page_integration===false&&map.acceptance.public_readback===false,detail:map.acceptance},
+-  {name:'strict mainline unchanged',pass:map.acceptance.mainline_before==='2/4'&&map.acceptance.mainline_after==='2/4',detail:map.acceptance}
+-];
+-const passed=checks.filter(x=>x.pass).length;
+-console.log(JSON.stringify({validator:'COMMON-HUMAN-COORDINATE-UPPER-LIMB-RESOLVER-V0.1',passed,total:checks.length,checks,case_results:results},null,2));
+-if(passed!==checks.length)process.exit(1);
++export const resolveBodyInput=createResolver(map);
++function runCli(){
++  const targets=Object.fromEntries(map.canonical_targets.map(x=>[x.id,x]));
++  const results=suite.cases.map(c=>{const actual=resolveBodyInput(c.input);return{id:c.id,input:c.input,expected:{status:c.expected_status,target:c.expected_target,side:c.expected_side,goal:c.expected_goal},actual,pass:actual.status===c.expected_status&&actual.target===c.expected_target&&actual.side===c.expected_side&&actual.goal===c.expected_goal}});
++  const checks=[
++    {name:'task id preserved',pass:map.task_id==='COMMON-HUMAN-COORDINATE',detail:map.task_id},
++    {name:'four canonical targets',pass:map.canonical_targets.length===4,detail:map.canonical_targets.map(x=>x.id)},
++    {name:'biceps is two-head composite',pass:targets.MUSCLE_BICEPS_BRACHII.kind==='COMPOSITE_MUSCLE'&&targets.MUSCLE_BICEPS_BRACHII.right_assets.length===2,detail:targets.MUSCLE_BICEPS_BRACHII},
++    {name:'forearm is region not muscle',pass:targets.REGION_FOREARM.kind==='ANATOMICAL_REGION'&&targets.REGION_FOREARM.asset_completeness==='PARTIAL_BONY_SUBSET',detail:targets.REGION_FOREARM},
++    {name:'broad arm terms require disambiguation',pass:['胳膊','手臂'].every(x=>Array.isArray(map.ambiguous_terms[x])),detail:map.ambiguous_terms},
++    {name:'symptom routing precedes exercise mapping',pass:resolveBodyInput('二头疼').status==='SAFETY_OR_SYMPTOM'&&resolveBodyInput('肘麻').status==='SAFETY_OR_SYMPTOM',detail:[resolveBodyInput('二头疼'),resolveBodyInput('肘麻')]},
++    {name:'unspecified side stays unspecified',pass:resolveBodyInput('二头').side==='UNSPECIFIED'&&resolveBodyInput('二头').assets.length===0,detail:resolveBodyInput('二头')},
++    {name:'left known term does not borrow right assets',pass:resolveBodyInput('左肱二头肌').status==='RESOLVED_ASSET_PENDING'&&resolveBodyInput('左肱二头肌').assets.length===0,detail:resolveBodyInput('左肱二头肌')},
++    {name:'twelve cases executed',pass:results.length===12,detail:results.length},
++    {name:'all expected outcomes matched',pass:results.every(x=>x.pass),detail:results},
++    {name:'page integration not falsely claimed',pass:map.acceptance.page_integration===false&&map.acceptance.public_readback===false,detail:map.acceptance},
++    {name:'strict mainline unchanged',pass:map.acceptance.mainline_before==='2/4'&&map.acceptance.mainline_after==='2/4',detail:map.acceptance}
++  ];
++  const passed=checks.filter(x=>x.pass).length;
++  console.log(JSON.stringify({validator:'COMMON-HUMAN-COORDINATE-UPPER-LIMB-RESOLVER-V0.1',passed,total:checks.length,checks,case_results:results},null,2));
++  if(passed!==checks.length)process.exit(1);
++}
++if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)runCli();
+diff --git a/research/movement/testset-02-movement-input-engine-v0.1.mjs b/research/movement/testset-02-movement-input-engine-v0.1.mjs
+index e69de29..00ca513 100644
+--- a/research/movement/testset-02-movement-input-engine-v0.1.mjs
++++ b/research/movement/testset-02-movement-input-engine-v0.1.mjs
+@@ -0,0 +1,20 @@
++import assert from 'node:assert/strict';
++import { resolveMovementInput, decorateMovementReferences, COORD } from '../../portal/movement/movement-coordinate.js';
++const checks = [];
++const check = (name, fn) => { try { fn(); checks.push({ name, pass: true }); } catch (e) { checks.push({ name, pass: false, error: String(e.message) }); } };
++check('task id preserved', () => assert.equal(COORD.task_id, 'COMMON-HUMAN-COORDINATE'));
++check('four canonical targets', () => assert.equal(COORD.canonical_targets.length, 4));
++check('symptom precedence over exercise', () => { assert.equal(resolveMovementInput('二头疼').status, 'SAFETY_OR_SYMPTOM'); assert.equal(resolveMovementInput('肘麻').status, 'SAFETY_OR_SYMPTOM'); });
++check('broad arm term disambiguates', () => { const r = resolveMovementInput('胳膊'); assert.equal(r.status, 'ASK_DISAMBIGUATION'); assert.ok(Array.isArray(r.choices) && r.choices.length >= 2); });
++check('unspecified side yields no assets', () => { const r = resolveMovementInput('二头'); assert.equal(r.side, 'UNSPECIFIED'); assert.equal(r.assets.length, 0); });
++check('right side resolves with BP refs', () => { const r = resolveMovementInput('右肱二头肌'); assert.equal(r.status, 'RESOLVED'); assert.equal(r.target, 'MUSCLE_BICEPS_BRACHII'); assert.equal(r.assets.length, 2); });
++check('goal suffix parsed', () => { assert.equal(resolveMovementInput('右前臂拉伸').goal, 'MOBILITY'); });
++check('left does not borrow right assets', () => { const r = resolveMovementInput('左肱二头肌'); assert.equal(r.status, 'RESOLVED_ASSET_PENDING'); assert.equal(r.assets.length, 0); });
++check('out-of-sample deferred', () => assert.equal(resolveMovementInput('肩').status, 'DEFER_OUT_OF_SAMPLE'));
++check('unknown term no match', () => assert.equal(resolveMovementInput('随便乱码xyz').status, 'NO_MATCH'));
++check('asset decoration without crosswalk does not fabricate', () => { const r = resolveMovementInput('右肱二头肌'); const d = decorateMovementReferences(r, null); assert.equal(d.crosswalk_available, false); assert.equal(d.asset_refs.length, 2); assert.ok(d.asset_refs.every(a => a.mesh_element_id === null)); });
++check('asset decoration maps real crosswalk when supplied', () => { const r = resolveMovementInput('右肱二头肌'); const fixture = { mappings: [{ bp_representation_id: 'BP5558', mesh_element_id: 'TEST-FJ0001', obj_path: 'test/a.obj' }, { bp_representation_id: 'BP5566', mesh_element_id: 'TEST-FJ0002', obj_path: 'test/b.obj' }] }; const d = decorateMovementReferences(r, fixture); assert.equal(d.crosswalk_available, true); assert.equal(d.asset_refs.map(a => a.mesh_element_id).join(','), 'TEST-FJ0001,TEST-FJ0002'); });
++check('left pending has empty asset refs', () => { const d = decorateMovementReferences(resolveMovementInput('左肱二头肌'), { mappings: [] }); assert.equal(d.asset_refs.length, 0); });
++const passed = checks.filter(c => c.pass).length;
++console.log(JSON.stringify({ validator: 'TESTSET-02-MOVEMENT-INPUT-ENGINE-V0.1', passed, total: checks.length, checks }, null, 2));
++if (passed !== checks.length) process.exit(1);

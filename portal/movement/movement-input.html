@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>动起来 · 身体语言输入</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; font: 15px/1.5 system-ui, sans-serif; background: #0f1115; color: #e8eaed; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 18px 64px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: #9aa0a6; margin: 0 0 18px; }
+  .row { display: flex; gap: 8px; }
+  input[type=text] { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #2a2f3a; background: #171b22; color: inherit; }
+  button { padding: 10px 14px; border-radius: 10px; border: 1px solid #2a2f3a; background: #232a36; color: inherit; cursor: pointer; }
+  button:hover { background: #2c3442; }
+  #result { margin-top: 18px; padding: 16px; border-radius: 12px; background: #171b22; border: 1px solid #2a2f3a; min-height: 60px; }
+  #result .headline { font-weight: 600; margin: 0 0 8px; }
+  #result .reason { color: #f0b429; }
+  #result .note { color: #9aa0a6; font-size: 13px; }
+  #result ul { padding-left: 18px; }
+  #result button { padding: 4px 10px; }
+  .viewer-link { color: #7fd1c0; }
+  .consent { display: flex; align-items: center; gap: 8px; margin: 18px 0 6px; color: #9aa0a6; font-size: 13px; }
+  .log-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0; }
+  #practice-log { list-style: none; margin: 8px 0 0; padding: 0; }
+  #practice-log li { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid #20242c; font-size: 13px; }
+  #practice-log .t { color: #6b7280; } #practice-log .q { color: #e8eaed; } #practice-log .s { color: #7fd1c0; text-align: right; }
+  #status-line { color: #6b7280; font-size: 12px; margin-top: 12px; }
+  code { background: #20242c; padding: 1px 5px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>动起来 · 身体语言输入</h1>
+  <p class="sub">用日常说法描述你想练或感觉不适的部位，系统映射到解剖坐标。本工具不做医疗诊断。</p>
+  <div class="row">
+    <input id="body-input" type="text" placeholder="例如：左二头、胳膊、肘麻、右前臂拉伸" autocomplete="off" />
+    <button id="resolve-btn">解析</button>
+  </div>
+  <div id="result" aria-live="polite"><p class="sub">输入一句话后点解析。</p></div>
+  <label class="consent"><input id="consent" type="checkbox" /> 允许在本机保存练习记录（可随时清除/导出）。</label>
+  <div class="log-tools">
+    <button id="export-log">导出</button>
+    <label><input id="import-log" type="file" accept="application/json" hidden /> 导入</label>
+    <button id="clear-log">清除</button>
+    <span>记录 <span id="log-count">0</span></span>
+  </div>
+  <ul id="practice-log"></ul>
+  <p id="status-line"></p>
+</main>
+<script type="module" src="./movement-input.js"></script>
+</body>
+</html>
