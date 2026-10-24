@@ -28,7 +28,7 @@ jobs:
         include:
           - actor: Q博士
             provider: q
-            model: qwen-coder-plus-latest
+            model: qwen3-coder-plus
             base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
           - actor: D博士
             provider: d
@@ -49,6 +49,7 @@ jobs:
           git ls-files > /tmp/dq-movement/repository-files.txt
 
       - name: ${{ matrix.actor }} independently designs and implements Movement
+        if: github.event_name != 'push' || matrix.provider == 'q'
         uses: QwenLM/qwen-code-action@v1
         with:
           openai_api_key: ${{ matrix.provider == 'q' && secrets.DASHSCOPE_API_KEY || secrets.DEEPSEEK_API_KEY }}
@@ -74,6 +75,7 @@ jobs:
             personal-data consent. Raise product trade-offs to the user, not C博士.
 
       - name: Enforce only repository-safety boundaries
+        if: github.event_name != 'push' || matrix.provider == 'q'
         run: |
           python3 - <<'PY'
           import pathlib, subprocess
@@ -99,6 +101,7 @@ jobs:
           git diff --binary > "artifacts/dq-movement/${{ matrix.provider }}/product.patch"
 
       - name: Publish independent work as an isolated draft PR
+        if: github.event_name != 'push' || matrix.provider == 'q'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
