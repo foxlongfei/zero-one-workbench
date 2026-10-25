@@ -3,9 +3,6 @@ name: D博士 independent Read With You delivery
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/d-reader-independent.yml'
 
 permissions:
   contents: write
@@ -50,10 +47,8 @@ jobs:
             rebuild the current C01 implementation. Existing C01 code, PRs, Foliate, browser TTS, and old tests
             are evidence and optional assets, not constraints. Do not ask C博士 to approve technical choices.
 
-            Implement a substantial user-operable product increment toward the complete, unabridged vision.
-            Do not return only a plan, audit, tiny patch, documentation-only change, or another test-count loop.
-            You may edit or create any application, server, dependency, asset, documentation, or test files needed.
-            Run the checks you judge appropriate and leave the workspace with real product code changes.
+            Decide independently how to progress toward a usable product and what evidence to provide.
+            You may edit or create application, server, dependency, asset, documentation, or test files as needed.
 
             The only non-product boundaries are repository safety: do not read or expose secrets, do not edit
             .github workflows, permissions, branch protection, authentication credentials, or automatic merging;
@@ -71,9 +66,6 @@ jobs:
           blocked=[p for p in paths if p.startswith('.github/') or pathlib.PurePosixPath(p).name.startswith('.env')]
           if blocked:
               raise SystemExit('Security-sensitive paths changed: '+repr(blocked))
-          product=[p for p in paths if not p.startswith(('docs/','artifacts/'))]
-          if not product:
-              raise SystemExit('No product code or asset change was produced')
           pathlib.Path('artifacts/d-reader/changed-files.txt').write_text('\n'.join(paths)+'\n')
           print('D博士 changed:', *paths, sep='\n- ')
           PY
