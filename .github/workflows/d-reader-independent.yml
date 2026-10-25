@@ -1,0 +1,113 @@
+name: D博士 independent Read With You delivery
+# continuation: 2026-10-24; D owns product decisions, C only repairs the execution channel
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/d-reader-independent.yml'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: d-reader-independent-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Preserve the complete user brief and repository context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/d-reader artifacts/d-reader
+          gh issue view 42 --json title,body,comments > /tmp/d-reader/issue-42.json
+          git ls-files > /tmp/d-reader/repository-files.txt
+
+      - name: D博士 independently designs and implements the product
+        uses: QwenLM/qwen-code-action@v1
+        with:
+          openai_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
+          openai_base_url: https://api.deepseek.com/v1
+          openai_model: deepseek-chat
+          prompt: |
+            You are D博士, the independent product and engineering owner of “陪你读书 / Read With You”.
+            The user—not C博士—defines the complete product vision. Read /tmp/d-reader/issue-42.json in full,
+            including its history and latest authorization, then inspect the entire repository and its history.
+
+            You have full authority over product design, architecture, open-source selection, dependencies,
+            user experience, implementation order, and tests. You may preserve, replace, remove, or completely
+            rebuild the current C01 implementation. Existing C01 code, PRs, Foliate, browser TTS, and old tests
+            are evidence and optional assets, not constraints. Do not ask C博士 to approve technical choices.
+
+            Implement a substantial user-operable product increment toward the complete, unabridged vision.
+            Do not return only a plan, audit, tiny patch, documentation-only change, or another test-count loop.
+            You may edit or create any application, server, dependency, asset, documentation, or test files needed.
+            Run the checks you judge appropriate and leave the workspace with real product code changes.
+
+            The only non-product boundaries are repository safety: do not read or expose secrets, do not edit
+            .github workflows, permissions, branch protection, authentication credentials, or automatic merging;
+            do not include unlicensed copyrighted books, music, or voices; do not perform voice cloning without
+            the speaker's explicit authorization. State any unresolved product trade-off for the user, not C博士.
+
+      - name: Enforce only repository-safety boundaries
+        run: |
+          python3 - <<'PY'
+          import pathlib, subprocess
+          lines=subprocess.check_output(['git','status','--porcelain','--untracked-files=all'],text=True).splitlines()
+          paths=[line[3:] for line in lines]
+          if not paths:
+              raise SystemExit('D博士 produced no repository change')
+          blocked=[p for p in paths if p.startswith('.github/') or pathlib.PurePosixPath(p).name.startswith('.env')]
+          if blocked:
+              raise SystemExit('Security-sensitive paths changed: '+repr(blocked))
+          product=[p for p in paths if not p.startswith(('docs/','artifacts/'))]
+          if not product:
+              raise SystemExit('No product code or asset change was produced')
+          pathlib.Path('artifacts/d-reader/changed-files.txt').write_text('\n'.join(paths)+'\n')
+          print('D博士 changed:', *paths, sep='\n- ')
+          PY
+          git diff --check
+          while IFS= read -r file; do
+            case "$file" in
+              *.js|*.mjs|*.cjs) node --check "$file" ;;
+            esac
+          done < <(git diff --name-only --diff-filter=ACM)
+          git diff --binary > artifacts/d-reader/product.patch
+
+      - name: Publish D博士 work as an isolated draft PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "D博士 automation"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BASE_BRANCH="${GITHUB_REF_NAME}"
+          [[ "$GITHUB_EVENT_NAME" == "schedule" || "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] && BASE_BRANCH=main
+          BRANCH="d-reader/independent-${GITHUB_RUN_ID}"
+          git switch -c "$BRANCH"
+          git add -A ':!.github'
+          git diff --cached --quiet && { echo 'No product changes to publish'; exit 1; }
+          git commit -m "D博士: independent Read With You product increment ${GITHUB_RUN_ID}"
+          git push origin "$BRANCH"
+          URL=$(gh pr create --draft --base "$BASE_BRANCH" --head "$BRANCH" \
+            --title "D博士｜陪你读书独立产品增量 #${GITHUB_RUN_ID}" \
+            --body "D博士依据 Issue #42 完整需求自主选择并实现；C博士未规定技术路线、文件范围、旧测试或功能顺序。请直接审阅产品取舍与可操作结果。未自动合并。Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}")
+          gh issue comment 42 --body "D博士独立执行已产生代码与草稿 PR：${URL}。运行证据：${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}。C博士未修改产品代码；未自动合并。"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: d-reader-independent-${{ github.run_id }}
+          path: artifacts/d-reader/
+          retention-days: 30
+

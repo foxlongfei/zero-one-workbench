@@ -1,0 +1,170 @@
+name: D and Q independent Movement delivery
+# activation: 2026-10-24 independent product channels
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/dq-movement-independent.yml'
+  schedule:
+    - cron: '41 3 * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: dq-movement-independent-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - actor: Q博士
+            provider: q
+            model: qwen3.8-flash
+            base_url: https://ws-6iu14ig5jvyp9gev.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+          - actor: D博士
+            provider: d
+            model: deepseek-chat
+            base_url: https://api.deepseek.com/v1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Preserve the complete movement brief and repository context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/dq-movement "artifacts/dq-movement/${{ matrix.provider }}"
+          gh issue view 3 --json title,body,comments > /tmp/dq-movement/issue-3.json
+          git ls-files > /tmp/dq-movement/repository-files.txt
+
+      - name: Set up the historically proven Q execution path
+        if: matrix.provider == 'q'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install pinned Aider for Q博士
+        if: matrix.provider == 'q'
+        run: python -m pip install 'aider-chat==0.86.1'
+
+      - name: Q博士 independently designs and implements Movement
+        if: matrix.provider == 'q'
+        env:
+          OPENAI_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          OPENAI_API_BASE: ${{ matrix.base_url }}
+          AIDER_ANALYTICS: 'false'
+          AIDER_CHECK_UPDATE: 'false'
+        run: |
+          cat > /tmp/q-movement-prompt.txt <<'PROMPT'
+          You are Q博士, an independent product and engineering owner of “动起来 / Movement”.
+          Read /tmp/dq-movement/issue-3.json in full, including the latest user correction, then inspect the
+          whole repository and its history. The full project is not a MediaPipe demo and is not limited to an
+          old A01 PR, push-ups, a fixed engine, a prescribed sequence, or C博士's test-count loop.
+
+          You have full authority over product design, architecture, mature open-source foundations,
+          dependencies, user experience, implementation order, and tests. You may preserve, replace, remove,
+          or rebuild existing Movement code. Do not ask C博士 to approve technical choices. Independently
+          implement a substantial user-operable product increment toward the complete Movement vision for
+          real people and long-term physical practice. Do not return only a plan, audit, tiny patch,
+          documentation-only change, or another test-count loop. You may edit or create any application,
+          server, dependency, asset, documentation, or test files needed and run checks you judge appropriate.
+
+          The only non-product boundaries are repository and user safety: do not read or expose secrets; do
+          not edit .github workflows, permissions, branch protection, credentials, or automatic merging; do
+          not present medical diagnosis or fabricate model/data results; preserve applicable licenses and
+          personal-data consent. Raise product trade-offs to the user, not C博士.
+          PROMPT
+          test -n "$OPENAI_API_KEY" || { echo "::error::DASHSCOPE_API_KEY is missing"; exit 1; }
+          timeout 1500s aider --model "openai/${{ matrix.model }}" --message-file /tmp/q-movement-prompt.txt \
+            --yes --no-auto-commits --no-auto-test --no-auto-lint --no-stream \
+            --map-tokens 8192 --no-check-update --no-show-model-warnings
+
+      - name: D博士 independently designs and implements Movement
+        if: matrix.provider == 'd' && github.event_name != 'push'
+        uses: QwenLM/qwen-code-action@v1
+        with:
+          openai_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
+          openai_base_url: ${{ matrix.base_url }}
+          openai_model: ${{ matrix.model }}
+          prompt: |
+            You are D博士, an independent product and engineering owner of “动起来 / Movement”.
+            Read /tmp/dq-movement/issue-3.json in full, including the latest user correction, then inspect the
+            whole repository and its history. The full project is not a MediaPipe demo and is not limited to an
+            old A01 PR, push-ups, a fixed engine, a prescribed sequence, or C博士's test-count loop.
+
+            You have full authority over product design, architecture, mature open-source foundations,
+            dependencies, user experience, implementation order, and tests. You may preserve, replace, remove,
+            or rebuild existing Movement code. Do not ask C博士 to approve technical choices. Independently
+            implement a substantial user-operable product increment toward the complete Movement vision for
+            real people and long-term physical practice. Do not return only a plan, audit, tiny patch,
+            documentation-only change, or another test-count loop. You may edit or create any application,
+            server, dependency, asset, documentation, or test files needed and run checks you judge appropriate.
+
+            The only non-product boundaries are repository and user safety: do not read or expose secrets; do
+            not edit .github workflows, permissions, branch protection, credentials, or automatic merging; do
+            not present medical diagnosis or fabricate model/data results; preserve applicable licenses and
+            personal-data consent. Raise product trade-offs to the user, not C博士.
+
+      - name: Enforce only repository-safety boundaries
+        if: github.event_name != 'push' || matrix.provider == 'q'
+        run: |
+          python3 - <<'PY'
+          import pathlib, subprocess
+          lines=subprocess.check_output(['git','status','--porcelain','--untracked-files=all'],text=True).splitlines()
+          paths=[line[3:] for line in lines]
+          if not paths:
+              raise SystemExit('${{ matrix.actor }} produced no repository change')
+          blocked=[p for p in paths if p.startswith('.github/') or pathlib.PurePosixPath(p).name.startswith('.env')]
+          if blocked:
+              raise SystemExit('Security-sensitive paths changed: '+repr(blocked))
+          product=[p for p in paths if not p.startswith(('docs/','artifacts/'))]
+          if not product:
+              raise SystemExit('No product code or asset change was produced')
+          pathlib.Path('artifacts/dq-movement/${{ matrix.provider }}/changed-files.txt').write_text('\n'.join(paths)+'\n')
+          print('${{ matrix.actor }} changed:', *paths, sep='\n- ')
+          PY
+          git diff --check
+          while IFS= read -r file; do
+            case "$file" in
+              *.js|*.mjs|*.cjs) node --check "$file" ;;
+            esac
+          done < <(git diff --name-only --diff-filter=ACM)
+          git diff --binary > "artifacts/dq-movement/${{ matrix.provider }}/product.patch"
+
+      - name: Publish independent work as an isolated draft PR
+        if: github.event_name != 'push' || matrix.provider == 'q'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "${{ matrix.actor }} automation"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BASE_BRANCH="${GITHUB_REF_NAME}"
+          [[ "${GITHUB_EVENT_NAME}" == "schedule" || "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] && BASE_BRANCH=main
+          BRANCH="movement/${{ matrix.provider }}-independent-${GITHUB_RUN_ID}"
+          git switch -c "$BRANCH"
+          git add -A ':!.github'
+          git diff --cached --quiet && { echo 'No product changes to publish'; exit 1; }
+          git commit -m "${{ matrix.actor }}: independent Movement product increment ${GITHUB_RUN_ID}"
+          git push origin "$BRANCH"
+          URL=$(gh pr create --draft --base "$BASE_BRANCH" --head "$BRANCH" \
+            --title "${{ matrix.actor }}｜动起来独立产品增量 #${GITHUB_RUN_ID}" \
+            --body "${{ matrix.actor }}依据 Issue #3 完整愿景自主选择并实现；C博士未规定技术路线、文件范围、旧测试或功能顺序。请直接审阅产品取舍与可操作结果。未自动合并。Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}")
+          gh issue comment 3 --body "${{ matrix.actor }}独立执行已产生代码与草稿 PR：${URL}。运行证据：${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}。C博士未修改产品代码；未自动合并。"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: movement-${{ matrix.provider }}-independent-${{ github.run_id }}
+          path: artifacts/dq-movement/${{ matrix.provider }}/
+          retention-days: 30
