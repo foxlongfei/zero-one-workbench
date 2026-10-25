@@ -6,8 +6,6 @@ on:
   push:
     paths:
       - '.github/workflows/dq-movement-independent.yml'
-  schedule:
-    - cron: '41 3 * * *'
 
 permissions:
   contents: write
