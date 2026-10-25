@@ -232,8 +232,12 @@ try {
   }, null, { timeout: 5000 });
   check('engine switches to the authorised voice', (await page.locator('#engineHint').innerText()).includes('家庭授权声音'), await page.locator('#engineHint').innerText());
 
-  const revoke = await page.evaluate(async id => (await fetch(`http://127.0.0.1:8792/api/voices/${id}/revoke`, { method: 'POST' })).status, created.body.id);
-  check('revocation accepted', revoke === 200, String(revoke));
+  // Revocation is driven through the UI, the way a family member would do it.
+  // A persistent handler: each of the three voice actions opens one confirm().
+  page.on('dialog', dialog => dialog.accept().catch(() => {}));
+  await page.locator(`[data-voice-actions="${created.body.id}"] [data-action="revoke-voice"]`).click();
+  await page.waitForFunction(() => document.querySelector('#voiceList')?.textContent.includes('已撤销授权'), null, { timeout: 8000 });
+  check('revocation accepted from the UI', (await status()).includes('已撤销'), await status());
   const blocked = await page.evaluate(async id => {
     const response = await fetch('http://127.0.0.1:8792/api/speak', {
       method: 'POST', headers: { 'content-type': 'application/json' },
@@ -242,11 +246,17 @@ try {
     return { status: response.status, body: await response.json() };
   }, created.body.id);
   check('revoked voice cannot be synthesised', blocked.status === 409, JSON.stringify(blocked));
-  await page.locator('#refreshVoices').click();
-  await page.waitForFunction(() => document.querySelector('#voiceList')?.textContent.includes('已撤销授权'), null, { timeout: 8000 });
   check('revoked state visible to the family', await page.locator('#voiceList .badge.bad').count() === 1);
-  const deleted = await page.evaluate(async id => (await fetch(`http://127.0.0.1:8792/api/voices/${id}`, { method: 'DELETE' })).status, created.body.id);
-  check('deletion removes the voice', deleted === 200, String(deleted));
+
+  // Restoring and deleting are also UI actions; deletion must empty the list.
+  await page.locator(`[data-voice-actions="${created.body.id}"] [data-action="restore-voice"]`).click();
+  await page.waitForFunction(() => !document.querySelector('#voiceList')?.textContent.includes('已撤销授权'), null, { timeout: 8000 });
+  check('restore brings the voice back', (await status()).includes('已恢复'), await status());
+  await page.locator(`[data-voice-actions="${created.body.id}"] [data-action="delete-voice"]`).click();
+  await page.waitForFunction(() => document.querySelectorAll('#voiceList .voice-card').length === 0, null, { timeout: 8000 });
+  check('deletion removes the voice from the list', (await status()).includes('已删除'), await status());
+  const gone = await page.evaluate(async id => (await fetch(`http://127.0.0.1:8792/api/voices/${id}`)).status, created.body.id);
+  check('deleted voice is gone from the library', gone === 404, String(gone));
 
   await page.evaluate(() => {
     const world = document.querySelector('header [data-nav="world"]');

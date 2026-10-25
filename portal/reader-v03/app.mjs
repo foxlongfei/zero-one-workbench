@@ -980,7 +980,7 @@ function voiceCard(voice) {
     }
   };
   actions.append(use, test);
-  card.append(h, meta, badge, actions);
+  card.append(h, meta, badge, actions, renderVoiceActions(voice));
   return card;
 }
 
@@ -993,6 +993,62 @@ function renderVoiceList(statusText = '') {
     ? (statusText || '这里列出声音库中已授权的家庭声音。撤销与删除由声音本人在声音库页面完成。')
     : '尚未配置声音库。你可以先使用本机语音或神经网络语音；家庭声音需要部署 server/voice-library 并在这里填写地址。';
   list.append(intro);
+  for (const voice of voices) list.append(voiceCard(voice));
+  if (libraryConfigured() && voices.length) {
+    const link = document.createElement('a');
+    link.href = `${settings.library.baseUrl.replace(/\/+$/, '')}/consent`;
+    link.target = '_blank';
+    link.rel = 'noreferrer';
+    link.textContent = '打开声音本人的授权与删除页面 →';
+    list.append(link);
+  }
+}
+
+// Creator-side controls for an authorised voice. They call the voice library
+// API, which re-checks consent: revoking changes the record the synthesis
+// endpoint reads, so this is not cosmetic. Deletion is final and confirmed.
+function renderVoiceActions(voice) {
+  const wrap = document.createElement('div');
+  wrap.className = 'actions row';
+  wrap.dataset.voiceActions = voice.id;
+  const revoked = voice.status === 'revoked';
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.dataset.action = revoked ? 'restore-voice' : 'revoke-voice';
+  toggle.textContent = revoked ? '恢复授权' : '撤销授权';
+  toggle.onclick = async () => {
+    if (!revoked && !confirm(`撤销「${voice.name}」的授权？撤销后立刻不能再合成这个声音，样本保留到声音本人决定删除。`)) return;
+    try {
+      const response = await libraryFetch(`/api/voices/${encodeURIComponent(voice.id)}/${revoked ? 'restore' : 'revoke'}`, { method: 'POST' });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || `声音库返回 ${response.status}`);
+      if (!revoked && activeVoice?.id === voice.id) activeVoice = null;
+      await loadVoices();
+      status(revoked ? `已恢复「${voice.name}」的授权` : `已撤销「${voice.name}」的授权，合成立即停止`);
+    } catch (error) {
+      status(`操作失败：${error.message}`, 'error');
+    }
+  };
+  const remove = document.createElement('button');
+  remove.type = 'button';
+  remove.className = 'ghost';
+  remove.dataset.action = 'delete-voice';
+  remove.textContent = '删除样本';
+  remove.onclick = async () => {
+    if (!confirm(`永久删除「${voice.name}」的样本、授权记录和音色参数？此操作不可恢复。\n请确认这是声音本人的决定。`)) return;
+    try {
+      const response = await libraryFetch(`/api/voices/${encodeURIComponent(voice.id)}`, { method: 'DELETE' });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || `声音库返回 ${response.status}`);
+      if (activeVoice?.id === voice.id) activeVoice = null;
+      await loadVoices();
+      status(`已删除「${voice.name}」的样本与授权记录`);
+    } catch (error) {
+      status(`删除失败：${error.message}`, 'error');
+    }
+  };
+  wrap.append(toggle, remove);
+  return wrap;
 }
 
 function refreshVoiceScreens() {
@@ -1110,9 +1166,20 @@ async function toggleRecording() {
     return;
   }
   try {
+    // A secure origin is required for microphone access: a plain-http host
+    // other than localhost resolves getUserMedia to `undefined`, which would
+    // otherwise be reported as a vague "not supported" message.
+    if (!window.isSecureContext) throw new Error('麦克风只能在 HTTPS 或 localhost 下使用，请换成 https 地址再试。');
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
     recordChunks = [];
     recorder = new MediaRecorder(stream);
+    // Without a recorder-level handler an encoding failure would leave the
+    // microphone open for the rest of the session.
+    recorder.onerror = event => {
+      stream.getTracks().forEach(track => track.stop());
+      recorder = null;
+      $('recordStatus').textContent = `录音中断：${event.error?.message || event.error || '未知错误'}`;
+    };
     recorder.ondataavailable = event => { if (event.data.size) recordChunks.push(event.data); };
     recorder.onstop = () => {
       stream.getTracks().forEach(track => track.stop());
