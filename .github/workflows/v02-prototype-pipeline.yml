@@ -1,21 +1,6 @@
 name: V0.2 Three Prototype Delivery Pipeline
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'portal/**'
-      - 'tests/v02/**'
-      - '.github/workflows/v02-prototype-pipeline.yml'
-  pull_request:
-    paths:
-      - 'portal/**'
-      - 'tests/v02/**'
-      - '.github/workflows/v02-prototype-pipeline.yml'
-  schedule:
-    - cron: '17 3 * * *'
-  issues:
-    types: [opened, edited, reopened]
 permissions:
   contents: read
   issues: write
