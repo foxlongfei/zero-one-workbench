@@ -83,6 +83,9 @@ jobs:
         run: |
           git config user.name "D博士 automation"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Keep workflow changes out of the PR commit: the job token has no workflows permission.
+          # The trigger commit may contain a workflow edit even when D博士 never touched it.
+          git restore --source=HEAD^ --staged --worktree -- .github/workflows/d-reader-independent.yml 2>/dev/null || true
           BASE_BRANCH="${GITHUB_REF_NAME}"
           [[ "$GITHUB_EVENT_NAME" == "schedule" || "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] && BASE_BRANCH=main
           BRANCH="d-reader/independent-${GITHUB_RUN_ID}"
