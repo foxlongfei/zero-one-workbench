@@ -83,9 +83,6 @@ jobs:
         run: |
           git config user.name "D博士 automation"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Keep workflow changes out of the PR commit: the job token has no workflows permission.
-          # The trigger commit may contain a workflow edit even when D博士 never touched it.
-          git restore --source=HEAD^ --staged --worktree -- .github/workflows/d-reader-independent.yml 2>/dev/null || true
           BASE_BRANCH="${GITHUB_REF_NAME}"
           [[ "$GITHUB_EVENT_NAME" == "schedule" || "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] && BASE_BRANCH=main
           BRANCH="d-reader/independent-${GITHUB_RUN_ID}"
@@ -93,6 +90,10 @@ jobs:
           git add -A ':!.github'
           git diff --cached --quiet && { echo 'No product changes to publish'; exit 1; }
           git commit -m "D博士: independent Read With You product increment ${GITHUB_RUN_ID}"
+          # Rebase the product-only commit onto the current main, so old workflow-trigger
+          # commits are not replayed as new workflow changes by the GitHub App token.
+          git fetch origin main
+          git rebase origin/main
           git push origin "$BRANCH"
           URL=$(gh pr create --draft --base "$BASE_BRANCH" --head "$BRANCH" \
             --title "D博士｜陪你读书独立产品增量 #${GITHUB_RUN_ID}" \
