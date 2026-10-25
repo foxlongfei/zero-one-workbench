@@ -7,6 +7,7 @@ const targets = [
   {name:'A01',path:'/portal/movement-mediapipe.html',selector:'main'},
   {name:'fortune-teller',path:'/portal/fortune-teller/index.html',selector:'#panel-bazi'},
   {name:'C01',path:'/portal/reader-integrated.html',selector:'#shelfScreen'},
+  {name:'reader-v03',path:'/portal/reader-v03/index.html',selector:'#importButton'},
   {name:'watch-world',path:'/portal/watch-world.html',selector:'body'}
 ];
 (async()=>{
@@ -21,7 +22,7 @@ const targets = [
    await page.locator(target.selector).first().waitFor({timeout:10000});
    if(!response||response.status()>=400)errors.push('HTTP '+response?.status());
    if(target.name==='portal'){
-    for(const href of ['movement-mediapipe.html','fortune-teller/index.html','reader-integrated.html','watch-world.html']){
+    for(const href of ['movement-mediapipe.html','fortune-teller/index.html','reader-integrated.html','reader-v03/index.html','watch-world.html']){
      if(await page.locator('a[href="'+href+'"]').count()!==1)errors.push('missing/duplicate product link '+href);
     }
    }
