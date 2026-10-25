@@ -1,0 +1,61 @@
+{
+ "id": 2661,
+ "uuid": "456f0781-30c6-4f58-a5b4-3da8f4878065",
+ "created": "2026-09-16T21:57:13.241442+02:00",
+ "last_update": "2026-09-16T21:57:13.241456+02:00",
+ "last_update_global": "2026-09-16T21:57:13.525405+02:00",
+ "category": {
+  "id": 14,
+  "name": "Calves"
+ },
+ "muscles": [
+  {
+   "id": 7,
+   "name": "Gastrocnemius",
+   "name_en": "Calves",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-7.edbd8c381b0c.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-7.2f836b0cd383.svg"
+  }
+ ],
+ "muscles_secondary": [],
+ "equipment": [
+  {
+   "id": 3,
+   "name": "Dumbbell"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "",
+ "images": [],
+ "translations": [
+  {
+   "id": 5089,
+   "uuid": "1460df87-3885-43c5-98fe-a7a1ef260f23",
+   "name": "Dumbbell Calf Raise",
+   "exercise": 2661,
+   "description": "<p>Custom description created by the Integrated Conditioning routine importer for wger.</p>\n",
+   "description_source": "Custom description created by the Integrated Conditioning routine importer for wger.",
+   "created": "2026-09-16T21:57:13.525389+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": []
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [],
+ "total_authors_history": []
+}
