@@ -1,5 +1,5 @@
 name: D博士 independent Read With You delivery
-# continuation: 2026-10-24; D owns product decisions, C only repairs the execution channel
+# continuation: 2026-10-25; user-authorized V0.3 execution; D owns product decisions, C only repairs the execution channel
 
 on:
   workflow_dispatch:
