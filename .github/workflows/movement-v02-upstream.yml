@@ -1,8 +1,6 @@
 name: Movement V0.2 upstream integration gate
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '20 4 * * *'
   push:
     paths:
       - 'deploy/movement-v02/**'
