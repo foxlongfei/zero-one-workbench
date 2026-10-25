@@ -3,10 +3,6 @@ name: D博士 independent Read With You delivery
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/d-reader-independent.yml'
 
 permissions:
   contents: write
