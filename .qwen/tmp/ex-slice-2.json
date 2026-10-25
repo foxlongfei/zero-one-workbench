@@ -1,0 +1,175 @@
+{
+  "push-up-wall": {
+    "id": "push-up-wall",
+    "slug": "push-up-wall",
+    "name": {"zh": "墙式俯卧撑", "en": "Wall push-up"},
+    "aliases": ["推墙"],
+    "family": "horizontal_push",
+    "pattern": "push",
+    "level": "entry",
+    "risk": "low",
+    "skillTags": ["支撑", "上肢推"],
+    "environment": ["home", "office"],
+    "equipment": ["wall"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "project-curation"}],
+    "description": {"zh": "面对墙站立，双手撑墙做俯卧撑。负荷最小、最容易保持身体直线，是所有人进入推的训练入口。", "en": "Stand facing a wall and push away from it."},
+    "steps": ["面对墙站立，一臂半距离，双手与肩同宽撑墙，掌心与肩齐高。", "脚跟不离地，身体保持一条线，屈肘让胸口靠近墙面。", "推回到手肘接近伸直，肩胛自然前伸。"],
+    "cues": ["脚跟不抬", "胸口靠近墙而不是头靠近墙", "推回时呼气"],
+    "commonErrors": [{"zh": "只屈肘不动躯干", "fix": "让整个身体一起靠近墙，像一块斜板。"}],
+    "muscleRoles": {
+      "primary": [{"name": "胸大肌", "origin": "水平推主要动力"}, {"name": "肱三头肌", "origin": "伸肘"}],
+      "stabilizers": [{"name": "腹部肌群", "origin": "维持躯干直线"}]
+    },
+    "jointsMotion": {"elbow": "伸 170°→屈约 100°"},
+    "capacity": {"type": "reps", "metric": "肘角"},
+    "capacityLoads": {"bodyweightShare": 0.18, "rangeOfMotion": 0.8, "depthMetric": "elbow"},
+    "scaleLevels": {
+      "entry": {"sets": 2, "reps": 12, "restSeconds": 45},
+      "steady": {"sets": 3, "reps": 15, "restSeconds": 45},
+      "strong": {"sets": 3, "reps": 20, "restSeconds": 45}
+    },
+    "sets": 2,
+    "reps": 12,
+    "restSeconds": 45,
+    "phaseDurations": [2.0, 1.2],
+    "poses": [
+      {"label": "起始", "seq": 0, "pose": {
+        "root": [0, 0.99, -0.45],
+        "ik": {"armPole_l": [-0.4, 0, -1], "armPole_r": [0.4, 0, -1], "legPole_l": [0, 0.3, 1], "legPole_r": [0, 0.3, 1]},
+        "joints": {"wrist_l": [-0.2, 1.28, 0.02], "wrist_r": [0.2, 1.28, 0.02]},
+        "hands": {"l": {"offset": [0, 0, 0.02], "rotation": [0, 0, 0]}, "r": {"offset": [0, 0, 0.02], "rotation": [0, 0, 0]}}
+      }},
+      {"label": "贴近墙", "seq": 0.5, "pose": {"trunkUp": [0, 0.98, 0.2]}},
+      {"label": "回起始", "seq": 1, "pose": {"trunkUp": [0, 1, 0]}}
+    ],
+    "camera": [{"seq": 0, "target": [0, 1.1, 0], "elevation": 8, "label": "侧面：看身体是不是整体一起动"}],
+    "reps": {"source": "elbow-angle", "bottom": 105, "top": 160},
+    "progressionOf": null,
+    "regressionOf": null,
+    "childChanges": "适合作为儿童入门第一课，10 次一组，强调脚跟与直线。",
+    "olderChanges": "非常适合作为日常维持训练：2 组 × 10 次，扶墙脚步可再近一些，避免低头。",
+    "rehabNotes": "肩部活动受限时缩短行程，只做一半幅度并保持无痛。",
+    "risks": ["无显著风险"],
+    "evidence": {"level": "consensus"}
+  },
+  "push-up-knee": {
+    "id": "push-up-knee",
+    "slug": "push-up-knee",
+    "name": {"zh": "跪姿俯卧撑", "en": "Knee push-up"},
+    "aliases": ["女性俯卧撑"],
+    "family": "horizontal_push",
+    "pattern": "push",
+    "level": "entry",
+    "risk": "shoulder-wrist-load",
+    "skillTags": ["支撑", "上肢推"],
+    "environment": ["home", "gym", "mat"],
+    "equipment": ["mat"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "push-up", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {"zh": "膝盖着地的俯卧撑：减少下身重量，仍然保持躯干到膝是一条线。是从墙式过渡到标准俯卧撑的中间台阶。", "en": "Push-up from the knees, keeping one line from head to knees."},
+    "steps": ["手与标准俯卧撑同宽，膝落在髋后方。", "臀部收紧，头到膝成一条线，不要翘臀。", "屈肘下放到胸口接近手背高度，再推起。"],
+    "cues": ["膝就是支点，身体不能折在髋部", "脚跟自然抬起"],
+    "commonErrors": [{"zh": "臀部翘起变成倒 V", "fix": "把骨盆向前送，让大腿与躯干对齐。"}],
+    "muscleRoles": {
+      "primary": [{"name": "胸大肌", "origin": "水平推"}, {"name": "肱三头肌", "origin": "伸肘"}],
+      "stabilizers": [{"name": "臀大肌", "origin": "防止塌腰翘臀"}]
+    },
+    "jointsMotion": {"elbow": "伸 175°→屈约 95°"},
+    "capacity": {"type": "reps", "metric": "肘角"},
+    "capacityLoads": {"bodyweightShare": 0.42, "rangeOfMotion": 0.95, "depthMetric": "elbow"},
+    "scaleLevels": {
+      "entry": {"sets": 3, "reps": 6, "restSeconds": 60},
+      "steady": {"sets": 3, "reps": 10, "restSeconds": 60},
+      "strong": {"sets": 3, "reps": 15, "restSeconds": 60}
+    },
+    "sets": 3,
+    "reps": 10,
+    "restSeconds": 60,
+    "phaseDurations": [2.0, 1.2],
+    "poses": [
+      {"label": "支撑位", "seq": 0, "pose": {
+        "root": [0, 0.48, 0.18],
+        "trunkUp": [0, 0.42, 0.91],
+        "trunkFwd": [0, 0.86, -0.5],
+        "ik": {"armPole_l": [-0.3, 0, -1], "armPole_r": [0.3, 0, -1], "legPole_l": [0, -1, -0.4], "legPole_r": [0, -1, -0.4]},
+        "joints": {"wrist_l": [-0.2, 0.06, 0.62], "wrist_r": [0.2, 0.06, 0.62]},
+        "hands": {"l": {"offset": [0, 0, 0]}, "r": {"offset": [0, 0, 0]}},
+        "ground": [
+          {"part": "hand", "side": "l", "contact": "CIRCLE"},
+          {"part": "hand", "side": "r", "contact": "CIRCLE"},
+          {"part": "knee", "side": "l", "contact": "CIRCLE"},
+          {"part": "knee", "side": "r", "contact": "CIRCLE"}
+        ]
+      }},
+      {"label": "下放位", "seq": 0.5, "pose": {"trunkUp": [0, 0.6, 0.8]}},
+      {"label": "推起位", "seq": 1, "pose": {"trunkUp": [0, 0.42, 0.91]}}
+    ],
+    "camera": [{"seq": 0, "target": [0, 0.4, 0.35], "elevation": 20, "label": "侧后 30°：髋部是否折线"}],
+    "reps": {"source": "elbow-angle", "bottom": 100, "top": 155},
+    "progressionOf": "push-up-wall",
+    "regressionOf": null,
+    "childChanges": "10 岁以下可以先用手撑台阶的斜俯卧撑，膝盖不是必须。",
+    "olderChanges": "膝跪地垫软垫，2 组 × 8 次足够；起身时先回跪坐再站，避免头晕。",
+    "rehabNotes": "肩或腕不适时把双手放在稳固台面上做斜俯卧撑。",
+    "risks": ["腕关节负荷", "膝盖压地不适（用垫子）"],
+    "evidence": {"level": "consensus"}
+  },
+  "push-up-incline": {
+    "id": "push-up-incline",
+    "slug": "push-up-incline",
+    "name": {"zh": "台下斜俯卧撑", "en": "Incline push-up"},
+    "aliases": ["上斜俯卧撑", "手撑高俯卧撑"],
+    "family": "horizontal_push",
+    "pattern": "push",
+    "level": "entry",
+    "risk": "shoulder-wrist-load",
+    "skillTags": ["支撑", "上肢推"],
+    "environment": ["home", "office", "gym"],
+    "equipment": ["table", "chair", "wall"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "push-up", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {"zh": "双手撑在桌沿、台阶或窗台上做俯卧撑。支撑面越高，下身承担的重量越少，是办公室里最现实的上肢推训练。", "en": "Hands on a raised surface; the higher the surface, the lighter the load."},
+    "steps": ["选一个稳固、不会滑动的台面，双手与肩同宽。", "脚向后退到身体成一条斜线，收紧核心。", "屈肘让胸口靠近台沿，再推回到肘几乎伸直。"],
+    "cues": ["台面必须稳", "肩不要耸起到耳朵", "全程脚跟不离地"],
+    "commonErrors": [{"zh": "支撑面太软或滑动", "fix": "换硬质桌面或靠墙的柜子。"}],
+    "muscleRoles": {
+      "primary": [{"name": "胸大肌", "origin": "水平推"}, {"name": "肱三头肌", "origin": "伸肘"}, {"name": "前锯肌", "origin": "顶端肩胛控制"}],
+      "stabilizers": [{"name": "腹斜肌", "origin": "抗旋转"}]
+    },
+    "jointsMotion": {"elbow": "伸 175°→屈约 95°"},
+    "capacity": {"type": "reps", "metric": "肘角"},
+    "capacityLoads": {"bodyweightShare": 0.35, "rangeOfMotion": 0.9, "depthMetric": "elbow"},
+    "scaleLevels": {
+      "entry": {"sets": 3, "reps": 8, "restSeconds": 60},
+      "steady": {"sets": 3, "reps": 12, "restSeconds": 60},
+      "strong": {"sets": 4, "reps": 15, "restSeconds": 60}
+    },
+    "sets": 3,
+    "reps": 10,
+    "restSeconds": 60,
+    "phaseDurations": [2.0, 1.2],
+    "poses": [
+      {"label": "支撑位", "seq": 0, "pose": {
+        "root": [0, 0.78, -0.15],
+        "trunkUp": [0, 0.86, 0.51],
+        "trunkFwd": [0, 0.51, -0.86],
+        "ik": {"armPole_l": [-0.3, 0, -1], "armPole_r": [0.3, 0, -1], "legPole_l": [0, 0.3, 1], "legPole_r": [0, 0.3, 1]},
+        "joints": {"wrist_l": [-0.2, 0.88, 0.32], "wrist_r": [0.2, 0.88, 0.32]},
+        "hands": {"l": {"offset": [0, 0, 0]}, "r": {"offset": [0, 0, 0]}},
+        "ground": [{"part": "foot", "side": "l", "contact": "LINE"}, {"part": "foot", "side": "r", "contact": "LINE"}]
+      }},
+      {"label": "下放位", "seq": 0.5, "pose": {"trunkUp": [0, 0.92, 0.39]}},
+      {"label": "推起位", "seq": 1, "pose": {"trunkUp": [0, 0.86, 0.51]}}
+    ],
+    "camera": [{"seq": 0, "target": [0, 0.7, 0.1], "elevation": 10, "label": "侧面：肩—髋—踝是否成直线"}],
+    "reps": {"source": "elbow-angle", "bottom": 100, "top": 155},
+    "progressionOf": "push-up-wall",
+    "regressionOf": null,
+    "childChanges": "用较低的稳固台阶，让孩子自己找到能完成 8 次的高度。",
+    "olderChanges": "桌沿高度是最稳的选择；2 组 × 10 次，推完站直深呼吸两次再走。",
+    "rehabNotes": "常用于肩部术后回归的中间阶段，但具体进度必须由治疗师决定，本产品不提供处方。",
+    "risks": ["支撑面不稳导致滑倒"],
+    "evidence": {"level": "consensus"}
+  }
+}

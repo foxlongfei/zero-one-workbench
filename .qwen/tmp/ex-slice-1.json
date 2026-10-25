@@ -1,0 +1,84 @@
+{
+  "push-up": {
+    "id": "push-up",
+    "slug": "push-up",
+    "name": {"zh": "俯卧撑", "en": "Push-up"},
+    "aliases": ["标准俯卧撑", "press-up"],
+    "family": "horizontal_push",
+    "pattern": "push",
+    "level": "steady",
+    "risk": "shoulder-wrist-load",
+    "skillTags": ["支撑", "上肢推", "核心抗伸"],
+    "environment": ["home", "gym", "outdoor", "office"],
+    "equipment": ["none", "mat"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "push-up", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {
+      "zh": "手掌撑地略宽于肩，身体成一条直线，胸口降到接近地面再推起。它是衡量上肢水平推力最直接的自重动作。",
+      "en": "Hands slightly wider than the shoulders, body in one line, chest to just above the floor, then press away."
+    },
+    "steps": [
+      "手掌落在肩正下方略宽，指尖向前，虎口吃住地面。",
+      "脚掌前脚掌踩地，收紧臀部与腹部，把肋骨往回收。",
+      "屈肘下放，肘与身体约成 45°，胸口降到手背高度。",
+      "掌根发力推起，肩胛在顶端自然前伸，不塌腰。"
+    ],
+    "cues": ["身体从后脑到脚跟是一条线", "下放时感觉肩胛向后向下收", "推起时呼气"],
+    "commonErrors": [
+      {"zh": "塌腰，腰先掉下去", "fix": "先减少次数，把臀部收起来；用跪姿或墙姿重建直线。"},
+      {"zh": "肘完全向两侧打开成 90°", "fix": "肘尖朝后内侧约 45°，保护肩前侧。"},
+      {"zh": "只做上半程", "fix": "降低难度（手撑高），保证胸口真的下到手背高度。"}
+    ],
+    "muscleRoles": {
+      "primary": [{"name": "胸大肌", "origin": "水平推的主要动力"}, {"name": "肱三头肌", "origin": "伸肘"}, {"name": "三角肌前束", "origin": "肩屈"}],
+      "secondary": [{"name": "前锯肌", "origin": "顶端肩胛前伸"}],
+      "stabilizers": [{"name": "腹直肌与腹斜肌", "origin": "抗腰椎过伸"}, {"name": "臀大肌", "origin": "维持髋伸展"}],
+      "antagonist": [{"name": "菱形肌与中下斜方肌", "origin": "下放阶段离心制动"}]
+    },
+    "jointsMotion": {"shoulder": "屈曲 0°→约 60° 再伸展推回", "elbow": "伸 180°→屈约 90°", "scapula": "后缩下沉→前伸"},
+    "capacity": {"type": "reps", "metric": "肘角与胸口高度", "rangeOfMotion": "肘 160°→90°"},
+    "capacityLoads": {"bodyweightShare": 0.64, "rangeOfMotion": 1.0, "depthMetric": "elbow"},
+    "scaleLevels": {
+      "entry": {"sets": 3, "reps": 5, "restSeconds": 75, "note": "跪姿或手撑高处，保证轨迹"},
+      "steady": {"sets": 3, "reps": 8, "restSeconds": 75},
+      "strong": {"sets": 4, "reps": 12, "restSeconds": 90}
+    },
+    "sets": 3,
+    "reps": 8,
+    "restSeconds": 75,
+    "phaseDurations": [2.0, 1.4],
+    "poses": [
+      {"label": "支撑位", "seq": 0, "pose": {
+        "root": [0, 0.62, 0],
+        "trunkUp": [0, 0.72, 0.69],
+        "trunkFwd": [0, 0.69, -0.72],
+        "ik": {"armPole_l": [-0.3, 0, -1], "armPole_r": [0.3, 0, -1], "legPole_l": [0, 0.3, 1], "legPole_r": [0, 0.3, 1]},
+        "hands": {"l": {"offset": [0, 0, 0]}, "r": {"offset": [0, 0, 0]}},
+        "joints": {"wrist_l": [-0.2, 0.06, 0.62], "wrist_r": [0.2, 0.06, 0.62]},
+        "ground": [
+          {"part": "hand", "side": "l", "contact": "CIRCLE"},
+          {"part": "hand", "side": "r", "contact": "CIRCLE"},
+          {"part": "foot", "side": "l", "contact": "CIRCLE"},
+          {"part": "foot", "side": "r", "contact": "CIRCLE"}
+        ]
+      }},
+      {"label": "下放位", "seq": 0.5, "pose": {
+        "joints": {"wrist_l": [-0.2, 0.06, 0.62], "wrist_r": [0.2, 0.06, 0.62]},
+        "trunkUp": [0, 0.8, 0.6]
+      }},
+      {"label": "回到支撑位", "seq": 1, "pose": {"joints": {"wrist_l": [-0.2, 0.06, 0.62], "wrist_r": [0.2, 0.06, 0.62]}, "trunkUp": [0, 0.72, 0.69]}}
+    ],
+    "camera": [
+      {"seq": 0, "target": [0, 0.42, 0.2], "elevation": 18, "label": "侧面 45°：看身体是否成一直线"},
+      {"seq": 1, "target": [0, 0.42, 0.2], "elevation": 18, "label": "同上，保持同一机位方便对比"}
+    ],
+    "reps": {"source": "elbow-angle", "bottom": 100, "top": 150},
+    "progressionOf": null,
+    "regressionOf": null,
+    "childChanges": "儿童与青少年用跪姿或手撑台阶，重点在身体直线与肩胛控制；不做憋气极限组。",
+    "olderChanges": "手撑墙面或台面做斜俯卧撑，脚后撤更多；每组 5–8 次，间歇 90s，核心是保持支撑稳定。",
+    "rehabNotes": "肩前侧疼痛时把手垫高、缩小幅度；手腕不适可用拳撑或把手放在台沿。任何尖锐疼痛停止。",
+    "risks": ["手腕与肩前侧负荷", "塌腰时腰椎过伸"],
+    "evidence": {"level": "consensus", "note": "自重水平推的通用教学要点；具体剂量因人而异。"}
+  }
+}

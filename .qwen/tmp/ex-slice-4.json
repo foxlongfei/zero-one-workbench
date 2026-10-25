@@ -1,0 +1,243 @@
+{
+  "glute-bridge": {
+    "id": "glute-bridge",
+    "slug": "glute-bridge",
+    "name": {"zh": "臀桥", "en": "Glute bridge"},
+    "aliases": ["桥式"],
+    "family": "hinge",
+    "pattern": "hip-extension",
+    "level": "entry",
+    "risk": "low",
+    "skillTags": ["髋伸", "久坐恢复"],
+    "environment": ["home", "office", "gym"],
+    "equipment": ["mat"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "glute-bridge", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {"zh": "仰卧屈膝，把髋抬到肩—髋—膝一条线。用来找回久坐后失去的髋伸展，也是学习“用臀部而不是腰”的入口。", "en": "Lying hip extension: learn to finish the hip with the glutes, not the lower back."},
+    "steps": ["仰卧，屈膝，脚跟离臀部约一掌距离。", "呼气把髋抬起，直到肩、髋、膝成一条线。", "顶端停一秒，臀部收紧，腰不要顶出去。", "慢慢放下，不要一下砸到底。"],
+    "cues": ["先收腹再抬髋，避免肋骨外翻", "感觉在臀部下缘", "两个人可以互看：腰有没有拱起来"],
+    "commonErrors": [{"zh": "用腰把髋顶起来", "fix": "缩短幅度，顶端只到髋伸直，不追求高度。"}, {"zh": "脚放太远，变成腘绳肌主导", "fix": "脚跟靠近臀部一点。"}],
+    "muscleRoles": {
+      "primary": [{"name": "臀大肌", "origin": "伸髋"}],
+      "secondary": [{"name": "腘绳肌", "origin": "伸髋协同"}],
+      "stabilizers": [{"name": "腹部肌群", "origin": "抗腰椎过伸"}],
+      "antagonist": [{"name": "髂腰肌", "origin": "离心控制髋屈回归"}]
+    },
+    "jointsMotion": {"hip": "伸 0°→约 15°", "knee": "保持屈约 100°"},
+    "capacity": {"type": "reps", "metric": "髋高度与骨盆位置"},
+    "capacityLoads": {"bodyweightShare": 0.5, "rangeOfMotion": 0.5, "depthMetric": "hipHeight"},
+    "scaleLevels": {
+      "entry": {"sets": 2, "reps": 10, "restSeconds": 45},
+      "steady": {"sets": 3, "reps": 15, "restSeconds": 45},
+      "strong": {"sets": 3, "reps": 20, "restSeconds": 60}
+    },
+    "sets": 3,
+    "reps": 15,
+    "restSeconds": 45,
+    "phaseDurations": [1.2, 1.8],
+    "poses": [
+      {"label": "落地", "seq": 0, "pose": {
+        "root": [0, 0.1, 0.28],
+        "trunkUp": [0, 0, -1],
+        "trunkFwd": [0, 1, 0],
+        "ik": {"legPole_l": [0.2, 1, 0], "legPole_r": [-0.2, 1, 0], "armPole_l": [0.5, -1, 0], "armPole_r": [-0.5, -1, 0]},
+        "joints": {
+          "wrist_l": [-0.3, 0.04, 0.05],
+          "wrist_r": [0.3, 0.04, 0.05],
+          "ankle_l": [-0.14, 0.07, -0.38],
+          "ankle_r": [0.14, 0.07, -0.38]
+        },
+        "ground": [
+          {"part": "butt", "contact": "CIRCLE"},
+          {"part": "head", "contact": "CIRCLE"},
+          {"part": "foot", "side": "l", "contact": "CIRCLE"},
+          {"part": "foot", "side": "r", "contact": "CIRCLE"}
+        ]
+      }},
+      {"label": "抬髋", "seq": 0.5, "pose": {"root": [0, 0.26, -0.02], "trunkUp": [0, 0.5, -0.86]}},
+      {"label": "回落", "seq": 1, "pose": {"root": [0, 0.1, 0.28], "trunkUp": [0, 0, -1]}}
+    ],
+    "camera": [{"seq": 0, "target": [0, 0.2, 0.05], "elevation": 8, "label": "侧面：肩髋膝是否成线，腰有没有顶"}],
+    "reps": {"source": "hip-height", "bottom": 0.6, "top": 0.85},
+    "progressionOf": null,
+    "regressionOf": null,
+    "childChanges": "作为热身与身体认知练习，10–15 次，配上“把骨盆像碗一样端平”的比喻。",
+    "olderChanges": "非常适合：2 组 × 10 次，头下垫薄枕，起身前先侧卧。",
+    "rehabNotes": "下背不适时缩小幅度、放慢；出现放射痛停止并就医。",
+    "risks": ["腰椎过伸"],
+    "evidence": {"level": "consensus"}
+  },
+  "reverse-lunge": {
+    "id": "reverse-lunge",
+    "slug": "reverse-lunge",
+    "name": {"zh": "后撤弓步", "en": "Reverse lunge"},
+    "aliases": ["后撤步蹲"],
+    "family": "lunge",
+    "pattern": "single-leg",
+    "level": "steady",
+    "risk": "knee-load",
+    "skillTags": ["单腿力量", "平衡"],
+    "environment": ["home", "gym", "outdoor"],
+    "equipment": ["none"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "lunge", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {"zh": "一条腿向后撤步下沉，再用前腿站起。比前弓步对膝盖更友好，也把平衡放进了训练里。", "en": "Step back, sink, and stand on the front leg."},
+    "steps": ["站直，一条腿向后撤一大步。", "双膝同时弯曲下沉，后膝接近地面但不磕地。", "前脚整个脚掌发力站起，回到站立。"],
+    "cues": ["前膝对准脚尖", "躯干保持直立，不向前扑", "步幅小一点更容易站稳"],
+    "commonErrors": [{"zh": "步幅太大导致前后失衡", "fix": "缩小步幅，先把下沉与站起做稳。"}, {"zh": "前膝内扣", "fix": "降低速度，想象把地面推开。"}],
+    "muscleRoles": {
+      "primary": [{"name": "股四头肌", "origin": "前腿伸膝"}, {"name": "臀大肌", "origin": "前腿伸髋"}],
+      "stabilizers": [{"name": "臀中肌", "origin": "骨盆侧向稳定"}, {"name": "腹部肌群", "origin": "躯干不晃"}]
+    },
+    "jointsMotion": {"hip": "前腿屈约 100°，后腿伸约 20°", "knee": "前腿屈至约 95°"},
+    "capacity": {"type": "reps", "metric": "膝角"},
+    "capacityLoads": {"bodyweightShare": 0.8, "rangeOfMotion": 0.95, "depthMetric": "hipHeight"},
+    "scaleLevels": {
+      "entry": {"sets": 2, "reps": 6, "restSeconds": 60, "note": "扶墙或椅背"},
+      "steady": {"sets": 3, "reps": 8, "restSeconds": 60},
+      "strong": {"sets": 3, "reps": 12, "restSeconds": 75}
+    },
+    "sets": 3,
+    "reps": 8,
+    "restSeconds": 60,
+    "phaseDurations": [2.0, 1.2],
+    "poses": [
+      {"label": "站立", "seq": 0, "pose": {"root": [0, 0.995, -0.033]}},
+      {"label": "后撤下沉", "seq": 0.5, "pose": {
+        "root": [0, 0.78, -0.18],
+        "trunkUp": [0, 0.99, 0.14],
+        "trunkFwd": [0, 0.14, 0.99],
+        "ik": {"legPole_l": [0.2, 0, 1], "legPole_r": [-0.2, 0, 1], "armPole_l": [0.3, 0.2, 0.5], "armPole_r": [-0.3, 0.2, -0.5]},
+        "joints": {"ankle_r": [0.12, 0.08, -1.02], "wrist_l": [-0.22, 0.9, 0.12], "wrist_r": [0.22, 0.9, 0.12]}
+      }},
+      {"label": "站起", "seq": 1, "pose": {"root": [0, 0.995, -0.033]}}
+    ],
+    "camera": [{"seq": 0, "target": [0, 0.8, -0.2], "elevation": 8, "label": "侧面 30°：前膝与脚尖、躯干是否直立"}],
+    "reps": {"source": "hip-height", "bottom": 0.62, "top": 0.85},
+    "progressionOf": "squat",
+    "regressionOf": null,
+    "childChanges": "先做原地分腿蹲（不撤步），左右各 6–8 次。",
+    "olderChanges": "必须扶稳椅背或墙面；每侧 6 次，间歇 90s，宁可幅度小。",
+    "rehabNotes": "膝盖不适时改为小幅下沉或扶着做，控制在无痛范围。",
+    "risks": ["平衡不足导致摇晃", "膝前侧负荷"],
+    "evidence": {"level": "consensus"}
+  },
+  "inverted-row": {
+    "id": "inverted-row",
+    "slug": "inverted-row",
+    "name": {"zh": "低杠划船", "en": "Inverted row"},
+    "aliases": ["反向划船", "自重划船"],
+    "family": "horizontal_pull",
+    "pattern": "pull",
+    "level": "steady",
+    "risk": "shoulder-wrist-load",
+    "skillTags": ["水平拉", "肩胛控制"],
+    "environment": ["gym", "outdoor", "home"],
+    "equipment": ["low_bar", "table"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "wger", "ref": "inverted-row", "license": "CC-BY-SA 4.0"}, {"id": "project-curation"}],
+    "description": {"zh": "身体仰卧在低杠或桌沿下方，握住横杆把胸口拉向杆。推与拉要成对出现，这是没有单杠时最可靠的水平拉动作。", "en": "Row your chest to a low bar while your heels stay on the ground."},
+    "steps": ["横杆高度约在髋部，握住略宽于肩。", "脚跟撑地，身体成一条斜线，收紧臀部。", "先把肩胛向下收，再把胸口拉向横杆。", "有控制地下放到手臂伸直。"],
+    "cues": ["先让肩胛动，再让手肘弯", "身体是一条线，不塌腰", "下放慢一点"],
+    "commonErrors": [{"zh": "只用手臂拉，肩膀耸起来", "fix": "先想“把肩膀往后下方放”，再拉。"}, {"zh": "腰部下沉", "fix": "收紧臀部，把骨盆提起。"}],
+    "muscleRoles": {
+      "primary": [{"name": "背阔肌", "origin": "肩内收与伸"}, {"name": "菱形肌与中斜方肌", "origin": "肩胛后缩"}],
+      "secondary": [{"name": "肱二头肌", "origin": "屈肘"}],
+      "stabilizers": [{"name": "腹部肌群与臀大肌", "origin": "维持躯干刚性"}]
+    },
+    "jointsMotion": {"elbow": "伸 175°→屈约 60°", "scapula": "前伸→后缩"},
+    "capacity": {"type": "reps", "metric": "肘角与胸口到杆距离"},
+    "capacityLoads": {"bodyweightShare": 0.55, "rangeOfMotion": 0.9, "depthMetric": "elbow"},
+    "scaleLevels": {
+      "entry": {"sets": 3, "reps": 6, "restSeconds": 75, "note": "杆调高，身体更直立"},
+      "steady": {"sets": 3, "reps": 10, "restSeconds": 75},
+      "strong": {"sets": 4, "reps": 12, "restSeconds": 90, "note": "降低杆高或脚垫高"}
+    },
+    "sets": 3,
+    "reps": 8,
+    "restSeconds": 75,
+    "phaseDurations": [1.6, 2.0],
+    "poses": [
+      {"label": "挂直", "seq": 0, "pose": {
+        "root": [0, 0.6, -0.42],
+        "trunkUp": [0, 0.16, 0.99],
+        "trunkFwd": [0, -0.99, 0.16],
+        "ik": {"armPole_l": [0.5, 0, -1], "armPole_r": [-0.5, 0, -1], "legPole_l": [0, 1, 0.4], "legPole_r": [0, 1, 0.4]},
+        "joints": {
+          "wrist_l": [-0.2, 0.82, 0],
+          "wrist_r": [0.2, 0.82, 0],
+          "ankle_l": [-0.14, 0.08, -1.5],
+          "ankle_r": [0.14, 0.08, -1.5]
+        },
+        "hands": {"l": {"offset": [0, 0, 0], "rotation": [0, 1.5, 0]}, "r": {"offset": [0, 0, 0], "rotation": [0, 1.5, 0]}},
+        "jointsNote": "wrist 就是杠的位置，solver 会把身体挂到它下面"
+      }},
+      {"label": "拉起", "seq": 0.5, "pose": {"root": [0, 0.66, -0.34], "trunkUp": [0, 0.16, 0.99]}},
+      {"label": "下放", "seq": 1, "pose": {"root": [0, 0.6, -0.42]}}
+    ],
+    "camera": [{"seq": 0, "target": [0, 0.55, -0.7], "elevation": 10, "label": "侧面：肩胛有没有先动"}],
+    "reps": {"source": "elbow-angle", "bottom": 95, "top": 150},
+    "progressionOf": null,
+    "regressionOf": null,
+    "childChanges": "儿童用肋木或稳固桌沿，重点在“把胸口送到杆前”，6–8 次。",
+    "olderChanges": "杆调高、身体更直立，2 组 × 6 次，注意起身时慢。",
+    "rehabNotes": "肩部不稳时先练等长肩胛后缩，不追求行程。",
+    "risks": ["杆不稳", "肩前侧不适"],
+    "evidence": {"level": "consensus"}
+  },
+  "dead-hang": {
+    "id": "dead-hang",
+    "slug": "dead-hang",
+    "name": {"zh": "悬垂", "en": "Dead hang"},
+    "aliases": ["吊杠"],
+    "family": "vertical_pull",
+    "pattern": "pull",
+    "level": "entry",
+    "risk": "shoulder-grip-load",
+    "skillTags": ["握力", "肩带减压"],
+    "environment": ["gym", "outdoor"],
+    "equipment": ["bar"],
+    "resistance": "bodyweight",
+    "sources": [{"id": "project-curation"}],
+    "description": {"zh": "挂在单杠上，肩胛略微收紧，身体自然悬垂。它是引体向上的第一步：先学会安全地挂住自己的身体。", "en": "Hang from the bar: the first step toward any pull-up."},
+    "steps": ["双手略宽于肩握杠，拇指可扣住。", "离开地面，肩胛轻微下沉，不要完全松掉。", "保持正常呼吸，脚不晃动。"],
+    "cues": ["肩不要耸到耳朵", "手握紧但手臂放松", "感觉握力下降就下杠"],
+    "commonErrors": [{"zh": "完全松弛导致肩被拉高", "fix": "轻收肩胛，把肩膀从耳朵旁拉开。"}],
+    "muscleRoles": {
+      "primary": [{"name": "前臂屈肌", "origin": "握力"}],
+      "stabilizers": [{"name": "斜方肌下束", "origin": "肩胛下沉"}, {"name": "肩袖肌群", "origin": "肩稳定"}]
+    },
+    "jointsMotion": {"shoulder": "接近完全屈曲", "grip": "等长"},
+    "capacity": {"type": "hold", "metric": "悬垂时间"},
+    "capacityLoads": {"bodyweightShare": 0.9, "rangeOfMotion": 0.2, "depthMetric": "elbow"},
+    "scaleLevels": {
+      "entry": {"sets": 3, "holdSeconds": 10, "restSeconds": 60},
+      "steady": {"sets": 3, "holdSeconds": 20, "restSeconds": 60},
+      "strong": {"sets": 4, "holdSeconds": 30, "restSeconds": 90}
+    },
+    "sets": 3,
+    "seconds": 15,
+    "restSeconds": 60,
+    "phaseDurations": [0, 0],
+    "poses": [
+      {"label": "悬垂", "seq": 0, "pose": {
+        "root": [0, 1.35, 0],
+        "trunkUp": [0, 1, 0],
+        "trunkFwd": [0, 0, 1],
+        "ik": {"armPole_l": [0.4, 0, -1], "armPole_r": [-0.4, 0, -1], "legPole_l": [0, 0, 1], "legPole_r": [0, 0, 1]},
+        "joints": {"wrist_l": [-0.22, 2.13, -0.02], "wrist_r": [0.22, 2.13, -0.02]},
+        "hands": {"l": {"offset": [0, 0, 0]}, "r": {"offset": [0, 0, 0]}},
+        "ground": []
+      }}
+    ],
+    "camera": [{"seq": 0, "target": [0, 1.6, 0], "elevation": 6, "label": "正面：肩有没有被拉成耸肩"}],
+    "reps": null,
+    "progressionOf": null,
+    "regressionOf": null,
+    "childChanges": "只有在杠下有保护且能安全上下时进行；10 秒 × 2 就够。",
+    "olderChanges": "不推荐无保护悬垂；可改为坐姿弹力带下拉维持拉力。",
+    "rehabNotes": "肩部术后不做；有习惯性肩不稳者先咨询专业人员。",
+    "risks": ["掉落", "握力突然失效"],
+    "evidence": {"level": "consensus"}
+  }
+}
