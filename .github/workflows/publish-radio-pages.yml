@@ -29,9 +29,6 @@ jobs:
           test -s _site/portal/reading-library.html
           test -s _site/portal/reader-integrated.html
           test -s _site/portal/reader-integrated.js
-          test -s _site/portal/reader-v03/index.html
-          test -s _site/portal/reader-v03/app.mjs
-          test -s _site/portal/reader-v03/lib/narration.mjs
           test -s _site/portal/vendor/foliate-js/view.js
           test -s _site/portal/vendor/mediapipe/vision_bundle.mjs
           test -s _site/portal/vendor/mediapipe/wasm/vision_wasm_internal.wasm
