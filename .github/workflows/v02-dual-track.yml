@@ -1,7 +1,5 @@
 name: V0.2 dual-track autonomous verification
 on:
-  schedule:
-    - cron: '17 2,14 * * *'
   workflow_dispatch:
 permissions:
   contents: read
