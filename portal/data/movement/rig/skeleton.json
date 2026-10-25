@@ -1,0 +1,1807 @@
+{
+ "schema": "zero-one.movement.rig.v1",
+ "builtAt": "2026-10-25T08:54:48.907Z",
+ "units": "metres",
+ "frame": "+X = subject left, +Y up, +Z anterior (same frame as portal/anatomy)",
+ "subject": {
+  "sex": "male",
+  "height": 1.7143,
+  "source": "BodyParts3D"
+ },
+ "license": {
+  "model": "BodyParts3D, (c) Database Center for Life Science (DBCLS), CC BY 4.0",
+  "packaging": "ashemag/human-atlas, MIT",
+  "url": "https://github.com/ashemag/human-atlas"
+ },
+ "joints": {
+  "root": [
+   0.00038,
+   0.47419,
+   -0.00651
+  ],
+  "hip": {
+   "L": [
+    0.03826,
+    -0.00187,
+    -0.0004
+   ],
+   "R": [
+    -0.03826,
+    0.00187,
+    0.0004
+   ]
+  },
+  "hipWorld": {
+   "L": [
+    0.03864,
+    0.47232,
+    -0.00691
+   ],
+   "R": [
+    -0.03788,
+    0.47606,
+    -0.00612
+   ]
+  },
+  "knee": {
+   "L": [
+    0.07331,
+    0.45287,
+    -0.01495
+   ],
+   "R": [
+    -0.07315,
+    0.45225,
+    -0.0143
+   ]
+  },
+  "ankle": {
+   "L": [
+    0.07081,
+    0.06146,
+    -0.02113
+   ],
+   "R": [
+    -0.07067,
+    0.06161,
+    -0.02154
+   ]
+  },
+  "shoulder": {
+   "L": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "R": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ]
+  },
+  "elbow": {
+   "L": [
+    0.23158,
+    1.10591,
+    -0.03101
+   ],
+   "R": [
+    -0.23126,
+    1.10487,
+    -0.03202
+   ]
+  },
+  "wrist": {
+   "L": [
+    0.2633,
+    0.90364,
+    0.01278
+   ],
+   "R": [
+    -0.26318,
+    0.90202,
+    0.01372
+   ]
+  },
+  "spineTop": [
+   0,
+   1.36775,
+   0.0895
+  ],
+  "neck": [
+   0,
+   1.48974,
+   -0.045
+  ]
+ },
+ "fits": {
+  "method": "RANSAC sphere fit on bone cap vertices + least-squares refinement",
+  "hipL": {
+   "center": [
+    0.038636182261947795,
+    0.47232472273618636,
+    -0.006911617315796632
+   ],
+   "radius": 0.0382829272045959,
+   "inliers": 5,
+   "of": 50,
+   "meanError": 0.05182543462808103,
+   "maxError": 0.2051804202218196
+  },
+  "hipR": {
+   "center": [
+    -0.03788023389284846,
+    0.4760645477465931,
+    -0.006117532232922279
+   ],
+   "radius": 0.03582190296022279,
+   "inliers": 3,
+   "of": 52,
+   "meanError": 0.04744997934004729,
+   "maxError": 0.2043152000732722
+  },
+  "kneeDelta": {
+   "L": 0.05261591860066189,
+   "R": 0.05098648797574428
+  },
+  "elbowSpread": {
+   "L": 0.029026381534999635,
+   "R": 0.02720683780486502
+  },
+  "note": "Centres are fitted from the mesh. They are anatomical approximations for animation, not measured joint kinematics of any person."
+ },
+ "bones": [
+  {
+   "name": "pelvis",
+   "parent": null,
+   "rig": null,
+   "joint": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "parts": [
+    {
+     "id": "FJ3288",
+     "name": "Left hip bone",
+     "system": "skeletal",
+     "file": "parts/FJ3288.json",
+     "vertexCount": 986,
+     "indexCount": 5424
+    },
+    {
+     "id": "FJ3152",
+     "name": "Right hip bone",
+     "system": "skeletal",
+     "file": "parts/FJ3152.json",
+     "vertexCount": 1036,
+     "indexCount": 5694
+    },
+    {
+     "id": "FJ3393",
+     "name": "Sacrum",
+     "system": "skeletal",
+     "file": "parts/FJ3393.json",
+     "vertexCount": 2771,
+     "indexCount": 15174
+    }
+   ]
+  },
+  {
+   "name": "chest",
+   "parent": "pelvis",
+   "rig": null,
+   "joint": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "parts": [
+    {
+     "id": "FJ3178",
+     "name": "Body of sternum",
+     "system": "skeletal",
+     "file": "parts/FJ3178.json",
+     "vertexCount": 2511,
+     "indexCount": 8430
+    },
+    {
+     "id": "FJ3290",
+     "name": "Manubrium",
+     "system": "skeletal",
+     "file": "parts/FJ3290.json",
+     "vertexCount": 1094,
+     "indexCount": 5676
+    }
+   ]
+  },
+  {
+   "name": "head",
+   "parent": "chest",
+   "rig": null,
+   "joint": [
+    0,
+    1.48974,
+    -0.045
+   ],
+   "parts": [
+    {
+     "id": "FJ3200",
+     "name": "Frontal bone",
+     "system": "skeletal",
+     "file": "parts/FJ3200.json",
+     "vertexCount": 3315,
+     "indexCount": 15336
+    },
+    {
+     "id": "FJ3274",
+     "name": "Left parietal bone",
+     "system": "skeletal",
+     "file": "parts/FJ3274.json",
+     "vertexCount": 2927,
+     "indexCount": 11196
+    },
+    {
+     "id": "FJ3380",
+     "name": "Right parietal bone",
+     "system": "skeletal",
+     "file": "parts/FJ3380.json",
+     "vertexCount": 2734,
+     "indexCount": 11082
+    },
+    {
+     "id": "FJ3309",
+     "name": "Occipital bone",
+     "system": "skeletal",
+     "file": "parts/FJ3309.json",
+     "vertexCount": 2938,
+     "indexCount": 14736
+    },
+    {
+     "id": "FJ3281",
+     "name": "Left temporal bone",
+     "system": "skeletal",
+     "file": "parts/FJ3281.json",
+     "vertexCount": 1835,
+     "indexCount": 8484
+    },
+    {
+     "id": "FJ3386",
+     "name": "Right temporal bone",
+     "system": "skeletal",
+     "file": "parts/FJ3386.json",
+     "vertexCount": 1976,
+     "indexCount": 8718
+    },
+    {
+     "id": "FJ3289",
+     "name": "Mandible",
+     "system": "skeletal",
+     "file": "parts/FJ3289.json",
+     "vertexCount": 1207,
+     "indexCount": 7044
+    }
+   ]
+  },
+  {
+   "name": "scapula.L",
+   "parent": "chest",
+   "rig": "scapula",
+   "joint": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "parts": [
+    {
+     "id": "FJ3279",
+     "name": "Left scapula",
+     "system": "skeletal",
+     "file": "parts/FJ3279.json",
+     "vertexCount": 3097,
+     "indexCount": 18540
+    },
+    {
+     "id": "FJ3237",
+     "name": "Left clavicle",
+     "system": "skeletal",
+     "file": "parts/FJ3237.json",
+     "vertexCount": 426,
+     "indexCount": 2478
+    }
+   ]
+  },
+  {
+   "name": "upperArm.L",
+   "parent": "chest",
+   "rig": "shoulder",
+   "joint": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "parts": [
+    {
+     "id": "FJ3262",
+     "name": "Left humerus",
+     "system": "skeletal",
+     "file": "parts/FJ3262.json",
+     "vertexCount": 586,
+     "indexCount": 2886
+    }
+   ]
+  },
+  {
+   "name": "forearm.L",
+   "parent": "upperArm.L",
+   "rig": "elbow",
+   "joint": [
+    0.23158,
+    1.10591,
+    -0.03101
+   ],
+   "parts": [
+    {
+     "id": "FJ3277",
+     "name": "Left radius",
+     "system": "skeletal",
+     "file": "parts/FJ3277.json",
+     "vertexCount": 250,
+     "indexCount": 1218
+    },
+    {
+     "id": "FJ3286",
+     "name": "Left ulna",
+     "system": "skeletal",
+     "file": "parts/FJ3286.json",
+     "vertexCount": 283,
+     "indexCount": 1302
+    },
+    {
+     "id": "FJ3243",
+     "name": "Left second metacarpal",
+     "system": "skeletal",
+     "file": "parts/FJ3243.json",
+     "vertexCount": 328,
+     "indexCount": 1776
+    },
+    {
+     "id": "FJ3257",
+     "name": "Left carpal block (capitate)",
+     "system": "skeletal",
+     "file": "parts/FJ3257.json",
+     "vertexCount": 230,
+     "indexCount": 1164
+    }
+   ]
+  },
+  {
+   "name": "thigh.L",
+   "parent": "pelvis",
+   "rig": "hip",
+   "joint": [
+    0.03864,
+    0.47232,
+    -0.00691
+   ],
+   "parts": [
+    {
+     "id": "FJ3259",
+     "name": "Left femur",
+     "system": "skeletal",
+     "file": "parts/FJ3259.json",
+     "vertexCount": 459,
+     "indexCount": 2652
+    },
+    {
+     "id": "FJ3275",
+     "name": "Left patella",
+     "system": "skeletal",
+     "file": "parts/FJ3275.json",
+     "vertexCount": 177,
+     "indexCount": 912
+    }
+   ]
+  },
+  {
+   "name": "shank.L",
+   "parent": "thigh.L",
+   "rig": "knee",
+   "joint": [
+    0.07331,
+    0.45287,
+    -0.01495
+   ],
+   "parts": [
+    {
+     "id": "FJ3282",
+     "name": "Left tibia",
+     "system": "skeletal",
+     "file": "parts/FJ3282.json",
+     "vertexCount": 331,
+     "indexCount": 1860
+    },
+    {
+     "id": "FJ3260",
+     "name": "Left fibula",
+     "system": "skeletal",
+     "file": "parts/FJ3260.json",
+     "vertexCount": 149,
+     "indexCount": 834
+    },
+    {
+     "id": "FJ3280",
+     "name": "Left talus",
+     "system": "skeletal",
+     "file": "parts/FJ3280.json",
+     "vertexCount": 666,
+     "indexCount": 3432
+    },
+    {
+     "id": "FJ3256",
+     "name": "Left calcaneus",
+     "system": "skeletal",
+     "file": "parts/FJ3256.json",
+     "vertexCount": 632,
+     "indexCount": 3366
+    }
+   ]
+  },
+  {
+   "name": "scapula.R",
+   "parent": "chest",
+   "rig": "scapula",
+   "joint": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "parts": [
+    {
+     "id": "FJ3384",
+     "name": "Right scapula",
+     "system": "skeletal",
+     "file": "parts/FJ3384.json",
+     "vertexCount": 2896,
+     "indexCount": 17268
+    },
+    {
+     "id": "FJ3362",
+     "name": "Right clavicle",
+     "system": "skeletal",
+     "file": "parts/FJ3362.json",
+     "vertexCount": 420,
+     "indexCount": 2460
+    }
+   ]
+  },
+  {
+   "name": "upperArm.R",
+   "parent": "chest",
+   "rig": "shoulder",
+   "joint": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "parts": [
+    {
+     "id": "FJ3368",
+     "name": "Right humerus",
+     "system": "skeletal",
+     "file": "parts/FJ3368.json",
+     "vertexCount": 794,
+     "indexCount": 3210
+    }
+   ]
+  },
+  {
+   "name": "forearm.R",
+   "parent": "upperArm.R",
+   "rig": "elbow",
+   "joint": [
+    -0.23126,
+    1.10487,
+    -0.03202
+   ],
+   "parts": [
+    {
+     "id": "FJ3349",
+     "name": "Right radius",
+     "system": "skeletal",
+     "file": "parts/FJ3349.json",
+     "vertexCount": 249,
+     "indexCount": 1224
+    },
+    {
+     "id": "FJ3391",
+     "name": "Right ulna",
+     "system": "skeletal",
+     "file": "parts/FJ3391.json",
+     "vertexCount": 305,
+     "indexCount": 1446
+    },
+    {
+     "id": "FJ3352",
+     "name": "Right second metacarpal",
+     "system": "skeletal",
+     "file": "parts/FJ3352.json",
+     "vertexCount": 347,
+     "indexCount": 1830
+    },
+    {
+     "id": "FJ3361",
+     "name": "Right carpal block (capitate)",
+     "system": "skeletal",
+     "file": "parts/FJ3361.json",
+     "vertexCount": 245,
+     "indexCount": 1218
+    }
+   ]
+  },
+  {
+   "name": "thigh.R",
+   "parent": "pelvis",
+   "rig": "hip",
+   "joint": [
+    -0.03788,
+    0.47606,
+    -0.00612
+   ],
+   "parts": [
+    {
+     "id": "FJ3365",
+     "name": "Right femur",
+     "system": "skeletal",
+     "file": "parts/FJ3365.json",
+     "vertexCount": 480,
+     "indexCount": 2790
+    },
+    {
+     "id": "FJ3381",
+     "name": "Right patella",
+     "system": "skeletal",
+     "file": "parts/FJ3381.json",
+     "vertexCount": 176,
+     "indexCount": 912
+    }
+   ]
+  },
+  {
+   "name": "shank.R",
+   "parent": "thigh.R",
+   "rig": "knee",
+   "joint": [
+    -0.07315,
+    0.45225,
+    -0.0143
+   ],
+   "parts": [
+    {
+     "id": "FJ3387",
+     "name": "Right tibia",
+     "system": "skeletal",
+     "file": "parts/FJ3387.json",
+     "vertexCount": 334,
+     "indexCount": 1902
+    },
+    {
+     "id": "FJ3366",
+     "name": "Right fibula",
+     "system": "skeletal",
+     "file": "parts/FJ3366.json",
+     "vertexCount": 162,
+     "indexCount": 894
+    },
+    {
+     "id": "FJ3385",
+     "name": "Right talus",
+     "system": "skeletal",
+     "file": "parts/FJ3385.json",
+     "vertexCount": 709,
+     "indexCount": 3552
+    },
+    {
+     "id": "FJ3360",
+     "name": "Right calcaneus",
+     "system": "skeletal",
+     "file": "parts/FJ3360.json",
+     "vertexCount": 641,
+     "indexCount": 3228
+    }
+   ]
+  }
+ ],
+ "muscles": [
+  {
+   "muscle": "Pectoralis major",
+   "zh": "胸大肌",
+   "partId": "FJ1446",
+   "name": "Abdominal part of right pectoralis major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1446.json",
+   "vertexCount": 563,
+   "indexCount": 2178
+  },
+  {
+   "muscle": "Pectoralis major",
+   "zh": "胸大肌",
+   "partId": "FJ1446M",
+   "name": "Abdominal part of left pectoralis major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1446M.json",
+   "vertexCount": 564,
+   "indexCount": 2166
+  },
+  {
+   "muscle": "Pectoralis major",
+   "zh": "胸大肌",
+   "partId": "FJ1447",
+   "name": "Clavicular part of right pectoralis major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1447.json",
+   "vertexCount": 917,
+   "indexCount": 2994
+  },
+  {
+   "muscle": "Pectoralis major",
+   "zh": "胸大肌",
+   "partId": "FJ1447M",
+   "name": "Clavicular part of left pectoralis major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1447M.json",
+   "vertexCount": 922,
+   "indexCount": 2994
+  },
+  {
+   "muscle": "Pectoralis major",
+   "zh": "胸大肌",
+   "partId": "FJ1464",
+   "name": "Sternocostal part of right pectoralis major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1464.json",
+   "vertexCount": 3278,
+   "indexCount": 10440
+  },
+  {
+   "muscle": "Pectoralis major",
+   "zh": "胸大肌",
+   "partId": "FJ1464M",
+   "name": "Sternocostal part of left pectoralis major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1464M.json",
+   "vertexCount": 3271,
+   "indexCount": 10470
+  },
+  {
+   "muscle": "Anterior deltoid",
+   "zh": "三角肌前束",
+   "partId": "FJ1468",
+   "name": "Clavicular part of right deltoid",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1468.json",
+   "vertexCount": 2121,
+   "indexCount": 4458
+  },
+  {
+   "muscle": "Anterior deltoid",
+   "zh": "三角肌前束",
+   "partId": "FJ1468M",
+   "name": "Clavicular part of left deltoid",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1468M.json",
+   "vertexCount": 2143,
+   "indexCount": 4500
+  },
+  {
+   "muscle": "Posterior deltoid",
+   "zh": "三角肌后束",
+   "partId": "FJ1513",
+   "name": "Spinal part of right deltoid",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1513.json",
+   "vertexCount": 1063,
+   "indexCount": 3084
+  },
+  {
+   "muscle": "Posterior deltoid",
+   "zh": "三角肌后束",
+   "partId": "FJ1513M",
+   "name": "Spinal part of left deltoid",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1513M.json",
+   "vertexCount": 1078,
+   "indexCount": 3138
+  },
+  {
+   "muscle": "Deltoid",
+   "zh": "三角肌",
+   "partId": "FJ1467",
+   "name": "Acromial part of right deltoid",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1467.json",
+   "vertexCount": 545,
+   "indexCount": 2058
+  },
+  {
+   "muscle": "Deltoid",
+   "zh": "三角肌",
+   "partId": "FJ1467M",
+   "name": "Acromial part of left deltoid",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1467M.json",
+   "vertexCount": 544,
+   "indexCount": 2058
+  },
+  {
+   "muscle": "Deltoid",
+   "zh": "三角肌",
+   "partId": "FJ1468",
+   "name": "Clavicular part of right deltoid",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1468.json",
+   "vertexCount": 2121,
+   "indexCount": 4458
+  },
+  {
+   "muscle": "Deltoid",
+   "zh": "三角肌",
+   "partId": "FJ1468M",
+   "name": "Clavicular part of left deltoid",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1468M.json",
+   "vertexCount": 2143,
+   "indexCount": 4500
+  },
+  {
+   "muscle": "Deltoid",
+   "zh": "三角肌",
+   "partId": "FJ1513",
+   "name": "Spinal part of right deltoid",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1513.json",
+   "vertexCount": 1063,
+   "indexCount": 3084
+  },
+  {
+   "muscle": "Deltoid",
+   "zh": "三角肌",
+   "partId": "FJ1513M",
+   "name": "Spinal part of left deltoid",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1513M.json",
+   "vertexCount": 1078,
+   "indexCount": 3138
+  },
+  {
+   "muscle": "Biceps brachii",
+   "zh": "肱二头肌",
+   "partId": "FJ1478",
+   "name": "Long head of right biceps brachii",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1478.json",
+   "vertexCount": 466,
+   "indexCount": 1476
+  },
+  {
+   "muscle": "Biceps brachii",
+   "zh": "肱二头肌",
+   "partId": "FJ1478M",
+   "name": "Long head of left biceps brachii",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1478M.json",
+   "vertexCount": 457,
+   "indexCount": 1476
+  },
+  {
+   "muscle": "Biceps brachii",
+   "zh": "肱二头肌",
+   "partId": "FJ1512",
+   "name": "Short head of right biceps brachii",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1512.json",
+   "vertexCount": 1035,
+   "indexCount": 2412
+  },
+  {
+   "muscle": "Biceps brachii",
+   "zh": "肱二头肌",
+   "partId": "FJ1512M",
+   "name": "Short head of left biceps brachii",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1512M.json",
+   "vertexCount": 1032,
+   "indexCount": 2448
+  },
+  {
+   "muscle": "Brachialis",
+   "zh": "肱肌",
+   "partId": "FJ1486",
+   "name": "Right brachialis",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1486.json",
+   "vertexCount": 630,
+   "indexCount": 2136
+  },
+  {
+   "muscle": "Brachialis",
+   "zh": "肱肌",
+   "partId": "FJ1486M",
+   "name": "Left brachialis",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1486M.json",
+   "vertexCount": 621,
+   "indexCount": 2106
+  },
+  {
+   "muscle": "Brachioradialis",
+   "zh": "肱桡肌",
+   "partId": "FJ1487",
+   "name": "Right brachioradialis",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1487.json",
+   "vertexCount": 1012,
+   "indexCount": 3216
+  },
+  {
+   "muscle": "Brachioradialis",
+   "zh": "肱桡肌",
+   "partId": "FJ1487M",
+   "name": "Left brachioradialis",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1487M.json",
+   "vertexCount": 991,
+   "indexCount": 3210
+  },
+  {
+   "muscle": "Triceps brachii",
+   "zh": "肱三头肌",
+   "partId": "FJ1477",
+   "name": "Lateral head of right triceps brachii",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1477.json",
+   "vertexCount": 656,
+   "indexCount": 2514
+  },
+  {
+   "muscle": "Triceps brachii",
+   "zh": "肱三头肌",
+   "partId": "FJ1477M",
+   "name": "Lateral head of left triceps brachii",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1477M.json",
+   "vertexCount": 661,
+   "indexCount": 2490
+  },
+  {
+   "muscle": "Triceps brachii",
+   "zh": "肱三头肌",
+   "partId": "FJ1479",
+   "name": "Long head of right triceps brachii",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1479.json",
+   "vertexCount": 504,
+   "indexCount": 1680
+  },
+  {
+   "muscle": "Triceps brachii",
+   "zh": "肱三头肌",
+   "partId": "FJ1479M",
+   "name": "Long head of left triceps brachii",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1479M.json",
+   "vertexCount": 504,
+   "indexCount": 1686
+  },
+  {
+   "muscle": "Triceps brachii",
+   "zh": "肱三头肌",
+   "partId": "FJ1480",
+   "name": "Medial head of right triceps brachii",
+   "parent": "upperArm.R",
+   "origin": [
+    -0.21207,
+    1.12528,
+    -0.03707
+   ],
+   "file": "parts/FJ1480.json",
+   "vertexCount": 325,
+   "indexCount": 1116
+  },
+  {
+   "muscle": "Triceps brachii",
+   "zh": "肱三头肌",
+   "partId": "FJ1480M",
+   "name": "Medial head of left triceps brachii",
+   "parent": "upperArm.L",
+   "origin": [
+    0.21103,
+    1.12631,
+    -0.03356
+   ],
+   "file": "parts/FJ1480M.json",
+   "vertexCount": 325,
+   "indexCount": 1122
+  },
+  {
+   "muscle": "Trapezius",
+   "zh": "斜方肌",
+   "partId": "FJ1520",
+   "name": "Ascending part of right trapezius",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1520.json",
+   "vertexCount": 2787,
+   "indexCount": 7962
+  },
+  {
+   "muscle": "Trapezius",
+   "zh": "斜方肌",
+   "partId": "FJ1520M",
+   "name": "Ascending part of left trapezius",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1520M.json",
+   "vertexCount": 2752,
+   "indexCount": 7920
+  },
+  {
+   "muscle": "Trapezius",
+   "zh": "斜方肌",
+   "partId": "FJ1521",
+   "name": "Descending part of right trapezius",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1521.json",
+   "vertexCount": 2394,
+   "indexCount": 7854
+  },
+  {
+   "muscle": "Trapezius",
+   "zh": "斜方肌",
+   "partId": "FJ1521M",
+   "name": "Descending part of left trapezius",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1521M.json",
+   "vertexCount": 2380,
+   "indexCount": 7866
+  },
+  {
+   "muscle": "Trapezius",
+   "zh": "斜方肌",
+   "partId": "FJ1554",
+   "name": "Transverse part of right trapezius",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1554.json",
+   "vertexCount": 1989,
+   "indexCount": 5880
+  },
+  {
+   "muscle": "Trapezius",
+   "zh": "斜方肌",
+   "partId": "FJ1554M",
+   "name": "Transverse part of left trapezius",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1554M.json",
+   "vertexCount": 1981,
+   "indexCount": 5886
+  },
+  {
+   "muscle": "Rhomboid major",
+   "zh": "菱形肌",
+   "partId": "FJ1536",
+   "name": "Right rhomboid major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1536.json",
+   "vertexCount": 1824,
+   "indexCount": 5580
+  },
+  {
+   "muscle": "Rhomboid major",
+   "zh": "菱形肌",
+   "partId": "FJ1536M",
+   "name": "Left rhomboid major",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1536M.json",
+   "vertexCount": 1806,
+   "indexCount": 5556
+  },
+  {
+   "muscle": "Serratus anterior",
+   "zh": "前锯肌",
+   "partId": "FJ1459",
+   "name": "Right serratus anterior",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1459.json",
+   "vertexCount": 7818,
+   "indexCount": 32478
+  },
+  {
+   "muscle": "Serratus anterior",
+   "zh": "前锯肌",
+   "partId": "FJ1459M",
+   "name": "Left serratus anterior",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1459M.json",
+   "vertexCount": 7810,
+   "indexCount": 32478
+  },
+  {
+   "muscle": "Obliquus externus abdominis",
+   "zh": "腹外斜肌",
+   "partId": "FJ1452",
+   "name": "Right external oblique",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1452.json",
+   "vertexCount": 17145,
+   "indexCount": 73800
+  },
+  {
+   "muscle": "Obliquus externus abdominis",
+   "zh": "腹外斜肌",
+   "partId": "FJ1452M",
+   "name": "Left external oblique",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1452M.json",
+   "vertexCount": 17116,
+   "indexCount": 73800
+  },
+  {
+   "muscle": "Erector spinae",
+   "zh": "竖脊肌",
+   "partId": "FJ1543",
+   "name": "spinalis",
+   "parent": "chest",
+   "origin": [
+    0,
+    1.36775,
+    0.0895
+   ],
+   "file": "parts/FJ1543.json",
+   "vertexCount": 787,
+   "indexCount": 2016
+  },
+  {
+   "muscle": "Erector spinae",
+   "zh": "竖脊肌",
+   "partId": "FJ1543M",
+   "name": "Spinalis",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1543M.json",
+   "vertexCount": 792,
+   "indexCount": 2040
+  },
+  {
+   "muscle": "Gluteus maximus",
+   "zh": "臀大肌",
+   "partId": "FJ1418",
+   "name": "Right gluteus maximus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1418.json",
+   "vertexCount": 1328,
+   "indexCount": 3708
+  },
+  {
+   "muscle": "Gluteus maximus",
+   "zh": "臀大肌",
+   "partId": "FJ1418M",
+   "name": "Left gluteus maximus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1418M.json",
+   "vertexCount": 1336,
+   "indexCount": 3720
+  },
+  {
+   "muscle": "Gluteus medius",
+   "zh": "臀中肌",
+   "partId": "FJ1419",
+   "name": "Right gluteus medius",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1419.json",
+   "vertexCount": 1129,
+   "indexCount": 4110
+  },
+  {
+   "muscle": "Gluteus medius",
+   "zh": "臀中肌",
+   "partId": "FJ1419M",
+   "name": "Left gluteus medius",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1419M.json",
+   "vertexCount": 1126,
+   "indexCount": 4134
+  },
+  {
+   "muscle": "Gluteus minimus",
+   "zh": "臀小肌",
+   "partId": "FJ1420",
+   "name": "Right gluteus minimus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1420.json",
+   "vertexCount": 1346,
+   "indexCount": 4296
+  },
+  {
+   "muscle": "Gluteus minimus",
+   "zh": "臀小肌",
+   "partId": "FJ1420M",
+   "name": "Left gluteus minimus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1420M.json",
+   "vertexCount": 1350,
+   "indexCount": 4308
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1433",
+   "name": "Right rectus femoris",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1433.json",
+   "vertexCount": 910,
+   "indexCount": 3750
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1433M",
+   "name": "Left rectus femoris",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1433M.json",
+   "vertexCount": 918,
+   "indexCount": 3750
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1442",
+   "name": "Right vastus lateralis",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1442.json",
+   "vertexCount": 1091,
+   "indexCount": 4410
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1442M",
+   "name": "Left vastus lateralis",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1442M.json",
+   "vertexCount": 1080,
+   "indexCount": 4410
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1443",
+   "name": "Right vastus medialis",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1443.json",
+   "vertexCount": 784,
+   "indexCount": 3000
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1443M",
+   "name": "Left vastus medialis",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1443M.json",
+   "vertexCount": 776,
+   "indexCount": 3000
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1441",
+   "name": "Right vastus intermedius",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1441.json",
+   "vertexCount": 840,
+   "indexCount": 2808
+  },
+  {
+   "muscle": "Quadriceps femoris",
+   "zh": "股四头肌",
+   "partId": "FJ1441M",
+   "name": "Left vastus intermedius",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1441M.json",
+   "vertexCount": 839,
+   "indexCount": 2808
+  },
+  {
+   "muscle": "Biceps femoris",
+   "zh": "股二头肌",
+   "partId": "FJ1395",
+   "name": "Long head of right biceps femoris",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1395.json",
+   "vertexCount": 718,
+   "indexCount": 3372
+  },
+  {
+   "muscle": "Biceps femoris",
+   "zh": "股二头肌",
+   "partId": "FJ1395M",
+   "name": "Long head of left biceps femoris",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1395M.json",
+   "vertexCount": 726,
+   "indexCount": 3372
+  },
+  {
+   "muscle": "Biceps femoris",
+   "zh": "股二头肌",
+   "partId": "FJ1444",
+   "name": "Short head of right biceps femoris",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1444.json",
+   "vertexCount": 456,
+   "indexCount": 1476
+  },
+  {
+   "muscle": "Biceps femoris",
+   "zh": "股二头肌",
+   "partId": "FJ1444M",
+   "name": "Short head of left biceps femoris",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1444M.json",
+   "vertexCount": 450,
+   "indexCount": 1440
+  },
+  {
+   "muscle": "Semitendinosus",
+   "zh": "半腱肌",
+   "partId": "FJ1436",
+   "name": "Right semitendinosus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1436.json",
+   "vertexCount": 638,
+   "indexCount": 1788
+  },
+  {
+   "muscle": "Semitendinosus",
+   "zh": "半腱肌",
+   "partId": "FJ1436M",
+   "name": "Left semitendinosus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1436M.json",
+   "vertexCount": 624,
+   "indexCount": 1788
+  },
+  {
+   "muscle": "Semimembranosus",
+   "zh": "半膜肌",
+   "partId": "FJ1435",
+   "name": "Right semimembranosus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1435.json",
+   "vertexCount": 664,
+   "indexCount": 3042
+  },
+  {
+   "muscle": "Semimembranosus",
+   "zh": "半膜肌",
+   "partId": "FJ1435M",
+   "name": "Left semimembranosus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1435M.json",
+   "vertexCount": 659,
+   "indexCount": 3042
+  },
+  {
+   "muscle": "Gastrocnemius",
+   "zh": "腓肠肌",
+   "partId": "FJ1394",
+   "name": "Lateral head of right gastrocnemius",
+   "parent": "shank.R",
+   "origin": [
+    -0.07315,
+    0.45225,
+    -0.0143
+   ],
+   "file": "parts/FJ1394.json",
+   "vertexCount": 482,
+   "indexCount": 2214
+  },
+  {
+   "muscle": "Gastrocnemius",
+   "zh": "腓肠肌",
+   "partId": "FJ1394M",
+   "name": "Lateral head of left gastrocnemius",
+   "parent": "shank.L",
+   "origin": [
+    0.07331,
+    0.45287,
+    -0.01495
+   ],
+   "file": "parts/FJ1394M.json",
+   "vertexCount": 487,
+   "indexCount": 2244
+  },
+  {
+   "muscle": "Gastrocnemius",
+   "zh": "腓肠肌",
+   "partId": "FJ1397",
+   "name": "Medial head of right gastrocnemius",
+   "parent": "shank.R",
+   "origin": [
+    -0.07315,
+    0.45225,
+    -0.0143
+   ],
+   "file": "parts/FJ1397.json",
+   "vertexCount": 647,
+   "indexCount": 2646
+  },
+  {
+   "muscle": "Gastrocnemius",
+   "zh": "腓肠肌",
+   "partId": "FJ1397M",
+   "name": "Medial head of left gastrocnemius",
+   "parent": "shank.L",
+   "origin": [
+    0.07331,
+    0.45287,
+    -0.01495
+   ],
+   "file": "parts/FJ1397M.json",
+   "vertexCount": 644,
+   "indexCount": 2676
+  },
+  {
+   "muscle": "Soleus",
+   "zh": "比目鱼肌",
+   "partId": "FJ1437",
+   "name": "Right soleus",
+   "parent": "shank.R",
+   "origin": [
+    -0.07315,
+    0.45225,
+    -0.0143
+   ],
+   "file": "parts/FJ1437.json",
+   "vertexCount": 792,
+   "indexCount": 3012
+  },
+  {
+   "muscle": "Soleus",
+   "zh": "比目鱼肌",
+   "partId": "FJ1437M",
+   "name": "Left soleus",
+   "parent": "shank.L",
+   "origin": [
+    0.07331,
+    0.45287,
+    -0.01495
+   ],
+   "file": "parts/FJ1437M.json",
+   "vertexCount": 778,
+   "indexCount": 2928
+  },
+  {
+   "muscle": "Iliopsoas",
+   "zh": "髂腰肌",
+   "partId": "FJ1422",
+   "name": "Right iliacus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1422.json",
+   "vertexCount": 1475,
+   "indexCount": 3966
+  },
+  {
+   "muscle": "Iliopsoas",
+   "zh": "髂腰肌",
+   "partId": "FJ1422M",
+   "name": "Left iliacus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1422M.json",
+   "vertexCount": 1478,
+   "indexCount": 4002
+  },
+  {
+   "muscle": "Iliopsoas",
+   "zh": "髂腰肌",
+   "partId": "FJ1431",
+   "name": "Right psoas major",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1431.json",
+   "vertexCount": 1401,
+   "indexCount": 4224
+  },
+  {
+   "muscle": "Iliopsoas",
+   "zh": "髂腰肌",
+   "partId": "FJ1431M",
+   "name": "Left psoas major",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1431M.json",
+   "vertexCount": 1378,
+   "indexCount": 4206
+  },
+  {
+   "muscle": "Adductor magnus",
+   "zh": "大收肌",
+   "partId": "FJ1403",
+   "name": "Right adductor magnus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1403.json",
+   "vertexCount": 1786,
+   "indexCount": 4944
+  },
+  {
+   "muscle": "Adductor magnus",
+   "zh": "大收肌",
+   "partId": "FJ1403M",
+   "name": "Left adductor magnus",
+   "parent": "pelvis",
+   "origin": [
+    0.00038,
+    0.47419,
+    -0.00651
+   ],
+   "file": "parts/FJ1403M.json",
+   "vertexCount": 1801,
+   "indexCount": 4974
+  }
+ ],
+ "diagnostics": [
+  "hip.L: centre=(0.0386, 0.4723, -0.0069) r=0.0383 inliers=5/50 meanErr=51.8mm",
+  "hip.R: centre=(-0.0379, 0.4761, -0.0061) r=0.0358 inliers=3/52 meanErr=47.4mm",
+  "knee.L.femur: centre=(0.0724, 0.4792, -0.0150) r=0.0352 inliers=55/177 meanErr=7.2mm",
+  "knee.L.tibia: centre=(0.0742, 0.4266, -0.0149) r=0.0314 inliers=88/168 meanErr=4.5mm",
+  "knee.R.femur: centre=(-0.0722, 0.4777, -0.0145) r=0.0357 inliers=61/183 meanErr=6.9mm",
+  "knee.R.tibia: centre=(-0.0741, 0.4268, -0.0141) r=0.0314 inliers=78/159 meanErr=4.6mm",
+  "shoulder.L: centre=(0.2110, 1.1263, -0.0336) r=0.0206 inliers=69/205 meanErr=6.5mm",
+  "shoulder.R: centre=(-0.2121, 1.1253, -0.0371) r=0.0201 inliers=60/201 meanErr=6.3mm",
+  "elbow.L.humerus: centre=(0.2097, 1.1310, -0.0386) r=0.0213 inliers=60/214 meanErr=7.1mm",
+  "elbow.L.radius: centre=(0.2316, 1.0914, -0.0246) r=0.0161 inliers=32/107 meanErr=5.6mm",
+  "elbow.L.ulna: centre=(0.2100, 1.1059, -0.0375) r=0.0158 inliers=86/161 meanErr=4.6mm",
+  "elbow.R.humerus: centre=(-0.2107, 1.1301, -0.0407) r=0.0210 inliers=57/215 meanErr=7.1mm",
+  "elbow.R.radius: centre=(-0.2313, 1.0927, -0.0257) r=0.0152 inliers=25/90 meanErr=5.2mm",
+  "elbow.R.ulna: centre=(-0.2105, 1.1049, -0.0383) r=0.0158 inliers=75/157 meanErr=5.3mm",
+  "wrist.L.radius: centre=(0.2633, 0.9036, 0.0128) r=0.0156 inliers=60/105 meanErr=4.9mm",
+  "wrist.L.ulna: centre=(0.2342, 0.9108, 0.0091) r=0.0162 inliers=11/81 meanErr=8.6mm",
+  "wrist.R.radius: centre=(-0.2632, 0.9020, 0.0137) r=0.0154 inliers=80/113 meanErr=3.8mm",
+  "wrist.R.ulna: centre=(-0.2342, 0.9042, 0.0086) r=0.0123 inliers=36/97 meanErr=7.4mm"
+ ]
+}

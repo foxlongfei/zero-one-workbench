@@ -1,0 +1,644 @@
+{
+ "schema": "zero-one.movement.anatomy-map.v1",
+ "builtAt": "2026-10-25T08:55:06.641Z",
+ "source": {
+  "model": "BodyParts3D 4.0 via ashemag/human-atlas",
+  "license": "CC BY 4.0 (BodyParts3D, Database Center for Life Science)",
+  "note": "This file maps exercise muscle names to anatomical mesh ids. It is authored by this project; it is not an upstream muscle-activation dataset."
+ },
+ "roleSemantics": "ROLE_FROM_EXERCISE_RECORD_NOT_EMG",
+ "muscles": {
+  "Pectoralis major": {
+   "zh": "胸大肌",
+   "terms": [
+    "pectoralis major",
+    "pectoralis major",
+    "pectoralis major",
+    "pectoralis major",
+    "pectoralis major",
+    "pectoralis major"
+   ],
+   "parts": [
+    {
+     "id": "FJ1446",
+     "name": "Abdominal part of right pectoralis major"
+    },
+    {
+     "id": "FJ1446M",
+     "name": "Abdominal part of left pectoralis major"
+    },
+    {
+     "id": "FJ1447",
+     "name": "Clavicular part of right pectoralis major"
+    },
+    {
+     "id": "FJ1447M",
+     "name": "Clavicular part of left pectoralis major"
+    },
+    {
+     "id": "FJ1464",
+     "name": "Sternocostal part of right pectoralis major"
+    },
+    {
+     "id": "FJ1464M",
+     "name": "Sternocostal part of left pectoralis major"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Anterior deltoid": {
+   "zh": "三角肌前束",
+   "terms": [
+    "clavicular part of right deltoid",
+    "clavicular part of left deltoid"
+   ],
+   "parts": [
+    {
+     "id": "FJ1468",
+     "name": "Clavicular part of right deltoid"
+    },
+    {
+     "id": "FJ1468M",
+     "name": "Clavicular part of left deltoid"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Posterior deltoid": {
+   "zh": "三角肌后束",
+   "terms": [
+    "spinal part of right deltoid",
+    "spinal part of left deltoid"
+   ],
+   "parts": [
+    {
+     "id": "FJ1513",
+     "name": "Spinal part of right deltoid"
+    },
+    {
+     "id": "FJ1513M",
+     "name": "Spinal part of left deltoid"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Deltoid": {
+   "zh": "三角肌",
+   "terms": [
+    "deltoid",
+    "deltoid",
+    "deltoid",
+    "deltoid",
+    "deltoid",
+    "deltoid"
+   ],
+   "parts": [
+    {
+     "id": "FJ1467",
+     "name": "Acromial part of right deltoid"
+    },
+    {
+     "id": "FJ1467M",
+     "name": "Acromial part of left deltoid"
+    },
+    {
+     "id": "FJ1468",
+     "name": "Clavicular part of right deltoid"
+    },
+    {
+     "id": "FJ1468M",
+     "name": "Clavicular part of left deltoid"
+    },
+    {
+     "id": "FJ1513",
+     "name": "Spinal part of right deltoid"
+    },
+    {
+     "id": "FJ1513M",
+     "name": "Spinal part of left deltoid"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Biceps brachii": {
+   "zh": "肱二头肌",
+   "terms": [
+    "biceps brachii",
+    "biceps brachii",
+    "biceps brachii",
+    "biceps brachii"
+   ],
+   "parts": [
+    {
+     "id": "FJ1478",
+     "name": "Long head of right biceps brachii"
+    },
+    {
+     "id": "FJ1478M",
+     "name": "Long head of left biceps brachii"
+    },
+    {
+     "id": "FJ1512",
+     "name": "Short head of right biceps brachii"
+    },
+    {
+     "id": "FJ1512M",
+     "name": "Short head of left biceps brachii"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Brachialis": {
+   "zh": "肱肌",
+   "terms": [
+    "brachialis",
+    "brachialis"
+   ],
+   "parts": [
+    {
+     "id": "FJ1486",
+     "name": "Right brachialis"
+    },
+    {
+     "id": "FJ1486M",
+     "name": "Left brachialis"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Brachioradialis": {
+   "zh": "肱桡肌",
+   "terms": [
+    "brachioradialis",
+    "brachioradialis"
+   ],
+   "parts": [
+    {
+     "id": "FJ1487",
+     "name": "Right brachioradialis"
+    },
+    {
+     "id": "FJ1487M",
+     "name": "Left brachioradialis"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Triceps brachii": {
+   "zh": "肱三头肌",
+   "terms": [
+    "triceps brachii",
+    "triceps brachii",
+    "triceps brachii",
+    "triceps brachii",
+    "triceps brachii",
+    "triceps brachii"
+   ],
+   "parts": [
+    {
+     "id": "FJ1477",
+     "name": "Lateral head of right triceps brachii"
+    },
+    {
+     "id": "FJ1477M",
+     "name": "Lateral head of left triceps brachii"
+    },
+    {
+     "id": "FJ1479",
+     "name": "Long head of right triceps brachii"
+    },
+    {
+     "id": "FJ1479M",
+     "name": "Long head of left triceps brachii"
+    },
+    {
+     "id": "FJ1480",
+     "name": "Medial head of right triceps brachii"
+    },
+    {
+     "id": "FJ1480M",
+     "name": "Medial head of left triceps brachii"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Latissimus dorsi": {
+   "zh": "背阔肌",
+   "terms": [
+    "latissimus dorsi"
+   ],
+   "parts": [],
+   "status": "NO_MESH_IN_MODEL"
+  },
+  "Trapezius": {
+   "zh": "斜方肌",
+   "terms": [
+    "trapezius",
+    "trapezius",
+    "trapezius",
+    "trapezius",
+    "trapezius",
+    "trapezius"
+   ],
+   "parts": [
+    {
+     "id": "FJ1520",
+     "name": "Ascending part of right trapezius"
+    },
+    {
+     "id": "FJ1520M",
+     "name": "Ascending part of left trapezius"
+    },
+    {
+     "id": "FJ1521",
+     "name": "Descending part of right trapezius"
+    },
+    {
+     "id": "FJ1521M",
+     "name": "Descending part of left trapezius"
+    },
+    {
+     "id": "FJ1554",
+     "name": "Transverse part of right trapezius"
+    },
+    {
+     "id": "FJ1554M",
+     "name": "Transverse part of left trapezius"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Rhomboid major": {
+   "zh": "菱形肌",
+   "terms": [
+    "rhomboid major",
+    "rhomboid major"
+   ],
+   "parts": [
+    {
+     "id": "FJ1536",
+     "name": "Right rhomboid major"
+    },
+    {
+     "id": "FJ1536M",
+     "name": "Left rhomboid major"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Serratus anterior": {
+   "zh": "前锯肌",
+   "terms": [
+    "serratus anterior",
+    "serratus anterior"
+   ],
+   "parts": [
+    {
+     "id": "FJ1459",
+     "name": "Right serratus anterior"
+    },
+    {
+     "id": "FJ1459M",
+     "name": "Left serratus anterior"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Rectus abdominis": {
+   "zh": "腹直肌",
+   "terms": [
+    "rectus abdominis"
+   ],
+   "parts": [],
+   "status": "NO_MESH_IN_MODEL"
+  },
+  "Obliquus externus abdominis": {
+   "zh": "腹外斜肌",
+   "terms": [
+    "external oblique",
+    "external oblique"
+   ],
+   "parts": [
+    {
+     "id": "FJ1452",
+     "name": "Right external oblique"
+    },
+    {
+     "id": "FJ1452M",
+     "name": "Left external oblique"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Erector spinae": {
+   "zh": "竖脊肌",
+   "terms": [
+    "spinalis",
+    "spinalis"
+   ],
+   "parts": [
+    {
+     "id": "FJ1543",
+     "name": "spinalis"
+    },
+    {
+     "id": "FJ1543M",
+     "name": "Spinalis"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Gluteus maximus": {
+   "zh": "臀大肌",
+   "terms": [
+    "gluteus maximus",
+    "gluteus maximus"
+   ],
+   "parts": [
+    {
+     "id": "FJ1418",
+     "name": "Right gluteus maximus"
+    },
+    {
+     "id": "FJ1418M",
+     "name": "Left gluteus maximus"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Gluteus medius": {
+   "zh": "臀中肌",
+   "terms": [
+    "gluteus medius",
+    "gluteus medius"
+   ],
+   "parts": [
+    {
+     "id": "FJ1419",
+     "name": "Right gluteus medius"
+    },
+    {
+     "id": "FJ1419M",
+     "name": "Left gluteus medius"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Gluteus minimus": {
+   "zh": "臀小肌",
+   "terms": [
+    "gluteus minimus",
+    "gluteus minimus"
+   ],
+   "parts": [
+    {
+     "id": "FJ1420",
+     "name": "Right gluteus minimus"
+    },
+    {
+     "id": "FJ1420M",
+     "name": "Left gluteus minimus"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Quadriceps femoris": {
+   "zh": "股四头肌",
+   "terms": [
+    "rectus femoris",
+    "rectus femoris",
+    "vastus lateralis",
+    "vastus lateralis",
+    "vastus medialis",
+    "vastus medialis",
+    "vastus intermedius",
+    "vastus intermedius"
+   ],
+   "parts": [
+    {
+     "id": "FJ1433",
+     "name": "Right rectus femoris"
+    },
+    {
+     "id": "FJ1433M",
+     "name": "Left rectus femoris"
+    },
+    {
+     "id": "FJ1442",
+     "name": "Right vastus lateralis"
+    },
+    {
+     "id": "FJ1442M",
+     "name": "Left vastus lateralis"
+    },
+    {
+     "id": "FJ1443",
+     "name": "Right vastus medialis"
+    },
+    {
+     "id": "FJ1443M",
+     "name": "Left vastus medialis"
+    },
+    {
+     "id": "FJ1441",
+     "name": "Right vastus intermedius"
+    },
+    {
+     "id": "FJ1441M",
+     "name": "Left vastus intermedius"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Biceps femoris": {
+   "zh": "股二头肌",
+   "terms": [
+    "biceps femoris",
+    "biceps femoris",
+    "biceps femoris",
+    "biceps femoris"
+   ],
+   "parts": [
+    {
+     "id": "FJ1395",
+     "name": "Long head of right biceps femoris"
+    },
+    {
+     "id": "FJ1395M",
+     "name": "Long head of left biceps femoris"
+    },
+    {
+     "id": "FJ1444",
+     "name": "Short head of right biceps femoris"
+    },
+    {
+     "id": "FJ1444M",
+     "name": "Short head of left biceps femoris"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Semitendinosus": {
+   "zh": "半腱肌",
+   "terms": [
+    "semitendinosus",
+    "semitendinosus"
+   ],
+   "parts": [
+    {
+     "id": "FJ1436",
+     "name": "Right semitendinosus"
+    },
+    {
+     "id": "FJ1436M",
+     "name": "Left semitendinosus"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Semimembranosus": {
+   "zh": "半膜肌",
+   "terms": [
+    "semimembranosus",
+    "semimembranosus"
+   ],
+   "parts": [
+    {
+     "id": "FJ1435",
+     "name": "Right semimembranosus"
+    },
+    {
+     "id": "FJ1435M",
+     "name": "Left semimembranosus"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Gastrocnemius": {
+   "zh": "腓肠肌",
+   "terms": [
+    "gastrocnemius",
+    "gastrocnemius",
+    "gastrocnemius",
+    "gastrocnemius"
+   ],
+   "parts": [
+    {
+     "id": "FJ1394",
+     "name": "Lateral head of right gastrocnemius"
+    },
+    {
+     "id": "FJ1394M",
+     "name": "Lateral head of left gastrocnemius"
+    },
+    {
+     "id": "FJ1397",
+     "name": "Medial head of right gastrocnemius"
+    },
+    {
+     "id": "FJ1397M",
+     "name": "Medial head of left gastrocnemius"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Soleus": {
+   "zh": "比目鱼肌",
+   "terms": [
+    "soleus",
+    "soleus"
+   ],
+   "parts": [
+    {
+     "id": "FJ1437",
+     "name": "Right soleus"
+    },
+    {
+     "id": "FJ1437M",
+     "name": "Left soleus"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Tibialis anterior": {
+   "zh": "胫骨前肌",
+   "terms": [
+    "tibialis anterior",
+    "tibialis anterior"
+   ],
+   "parts": [
+    {
+     "id": "FJ1439",
+     "name": "Right tibialis anterior"
+    },
+    {
+     "id": "FJ1439M",
+     "name": "Left tibialis anterior"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Iliopsoas": {
+   "zh": "髂腰肌",
+   "terms": [
+    "iliacus",
+    "iliacus",
+    "psoas major",
+    "psoas major"
+   ],
+   "parts": [
+    {
+     "id": "FJ1422",
+     "name": "Right iliacus"
+    },
+    {
+     "id": "FJ1422M",
+     "name": "Left iliacus"
+    },
+    {
+     "id": "FJ1431",
+     "name": "Right psoas major"
+    },
+    {
+     "id": "FJ1431M",
+     "name": "Left psoas major"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  },
+  "Adductor magnus": {
+   "zh": "大收肌",
+   "terms": [
+    "adductor magnus",
+    "adductor magnus"
+   ],
+   "parts": [
+    {
+     "id": "FJ1403",
+     "name": "Right adductor magnus"
+    },
+    {
+     "id": "FJ1403M",
+     "name": "Left adductor magnus"
+    }
+   ],
+   "status": "MESH_AVAILABLE"
+  }
+ },
+ "gaps": [
+  {
+   "muscle": "Latissimus dorsi",
+   "zh": "背阔肌",
+   "searchedTerms": [
+    "latissimus dorsi"
+   ]
+  },
+  {
+   "muscle": "Rectus abdominis",
+   "zh": "腹直肌",
+   "searchedTerms": [
+    "rectus abdominis"
+   ]
+  }
+ ]
+}
