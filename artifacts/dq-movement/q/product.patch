@@ -1,0 +1,9 @@
+diff --git a/.gitignore b/.gitignore
+index 6128fef..9b834f8 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -5,3 +5,4 @@ portal/vendor/mediapipe/models/
+ 
+ # Voice library runtime data (consenting family voice samples; never commit).
+ server/voice-library/data/
++.aider*
