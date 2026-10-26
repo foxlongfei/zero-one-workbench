@@ -7,7 +7,7 @@ on:
         required: true
         default: all
         type: choice
-        options: [all, A01, B01, C01]
+        options: [all, A01, B01]
 permissions:
   contents: read
 concurrency:
@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        project: [A01, B01, C01]
+        project: [A01, B01]
         provider: [Q, D]
     permissions:
       contents: read
@@ -59,7 +59,6 @@ jobs:
           case "$PROJECT" in
             A01) issue=22; page="portal/movement-v02-experience.html"; objective="Deliver actual licensed dynamic teaching resources for at least two distinct full-body training exercises, integrated into the existing follow-along flow.";;
             B01) issue=21; page="portal/traditional-case-v02.html"; objective="Deliver an actual source-traceable intake-to-method case workflow for both lost-property and residence, preserving residence as a submodule. Never invent predictions.";;
-            C01) issue=11; page="portal/read-with-you-v01.html"; objective="Deliver real reading continuation/progress and accessible voice controls while respecting text copyright and existing issues 10-15.";;
           esac
           {
             echo "You are the implementation agent for $PROJECT, issue #$issue. Work in a small bounded increment."
@@ -92,7 +91,6 @@ jobs:
           p=sys.argv[1]
           allowed={'A01':['portal/movement-v02-experience.html','portal/assets/','tests/v02/'],
                    'B01':['portal/traditional-case-v02.html','portal/housing-v02-experience.html','portal/assets/','tests/v02/'],
-                   'C01':['portal/read-with-you-v01.html','portal/assets/','tests/v02/']}[p]
           changed=subprocess.check_output(['git','status','--porcelain','--untracked-files=all'],text=True).splitlines()
           paths=[line[3:] for line in changed]
           bad=[x for x in paths if not any(x==a or (a.endswith('/') and x.startswith(a)) for a in allowed)]
@@ -142,7 +140,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for project in A01 B01 C01; do
+          for project in A01 B01; do
            for provider in Q D; do
             patch="/tmp/agent-patches/$project-$provider.patch"
             [[ -s "$patch" ]] || continue
@@ -151,7 +149,7 @@ jobs:
             git apply --index "$patch"
             git commit -m "feat($project): $provider autonomous V0.2 prototype increment"
             git push origin "$branch"
-            case "$project" in A01) issue=22;; B01) issue=21;; C01) issue=11;; esac
+            case "$project" in A01) issue=22;; B01) issue=21;; esac
             gh pr create --base main --head "$branch" --draft --title "V0.2 $project $provider automated prototype increment" --body "Automated code proposal for #$issue. Review required. This PR is NOT deployment, independent blind testing, or accepted product. Run V0.2 validation and verify the public user journey before merging."
            done
           done
