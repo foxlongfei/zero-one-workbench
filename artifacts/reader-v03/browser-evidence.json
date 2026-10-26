@@ -1,0 +1,186 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "shelf boots without page errors",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "empty shelf shows the way in",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "readiness states local speech is ready",
+      "pass": true,
+      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n神经网络语音 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n家人授权声音 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n只有「本机朗读」需要开箱可用；另两项按需在「声音」页连接，不连接也能完整听书。"
+    },
+    {
+      "name": "readiness admits the optional sources are unset",
+      "pass": true,
+      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n神经网络语音 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n家人授权声音 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n只有「本机朗读」需要开箱可用；另两项按需在「声音」页连接，不连接也能完整听书。"
+    },
+    {
+      "name": "readiness does not claim an unset family library",
+      "pass": true,
+      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n神经网络语音 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n家人授权声音 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n只有「本机朗读」需要开箱可用；另两项按需在「声音」页连接，不连接也能完整听书。"
+    },
+    {
+      "name": "sample book imports with no account or key",
+      "pass": true,
+      "details": "示范-一个安静的晚上\nTXT\n示范-一个安静的晚上\nTXT · 尚未开始\n阅读\n听书\n移除"
+    },
+    {
+      "name": "sample book starts listening straight away",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "deleting the sample restores the empty shelf",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "TXT and EPUB both imported",
+      "pass": true,
+      "details": "已导入 1 本"
+    },
+    {
+      "name": "EPUB metadata title shown",
+      "pass": true,
+      "details": "安静的房子\n零一编辑部 · EPUB · 尚未开始\n阅读\n听书\n移除\nmorning\nTXT\nmorning\nTXT · 尚未开始\n阅读\n听书\n移除"
+    },
+    {
+      "name": "EPUB cover rendered",
+      "pass": true,
+      "details": "<img src=\"blob:https://foxlongfei.github.io/76464661-6926-4fa8-b717-e2223e3f971a\" alt=\"\" loading=\"lazy\">"
+    },
+    {
+      "name": "TXT split into three chapters",
+      "pass": true,
+      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+    },
+    {
+      "name": "TXT body rendered",
+      "pass": true,
+      "details": "第一章 清晨\n\n天刚亮的时候，小院的竹门被风轻轻推开。\n\n雨后的石阶上留着浅浅的水痕。\n\n她把昨夜的疑问写在纸上，决定今天去问图书管理员。"
+    },
+    {
+      "name": "playback starts",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "chapter jump works while listening",
+      "pass": true,
+      "details": "0"
+    },
+    {
+      "name": "listening crosses the chapter boundary without stopping",
+      "pass": true,
+      "details": "已打开《morning》· 3 章 · 9 段"
+    },
+    {
+      "name": "chapter list follows the audio",
+      "pass": true,
+      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+    },
+    {
+      "name": "pause freezes the cursor",
+      "pass": true,
+      "details": "1:0 vs 1:0"
+    },
+    {
+      "name": "resume re-speaks the interrupted paragraph",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "background music ducks while narrating",
+      "pass": true,
+      "details": "base 0.2 ducked 0.05"
+    },
+    {
+      "name": "background music keeps playing",
+      "pass": true,
+      "details": "music paused"
+    },
+    {
+      "name": "note saved with quote",
+      "pass": true,
+      "details": "第二章 午后 · 2026/10/26 08:27:52\n管理员说，书里的问题不必急着回答。\n\n这一段的雨声让我想起小时候的院子。\n\n回到这段话\n删除"
+    },
+    {
+      "name": "progress and book survive a reload",
+      "pass": true,
+      "details": "听到 第二章 午后 · 44% · 上次在听书"
+    },
+    {
+      "name": "notes restored after reload",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "resume lands on the saved chapter",
+      "pass": true,
+      "details": "第二章 午后（第 2/3 段）"
+    },
+    {
+      "name": "EPUB TOC from navigation document",
+      "pass": true,
+      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+    },
+    {
+      "name": "EPUB chapter jump",
+      "pass": true,
+      "details": "第三章 夜晚 vs 第三章 夜晚"
+    },
+    {
+      "name": "EPUB pagination stays open",
+      "pass": true,
+      "details": "已打开《安静的房子》· 3 章 · 18 段"
+    },
+    {
+      "name": "radio catalogue lists classical channels",
+      "pass": true,
+      "details": "安静书房\n环境声 · 合成环境音，公共领域（本站生成）\n☆ 收藏\nBBC Radio 3 · 古典音乐\n电台 · BBC Radio 3 官方公开直播地址\n☆ 收藏\n播放\n官方页面\nFrance Musique · 古典音乐\n电台 · Radio France 官方公开直播地址\n☆ 收藏\n播放\n官方页面\n睡前故事（示例单集）\n播客 · 示例条目：上线前须替换为持权方授权节目 · 待接入持权内容\n☆ 收藏"
+    },
+    {
+      "name": "rights are shown per source",
+      "pass": true,
+      "details": "安静书房\n环境声 · 合成环境音，公共领域（本站生成）\n☆ 收藏\nBBC Radio 3 · 古典音乐\n电台 · BBC Radio 3 官方公开直播地址\n☆ 收藏\n播放\n官方页面\nFrance Musique · 古典音乐\n电台 · Radio France 官方公开直播地址\n☆ 收藏\n播放\n官方页面\n睡前故事（示例单集）\n播客 · 示例条目：上线前须替换为持权方授权节目 · 待接入持权内容\n☆ 收藏"
+    },
+    {
+      "name": "favourite persists in settings",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "daypart label present",
+      "pass": true,
+      "details": "· 白天"
+    },
+    {
+      "name": "recording requires consent",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "consent + name enables recording",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "family voice library is reported as not connected",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "no page errors during the whole run",
+      "pass": true,
+      "details": ""
+    }
+  ],
+  "errors": []
+}
