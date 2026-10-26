@@ -3,6 +3,9 @@ name: D博士 independent Read With You delivery
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/d-reader-independent.yml]
 
 permissions:
   contents: write
@@ -31,6 +34,17 @@ jobs:
           gh issue view 42 --json title,body,comments > /tmp/d-reader/issue-42.json
           git ls-files > /tmp/d-reader/repository-files.txt
 
+      - name: Recover previous D博士 product artifact before continuing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/d-reader/recovery
+          gh run download 40164992354 --name d-reader-independent-40164992354 --dir /tmp/d-reader/recovery
+          find /tmp/d-reader/recovery -maxdepth 2 -type f -print
+          if [ -f /tmp/d-reader/recovery/product.patch ]; then
+            git apply --check /tmp/d-reader/recovery/product.patch || true
+          fi
+
       - name: D博士 independently designs and implements the product
         uses: QwenLM/qwen-code-action@v1
         with:
@@ -42,6 +56,12 @@ jobs:
             The user—not C博士—defines the complete product vision. Read /tmp/d-reader/issue-42.json in full,
             including its history and latest authorization, then inspect the entire repository and its history.
 
+            Continue from prior work, do not restart the product from scratch. First inspect
+            /tmp/d-reader/recovery and the logs of run 40164992354; preserve and reuse
+            recoverable product changes. The previous push failed on GitHub workflow
+            permissions, not on product tests. The prior run 40197113037 timed out.
+            Focus on completing and publishing V0.3 with actual working URL and evidence.
+            Do not modify .github workflows or attempt to grant permissions.
             You have full authority over product design, architecture, open-source selection, dependencies,
             user experience, implementation order, and tests. You may preserve, replace, remove, or completely
             rebuild the current C01 implementation. Existing C01 code, PRs, Foliate, browser TTS, and old tests
