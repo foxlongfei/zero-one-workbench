@@ -23,6 +23,11 @@ const playwrightPath = arg ? arg.split('=')[1] : 'playwright';
 const playwrightModule = await import(playwrightPath);
 const chromium = playwrightModule.chromium || playwrightModule.default?.chromium;
 
+// A system Chromium avoids Playwright's bundled browser download, which is what
+// makes this check runnable on a machine that only has a distro package.
+const chromeArg = process.argv.find(value => value.startsWith('--chrome='));
+const chromePath = chromeArg ? chromeArg.split('=')[1] : process.env.RW03_CHROME_PATH || '';
+
 const { createVoiceLibrary } = await import('../../server/voice-library/server.mjs');
 
 const PORT = 8791;
@@ -52,7 +57,11 @@ const watch = page => {
   });
 };
 
-const browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
+const browser = await chromium.launch({
+  headless: true,
+  ...(chromePath ? { executablePath: chromePath } : {}),
+  args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'],
+});
 const evidence = { checks, errors };
 
 try {
@@ -65,6 +74,37 @@ try {
   await page.goto(url);
   await page.waitForSelector('#importButton:enabled');
   check('shelf boots without page errors', errors.length === 0, errors.join(' | '));
+
+  // ---- first open ---------------------------------------------------------
+  // Before anyone imports anything, the page must say what already works and
+  // offer something audible, otherwise a visitor has to guess and leave.
+  check('empty shelf shows the way in', await page.locator('#shelfEmpty').isVisible());
+  const readiness = await page.locator('#readiness').innerText();
+  check('readiness states local speech is ready', (await page.locator('#readiness [data-kind="browser"]').getAttribute('data-ready')) === 'yes', readiness);
+  check('readiness admits the optional sources are unset', (await page.locator('#readiness [data-kind="endpoint"]').getAttribute('data-ready')) === 'no', readiness);
+  await page.locator('#emptyTrySample').click();
+  await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 1, null, { timeout: 8000 });
+  check('sample book imports with no account or key', (await page.locator('#shelf').innerText()).includes('一个安静的晚上'), await page.locator('#shelf').innerText());
+  await page.locator('#shelf .book').filter({ hasText: '安静的晚上' }).locator('[data-action="listen"]').click();
+  await page.waitForFunction(() => document.querySelector('#playButton')?.dataset.state === 'speaking', null, { timeout: 10000 });
+  check('sample book starts listening straight away', true);
+  await page.locator('#playButton').click();
+  // Removing asks through a native confirm dialog, which headless Chrome
+  // auto-dismisses; accept it so the sample does not pollute the shelf checks.
+  page.on('dialog', dialog => dialog.accept());
+  await page.evaluate(() => {
+    const book = [...document.querySelectorAll('#shelf .book')][0];
+    book?.querySelector('[data-action="delete"]')?.click();
+  });
+  // Deleting awaits IndexedDB and note cleanup before re-rendering, so wait for
+  // the outcome (empty state restored) rather than for the list alone.
+  await page.waitForFunction(
+    () => document.querySelectorAll('#shelf .book').length === 0 && !document.querySelector('#shelfEmpty')?.hidden,
+    null,
+    { timeout: 10000 },
+  );
+  page.removeAllListeners('dialog');
+  check('deleting the sample restores the empty shelf', await page.locator('#shelfEmpty').isVisible());
 
   // ---- import -------------------------------------------------------------
   await page.locator('#files').setInputFiles(resolve('tests/reader-v03/fixtures/morning.txt'));

@@ -250,6 +250,76 @@ async function importFiles(fileList) {
   return summary;
 }
 
+// A first-time visitor should be able to hear this product working before they
+// own an ebook. The sample is written for this prototype and dedicated to the
+// public domain, so it can be shipped without any licence risk.
+const SAMPLE_BOOK = {
+  title: '示范：一个安静的晚上',
+  chapters: [
+    {
+      title: '第一章 窗边的灯',
+      paragraphs: [
+        '天黑了，屋子里只剩下一盏小灯还亮着。灯光落在桌角，像一小片温暖的湖。',
+        '妈妈把书摊开在膝盖上，孩子靠过来，把下巴搁在她的手臂上。',
+        '「今天讲哪一段？」妈妈问。',
+        '「从上次停下的地方开始。」孩子说，「你走了以后，我自己没有往后翻。」',
+      ],
+    },
+    {
+      title: '第二章 一口气听完',
+      paragraphs: [
+        '故事里的人走过长长的走廊，推开一扇门，门外是春天的声音。',
+        '孩子听着听着，眼睛慢慢合上了，但手指还搭在书页上，好像怕它跑掉。',
+        '妈妈没有停下来。她把声音放轻一点，一句接一句地往下读，直到故事自己走到结尾。',
+      ],
+    },
+  ],
+};
+
+async function trySampleBook() {
+  try {
+    const text = SAMPLE_BOOK.chapters
+      .map(chapter => `${chapter.title}\n${chapter.paragraphs.join('\n\n')}`)
+      .join('\n\n');
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const file = new File([blob], '示范-一个安静的晚上.txt', { type: 'text/plain' });
+    await importFiles([file]);
+  } catch (error) {
+    status(`示范书没能导入：${error.message}`, 'error');
+  }
+}
+
+// Say plainly what is ready on this device: local speech needs nothing, the
+// other two sources need setup the visitor may not want. A visitor who thinks
+// listening requires an API key will never press play.
+function renderReadiness() {
+  const box = $('readiness');
+  if (!box) return;
+  const set = (kind, state, text) => {
+    const line = box.querySelector(`.readiness-line[data-kind="${kind}"]`);
+    if (line) line.dataset.ready = state;
+    const label = { browser: 'readyBrowser', endpoint: 'readyEndpoint', library: 'readyLibrary' }[kind];
+    if (label && $(label)) $(label).textContent = text;
+  };
+  const browserVoices = window.speechSynthesis?.getVoices?.() ?? [];
+  if (params.get('ttsTone') === '1') {
+    set('browser', 'yes', '已就绪（测试音）：不联网即可连续朗读。');
+  } else if (!window.speechSynthesis) {
+    set('browser', 'no', '这台浏览器不支持语音合成；可以连接神经网络语音，或换用 Chrome / Edge / Safari。');
+  } else if (!browserVoices.length) {
+    set('browser', 'yes', '已就绪：语音列表可能稍后加载，先点「听书」即可，或到「声音」页换一个声音。');
+  } else {
+    const chinese = browserVoices.filter(voice => /^(zh|cmn)/i.test(voice.lang || ''));
+    set('browser', 'yes', chinese.length
+      ? `已就绪：本机有 ${chinese.length} 个中文声音，不联网、不上传文本。`
+      : `已就绪：本机有 ${browserVoices.length} 个声音，暂无中文声音，朗读中文可能不准。`);
+  }
+  set('endpoint', settings.endpoint.baseUrl ? 'yes' : 'no',
+    settings.endpoint.baseUrl ? `已配置：${settings.endpoint.baseUrl}（文本会发往该服务）。` : '尚未配置，可选；配置后音质更好但需要自己的语音服务。');
+  set('library', libraryConfigured() ? 'yes' : 'no',
+    libraryConfigured() ? `已连接：${settings.library.baseUrl}。` : '尚未连接，可选；需要自己运行声音库服务并由家人授权录制。');
+}
+
 async function removeBook(book) {
   if (!confirm(`从本机书架移除《${titleOf(book)}》？进度和笔记会一并删除，原文件不受影响。`)) return;
   await store.deleteBookRecord(book.id);
@@ -258,6 +328,9 @@ async function removeBook(book) {
   if (localStorage.getItem('rw03-last-book') === book.id) localStorage.removeItem('rw03-last-book');
   if (activeBook?.id === book.id) closeBook();
   await refreshShelf();
+  // Removing the book that was open leaves the reader on an empty stage with
+  // nothing to play; go back to the shelf so the visitor can see what is left.
+  if (!$('screen-reader').hidden && !activeBook) showScreen('shelf');
   status(`已从本机移除《${titleOf(book)}》`);
 }
 
@@ -1274,6 +1347,8 @@ function wireEvents() {
   });
   $('toVoices').onclick = () => showScreen('voices');
   $('importButton').onclick = () => $('files').click();
+  $('emptyImport').onclick = () => $('files').click();
+  $('emptyTrySample').onclick = () => trySampleBook();
   $('files').onchange = async event => {
     const files = [...event.target.files];
     event.target.value = '';
@@ -1428,7 +1503,7 @@ function wireEvents() {
     playWorld(worldRecommended.item);
   };
 
-  window.speechSynthesis?.addEventListener?.('voiceschanged', () => updateEngineControls());
+  window.speechSynthesis?.addEventListener?.('voiceschanged', () => { updateEngineControls(); renderReadiness(); });
   document.addEventListener('keydown', event => {
     if (event.target.matches?.('input,textarea,select')) return;
     if (!$('screen-reader').hidden && event.code === 'Space') { event.preventDefault(); toggleFromKeyboard(); }
@@ -1447,9 +1522,12 @@ async function init() {
   renderStats();
   renderWorld();
   renderVoiceList();
+  renderReadiness();
   $('importButton').disabled = false;
   if (libraryConfigured()) loadVoices();
-  status('书架已就绪。导入 EPUB 或 TXT，点「听书」就能连续朗读；进度只保存在本机。');
+  status(books.length
+    ? '书架已就绪。点「听书」就能从上次的位置连续朗读；进度只保存在本机。'
+    : '书架还空着。导入一本 EPUB / TXT，或点「先用示范书试试」听一段，不需要任何账号或密钥。');
 }
 
 init().catch(error => {

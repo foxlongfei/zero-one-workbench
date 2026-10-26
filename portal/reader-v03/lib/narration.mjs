@@ -11,6 +11,8 @@
 // is fully unit-testable in Node with fake timers.
 
 import { chunkText, normalizeText } from './text.mjs';
+import { chunkForSpeech, isPageArtefact, spokenLength } from './reading-rhythm.mjs';
+import { sleep, chapterAnnouncement, pauseBefore, DEFAULT_CHAPTER_PAUSE_MS } from './chapter-flow.mjs';
 
 export const State = Object.freeze({
   IDLE: 'idle',
@@ -20,7 +22,7 @@ export const State = Object.freeze({
 });
 
 export class Narration {
-  constructor({ speak, onState = () => {}, onProgress = () => {}, onChunk = () => {}, onError = () => {}, clock = () => Date.now(), chunker = chunkText } = {}) {
+  constructor({ speak, onState = () => {}, onProgress = () => {}, onChunk = () => {}, onError = () => {}, clock = () => Date.now(), chunker = chunkForSpeech, settleMs = () => 0 } = {}) {
     this.speak = speak;
     this.onState = onState;
     this.onProgress = onProgress;
@@ -28,6 +30,12 @@ export class Narration {
     this.onError = onError;
     this.clock = clock;
     this.chunker = chunker;
+    // A voice can stop at a paragraph that ends without punctuation; a short
+    // settle gap lets those read as a completed sentence rather than a cut.
+    this.settleMs = settleMs;
+    this.speakTitles = true;
+    this.chapterPauseMs = DEFAULT_CHAPTER_PAUSE_MS;
+    this.lastAnnounced = null;
     this.book = null;
     this.state = State.IDLE;
     this.resumeState = State.IDLE;
@@ -46,6 +54,8 @@ export class Narration {
     this.book = book;
     this.stop({ keepPosition: false });
     this.state = State.IDLE;
+    this.lastAnnounced = null;
+    this.announcedChapter = null;
     this.jump(position ?? { chapter: 0, paragraph: 0 });
   }
 
@@ -103,6 +113,8 @@ export class Narration {
     this.report();
     try {
       while (true) {
+        await this.#chapterLeadIn(controller.signal);
+        if (controller.signal.aborted) return;
         const text = this.chunks[this.chunkIndex];
         if (text === undefined) {
           const advanced = this.#advanceParagraph();
@@ -115,11 +127,12 @@ export class Narration {
           }
           continue;
         }
-        if (!text.trim()) {
+        const hasSpeech = spokenLength(text) > 0;
+        if (!hasSpeech) {
           this.chunkIndex += 1;
           continue;
         }
-        this.onChunk({ chapter: this.chapter, paragraph: this.paragraph, chunk: this.chunkIndex, text });
+        this.onChunk({ chapter: this.chapter, paragraph: this.paragraph, chunk: this.chunkIndex, text, last: this.chunkIndex >= this.chunks.length - 1 });
         const started = this.clock();
         // Browser/endpoint engines are asked for `rate` scaled wall clock;
         // estimate listening time so statistics stay truthful per engine speed.
@@ -129,7 +142,12 @@ export class Narration {
         ]);
         if (controller.signal.aborted) return;
         this.listenedMs += this.clock() - started;
-        this.listenedChars = (this.listenedChars ?? 0) + text.length;
+        this.listenedChars = (this.listenedChars ?? 0) + spokenLength(text);
+        // Settle only between the last sentence of a paragraph and the next
+        // one: inside a paragraph the voice already carries the rhythm.
+        const settle = this.chunkIndex >= this.chunks.length - 1 ? Math.max(0, Number(this.settleMs(this.chapter, this.paragraph)) || 0) : 0;
+        if (settle) await sleep(settle, { signal: controller.signal });
+        if (controller.signal.aborted) return;
         this.chunkIndex += 1;
         this.report();
       }
@@ -138,6 +156,26 @@ export class Narration {
       this.pause({ silent: true });
       this.onError(error);
     }
+  }
+
+  // Announce the chapter heading once per visit, then breathe before the first
+  // sentence. Runs before every chunk so a jump into a new chapter is announced
+  // even when the listening loop was already running.
+  async #chapterLeadIn(signal) {
+    const title = chapterAnnouncement(this.book?.chapters?.[this.chapter], { spokenTitles: this.speakTitles });
+    const atStart = this.paragraph === 0 && this.chunkIndex === 0;
+    if (atStart && this.announcedChapter !== this.chapter) {
+      this.announcedChapter = this.chapter;
+      const pause = pauseBefore({ paragraph: 0 }, { chapterPauseMs: this.chapterPauseMs });
+      // The heading is a separate utterance so the voice gives it its own
+      // cadence; the cursor stays on paragraph 0, which is spoken afterwards.
+      if (title) {
+        this.onChunk({ chapter: this.chapter, paragraph: 0, chunk: 0, text: title, announcement: true });
+        await Promise.race([this.speak(title, { signal }), this.#aborted(signal)]);
+      }
+      if (pause) await sleep(pause, { signal });
+    }
+    // Paused/restarted mid-chapter: no heading, no pause.
   }
 
   // Aborting must leave the loop even when the engine ignores the signal (a

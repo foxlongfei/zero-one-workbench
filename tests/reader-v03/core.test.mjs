@@ -113,7 +113,9 @@ test('listening runs continuously across a chapter boundary', async () => {
   });
   narration.load(demoBook);
   await narration.start();
-  assert.deepEqual(spoken, ['甲一。', '甲二。', '乙一。']);
+  // The narrator says each chapter's heading as its own utterance, then flows
+  // straight into the body and the next chapter without stopping.
+  assert.deepEqual(spoken, ['第一章', '甲一。', '甲二。', '第二章', '乙一。']);
   assert.deepEqual(changes, [1]);
   assert.equal(narration.state, State.ENDED);
   assert.equal(narration.chapter, 1);

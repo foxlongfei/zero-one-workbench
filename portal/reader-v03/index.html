@@ -117,6 +117,12 @@ textarea{min-height:80px;resize:vertical}
 .hint{font-size:.85rem;color:var(--muted)}
 footer{padding:2rem clamp(1rem,4vw,2.5rem);color:var(--muted);font-size:.82rem;border-top:1px solid var(--line);margin-top:3rem}
 footer a{color:var(--muted)}
+/* first-run readiness: say plainly what already works and what needs setup */
+.readiness{display:grid;gap:.45rem;margin:.4rem 0 0;padding:.9rem 1rem;border:1px dashed var(--line);border-radius:12px;background:#fbf9f2}
+.readiness-line{display:flex;gap:.55rem;align-items:baseline;font-size:.92rem}
+.readiness .dot{width:.6rem;height:.6rem;border-radius:50%;background:#c9c3b4;flex:none;transform:translateY(-.05rem)}
+.readiness-line[data-ready="yes"] .dot{background:var(--ok)}
+.readiness-line[data-ready="no"] .dot{background:var(--warm)}
 [hidden]{display:none!important}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -150,8 +156,27 @@ footer a{color:var(--muted)}
     <h2 style="margin-top:1.6rem">我的书架 <span class="muted" id="shelfCount"></span></h2>
     <ul class="shelf" id="shelf" aria-label="书列表"></ul>
     <div id="shelfEmpty" class="card" hidden>
-      <h3>书架还空着</h3>
-      <p class="muted">导入你自己的 EPUB 或 TXT 电子书即可开始。书籍只保存在这台设备的浏览器里，不会上传。请只导入你有权阅读的文件。</p>
+      <h3>书架还空着，先导入一本书</h3>
+      <p class="muted">支持 EPUB、TXT（也接受 MOBI / AZW3 / FB2 / CBZ）。导入后点「听书」，就能从第一章连续听到结尾；暂停、跳章和听到哪里都会记住。书籍和笔记只保存在这台设备的浏览器里，不会上传。请只导入你有权阅读的文件。</p>
+      <div class="row" style="margin:.8rem 0">
+        <button id="emptyImport" class="primary" type="button">选择电子书文件</button>
+        <button id="emptyTrySample" type="button">先用示范书试试</button>
+      </div>
+      <div id="readiness" class="readiness" data-testid="readiness">
+        <div class="readiness-line" data-kind="browser">
+          <span class="dot" aria-hidden="true"></span>
+          <span><strong>本机朗读</strong> <span class="muted" id="readyBrowser">检查中…</span></span>
+        </div>
+        <div class="readiness-line" data-kind="endpoint">
+          <span class="dot" aria-hidden="true"></span>
+          <span><strong>神经网络语音</strong> <span class="muted" id="readyEndpoint">尚未配置，可选</span></span>
+        </div>
+        <div class="readiness-line" data-kind="library">
+          <span class="dot" aria-hidden="true"></span>
+          <span><strong>家人授权声音</strong> <span class="muted" id="readyLibrary">尚未连接，可选</span></span>
+        </div>
+        <p class="hint">只有「本机朗读」需要开箱可用；另两项按需在「声音」页连接，不连接也能完整听书。</p>
+      </div>
     </div>
   </section>
 

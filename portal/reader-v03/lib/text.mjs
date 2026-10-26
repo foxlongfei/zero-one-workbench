@@ -1,6 +1,8 @@
 // Pure text utilities shared by the reader core and the TTS engine.
 // No DOM / browser APIs here so Node tests can import this module directly.
 
+import { chunkForSpeech, sentenceUnits } from './reading-rhythm.mjs';
+
 const CHAPTER_TITLE = /^(?:第[一二三四五六七八九十百千零〇两0-9０-９]+[章节回卷篇部集]|序章|前言|序言|楔子|引子|尾声|后记|番外|Chapter\s+[0-9IVXLC]+|Prologue|Epilogue)(?:\s|$|[：:·.、])/i;
 
 export const isChapterTitle = line => {
@@ -44,43 +46,13 @@ export const normalizeText = value => String(value ?? '')
   .replace(/\s*\n\s*/g, ' ')
   .trim();
 
-// Sentence-aware chunking: never cut inside a sentence when a sentence
-// boundary is available within the budget, so reading sounds natural and
-// pause/resume always lands on a sentence the listener recognises.
+// Kept for callers that only want sentence units; speech chunking lives in
+// reading-rhythm.mjs because it also cleans page artefacts and markup.
 export function splitSentences(text) {
-  const flat = normalizeText(text);
-  if (!flat) return [];
-  const parts = flat.split(/(?<=[。！？!?；;…」』”’])\s*|(?<=[.!?])\s+(?=[A-Z0-9“"'(（【\[])/u);
-  return parts.map(x => x.trim()).filter(Boolean);
+  return sentenceUnits(normalizeText(text));
 }
 
-export function chunkText(text, { maxChars = 220, minChars = 40 } = {}) {
-  const chunks = [];
-  let buffer = '';
-  const flush = () => {
-    const value = buffer.trim();
-    if (value) chunks.push(value);
-    buffer = '';
-  };
-  for (const sentence of splitSentences(text)) {
-    if (sentence.length > maxChars) {
-      flush();
-      let rest = sentence;
-      while (rest.length > maxChars) {
-        const cut = Math.max(rest.lastIndexOf('，', maxChars), rest.lastIndexOf(',', maxChars));
-        const at = cut > minChars ? cut + 1 : maxChars;
-        chunks.push(rest.slice(0, at).trim());
-        rest = rest.slice(at);
-      }
-      if (rest.trim()) buffer = rest;
-      continue;
-    }
-    if (buffer && buffer.length + sentence.length > maxChars) flush();
-    buffer = buffer ? `${buffer}${/[。！？!?；;…」』”’.]$/u.test(buffer) ? '' : ' '}${sentence}` : sentence;
-  }
-  flush();
-  return chunks;
-}
+export const chunkText = (text, options) => chunkForSpeech(text, options);
 
 // Approximate position for a paragraph index inside a book, used when the
 // renderer is hidden (listening in the background) and no page range exists.
