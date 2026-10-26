@@ -113,8 +113,8 @@ test('listening runs continuously across a chapter boundary', async () => {
   });
   narration.load(demoBook);
   await narration.start();
-  // The narrator says each chapter's heading as its own utterance, then flows
-  // straight into the body and the next chapter without stopping.
+  // Chapter titles are announced by the narrator before the first sentence of
+  // each chapter, then the body follows without stopping.
   assert.deepEqual(spoken, ['第一章', '甲一。', '甲二。', '第二章', '乙一。']);
   assert.deepEqual(changes, [1]);
   assert.equal(narration.state, State.ENDED);

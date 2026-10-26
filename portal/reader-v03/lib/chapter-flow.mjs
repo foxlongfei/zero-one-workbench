@@ -1,48 +1,43 @@
-// Pauses between the pieces of a book: chapter to chapter, paragraph to
-// paragraph. Timing is configuration, not magic numbers in the loop, so the
-// reader can offer "紧凑 / 自然 / 舒缓" pacing and tests stay deterministic.
+// A short listening pause at chapter breaks, read like a human narrator would.
+//
+// "第 3 章 · 雨后的院子" followed immediately by the first sentence feels rushed;
+// a narrator says the chapter, breathes, and then continues. This module turns
+// that into explicit audio decisions the narration loop can honour, so chapter
+// boundaries are felt rather than merely indicated.
 
-export const DEFAULT_CHAPTER_PAUSE_MS = 650;
-export const DEFAULT_PARAGRAPH_PAUSE_MS = 0;
+export const DEFAULT_CHAPTER_PAUSE_MS = 1400;
 
-// A heading is spoken as its own utterance so the voice gives it the cadence of
-// a title instead of running it into the first sentence.
+// Sleep that can be interrupted: the narration controller aborts it exactly like
+// it aborts speech, so pause() never leaves a pending timer behind.
+export const sleep = (ms, { signal } = {}) => new Promise((resolve, reject) => {
+  if (!(ms > 0)) return resolve();
+  const abort = () => {
+    clearTimeout(timer);
+    reject(Object.assign(new Error('speech aborted'), { name: 'AbortError' }));
+  };
+  const timer = setTimeout(() => {
+    signal?.removeEventListener('abort', abort);
+    resolve();
+  }, ms);
+  if (signal?.aborted) abort();
+  else signal?.addEventListener('abort', abort, { once: true });
+});
+
+// The heading read aloud at the start of a chapter. TXT books often repeat the
+// heading as paragraph 0; the parser already drops it from the body, but the
+// guard keeps a duplicated title out of the audio anyway.
 export function chapterAnnouncement(chapter, { spokenTitles = true } = {}) {
-  if (!spokenTitles || !chapter) return '';
-  const title = String(chapter.heading || chapter.title || '').replace(/\s+/g, ' ').trim();
-  if (!title || title.length > 60) return '';
+  if (!spokenTitles) return '';
+  const title = String(chapter?.title ?? '').trim();
+  if (!title) return '';
+  const first = String(chapter?.paragraphs?.[0] ?? '').trim();
+  if (first && (first === title || first.startsWith(title))) return '';
   return title;
 }
 
-// Gap before a paragraph. First paragraph of a chapter gets the chapter pause;
-// everything else gets the (usually zero) paragraph pause.
-export function pauseBefore({ paragraph = 0, chapterChanged = false } = {}, { chapterPauseMs = DEFAULT_CHAPTER_PAUSE_MS, paragraphPauseMs = DEFAULT_PARAGRAPH_PAUSE_MS } = {}) {
-  const ms = chapterChanged || paragraph === 0 ? chapterPauseMs : paragraphPauseMs;
-  return Math.max(0, Number(ms) || 0);
+// Pause to insert before speaking `paragraph` of `chapter`: a real breath at a
+// chapter start, nothing inside a chapter (sentence-end silence already comes
+// from the voice itself).
+export function pauseBefore({ paragraph } = {}, { chapterPauseMs = DEFAULT_CHAPTER_PAUSE_MS } = {}) {
+  return paragraph === 0 ? Math.max(0, chapterPauseMs | 0) : 0;
 }
-
-export const sleep = (ms, { signal } = {}) => {
-  const duration = Math.max(0, Number(ms) || 0);
-  if (!duration) return Promise.resolve();
-  if (signal?.aborted) return Promise.reject(Object.assign(new Error('speech aborted'), { name: 'AbortError' }));
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      signal?.removeEventListener('abort', abort);
-      resolve();
-    }, duration);
-    const abort = () => {
-      clearTimeout(timer);
-      reject(Object.assign(new Error('speech aborted'), { name: 'AbortError' }));
-    };
-    signal?.addEventListener('abort', abort, { once: true });
-  });
-};
-
-// Human-facing pacing presets stored in settings.
-export const PACING = Object.freeze({
-  compact: { label: '紧凑', chapterPauseMs: 250, paragraphPauseMs: 0, settleMs: 120 },
-  natural: { label: '自然', chapterPauseMs: DEFAULT_CHAPTER_PAUSE_MS, paragraphPauseMs: 80, settleMs: 320 },
-  gentle: { label: '舒缓', chapterPauseMs: 1200, paragraphPauseMs: 450, settleMs: 650 },
-});
-
-export const pacingOf = id => PACING[id] ?? PACING.natural;

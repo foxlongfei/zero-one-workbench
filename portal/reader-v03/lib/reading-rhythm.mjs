@@ -1,127 +1,125 @@
-// Speech rhythm: turning a paragraph of book text into utterances a voice can
-// say naturally. Pure functions, shared by the reader core and the tests.
+// Text normalisation for spoken output.
 //
-// Reading aloud is not concatenation. A book paragraph carries page furniture
-// (page numbers, running heads, footnote markers, soft hyphens) and markup
-// leftovers that must never be spoken; sentences need to arrive whole; and a
-// voice that is handed one enormous string both stutters and makes pause
-// unusable. chunkForSpeech cleans, then packs whole sentences up to a budget.
+// Books are written to be *read*, not to be *spoken*: page numbers, running
+// headers, footnote markers, markdown emphasis, repeated whitespace and
+// punctuation runs all survive into the extracted paragraph and make a TTS
+// engine stumble. Cleaning them here keeps the on-screen text untouched while
+// the voice hears something natural.
+//
+// Pure functions only (no DOM), so the Node tests can import this directly.
 
-// A line that is only a page number or a bracketed footnote marker is furniture
-// from the printed page, not part of the story.
-const PAGE_FURNITURE = /^(?:[-–—]?\s*\d{1,4}\s*[-–—]?|\[\d{1,3}\]|［\d{1,3}］)$/u;
+const isCjk = ch => Boolean(ch) && /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(ch);
 
-const TRAILING_BRACKET = /[（(［\[]\s*(?:注|译|编者注|图片来源)[^）)］\]]*[）)］\]]/gu;
+// A paragraph that is only a page number / running head is skipped entirely.
+const PAGE_ARTEFACT = /^(?:[-—–\s]*\d{1,4}[-—–\s]*|第\s*\d+\s*页\s*(?:\/共\s*\d+\s*页)?|Page\s+\d+(?:\s+of\s+\d+)?)$/i;
+const FOOTNOTE_MARKER = /\[\^?\d{1,3}\]|(?<=[\u3400-\u9fff])\{\d{1,3}\}/g;
+// Markdown / light-rich-text leftovers that should never be spoken.
+const MARKUP = [
+  [/\*\*(.+?)\*\*/g, '$1'],
+  [/(?<!\*)\*(?!\s)(.+?)(?<!\s)\*(?!\*)/g, '$1'],
+  [/`([^`]+)`/g, '$1'],
+  [/<[^>]{1,200}>/g, ''],
+  [/&nbsp;/g, ' '],
+  [/&amp;/g, '&'],
+  [/&lt;/g, '<'],
+  [/&gt;/g, '>'],
+];
 
-export const isPageArtefact = line => {
-  const text = String(line ?? '').trim();
-  return Boolean(text) && PAGE_FURNITURE.test(text);
-};
-
-// Clean one paragraph for speech without changing what the listener hears:
-// visible characters stay, invisible furniture goes.
 export function cleanForSpeech(text) {
-  return String(text ?? '')
-    .replace(/[\u00AD\u200B\u200C\u200D\u2060\uFEFF]/g, '')
-    .replace(/<[^>\n]{1,40}>/g, '')
-    .replace(TRAILING_BRACKET, '')
-    .replace(/[ \t\u3000]+/g, ' ')
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line && !isPageArtefact(line))
-    .join(' ')
-    .trim();
+  let value = String(text ?? '').replace(/[\u00AD\u200B\u200C\u200D\uFEFF]/g, '');
+  for (const [pattern, replacement] of MARKUP) value = value.replace(pattern, replacement);
+  value = value.replace(FOOTNOTE_MARKER, '');
+  // Dashes used as an em-dash pause read better as a comma in Chinese text.
+  value = value.replace(/([\u3400-\u9fff])\s*[—–-]{1,2}\s*([\u3400-\u9fff])/g, '$1，$2');
+  // A space between two CJK characters is a layout artefact, not a word break.
+  value = value.replace(/([\u3400-\u9fff])\s+(?=[\u3400-\u9fff])/g, '$1');
+  // Punctuation runs: "……" is a real pause, everything else collapses.
+  value = value.replace(/([。！？!?，,、；;：:])\1+/g, '$1');
+  value = value.replace(/(?<!\.)\.{4,}(?!\.)/g, '……');
+  value = value.replace(/\s+/g, ' ').trim();
+  return value;
 }
 
-// Characters that actually reach the ear. Punctuation is silent, so counting
-// it would inflate listening statistics and "characters per minute".
-export const spokenLength = text => String(text ?? '').replace(/[\s\p{P}\p{S}]/gu, '').length;
+export const isPageArtefact = text => PAGE_ARTEFACT.test(String(text ?? '').trim());
 
-const SENTENCE_END = /[。！？!?…；;」』”’"'）)]/u;
-const EN_SENTENCE_END = /[.!?](?=\s+["'“”‘’(（]?[A-Z0-9\u4e00-\u9fff])/u;
+// The "home" language of a book from its own text: count CJK vs Latin letters.
+export function detectLanguage(text) {
+  const sample = String(text ?? '').slice(0, 20000);
+  let cjk = 0;
+  let latin = 0;
+  for (const ch of sample) {
+    if (isCjk(ch)) cjk += 1;
+    else if (/[A-Za-z]/.test(ch)) latin += 1;
+  }
+  if (cjk === 0 && latin === 0) return 'und';
+  return cjk >= latin * 0.35 ? 'zh' : 'en';
+}
 
-// Split into sentences, never losing text. Splitting happens *after* the
-// terminator (plus any closing quotes/brackets) so a chunk always ends on a
-// boundary the listener recognises as the end of a sentence.
+// Split a paragraph into spoken sentences, then group them into chunks that fit
+// a TTS request. CJK books have no spaces between sentences, so the boundary
+// must be found on punctuation, including closing quotes after it; Latin text
+// additionally breaks at ". " followed by a capital letter or digit.
 export function sentenceUnits(text) {
   const flat = String(text ?? '').replace(/\s+/g, ' ').trim();
   if (!flat) return [];
   const units = [];
-  let start = 0;
-  let index = 0;
-  while (index < flat.length) {
-    const char = flat[index];
-    const isCjkEnd = SENTENCE_END.test(char);
-    const isAsciiEnd = char === '.' || char === '!' || char === '?' || char === ';';
-    if (isCjkEnd || (isAsciiEnd && EN_SENTENCE_END.test(flat.slice(index, index + 3)))) {
-      let end = index + 1;
-      while (end < flat.length && /[。！？!?…；;」』”’"'）)、，,]/u.test(flat[end])) end += 1;
-      const piece = flat.slice(start, end).trim();
-      if (piece) units.push(piece);
-      start = end;
-      index = end;
-      continue;
+  let buffer = '';
+  const closers = '」』”’）)】》';
+  const terminates = ch => '。！？!?；;…'.includes(ch);
+  const latinBreak = (i, end) => {
+    const ch = flat[i];
+    if (ch !== '.') return 0;
+    if (flat[i - 1] === '.' || flat[i + 1] === '.') return 0; // ellipsis / abbreviation dots
+    const rest = flat.slice(i + 1, end);
+    return /^ ["“'(（【\[]?[A-Z0-9]/.test(rest) ? 1 : 0;
+  };
+  for (let i = 0; i < flat.length; i++) {
+    const ch = flat[i];
+    buffer += ch;
+    if (!terminates(ch) && !latinBreak(i, flat.length)) continue;
+    // Swallow a run of terminators and trailing closing quotes/brackets.
+    let j = i + 1;
+    while (j < flat.length && (terminates(flat[j]) || closers.includes(flat[j]))) {
+      buffer += flat[j];
+      j += 1;
     }
-    index += 1;
+    i = j - 1;
+    if (buffer.trim()) units.push(buffer.trim());
+    buffer = '';
   }
-  const tail = flat.slice(start).trim();
-  if (tail) units.push(tail);
+  if (buffer.trim()) units.push(buffer.trim());
   return units;
 }
 
-const COMMA_MARKS = ['，', ',', '、', '；', ';', '：', ':'];
-
-const cutAtComma = (sentence, maxChars, minChars) => {
-  const pieces = [];
-  let rest = sentence;
-  while (rest.length > maxChars) {
-    // First choice: the last comma inside the budget, so the piece ends on a
-    // natural breath. If the sentence has no comma that early but does have one
-    // later, cut at the next comma after the budget rather than mid-word. Only
-    // text with no comma at all falls back to a hard cut, so every piece makes
-    // progress and nothing is ever lost.
-    let cut = -1;
-    for (const mark of COMMA_MARKS) cut = Math.max(cut, rest.lastIndexOf(mark, maxChars - 1));
-    if (cut < Math.min(minChars, maxChars - 1)) {
-      let next = -1;
-      for (const mark of COMMA_MARKS) {
-        const at = rest.indexOf(mark, maxChars);
-        if (at !== -1 && (next === -1 || at < next)) next = at;
-      }
-      cut = next;
-    }
-    const at = cut >= 0 ? cut + 1 : maxChars;
-    const piece = rest.slice(0, at).trim();
-    if (piece) pieces.push(piece);
-    rest = rest.slice(at);
-  }
-  if (rest.trim()) pieces.push(rest.trim());
-  return pieces;
-};
-
-// Pack whole sentences into utterances of at most `maxChars`, remembering the
-// natural gap *between* sentences so the narrator can breathe there.
-export function chunkForSpeech(text, { maxChars = 220, minChars = 40 } = {}) {
-  const clean = cleanForSpeech(text);
-  if (!clean) return [];
-  const units = sentenceUnits(clean);
-  if (!units.length) return [];
+// Group sentences into chunks of at most `maxChars`, never splitting a sentence
+// unless it alone is longer than the budget (then cut at a comma).
+export function chunkForSpeech(text, { maxChars = 180, minChars = 48 } = {}) {
   const chunks = [];
   let buffer = '';
-  for (const unit of units) {
-    if (unit.length > maxChars) {
-      if (buffer) { chunks.push(buffer); buffer = ''; }
-      chunks.push(...cutAtComma(unit, maxChars, minChars));
+  const flush = () => {
+    const value = buffer.trim();
+    if (value) chunks.push(value);
+    buffer = '';
+  };
+  for (const sentence of sentenceUnits(cleanForSpeech(text))) {
+    if (sentence.length > maxChars) {
+      flush();
+      let rest = sentence;
+      while (rest.length > maxChars) {
+        const window = rest.slice(0, maxChars);
+        const cut = Math.max(window.lastIndexOf('，'), window.lastIndexOf(','), window.lastIndexOf('、'));
+        const at = cut > minChars ? cut + 1 : maxChars;
+        chunks.push(rest.slice(0, at).trim());
+        rest = rest.slice(at).trim();
+      }
+      if (rest) buffer = rest;
       continue;
     }
-    if (buffer && buffer.length + unit.length > maxChars) {
-      chunks.push(buffer);
-      buffer = '';
-    }
-    buffer = buffer ? `${buffer}${/[，,、；;：:]$/u.test(buffer) ? '' : ' '}${unit}` : unit;
+    if (buffer && buffer.length + sentence.length > maxChars) flush();
+    buffer = buffer ? `${buffer}${isCjk(buffer.at(-1)) ? '' : ' '}${sentence}` : sentence;
   }
-  if (buffer) chunks.push(buffer);
+  flush();
   return chunks;
 }
 
-export const sentenceCount = text => sentenceUnits(cleanForSpeech(text)).length;
+export const spokenLength = text => cleanForSpeech(text).replace(/\s+/g, '').length;
