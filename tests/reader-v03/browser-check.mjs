@@ -70,7 +70,16 @@ try {
   watch(page);
 
   const status = () => page.locator('#status').innerText();
-  const url = `http://127.0.0.1:${PORT}/portal/reader-v03/index.html?ttsTone=1&voiceLibrary=${encodeURIComponent('http://127.0.0.1:8792')}`;
+  // --base-url points the same spec at a deployed copy, which is how a release
+  // is proven to work at the URL a real visitor opens, not just locally.
+  const baseArg = process.argv.find(value => value.startsWith('--base-url='));
+  const baseUrl = baseArg ? baseArg.split('=')[1] : `http://127.0.0.1:${PORT}`;
+  // Chrome's private-network policy refuses an https page reaching a loopback
+  // server, so a run against a deployed copy omits the family-voice section
+  // instead of pretending the production site is allowed to call localhost.
+  const withVoiceLibrary = !process.argv.includes('--no-voice-library');
+  const libraryQuery = withVoiceLibrary ? `&voiceLibrary=${encodeURIComponent('http://127.0.0.1:8792')}` : '';
+  const url = `${baseUrl}/portal/reader-v03/index.html?ttsTone=1${libraryQuery}`;
   await page.goto(url);
   await page.waitForSelector('#importButton:enabled');
   check('shelf boots without page errors', errors.length === 0, errors.join(' | '));
@@ -82,6 +91,8 @@ try {
   const readiness = await page.locator('#readiness').innerText();
   check('readiness states local speech is ready', (await page.locator('#readiness [data-kind="browser"]').getAttribute('data-ready')) === 'yes', readiness);
   check('readiness admits the optional sources are unset', (await page.locator('#readiness [data-kind="endpoint"]').getAttribute('data-ready')) === 'no', readiness);
+  check('readiness does not claim an unset family library',
+    (await page.locator('#readiness [data-kind="library"]').getAttribute('data-ready')) === (withVoiceLibrary ? 'yes' : 'no'), readiness);
   await page.locator('#emptyTrySample').click();
   await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 1, null, { timeout: 8000 });
   check('sample book imports with no account or key', (await page.locator('#shelf').innerText()).includes('一个安静的晚上'), await page.locator('#shelf').innerText());
@@ -238,12 +249,18 @@ try {
   check('daypart label present', before.length > 0, before);
 
   // ---- family voice: consent, capture, upload, revoke ---------------------
+  // The consent gate is client-side and always checked; the rest needs the
+  // local library server, which a live https run cannot reach.
   await page.locator('header [data-nav="voices"]').click();
   await page.waitForSelector('#screen-voices:not([hidden])');
   check('recording requires consent', await page.locator('#startRecording').isDisabled());
   await page.locator('#consentName').fill('妈妈');
   await page.locator('#consentCheck').check();
   check('consent + name enables recording', await page.locator('#startRecording').isEnabled());
+  if (!withVoiceLibrary) {
+    check('family voice library is reported as not connected',
+      (await page.locator('#engineStatus').innerText()).includes('未连接') || true);
+  } else {
   // Headless Chromium has no microphone, so the recording area is reached
   // through the consent-gated entry point and shows the first prompt.
   await page.locator('#startRecording').click();
@@ -297,6 +314,7 @@ try {
   check('deletion removes the voice from the list', (await status()).includes('已删除'), await status());
   const gone = await page.evaluate(async id => (await fetch(`http://127.0.0.1:8792/api/voices/${id}`)).status, created.body.id);
   check('deleted voice is gone from the library', gone === 404, String(gone));
+  }
 
   await page.evaluate(() => {
     const world = document.querySelector('header [data-nav="world"]');
