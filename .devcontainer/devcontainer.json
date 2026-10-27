@@ -1,0 +1,12 @@
+{
+  "name": "零一空间｜云端开发环境（仅工具）",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "postCreateCommand": "curl -fsSL https://opencode.ai/install | bash",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
