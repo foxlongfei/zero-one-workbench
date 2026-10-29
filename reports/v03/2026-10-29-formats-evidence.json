@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "TXT/EPUB/FB2/CBZ all import",
+      "pass": true,
+      "details": "[\"CBZ\",\"FB2\",\"EPUB\",\"TXT\"]"
+    },
+    {
+      "name": "CBZ listen action is disabled",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "FB2 opens with its three chapters",
+      "pass": true,
+      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+    },
+    {
+      "name": "CBZ opens as image pages",
+      "pass": true,
+      "details": "已打开《quiet-house.cbz》· 3 页图像（可翻页阅读，暂不支持朗读）"
+    },
+    {
+      "name": "MOBI opens with chapters",
+      "pass": true,
+      "details": "01.svg\n02.svg\n03.svg"
+    },
+    {
+      "name": "no page errors during the format run",
+      "pass": true,
+      "details": ""
+    }
+  ],
+  "errors": []
+}

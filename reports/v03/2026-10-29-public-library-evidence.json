@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "popular public-domain catalogue loads",
+      "pass": true,
+      "details": "{\"results\":48,\"loading\":false}"
+    },
+    {
+      "name": "catalogue exposes EPUB and AZW3 actions",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "keyword search returns a public-domain book",
+      "pass": true,
+      "details": "Short Fiction"
+    },
+    {
+      "name": "EPUB from Standard Ebooks is stored on the local shelf",
+      "pass": true,
+      "details": "EPUB"
+    },
+    {
+      "name": "AZW3 from Standard Ebooks is stored on the local shelf",
+      "pass": true,
+      "details": "[\"AZW3\",\"EPUB\"]"
+    },
+    {
+      "name": "AZW3 opens in the reader through foliate-js",
+      "pass": true,
+      "details": "第 1 部分\n第 2 部分\n第 3 部分\n第 4 部分\n第 5 部分\n第 6 部分\n第 7 部分\n第 8 部分\n第 9 部分\n第 10 部分\n第 11 部分\n第 12 部分\n第 13 部分\n第 14 部分\n第 15 部分\n第 16 部分\n第 17 部分\n第 18 部分\n第 19 部分\n第 20 部分\n第 21 部分\n第 22 部分\n第 23 部分\n第 24 部分\n第 25 部分\n第 26 部分\n第 27 部分\n第 28 部分\n第 29 部分\n第 30 部分\n第 31 部分\n第 32 部分\n第 33 部分\n第 34 部分\n第 35 部分\n第 36 部分\n第 37 部分\n第 38 部分\n第 39 部分\n第 40 部分\n第 41 部分\n第 42 部分\n第 43 部分\n第 44 部分\n第 45 部分\n第 46 部分\n第 47 部分\n第 48 部分\n第 49 部分\n第 50 部分\n第 51 部分\n第 52 部分\n第 53 部分\n第 54 部分\n第 55 部分\n第 56 部分\n第 57 部分\n第 58 部分\n第 59 部分\n第 60 部分\n第 61 部分\n第 62 部分\n第 63 部分\n第 64 部分\n第 65 部分\n第 66 部分\n第 67 部分\n第 68 部分\n第 69 部分\n第 70 部分\n第 71 部分\n第 72 部分\n第 73 部分\n第 74 部分\n第 75 部分\n第 76 部分\n第 77 部分\n第 78 部分\n第 79 部分\n第 80 部分"
+    },
+    {
+      "name": "reader does not report a load failure",
+      "pass": true,
+      "details": "已打开《Short Fiction》· 80 章 · 15303 段"
+    },
+    {
+      "name": "no page errors during the library run",
+      "pass": true,
+      "details": ""
+    }
+  ],
+  "errors": [],
+  "baseUrl": "https://foxlongfei.github.io/zero-one-workbench"
+}

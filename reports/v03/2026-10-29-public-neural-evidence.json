@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "demo neural voice is available without a download",
+      "pass": true,
+      "details": "{\"loaded\":false,\"trainingReady\":false,\"voiceId\":\"demo\",\"hasEmbedding\":true,\"voices\":0}"
+    },
+    {
+      "name": "Piper Plus model loads in the browser",
+      "pass": true,
+      "details": "{\"loaded\":true,\"trainingReady\":false,\"voiceId\":\"demo\",\"hasEmbedding\":true,\"voices\":0}"
+    },
+    {
+      "name": "model load is reported to the user",
+      "pass": true,
+      "details": "模型已就绪（本机）"
+    },
+    {
+      "name": "demo neural voice synthesises in the browser",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "authorised reference audio is trained into a local voice",
+      "pass": true,
+      "details": "{\"loaded\":true,\"trainingReady\":true,\"voiceId\":\"pv_0efa357b\",\"hasEmbedding\":true,\"voices\":1}"
+    },
+    {
+      "name": "trained voice is listed in the UI",
+      "pass": true,
+      "details": "测试家人的声音\n测试家人 · 2026/10/29 02:55:33\n正在使用\n删除"
+    },
+    {
+      "name": "the trained neural voice is used for reading",
+      "pass": true,
+      "details": "开源神经"
+    },
+    {
+      "name": "trained voice survives a reload",
+      "pass": true,
+      "details": "{\"loaded\":false,\"trainingReady\":false,\"voiceId\":\"pv_0efa357b\",\"hasEmbedding\":true,\"voices\":1}"
+    },
+    {
+      "name": "no page errors during the neural run",
+      "pass": true,
+      "details": ""
+    }
+  ],
+  "errors": [],
+  "baseUrl": "https://foxlongfei.github.io/zero-one-workbench",
+  "elapsedMs": 48317
+}

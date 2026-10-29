@@ -1,0 +1,115 @@
+{
+  "date": "2026-10-29",
+  "product": "陪你读书 V0.3",
+  "owner": "D博士",
+  "status": "PUBLISHED_PENDING_USER_ACCEPTANCE",
+  "deployed_commit": "eed04ae0d53c7ad94607b801541aefcb34611c89",
+  "previous_commit": "9bf44d8581946b2ee0ec43f75cc48b971daca8c8",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/reader-v03/index.html",
+  "deployment_readback": {
+    "http_status": 200,
+    "local_app_sha256": "5903ee9f597a0b91a7336b0d3eedb46df33efc6765b9e2d481540f232bfd0b75",
+    "public_app_sha256": "5903ee9f597a0b91a7336b0d3eedb46df33efc6765b9e2d481540f232bfd0b75",
+    "match": true,
+    "piper_asset_http_status": 200
+  },
+  "features": {
+    "neural_tts": {
+      "model": "Piper Plus zs-v1 (base.onnx)",
+      "runtime": "piper-plus 0.8.2 in the browser",
+      "languages": ["zh", "en", "ja", "ko", "es", "fr", "pt", "sv"],
+      "licenses": {
+        "piper_plus_runtime": "MIT",
+        "zs_v1_weights": "MIT",
+        "campplus_encoder": "Apache-2.0"
+      },
+      "first_load_size": "about 70 MB (40 MB TTS + 28 MB encoder when training)",
+      "fully_local_after_model_load": true,
+      "demo_voice_embedding": "portal/reader-v03/data/piper-demo-voice.json",
+      "demo_voice_note": "Derived from the model publisher's zh-ft sample; demonstration only, not a real user recording."
+    },
+    "voice_training": {
+      "method": "local zero-shot speaker conditioning (CAM++ embedding)",
+      "reference_duration": "5-15 seconds",
+      "consent_gate": true,
+      "storage": "IndexedDB on the same device",
+      "upload": false,
+      "delete": true,
+      "preview_after_training": true
+    },
+    "open_library": {
+      "source": "Standard Ebooks",
+      "search": true,
+      "download_formats": ["epub", "azw3"],
+      "rights_note": "Public domain in the United States; other regions must check local law.",
+      "hosting": "publisher endpoint with CORS; books stored locally in IndexedDB"
+    },
+    "formats_verified": ["TXT", "EPUB", "AZW3", "MOBI", "FB2", "CBZ"],
+    "cbz_behavior": "image pages can be read and paginated; narration is explicitly disabled because there is no text layer"
+  },
+  "tests": {
+    "unit": {
+      "command": "node --test tests/reader-v03/core.test.mjs tests/reader-v03/pacing.test.mjs tests/reader-v03/voice-library.test.mjs tests/reader-v03/library.test.mjs tests/reader-v03/piper.test.mjs",
+      "pass": 33,
+      "fail": 0
+    },
+    "browser_local": {
+      "command": "node tests/reader-v03/browser-check.mjs --playwright=<temp playwright>",
+      "pass": 49,
+      "page_errors": 0
+    },
+    "browser_public": {
+      "command": "node tests/reader-v03/browser-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --no-voice-library",
+      "pass": 40,
+      "page_errors": 0,
+      "excluded": "self-hosted voice library section (https page cannot call loopback server)"
+    },
+    "neural_local": {
+      "command": "node tests/reader-v03/neural-check.mjs --playwright=<temp playwright>",
+      "pass": 9,
+      "page_errors": 0,
+      "elapsed_ms": 36725
+    },
+    "neural_public": {
+      "command": "node tests/reader-v03/neural-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --playwright=<temp playwright>",
+      "pass": 9,
+      "page_errors": 0,
+      "elapsed_ms": 48317
+    },
+    "library_local": {
+      "command": "node tests/reader-v03/library-check.mjs --playwright=<temp playwright>",
+      "pass": 8,
+      "page_errors": 0
+    },
+    "library_public": {
+      "command": "node tests/reader-v03/library-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --playwright=<temp playwright>",
+      "pass": 8,
+      "page_errors": 0
+    },
+    "formats_local": {
+      "command": "node tests/reader-v03/formats-check.mjs --playwright=<temp playwright>",
+      "pass": 6,
+      "page_errors": 0,
+      "formats": ["CBZ", "FB2", "EPUB", "TXT", "MOBI"]
+    },
+    "portal_delivery_smoke": {
+      "command": "PORTAL_BASE_URL=https://foxlongfei.github.io/zero-one-workbench node scripts/portal-delivery-smoke.cjs",
+      "routes": 6,
+      "failed_routes": 0
+    }
+  },
+  "known_gaps": [
+    "voice training is zero-shot speaker conditioning, not gradient fine-tuning; quality depends on the reference clip and experimental model",
+    "first neural use needs network access to unpkg/jsDelivr/Hugging Face and downloads about 70 MB",
+    "real-device microphone, iOS Safari, lock-screen playback and audio focus are not yet accepted",
+    "Standard Ebooks public-domain status follows United States law",
+    "no cloud sync; clearing site data removes books, notes and trained voices",
+    "two independent blind tests and the user's own acceptance have not happened"
+  ],
+  "evidence": [
+    "docs/v0.3/2026-10-29-open-source-voice-and-library.md",
+    "artifacts/reader-v03/neural-evidence.json",
+    "artifacts/reader-v03/library-evidence.json",
+    "artifacts/reader-v03/formats-evidence.json"
+  ]
+}
