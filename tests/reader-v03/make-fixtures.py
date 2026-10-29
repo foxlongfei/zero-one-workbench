@@ -42,4 +42,20 @@ with ZipFile(out / 'quiet-house.epub', 'w') as z:
         z.writestr(f'OEBPS/c{n}.xhtml', f'<html xmlns="http://www.w3.org/1999/xhtml"><head><title>{title}</title></head><body><h1>{title}</h1>{body}</body></html>', compress_type=ZIP_DEFLATED)
     z.writestr('OEBPS/broken.xhtml', '<html><body><p>不进入 spine 的额外文件</p></body></html>', compress_type=ZIP_DEFLATED)
 
-print(f'wrote {out}/morning.txt and {out}/quiet-house.epub')
+fb2_sections = ''.join(
+    f'<section><title><p>{title}</p></title>' + ''.join(f'<p>{p}</p>' for p in paras) + '</section>'
+    for title, paras in chapters
+)
+fb2 = f'''<?xml version="1.0" encoding="utf-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0">
+<description><title-info><book-title>安静的房子</book-title><author><first-name>零一</first-name><last-name>编辑部</last-name></author><lang>zh-CN</lang></title-info></description>
+<body>{fb2_sections}</body></FictionBook>'''
+(out / 'quiet-house.fb2').write_text(fb2, encoding='utf-8')
+
+with ZipFile(out / 'quiet-house.cbz', 'w', ZIP_DEFLATED) as z:
+    for index, (title, paras) in enumerate(chapters, 1):
+        text = ''.join(f'<text x="40" y="{120 + i * 54}" font-size="24">{p}</text>' for i, p in enumerate(paras))
+        svg = f'<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800"><rect width="600" height="800" fill="#f7f3e9"/><text x="40" y="60" font-size="32">{title}</text>{text}</svg>'
+        z.writestr(f'{index:02}.svg', svg)
+
+print(f'wrote {out}/morning.txt, quiet-house.epub, quiet-house.fb2 and quiet-house.cbz')

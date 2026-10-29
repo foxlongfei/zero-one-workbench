@@ -10,6 +10,8 @@ import { splitChapters, percent, formatMilliseconds } from './lib/text.mjs';
 import { Narration, State } from './lib/narration.mjs';
 import { bookFromTxt, isBookFinished, mapEpubSections, pickText, paragraphsFromHtml, totalParagraphs } from './lib/book.mjs';
 import { BrowserEngine, EndpointEngine, LibraryVoiceEngine, ToneEngine, isAbort } from './lib/engines.mjs';
+import { DEMO_VOICE_URL, PiperEngine, PiperRuntime, primePiperAudio } from './lib/piper.mjs';
+import { fetchLibraryBook, searchStandardEbooks } from './lib/library.mjs';
 import * as store from './lib/store.mjs';
 import { BUILTIN_SOURCES, resolveDaypart, resolvePlaylist } from './lib/listening-world.mjs';
 
@@ -32,6 +34,7 @@ const DEFAULT_SETTINGS = {
   rate: 1,
   endpoint: { baseUrl: '', model: '', voice: '', apiKey: '' },
   library: { baseUrl: params.get('voiceLibrary') || '', token: '', voiceId: '' },
+  piper: { voiceId: 'demo' },
   music: { volume: 0.18, ducking: true },
   statistics: { days: {}, listenedMs: 0 },
   worldFavourites: [],
@@ -41,6 +44,7 @@ const mergeSettings = patch => ({
   ...patch,
   endpoint: { ...settings.endpoint, ...patch.endpoint },
   library: { ...settings.library, ...patch.library },
+  piper: { ...settings.piper, ...patch.piper },
   music: { ...settings.music, ...patch.music },
   statistics: { ...settings.statistics, ...patch.statistics },
 });
@@ -52,13 +56,302 @@ try {
 const saveSettings = () => localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 
 // --------------------------------------------------------------------------
+// Open-source neural voice (Piper Plus) and local voice training
+// --------------------------------------------------------------------------
+const PIPER_VOICES_KEY = 'piper-voices';
+
+const piperVoiceById = id => piperVoices.find(voice => voice.id === id) || null;
+
+function renderPiperVoiceSelect() {
+  const select = $('piperVoiceSelect');
+  if (!select) return;
+  const options = [
+    { id: 'demo', name: `示范声音${piperDemo ? '（模型示例）' : '（需加载模型）'}` },
+    ...piperVoices,
+  ];
+  select.replaceChildren(...options.map(voice => new Option(
+    voice.speaker ? `${voice.name} · ${voice.speaker}` : voice.name,
+    voice.id,
+    false,
+    voice.id === activePiperVoiceId,
+  )));
+  $('piperDeleteVoice').hidden = activePiperVoiceId === 'demo';
+}
+
+function renderPiperVoiceList() {
+  const list = $('piperVoiceList');
+  if (!list) return;
+  list.replaceChildren();
+  for (const voice of piperVoices) {
+    const card = document.createElement('div');
+    card.className = 'voice-card';
+    card.dataset.piperVoiceId = voice.id;
+    const title = document.createElement('h3');
+    title.textContent = voice.name || '训练声音';
+    const meta = document.createElement('div');
+    meta.className = 'muted';
+    meta.textContent = [voice.speaker, voice.relation, voice.createdAt ? new Date(voice.createdAt).toLocaleString('zh-CN') : ''].filter(Boolean).join(' · ');
+    const actions = document.createElement('div');
+    actions.className = 'row';
+    const use = document.createElement('button');
+    use.type = 'button';
+    use.className = 'primary';
+    use.textContent = voice.id === activePiperVoiceId ? '正在使用' : '用这个声音朗读';
+    use.onclick = () => {
+      setActivePiperVoice(voice.id);
+      switchEngine('piper');
+      status(`已切换到「${voice.name}」`);
+    };
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'ghost';
+    remove.textContent = '删除';
+    remove.onclick = async () => {
+      if (!confirm(`删除本机训练声音「${voice.name}」？只删除声音特征，不影响书和进度。`)) return;
+      piperVoices = piperVoices.filter(item => item.id !== voice.id);
+      await savePiperVoices();
+      if (activePiperVoiceId === voice.id) setActivePiperVoice('demo');
+      else { renderPiperVoiceSelect(); renderPiperVoiceList(); }
+      status('已删除本机训练声音');
+    };
+    actions.append(use, remove);
+    card.append(title, meta, actions);
+    list.append(card);
+  }
+  if (!piperVoices.length) {
+    const empty = document.createElement('p');
+    empty.className = 'hint';
+    empty.textContent = '还没有本机训练声音。录制或选择一个参考声音，训练完成后会出现在这里。';
+    list.append(empty);
+  }
+}
+
+function setActivePiperVoice(id, { persist = true } = {}) {
+  const demo = id === 'demo';
+  const profile = piperVoiceById(id);
+  activePiperVoiceId = demo ? 'demo' : (profile?.id || 'demo');
+  const source = demo ? piperDemo?.embedding : profile?.embedding;
+  activePiperEmbedding = source?.length ? new Float32Array(source) : null;
+  if (persist) {
+    settings.piper.voiceId = activePiperVoiceId;
+    saveSettings();
+  }
+  renderPiperVoiceSelect();
+  renderPiperVoiceList();
+  refreshVoiceScreens?.();
+  refreshEngineBadge?.();
+  renderReadiness();
+}
+
+const savePiperVoices = () => store.putRecord(PIPER_VOICES_KEY, piperVoices);
+
+async function loadPiperDemoVoice() {
+  try {
+    const response = await fetch(DEMO_VOICE_URL);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    piperDemo = await response.json();
+    if (activePiperVoiceId === 'demo') {
+      activePiperEmbedding = new Float32Array(piperDemo.embedding);
+    }
+    renderPiperVoiceSelect();
+  } catch (error) {
+    console.warn('示范神经声音加载失败', error);
+    status('示范神经声音加载失败；仍可使用浏览器语音，或训练自己的声音。', 'warn');
+  }
+}
+
+async function loadPiperVoices() {
+  const saved = await store.getRecord(PIPER_VOICES_KEY, []);
+  piperVoices = Array.isArray(saved) ? saved : [];
+  const wanted = settings.piper.voiceId || 'demo';
+  setActivePiperVoice(wanted !== 'demo' && piperVoiceById(wanted) ? wanted : 'demo', { persist: false });
+}
+
+function updatePiperProgress(progress = {}) {
+  const wrap = $('piperProgressWrap');
+  const bar = $('piperProgressBar');
+  if (!wrap || !bar) return;
+  const value = Math.max(0, Math.min(1, Number(progress.progress) || 0));
+  wrap.hidden = false;
+  bar.style.width = `${Math.round(value * 100)}%`;
+  $('piperStatus').textContent = progress.stage === 'ready'
+    ? '模型已就绪（本机）'
+    : `${progress.message || progress.stage || '加载中'} ${Math.round(value * 100)}%`;
+  if (progress.stage === 'ready') {
+    setTimeout(() => { wrap.hidden = true; }, 800);
+    refreshVoiceScreens?.();
+    refreshEngineBadge?.();
+    renderReadiness();
+  }
+}
+
+async function loadPiperModel() {
+  const button = $('piperLoad');
+  button.disabled = true;
+  $('piperStatus').textContent = '正在加载 Piper Plus 模型…';
+  try {
+    await ensurePiperRuntime().load();
+    $('piperStatus').textContent = '模型已就绪（本机）';
+    switchEngine('piper');
+    status('开源神经语音已加载；模型由浏览器缓存，下次减少下载。');
+  } catch (error) {
+    $('piperStatus').textContent = `加载失败：${error.message}`;
+    status(`神经语音加载失败：${error.message}。已保留浏览器语音。`, 'error');
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function previewPiper() {
+  const result = $('piperTestResult');
+  if (!activePiperEmbedding) {
+    result.textContent = '请先加载模型或训练声音。';
+    return;
+  }
+  result.textContent = '正在本机合成…';
+  try {
+    const engine = buildEngine('piper');
+    await engine.speak('你好，我在这里陪着你读书。今天想听哪一段？');
+    result.textContent = '试听完成（Piper Plus，本机）';
+  } catch (error) {
+    result.textContent = `试听失败：${error.message}`;
+  }
+}
+
+function updatePiperTrainState() {
+  const ready = Boolean(
+    $('piperConsent')?.checked
+    && $('piperSpeaker')?.value.trim()
+    && piperReferenceBlob,
+  );
+  $('piperTrain').disabled = !ready;
+}
+
+function setPiperReference(blob, sourceLabel = '参考声音') {
+  piperReferenceBlob = blob;
+  const preview = $('piperRefPreview');
+  if (preview.dataset.url) URL.revokeObjectURL(preview.dataset.url);
+  preview.dataset.url = URL.createObjectURL(blob);
+  preview.src = preview.dataset.url;
+  preview.hidden = false;
+  $('piperRecordStatus').textContent = `${sourceLabel}已就绪；请确认是声音本人授权。`;
+  updatePiperTrainState();
+}
+
+async function togglePiperRecording() {
+  if (piperRecorder && piperRecorder.state === 'recording') { piperRecorder.stop(); return; }
+  if (!navigator.mediaDevices?.getUserMedia) {
+    $('piperRecordStatus').textContent = '当前浏览器不支持录音，请改为选择音频文件。';
+    return;
+  }
+  try {
+    if (!window.isSecureContext) throw new Error('录音需要 HTTPS 或 localhost');
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    const chunks = [];
+    piperRecorder = new MediaRecorder(stream);
+    piperRecorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+    piperRecorder.onstop = () => {
+      stream.getTracks().forEach(track => track.stop());
+      clearTimeout(piperRecordTimer);
+      piperRecordTimer = null;
+      const blob = new Blob(chunks, { type: piperRecorder?.mimeType || 'audio/webm' });
+      piperRecorder = null;
+      setPiperReference(blob, '录制的参考声音');
+      $('piperRecord').textContent = '重新录制 8 秒参考声音';
+    };
+    piperRecorder.start();
+    $('piperRecord').textContent = '停止录制';
+    $('piperRecordStatus').textContent = '录音中……请用自然语速读一小段话，8 秒后自动停止。';
+    piperRecordTimer = setTimeout(() => {
+      if (piperRecorder?.state === 'recording') piperRecorder.stop();
+    }, 8000);
+  } catch (error) {
+    $('piperRecordStatus').textContent = `无法录音：${error.message}`;
+  }
+}
+
+async function trainPiperVoice() {
+  const speaker = $('piperSpeaker').value.trim();
+  if (!$('piperConsent').checked) { $('piperTrainStatus').textContent = '请先勾选授权声明。'; return; }
+  if (!speaker) { $('piperTrainStatus').textContent = '请填写声音本人称呼。'; return; }
+  if (!piperReferenceBlob) { $('piperTrainStatus').textContent = '请先录制或选择参考声音。'; return; }
+  $('piperTrain').disabled = true;
+  $('piperTrainStatus').textContent = '正在加载声音编码器并提取特征（首次约 28 MB，之后缓存）…';
+  try {
+    const runtime = ensurePiperRuntime();
+    const embedding = await runtime.encodeReference(piperReferenceBlob);
+    const profile = {
+      id: `pv_${crypto.randomUUID().slice(0, 8)}`,
+      name: `${speaker}的声音`,
+      speaker,
+      relation: $('piperRelation').value.trim(),
+      embedding: Array.from(embedding),
+      createdAt: now(),
+      consent: {
+        granted: true,
+        grantedBy: speaker,
+        statement: '本人授权在本机使用这段声音样本进行语音合成与试听。',
+        grantedAt: now(),
+      },
+    };
+    piperVoices = [profile, ...piperVoices.filter(item => item.name !== profile.name)];
+    await savePiperVoices();
+    setActivePiperVoice(profile.id);
+    switchEngine('piper');
+    $('piperTrainStatus').textContent = '训练完成，已切换到该声音；正在生成试听…';
+    await runtime.speak('你好，我在这里陪着你读书。', { embedding });
+    $('piperTrainStatus').textContent = '训练完成，已切换到该声音。参考音频只在本机处理，可随时删除。';
+    piperReferenceBlob = null;
+    $('piperRefPreview').hidden = true;
+    $('piperConsent').checked = false;
+    $('piperRecord').textContent = '录制 8 秒参考声音';
+    renderPiperVoiceList();
+  } catch (error) {
+    $('piperTrainStatus').textContent = `训练失败：${error.message}`;
+  } finally {
+    updatePiperTrainState();
+  }
+}
+
+async function deleteActivePiperVoice() {
+  if (activePiperVoiceId === 'demo') return;
+  const voice = piperVoiceById(activePiperVoiceId);
+  if (!voice) return;
+  if (!confirm(`删除本机训练声音「${voice.name}」？`)) return;
+  piperVoices = piperVoices.filter(item => item.id !== voice.id);
+  await savePiperVoices();
+  setActivePiperVoice('demo');
+  status('已删除本机训练声音');
+}
+
+// --------------------------------------------------------------------------
 // Speech engines
 // --------------------------------------------------------------------------
 let narration = null;
 let currentEngine = null;
 let activeVoice = null;
+let piperRuntime = null;
+let piperVoices = [];
+let piperDemo = null;
+let activePiperVoiceId = 'demo';
+let activePiperEmbedding = null;
+let piperReferenceBlob = null;
+let piperRecorder = null;
+let piperRecordTimer = null;
+
+const ensurePiperRuntime = () => {
+  if (!piperRuntime) piperRuntime = new PiperRuntime({ onProgress: progress => updatePiperProgress(progress) });
+  return piperRuntime;
+};
 
 const buildEngine = (kind = settings.engine) => {
+  if (kind === 'piper') {
+    return new PiperEngine({
+      runtime: ensurePiperRuntime(),
+      getEmbedding: () => activePiperEmbedding,
+      speed: settings.rate,
+    });
+  }
   if (kind === 'endpoint' && settings.endpoint.baseUrl) {
     try {
       return new EndpointEngine({ ...settings.endpoint, speed: settings.rate, name: settings.endpoint.model || '神经网络语音' });
@@ -83,6 +376,7 @@ const buildEngine = (kind = settings.engine) => {
 const engineHint = engine => {
   if (!engine) return '还没有可用的朗读引擎。';
   if (engine.kind === 'browser') return '本机浏览器语音：不联网、不上传文本；音质取决于设备。';
+  if (engine.kind === 'piper') return '开源神经语音（Piper Plus）：模型、文本和训练都在本机；首次使用需下载模型。';
   if (engine.kind === 'endpoint') return `神经网络语音「${engine.name}」：朗读文本会发送到 ${engine.baseUrl}。`;
   if (engine.kind === 'library') return `家庭授权声音「${engine.name}」：文本只发送到你的声音库。`;
   return '离线测试音：仅用于自动化测试。';
@@ -95,6 +389,10 @@ let books = [];
 let coverUrls = new Set();
 let activeBook = null;
 let voices = [];
+let libraryResults = [];
+let libraryLoading = false;
+let librarySearchTimer = null;
+let libraryPendingQuery = null;
 
 const progressKey = id => `rw03-progress-${id}`;
 const bookProgress = id => {
@@ -107,6 +405,8 @@ const saveProgress = (id, position) => {
 
 const formatOf = book => String(book.format || book.filename?.split('.').pop() || '').toUpperCase();
 const titleOf = book => book.title || book.filename || '未命名';
+const isImageComic = book => formatOf(book) === 'CBZ';
+const paragraphPosition = (chapter, index = 0) => (chapter?.paragraphs?.length ? `第 ${index + 1}/${chapter.paragraphs.length} 段` : '图像页');
 
 function progressLabel(book) {
   const saved = bookProgress(book.id);
@@ -174,7 +474,13 @@ function renderShelf() {
     const listen = document.createElement('button');
     listen.type = 'button'; listen.dataset.action = 'listen'; listen.className = 'primary';
     listen.textContent = saved?.listening ? '继续听' : '听书';
-    listen.onclick = () => openBook(book, { listen: true });
+    if (isImageComic(book)) {
+      listen.disabled = true;
+      listen.textContent = '图像漫画';
+      listen.title = 'CBZ 是图像漫画，可翻页阅读；当前版本不支持朗读图像页。';
+    } else {
+      listen.onclick = () => openBook(book, { listen: true });
+    }
     const remove = document.createElement('button');
     remove.type = 'button'; remove.dataset.action = 'delete'; remove.className = 'ghost'; remove.textContent = '移除';
     remove.onclick = () => removeBook(book);
@@ -250,6 +556,98 @@ async function importFiles(fileList) {
   return summary;
 }
 
+// --------------------------------------------------------------------------
+// Standard Ebooks open library
+// --------------------------------------------------------------------------
+function renderLibrary() {
+  const list = $('libraryList');
+  list.replaceChildren();
+  if (!libraryResults.length) {
+    const empty = document.createElement('p');
+    empty.className = 'hint';
+    empty.textContent = '没有找到匹配的公版书，换一个关键词试试。';
+    list.append(empty);
+    return;
+  }
+  for (const book of libraryResults) {
+    const card = document.createElement('article');
+    card.className = 'library-card';
+    card.dataset.bookId = book.id;
+    if (book.cover) {
+      const img = document.createElement('img');
+      img.src = book.cover;
+      img.alt = '';
+      img.loading = 'lazy';
+      card.append(img);
+    }
+    const title = document.createElement('h3');
+    title.textContent = book.title;
+    const author = document.createElement('p');
+    author.className = 'author';
+    author.textContent = book.author;
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    const epub = document.createElement('button');
+    epub.type = 'button';
+    epub.className = 'primary';
+    epub.textContent = '导入 EPUB';
+    epub.onclick = () => importLibraryBook(book, 'epub');
+    const azw3 = document.createElement('button');
+    azw3.type = 'button';
+    azw3.textContent = '导入 AZW3';
+    azw3.onclick = () => importLibraryBook(book, 'azw3');
+    const source = document.createElement('a');
+    source.href = book.pageUrl;
+    source.target = '_blank';
+    source.rel = 'noreferrer';
+    source.textContent = '原页';
+    source.style.alignSelf = 'center';
+    actions.append(epub, azw3, source);
+    const rights = document.createElement('p');
+    rights.className = 'rights';
+    rights.textContent = '公版 · Standard Ebooks · 无 DRM';
+    card.append(title, author, actions, rights);
+    list.append(card);
+  }
+}
+
+async function searchLibrary(query = '') {
+  if (libraryLoading) { libraryPendingQuery = query; return; }
+  libraryLoading = true;
+  $('libraryStatus').textContent = query ? `正在搜索「${query}」…` : '正在读取热门公版书…';
+  try {
+    libraryResults = await searchStandardEbooks(query);
+    $('libraryStatus').textContent = `找到 ${libraryResults.length} 本公版书。下载后只保存在本机。`;
+    renderLibrary();
+  } catch (error) {
+    libraryResults = [];
+    $('libraryStatus').textContent = `公版书库连接失败：${error.message}`;
+    renderLibrary();
+  } finally {
+    libraryLoading = false;
+    if (libraryPendingQuery !== null) {
+      const next = libraryPendingQuery;
+      libraryPendingQuery = null;
+      searchLibrary(next);
+    }
+  }
+}
+
+async function importLibraryBook(book, format) {
+  $('libraryStatus').textContent = `正在下载《${book.title}》${format.toUpperCase()}…`;
+  try {
+    const blob = await fetchLibraryBook(book, format);
+    const ext = format === 'azw3' ? 'azw3' : 'epub';
+    const file = new File([blob], `${book.slug}.${ext}`, { type: blob.type || 'application/octet-stream' });
+    await importFiles([file]);
+    $('libraryStatus').textContent = `《${book.title}》已导入书架。`;
+    await refreshShelf();
+    showScreen('shelf');
+  } catch (error) {
+    $('libraryStatus').textContent = `导入失败：${error.message}`;
+  }
+}
+
 // A first-time visitor should be able to hear this product working before they
 // own an ebook. The sample is written for this prototype and dedicated to the
 // public domain, so it can be shipped without any licence risk.
@@ -298,7 +696,7 @@ function renderReadiness() {
   const set = (kind, state, text) => {
     const line = box.querySelector(`.readiness-line[data-kind="${kind}"]`);
     if (line) line.dataset.ready = state;
-    const label = { browser: 'readyBrowser', endpoint: 'readyEndpoint', library: 'readyLibrary' }[kind];
+    const label = { browser: 'readyBrowser', piper: 'readyPiper', endpoint: 'readyEndpoint', library: 'readyLibrary' }[kind];
     if (label && $(label)) $(label).textContent = text;
   };
   const browserVoices = window.speechSynthesis?.getVoices?.() ?? [];
@@ -313,6 +711,13 @@ function renderReadiness() {
     set('browser', 'yes', chinese.length
       ? `已就绪：本机有 ${chinese.length} 个中文声音，不联网、不上传文本。`
       : `已就绪：本机有 ${browserVoices.length} 个声音，暂无中文声音，朗读中文可能不准。`);
+  }
+  if (!window.WebAssembly) {
+    set('piper', 'no', '此浏览器不支持 WebAssembly，无法运行本机神经模型。');
+  } else if (piperRuntime?.loaded) {
+    set('piper', 'yes', `已就绪：${activePiperVoiceId === 'demo' ? '示范声音' : '已训练声音'}，模型已缓存。`);
+  } else {
+    set('piper', 'no', '可选；首次使用需下载约 70 MB 模型，之后本机运行。');
   }
   set('endpoint', settings.endpoint.baseUrl ? 'yes' : 'no',
     settings.endpoint.baseUrl ? `已配置：${settings.endpoint.baseUrl}（文本会发往该服务）。` : '尚未配置，可选；配置后音质更好但需要自己的语音服务。');
@@ -367,12 +772,19 @@ async function openBook(book, { listen = false } = {}) {
     renderChapterList();
     renderNotes();
     refreshEngineBadge();
-    status(`已打开《${bookModel.title || titleOf(book)}》· ${bookModel.chapters.length} 章 · ${totalParagraphs(bookModel)} 段`);
+    status(bookModel.audioSupported === false
+      ? `已打开《${bookModel.title || titleOf(book)}》· ${bookModel.chapters.length} 页图像（可翻页阅读，暂不支持朗读）`
+      : `已打开《${bookModel.title || titleOf(book)}》· ${bookModel.chapters.length} 章 · ${totalParagraphs(bookModel)} 段`);
     if (listen) {
       // startPosition() is the one place that turns a finished book back into a
       // fresh pass. Passing the saved cursor directly would reopen a finished
       // book on its last paragraph and stop again immediately.
-      await startListening();
+      if (bookModel.audioSupported === false) {
+        await showParagraph(saved.chapter ?? 0, saved.paragraph ?? 0, { scroll: true });
+        status('这是图像漫画（CBZ）：可以翻页阅读，当前版本不支持朗读图像页。', 'warn');
+      } else {
+        await startListening();
+      }
     } else {
       await showParagraph(saved.chapter ?? 0, saved.paragraph ?? 0, { scroll: true });
     }
@@ -463,10 +875,18 @@ async function openEpub(book, saved, token) {
   if (token !== renderToken) { view.destroy?.(); return; }
   bookModel = mapEpubSections({ sections: epub.sections, toc: epub.toc ?? navToc, metadata: epub.metadata, format: formatOf(book) });
   if (!bookModel.title) bookModel.title = titleOf(book);
+  // CBZ sections are images with a `load()` URL, not XHTML documents. They can
+  // still be read page by page through foliate, but there is no text to speak.
+  bookModel.audioSupported = (epub.sections ?? []).every(section => typeof section?.createDocument === 'function');
   // One narration chapter per spine section; paragraph text is extracted up
   // front so listening works with the reading pane closed or off-screen.
   for (const chapter of bookModel.chapters) {
-    const doc = await epub.sections[chapter.sectionIndex].createDocument();
+    const section = epub.sections[chapter.sectionIndex];
+    if (typeof section?.createDocument !== 'function') {
+      chapter.paragraphs = [];
+      continue;
+    }
+    const doc = await section.createDocument();
     chapter.paragraphs = paragraphsFromHtml(doc.documentElement?.outerHTML || doc.body?.innerHTML || '');
     if (!chapter.paragraphs.length) chapter.paragraphs = [chapter.title];
   }
@@ -543,8 +963,8 @@ function setCursor(chapter, paragraph) {
     narration.resume();
   }
   markCurrentChapter(chapter);
-  $('nowChapter').textContent = `${ch.title}（第 ${target + 1}/${ch.paragraphs.length} 段）`;
-  $('nowSentence').textContent = (ch.paragraphs[target] || '').slice(0, 70);
+  $('nowChapter').textContent = `${ch.title}（${paragraphPosition(ch, target)}）`;
+  $('nowSentence').textContent = (ch.paragraphs[target] || '图像页没有可朗读文本').slice(0, 70);
 }
 
 function renderChapterList() {
@@ -581,7 +1001,7 @@ async function showParagraph(chapterIndex, paragraphIndex, { scroll = false, per
   currentParagraph = Math.max(0, Math.min(Math.max(0, chapter.paragraphs.length - 1), paragraphIndex | 0));
   markCurrentChapter(chapterIndex);
   $('nowChapter').textContent = chapter.title;
-  $('position').textContent = `${chapter.title} · 第 ${currentParagraph + 1}/${chapter.paragraphs.length} 段`;
+  $('position').textContent = `${chapter.title} · ${paragraphPosition(chapter, currentParagraph)}`;
   if (persist && activeBook && !narration?.active) {
     // Only written when a book is actually shown: opening another book resets
     // the shared reader pane while the previous book's progress is still in
@@ -720,7 +1140,7 @@ function createNarration() {
       if (!ch) return;
       currentChapter = chapter;
       currentParagraph = paragraph;
-      $('nowChapter').textContent = `${ch.title}（第 ${paragraph + 1}/${ch.paragraphs.length} 段）`;
+      $('nowChapter').textContent = `${ch.title}（${paragraphPosition(ch, paragraph)}）`;
       if (chapterChanged) {
         markCurrentChapter(chapter);
         refreshShelf().catch(() => {});
@@ -803,6 +1223,11 @@ async function narrationFor(position) {
 
 async function startListening(position = null) {
   if (!bookModel) { status('先在书架选一本书。', 'warn'); return; }
+  if (bookModel.audioSupported === false) {
+    status('这是图像漫画（CBZ）：可以翻页阅读，当前版本不支持朗读图像页。', 'warn');
+    return;
+  }
+  primePiperAudio();
   currentEngine = buildEngine();
   if (!currentEngine) return;
   refreshEngineBadge();
@@ -817,6 +1242,11 @@ async function startListening(position = null) {
 
 function togglePlay() {
   if (!bookModel) { status('先在书架选一本书。', 'warn'); return; }
+  if (bookModel.audioSupported === false) {
+    status('这是图像漫画（CBZ）：可以翻页阅读，当前版本不支持朗读图像页。', 'warn');
+    return;
+  }
+  primePiperAudio();
   currentEngine = buildEngine();
   if (!currentEngine) return;
   // State is read synchronously: pause must land before any await, otherwise a
@@ -863,7 +1293,7 @@ function recordListening(milliseconds) {
 
 function refreshEngineBadge() {
   const engine = currentEngine || buildEngine();
-  const label = { browser: '本机语音', endpoint: '神经网络', library: '家庭声音', tone: '测试音' }[engine?.kind] || '引擎';
+  const label = { browser: '本机语音', piper: '开源神经', endpoint: '神经网络', library: '家庭声音', tone: '测试音' }[engine?.kind] || '引擎';
   $('engineBadge').textContent = label;
   $('engineBadge').dataset.kind = engine?.kind || '';
   $('engineHint').textContent = engineHint(engine);
@@ -1144,8 +1574,12 @@ function renderVoiceActions(voice) {
 
 function refreshVoiceScreens() {
   const engineSelect = $('voiceEngineSelect');
+  const piperLabel = piperRuntime?.loaded
+    ? `Piper Plus（${activePiperVoiceId === 'demo' ? '示范声音' : '已训练声音'}）`
+    : 'Piper Plus（首次需下载）';
   const options = [
     ['browser', '本机浏览器语音（离线、不上传）'],
+    ['piper', `开源神经语音：${piperLabel}`],
     ['endpoint', settings.endpoint.baseUrl ? `神经网络语音：${settings.endpoint.model || settings.endpoint.voice || '已配置服务'}` : '神经网络语音（未配置）'],
     ['library', activeVoice ? `家庭授权声音：${activeVoice.name}` : '家庭授权声音（未选择）'],
   ];
@@ -1164,6 +1598,9 @@ function renderPrivacyStats() {
   el.replaceChildren();
   const lines = [
     `今日朗读 ${formatMilliseconds(stats.days[today] || 0)}，累计 ${formatMilliseconds(stats.listenedMs || 0)}。`,
+    piperRuntime?.loaded
+      ? 'Piper Plus 开源神经语音：模型与文本都在本机，首次下载后由浏览器缓存，不产生按次费用。'
+      : 'Piper Plus 开源神经语音尚未加载；加载后模型与文本都在本机。',
     settings.endpoint.apiKey ? `神经网络音频已启用：文本只发往 ${settings.endpoint.baseUrl}，密钥仅保存在本机。` : '神经网络语音未设置密钥：文本不会离开本机。',
     libraryConfigured() ? `家庭声音库：${settings.library.baseUrl}（仅发送当前朗读文本与声音 id）。` : '家庭声音库未连接。',
   ];
@@ -1194,6 +1631,10 @@ function switchEngine(kind) {
   currentEngine = null;
   updateEngineControls();
   refreshEngineBadge();
+  if (kind === 'piper') {
+    if (!activePiperEmbedding) status('神经声音还没有可用特征；请加载示范声音或训练自己的声音。', 'warn');
+    if (!piperRuntime?.loaded) loadPiperModel();
+  }
   if (kind === 'endpoint' && !settings.endpoint.baseUrl) status('神经网络语音还没有配置服务地址，请到「声音」页填写。', 'warn');
   if (kind === 'library' && !activeVoice) status('还没有选择家庭授权声音，请到「声音」页选择或录制。', 'warn');
 }
@@ -1355,7 +1796,12 @@ function showScreen(name) {
     if (button.dataset.nav === name) button.setAttribute('aria-current', 'page');
     else button.removeAttribute('aria-current');
   });
-  if (name === 'voices') renderVoiceList();
+  if (name === 'voices') {
+    renderVoiceList();
+    renderPiperVoiceList();
+    renderPiperVoiceSelect();
+  }
+  if (name === 'library' && !libraryResults.length && !libraryLoading) searchLibrary('');
   if (name === 'world') renderWorld();
 }
 
@@ -1367,6 +1813,7 @@ function wireEvents() {
   $('importButton').onclick = () => $('files').click();
   $('emptyImport').onclick = () => $('files').click();
   $('emptyTrySample').onclick = () => trySampleBook();
+  $('emptyLibrary').onclick = () => showScreen('library');
   $('files').onchange = async event => {
     const files = [...event.target.files];
     event.target.value = '';
@@ -1437,6 +1884,33 @@ function wireEvents() {
     } catch (error) {
       $('testVoiceResult').textContent = `试听失败：${error.message}`;
     }
+  };
+
+  $('piperLoad').onclick = () => loadPiperModel();
+  $('piperTest').onclick = () => previewPiper();
+  $('piperVoiceSelect').onchange = event => {
+    setActivePiperVoice(event.target.value);
+    switchEngine('piper');
+    status(event.target.value === 'demo' ? '已选择示范神经声音' : '已选择本机训练声音');
+  };
+  $('piperConsent').onchange = updatePiperTrainState;
+  $('piperSpeaker').oninput = updatePiperTrainState;
+  $('piperRefFile').onchange = event => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (file) setPiperReference(file, '参考声音文件');
+  };
+  $('piperRecord').onclick = () => togglePiperRecording();
+  $('piperTrain').onclick = () => trainPiperVoice();
+  $('piperDeleteVoice').onclick = () => deleteActivePiperVoice();
+
+  $('librarySearchForm').onsubmit = event => {
+    event.preventDefault();
+    searchLibrary($('librarySearch').value.trim());
+  };
+  $('librarySearch').oninput = () => {
+    clearTimeout(librarySearchTimer);
+    librarySearchTimer = setTimeout(() => searchLibrary($('librarySearch').value.trim()), 450);
   };
 
   $('musicFile').onchange = async event => {
@@ -1522,6 +1996,7 @@ function wireEvents() {
   };
 
   window.speechSynthesis?.addEventListener?.('voiceschanged', () => { updateEngineControls(); renderReadiness(); });
+  document.addEventListener('pointerdown', () => primePiperAudio(), { once: true, passive: true });
   document.addEventListener('keydown', event => {
     if (event.target.matches?.('input,textarea,select')) return;
     if (!$('screen-reader').hidden && event.code === 'Space') { event.preventDefault(); toggleFromKeyboard(); }
@@ -1534,10 +2009,14 @@ async function init() {
   updateConsentState();
   showScreen('shelf');
   await store.openReaderDb();
+  await loadPiperDemoVoice();
+  await loadPiperVoices();
   await refreshShelf();
   await restoreMusic();
   updateEngineControls();
   renderStats();
+  renderPiperVoiceList();
+  renderPiperVoiceSelect();
   renderWorld();
   renderVoiceList();
   renderReadiness();
@@ -1545,7 +2024,7 @@ async function init() {
   if (libraryConfigured()) loadVoices();
   status(books.length
     ? '书架已就绪。点「听书」就能从上次的位置连续朗读；进度只保存在本机。'
-    : '书架还空着。导入一本 EPUB / TXT，或点「先用示范书试试」听一段，不需要任何账号或密钥。');
+    : '书架还空着。导入 EPUB / TXT / AZW3 / MOBI / FB2 / CBZ，或到公版书库挑一本；也可以先用示范书试试。');
 }
 
 init().catch(error => {
@@ -1562,6 +2041,14 @@ if (params.get('testHooks') === '1') {
     title: () => bookModel?.title ?? '',
     chapters: () => bookModel?.chapters.length ?? 0,
     startedAt: () => narration?.startedAt ?? 0,
+    piper: () => ({
+      loaded: Boolean(piperRuntime?.loaded),
+      trainingReady: Boolean(piperRuntime?.trainingReady),
+      voiceId: activePiperVoiceId,
+      hasEmbedding: Boolean(activePiperEmbedding),
+      voices: piperVoices.length,
+    }),
+    library: () => ({ results: libraryResults.length, loading: libraryLoading }),
   };
 }
 

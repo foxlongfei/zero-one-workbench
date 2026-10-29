@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f7f3e9">
 <title>陪你读书 V0.3</title>
+<script type="importmap">
+{
+  "imports": {
+    "piper-plus": "https://unpkg.com/piper-plus@0.8.2/src/index.js",
+    "@piper-plus/g2p": "https://cdn.jsdelivr.net/npm/@piper-plus/g2p@0.4.2/src/index.js",
+    "onnxruntime-web": "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.30.0/dist/ort.min.mjs"
+  }
+}
+</script>
 <style>
 :root{
   --paper:#f7f3e9;--card:#fffdf8;--ink:#26342c;--muted:#6b776e;--line:#e3ddd0;
@@ -102,6 +111,17 @@ textarea{min-height:80px;resize:vertical}
 .chips{display:flex;gap:.4rem;flex-wrap:wrap}
 .chip{font-size:.85rem;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--line);background:#fff}
 .chip[aria-pressed="true"]{background:#e6efe7;border-color:var(--accent)}
+.library-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1.4rem}
+.library-card{display:flex;flex-direction:column;gap:.5rem;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem;box-shadow:var(--shadow);min-width:0}
+.library-card img{width:100%;aspect-ratio:3/4.3;object-fit:cover;border-radius:6px;background:#e8e2d5}
+.library-card h3{font-size:1rem;margin:0;line-height:1.35;overflow-wrap:anywhere}
+.library-card .author{font-size:.86rem;color:var(--muted);margin:0}
+.library-card .actions{margin-top:auto;display:flex;gap:.35rem;flex-wrap:wrap}
+.library-card .actions button{font-size:.82rem;padding:.25rem .5rem;min-height:32px}
+.library-card .rights{font-size:.72rem;color:var(--muted)}
+.progress-line{width:100%;height:8px;border-radius:999px;overflow:hidden;background:#e6e0d3}
+.progress-line i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.voice-train-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem}
 .dialog{border:1px solid var(--line);border-radius:var(--radius);padding:0;max-width:560px;width:calc(100vw - 2rem);box-shadow:0 24px 60px rgba(30,40,33,.25);background:var(--card);color:var(--ink)}
 .dialog::backdrop{background:rgba(30,40,33,.35)}
 .dialog form{padding:1.3rem}
@@ -133,6 +153,7 @@ footer a{color:var(--muted)}
   <span class="version">V0.3 原型机</span>
   <nav class="tabs" aria-label="主导航">
     <button type="button" data-nav="shelf" aria-current="page">书架</button>
+    <button type="button" data-nav="library">公版书库</button>
     <button type="button" data-nav="reader">阅读</button>
     <button type="button" data-nav="voices">声音</button>
     <button type="button" data-nav="world">听世界</button>
@@ -157,27 +178,44 @@ footer a{color:var(--muted)}
     <ul class="shelf" id="shelf" aria-label="书列表"></ul>
     <div id="shelfEmpty" class="card" hidden>
       <h3>书架还空着，先导入一本书</h3>
-      <p class="muted">支持 EPUB、TXT（也接受 MOBI / AZW3 / FB2 / CBZ）。导入后点「听书」，就能从第一章连续听到结尾；暂停、跳章和听到哪里都会记住。书籍和笔记只保存在这台设备的浏览器里，不会上传。请只导入你有权阅读的文件。</p>
+      <p class="muted">支持 EPUB / AZW3 / MOBI / FB2 / CBZ / TXT。导入后点「听书」，就能从第一章连续听到结尾；暂停、跳章和听到哪里都会记住。也可以从「公版书库」直接导入 Standard Ebooks 的公版书。书籍和笔记只保存在这台设备的浏览器里，不会上传。请只导入你有权阅读的文件。</p>
       <div class="row" style="margin:.8rem 0">
         <button id="emptyImport" class="primary" type="button">选择电子书文件</button>
         <button id="emptyTrySample" type="button">先用示范书试试</button>
+        <button id="emptyLibrary" type="button">去公版书库挑一本</button>
       </div>
       <div id="readiness" class="readiness" data-testid="readiness">
         <div class="readiness-line" data-kind="browser">
           <span class="dot" aria-hidden="true"></span>
           <span><strong>本机朗读</strong> <span class="muted" id="readyBrowser">检查中…</span></span>
         </div>
+        <div class="readiness-line" data-kind="piper">
+          <span class="dot" aria-hidden="true"></span>
+          <span><strong>开源神经语音</strong> <span class="muted" id="readyPiper">首次使用需下载约 70 MB 模型，之后缓存</span></span>
+        </div>
         <div class="readiness-line" data-kind="endpoint">
           <span class="dot" aria-hidden="true"></span>
-          <span><strong>神经网络语音</strong> <span class="muted" id="readyEndpoint">尚未配置，可选</span></span>
+          <span><strong>自选语音 API</strong> <span class="muted" id="readyEndpoint">尚未配置，可选</span></span>
         </div>
         <div class="readiness-line" data-kind="library">
           <span class="dot" aria-hidden="true"></span>
-          <span><strong>家人授权声音</strong> <span class="muted" id="readyLibrary">尚未连接，可选</span></span>
+          <span><strong>自建家庭声音库</strong> <span class="muted" id="readyLibrary">尚未连接，可选</span></span>
         </div>
-        <p class="hint">只有「本机朗读」需要开箱可用；另两项按需在「声音」页连接，不连接也能完整听书。</p>
+        <p class="hint">「本机朗读」开箱可用；「开源神经语音」可下载模型后离线朗读并训练家人声音；其他两项按需连接。</p>
       </div>
     </div>
+  </section>
+
+  <!-- ============ OPEN LIBRARY ============ -->
+  <section data-screen="library" id="screen-library" aria-label="公版书库" hidden>
+    <h1>公版书库</h1>
+    <p class="muted">直接检索并导入 <a href="https://standardebooks.org" rel="noreferrer">Standard Ebooks</a> 的公版电子书。支持 EPUB 与 AZW3；书和进度只保存在本机。Standard Ebooks 的公版判断以美国法律为准，其他地区请自行核对当地法律。</p>
+    <form id="librarySearchForm" class="shelf-tools" role="search">
+      <input id="librarySearch" type="search" placeholder="搜索书名、作者，例如 Austen、Dickens、探险" aria-label="搜索公版书库">
+      <button class="primary" type="submit">搜索</button>
+    </form>
+    <div id="libraryStatus" class="hint" role="status" aria-live="polite">输入关键词，或留空浏览热门公版书。</div>
+    <div id="libraryList" class="library-grid" style="margin-top:1rem"></div>
   </section>
 
   <!-- ============ READER ============ -->
@@ -255,7 +293,7 @@ footer a{color:var(--muted)}
   <!-- ============ VOICES ============ -->
   <section data-screen="voices" id="screen-voices" aria-label="声音设置" hidden>
     <h1>声音与隐私</h1>
-    <p class="muted">朗读可以完全留在本机，也可以连接你自选的神经网络语音服务，或使用家人授权录制的声音。任何声音克隆都必须由声音本人明确授权；没有授权的声音不能在本系统创建。</p>
+    <p class="muted">朗读可以完全留在本机，也可以使用开源神经语音模型，或连接你自选的语音服务。家人声音必须由声音本人明确授权；没有授权的声音不能在本系统创建。</p>
 
     <div class="grid2" style="margin:1.2rem 0">
       <div class="card">
@@ -265,7 +303,16 @@ footer a{color:var(--muted)}
         <div id="engineStatus" class="hint"></div>
       </div>
       <div class="card">
-        <h2>神经网络语音服务</h2>
+        <h2>开源神经语音 · Piper Plus（本机）</h2>
+        <p class="hint">多语言开源 VITS 模型，中文/英文等语言在浏览器本机合成，不上传文本。首次下载约 70 MB，之后由浏览器缓存；模型与声音训练均在本机完成。</p>
+        <div class="row"><button id="piperLoad" class="primary" type="button">下载 / 加载模型</button><span id="piperStatus" class="hint">未加载</span></div>
+        <div class="progress-line" id="piperProgressWrap" hidden style="margin:.6rem 0"><i id="piperProgressBar"></i></div>
+        <label class="field">神经声音<select id="piperVoiceSelect"></select></label>
+        <div class="row"><button id="piperTest" type="button">试听当前神经声音</button><span id="piperTestResult" class="hint"></span></div>
+        <p class="hint">模型：<a href="https://huggingface.co/ayousanz/piper-plus-base" rel="noreferrer">Piper Plus zs-v1</a>（MIT） · 声音编码器：CAM++（Apache-2.0） · 运行库：<a href="https://github.com/ayutaz/piper-plus" rel="noreferrer">piper-plus</a>（MIT）。示范声音是模型发布方提供的试听样例，不是真人录音。</p>
+      </div>
+      <div class="card">
+        <h2>自选语音 API（可选）</h2>
         <p class="hint">兼容 OpenAI 的 <code>/v1/audio/speech</code> 接口，例如自建或托管的 Kokoro-FastAPI、Piper 网关。地址与密钥只保存在本机浏览器；密钥不会写入代码或公开页面。</p>
         <label class="field">服务地址（如 https://your-kokoro.example/v1）<input id="endpointUrl" type="url" placeholder="https://…" autocomplete="off"></label>
         <label class="field">模型 <input id="endpointModel" type="text" placeholder="kokoro" autocomplete="off"></label>
@@ -274,17 +321,40 @@ footer a{color:var(--muted)}
         <div class="row"><button id="saveEndpoint" class="primary" type="button">保存服务</button><button id="clearEndpoint" type="button">清除</button></div>
       </div>
       <div class="card">
-        <h2>家庭声音库（服务端）</h2>
-        <p class="hint">由声音库服务生成、验证并留痕授权记录。页面只保存声音 id；撤销或删除由声音本人执行。</p>
+        <h2>高级：自建家庭声音库（服务端）</h2>
+        <p class="hint">可选。由你自己部署的声音库服务生成、验证并留痕授权记录；页面只保存声音 id。</p>
         <label class="field">声音库地址 <input id="libraryUrl" type="url" placeholder="https://voice-library.example" autocomplete="off"></label>
         <label class="field">访问令牌（可选）<input id="libraryToken" type="password" autocomplete="off"></label>
         <div class="row"><button id="saveLibrary" class="primary" type="button">保存声音库</button><button id="refreshVoices" type="button">刷新声音列表</button></div>
       </div>
       <div class="card">
         <h2>数据与费用透明</h2>
-        <p class="hint">本机朗读不产生网络流量。神经网络语音按你的服务商计费，每次朗读把一到几句文本发送到该服务；家庭声音库只发送当前朗读的文本。你的书库、进度、笔记永远只在本机。</p>
+        <p class="hint">本机朗读与 Piper Plus 神经语音都在本机完成，不产生按次费用，也不上传文本。自选语音 API 按服务商计费，每次朗读把一到几句文本发送到该服务；自建声音库只发送当前朗读的文本。你的书库、进度、笔记永远只在本机。</p>
         <div id="privacyStats" class="hint"></div>
       </div>
+    </div>
+
+    <h2 style="margin-top:2rem">本机声音训练（零样本，须声音本人授权）</h2>
+    <div class="card">
+      <p class="hint">用一段 5–15 秒的清晰人声训练一个本机神经声音。模型会提取声音特征并在本机合成；参考音频和特征不会上传，也不写入公开页面。请只使用你本人或已明确授权的声音，不得用于冒充他人。</p>
+      <div class="voice-train-grid">
+        <div>
+          <label class="row" style="gap:.5rem;align-items:flex-start"><input id="piperConsent" type="checkbox"> <span>我确认这是本人声音，或已取得声音本人对语音合成和试听的明确授权；我了解合成结果会标注为合成语音。</span></label>
+          <label class="field">声音本人称呼<input id="piperSpeaker" type="text" placeholder="例如：妈妈、爷爷、小雨"></label>
+          <label class="field">关系（可选）<input id="piperRelation" type="text" placeholder="例如：孩子、长辈"></label>
+        </div>
+        <div>
+          <label class="field">参考声音文件（WAV / MP3 / M4A / WebM）<input id="piperRefFile" type="file" accept="audio/*"></label>
+          <div class="row"><button id="piperRecord" type="button">录制 8 秒参考声音</button><span id="piperRecordStatus" class="hint"></span></div>
+          <audio id="piperRefPreview" controls hidden style="width:100%;margin-top:.5rem"></audio>
+        </div>
+      </div>
+      <div class="row" style="margin-top:.8rem">
+        <button id="piperTrain" class="primary" type="button" disabled>训练并使用这个声音</button>
+        <button id="piperDeleteVoice" type="button" hidden>删除当前训练声音</button>
+        <span id="piperTrainStatus" class="hint"></span>
+      </div>
+      <div id="piperVoiceList" class="voice-train-grid" style="margin-top:.8rem"></div>
     </div>
 
     <h2 style="margin-top:1.6rem">可用声音</h2>
