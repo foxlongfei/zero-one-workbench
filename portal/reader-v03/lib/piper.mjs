@@ -26,6 +26,29 @@ export const PIPER = Object.freeze({
   downloadHint: '首次使用下载约 70 MB，之后由浏览器缓存。',
 });
 
+export const PIPER_PACKS = Object.freeze({
+  zs: Object.freeze({
+    id: 'zs',
+    name: 'Piper Plus zs-v1',
+    shortName: '可训练多语言',
+    modelUrl: PIPER.modelUrl,
+    encoderUrl: PIPER.encoderUrl,
+    requiresEmbedding: true,
+    sizeHint: '约 70 MB（含声音编码器）',
+    license: PIPER.license,
+  }),
+  mera: Object.freeze({
+    id: 'mera',
+    name: 'Mera 多语言',
+    shortName: '单声线离线包',
+    modelUrl: 'kizuna-intelligence/piper-plus-mera-multilingual',
+    encoderUrl: null,
+    requiresEmbedding: false,
+    sizeHint: '约 39 MB，无需参考声音',
+    license: 'Apache-2.0（模型）；运行库 MIT',
+  }),
+});
+
 export const DEMO_VOICE_URL = new URL('../data/piper-demo-voice.json', import.meta.url).href;
 
 let sharedContext = null;
@@ -77,8 +100,11 @@ const playSamples = (samples, sampleRate, { signal } = {}) => new Promise((resol
 });
 
 export class PiperRuntime {
-  constructor({ onProgress = null } = {}) {
+  constructor({ modelUrl = PIPER.modelUrl, encoderUrl = PIPER.encoderUrl, requiresEmbedding = true, onProgress = null } = {}) {
     this.onProgress = onProgress;
+    this.modelUrl = modelUrl;
+    this.encoderUrl = encoderUrl;
+    this.requiresEmbedding = requiresEmbedding;
     this.tts = null;
     this.encoder = null;
     this.ort = null;
@@ -111,7 +137,7 @@ export class PiperRuntime {
         this._ttsLoading = (async () => {
           const { PiperPlus } = await this._importModules();
           this.tts = await PiperPlus.initialize({
-            model: PIPER.modelUrl,
+            model: this.modelUrl,
             ort: this.ort,
             onProgress: progress => this.onProgress?.(progress),
           });
@@ -124,7 +150,7 @@ export class PiperRuntime {
         this._encoderLoading = (async () => {
           await this._importModules();
           this.encoder = await this.SpeakerEncoder.initialize({
-            modelUrl: PIPER.encoderUrl,
+            modelUrl: this.encoderUrl,
             ort: this.ort,
           });
         })().finally(() => { this._encoderLoading = null; });
@@ -138,6 +164,7 @@ export class PiperRuntime {
   // speaker embedding. The reference audio is never uploaded.
   async encodeReference(blob) {
     if (!(blob instanceof Blob) || !blob.size) throw new Error('参考声音为空');
+    if (!this.encoderUrl) throw new Error('这个离线声音包不支持训练');
     await this.load({ withEncoder: true });
     const ctx = getContext();
     const decoded = await ctx.decodeAudioData((await blob.arrayBuffer()).slice(0));
@@ -147,16 +174,19 @@ export class PiperRuntime {
 
   async synthesize(text, { embedding, speed = 1, signal } = {}) {
     if (!text || !String(text).trim()) throw new Error('朗读文本为空');
-    if (!embedding || !embedding.length) throw new Error('还没有可用的声音特征');
+    if (this.requiresEmbedding && (!embedding || !embedding.length)) throw new Error('还没有可用的声音特征');
     await this.load();
     if (signal?.aborted) throw abortError();
     const rate = Number(speed) > 0 ? Number(speed) : 1;
-    const audio = await this.tts.synthesize(String(text), {
+    const options = {
       language: detectPiperLanguage(text),
-      speakerEmbedding: embedding instanceof Float32Array ? embedding : new Float32Array(embedding),
       // Piper's lengthScale is the inverse of speaking rate.
       lengthScale: 1 / rate,
-    });
+    };
+    if (this.requiresEmbedding) {
+      options.speakerEmbedding = embedding instanceof Float32Array ? embedding : new Float32Array(embedding);
+    }
+    const audio = await this.tts.synthesize(String(text), options);
     if (signal?.aborted) throw abortError();
     return audio;
   }

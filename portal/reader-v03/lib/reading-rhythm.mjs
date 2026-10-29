@@ -13,6 +13,12 @@ const PAGE_FURNITURE = /^(?:[-–—]?\s*\d{1,4}\s*[-–—]?|\[\d{1,3}\]|［\d{
 
 const TRAILING_BRACKET = /[（(［\[]\s*(?:注|译|编者注|图片来源)[^）)］\]]*[）)］\]]/gu;
 
+// A standalone note/annotation line is book apparatus, not body text. Do not
+// read it aloud; ordinary prose that merely starts with 注意 is left alone.
+const NOTE_LINE = /^(?:注|注解|注释|译者注|编者注|脚注|尾注|【注】|\[注\])\s*[：:]/u;
+
+export const isNoteArtefact = line => NOTE_LINE.test(String(line ?? '').trim());
+
 export const isPageArtefact = line => {
   const text = String(line ?? '').trim();
   return Boolean(text) && PAGE_FURNITURE.test(text);
@@ -28,7 +34,7 @@ export function cleanForSpeech(text) {
     .replace(/[ \t\u3000]+/g, ' ')
     .split('\n')
     .map(line => line.trim())
-    .filter(line => line && !isPageArtefact(line))
+    .filter(line => line && !isPageArtefact(line) && !isNoteArtefact(line))
     .join(' ')
     .trim();
 }

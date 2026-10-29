@@ -69,6 +69,15 @@ try {
   await page.waitForFunction(() => document.querySelector('#piperTestResult')?.textContent.includes('试听完成'), null, { timeout: 180000 });
   check('demo neural voice synthesises in the browser', true);
 
+  await page.locator('#piperPackSelect').selectOption('mera');
+  await page.waitForFunction(() => window.__rw03.piper().pack === 'mera' && window.__rw03.piper().loaded, null, { timeout: 240000 });
+  check('second offline voice pack loads', (await page.evaluate(() => window.__rw03.piper())).pack === 'mera');
+  await page.locator('#piperTest').click();
+  await page.waitForFunction(() => document.querySelector('#piperTestResult')?.textContent.includes('Mera'), null, { timeout: 180000 });
+  check('second offline voice pack synthesises', (await page.locator('#piperTestResult').innerText()).includes('Mera'), await page.locator('#piperTestResult').innerText());
+  await page.locator('#piperPackSelect').selectOption('zs');
+  await page.waitForFunction(() => window.__rw03.piper().pack === 'zs' && window.__rw03.piper().loaded, null, { timeout: 60000 });
+
   await page.locator('#piperConsent').check();
   await page.locator('#piperSpeaker').fill('测试家人');
   await page.locator('#piperRefFile').setInputFiles({ name: 'zh-reference.wav', mimeType: 'audio/wav', buffer: reference });
@@ -80,7 +89,7 @@ try {
   check('authorised reference audio is trained into a local voice', trained.voices === 1 && trained.voiceId !== 'demo' && trained.hasEmbedding, JSON.stringify(trained));
   check('trained voice is listed in the UI', (await page.locator('#piperVoiceList').innerText()).includes('测试家人'), await page.locator('#piperVoiceList').innerText());
 
-  await page.locator('header [data-nav="shelf"]').click();
+  await page.locator('header [data-nav="library"]').click();
   await page.locator('#emptyTrySample').click();
   await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 1, null, { timeout: 30000 });
   await page.locator('#shelf .book [data-action="listen"]').click();

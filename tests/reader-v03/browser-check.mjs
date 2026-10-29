@@ -79,7 +79,7 @@ try {
   // instead of pretending the production site is allowed to call localhost.
   const withVoiceLibrary = !process.argv.includes('--no-voice-library');
   const libraryQuery = withVoiceLibrary ? `&voiceLibrary=${encodeURIComponent('http://127.0.0.1:8792')}` : '';
-  const url = `${baseUrl}/portal/reader-v03/index.html?ttsTone=1${libraryQuery}`;
+  const url = `${baseUrl}/portal/reader-v03/index.html?ttsTone=1&testHooks=1${libraryQuery}`;
   await page.goto(url);
   await page.waitForSelector('#importButton:enabled');
   check('shelf boots without page errors', errors.length === 0, errors.join(' | '));
@@ -132,12 +132,17 @@ try {
   await page.waitForFunction(() => document.querySelectorAll('#chapterList button').length === 3);
   check('TXT split into three chapters', await page.locator('#chapterList button').count() === 3, await page.locator('#chapterList').innerText());
   check('TXT body rendered', (await page.locator('#txtPage p').count()) >= 3, await page.locator('#txtPage').innerText());
+  await page.locator('#tocToggle').click();
+  check('book-style TOC dialog lists every chapter', await page.locator('#tocDialogList button').count() === 3, await page.locator('#tocDialogList').innerText());
+  await page.locator('#tocDialog button[value="close"]').click();
 
   await page.locator('#playButton').click();
   await page.waitForFunction(() => document.querySelector('#playButton')?.dataset.state === 'speaking', null, { timeout: 8000 });
   check('playback starts', true);
   await page.waitForFunction(() => document.querySelector('#playButton')?.dataset.paragraph === '1', null, { timeout: 15000 });
   const firstChapter = await page.locator('#playButton').getAttribute('data-chapter');
+  const txtSync = await page.evaluate(() => window.__rw03.sync());
+  check('audio cursor synchronises the visible TXT paragraph', txtSync && txtSync.chapter === 0 && txtSync.paragraph >= 0, JSON.stringify(txtSync));
 
   // Jump to the last chapter while playing, then back to the first and let the
   // narration cross the 1→2 boundary by itself: that is the proof of
@@ -226,11 +231,14 @@ try {
   await epubPage.waitForSelector('foliate-view');
   await epubPage.waitForFunction(() => document.querySelectorAll('#chapterList button').length === 3, null, { timeout: 15000 });
   check('EPUB TOC from navigation document', await epubPage.locator('#chapterList button').count() === 3, await epubPage.locator('#chapterList').innerText());
-  const jumpLabel = (await epubPage.locator('#chapterList button').nth(2).innerText()).trim();
+  const jumpLabel = (await epubPage.locator('#chapterList button').nth(2).innerText()).replace(/^\d+\.\s*/, '').trim();
   await epubPage.locator('#chapterList button').nth(2).click();
   await epubPage.waitForFunction(label => document.querySelector('#nowChapter')?.textContent.includes(label), jumpLabel, { timeout: 15000 });
   const jumpedTo = (await epubPage.locator('#nowChapter').innerText()).trim();
   check('EPUB chapter jump', jumpedTo.includes(jumpLabel), `${jumpLabel} vs ${jumpedTo}`);
+  await epubPage.waitForFunction(() => window.__rw03.sync()?.chapter === 2, null, { timeout: 15000 });
+  const epubSync = await epubPage.evaluate(() => window.__rw03.sync());
+  check('EPUB chapter jump synchronises the visible paragraph', epubSync && epubSync.chapter === 2, JSON.stringify(epubSync));
   await epubPage.locator('#nextPage').click();
   await epubPage.waitForTimeout(500);
   check('EPUB pagination stays open', await epubPage.locator('foliate-view').count() === 1 && !(await epubStatus()).includes('失败'), await epubStatus());
@@ -272,6 +280,17 @@ try {
   const resumedLast = await statePage.locator('#nowChapter').innerText();
   check('resume from the last chapter does not restart the book', resumedLast.includes('第三章'), resumedLast);
   check('TXT pane is rendered when listening starts from the shelf', await statePage.locator('#txtPage p').count() > 0, await statePage.locator('#txtPage').innerText());
+
+  await statePage.locator('#playButton').click();
+  await statePage.waitForFunction(() => window.__rw03.engineState() === 'paused', null, { timeout: 8000 });
+  await statePage.locator('#readParagraph').click();
+  await statePage.waitForFunction(() => window.__rw03.engineState() === 'ended', null, { timeout: 30000 });
+  check('paragraph scope stops after the selected paragraph', Boolean(await statePage.evaluate(() => window.__rw03.scope())), JSON.stringify(await statePage.evaluate(() => window.__rw03.scope())));
+  check('paragraph scope reports completion without marking the book finished', (await statePage.locator('#status').innerText()).includes('本段已读完'), await statePage.locator('#status').innerText());
+  await statePage.locator('#readWholeBook').click();
+  await statePage.waitForFunction(() => window.__rw03.engineState() === 'speaking', null, { timeout: 30000 });
+  check('whole-book scope clears the paragraph boundary', await statePage.evaluate(() => window.__rw03.scope()) === null);
+  await statePage.locator('#playButton').click();
   await statePage.close();
 
   // ---- 听世界 -------------------------------------------------------------

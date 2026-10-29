@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { chunkText, splitChapters, isChapterTitle, splitSentences, secondsToMinutes, formatMilliseconds, percent } from '../../portal/reader-v03/lib/text.mjs';
-import { bookFromTxt, isBookFinished, mapEpubSections, paragraphsFromHtml, pickText, totalParagraphs } from '../../portal/reader-v03/lib/book.mjs';
+import { bookFromTxt, chapterIndexForSection, isAuxiliarySection, isBookFinished, mapEpubSections, narratableChapters, paragraphsFromHtml, pickText, totalParagraphs } from '../../portal/reader-v03/lib/book.mjs';
 import { Narration, State } from '../../portal/reader-v03/lib/narration.mjs';
 import { resolvePlaylist, resolveDaypart, BUILTIN_SOURCES } from '../../portal/reader-v03/lib/listening-world.mjs';
 
@@ -74,11 +74,12 @@ test('builds a TXT book model', () => {
 });
 
 test('paragraph extraction keeps CJK text and drops markup', () => {
-  const html = '<html><body><nav>目录</nav><h1>标题 &amp; 副题</h1><p>第一段。</p><div>第二段<br>续。</div><script>x()</script></body></html>';
+  const html = '<html><body><nav>目录</nav><h1>标题 &amp; 副题</h1><p>第一段。</p><div>第二段<br>续。</div><aside>注释不应出现</aside><script>x()</script></body></html>';
   const paragraphs = paragraphsFromHtml(html);
   assert.ok(paragraphs.includes('标题 & 副题'));
   assert.ok(paragraphs.includes('第一段。'));
   assert.ok(!paragraphs.join('|').includes('x()'));
+  assert.ok(!paragraphs.join('|').includes('注释不应出现'));
   assert.ok(!paragraphs.includes('目录'));
 });
 
@@ -94,6 +95,19 @@ test('maps EPUB spine sections to TOC titles', () => {
   assert.deepEqual(model.chapters.map(c => c.title), ['第一章', '第二章', '第 3 部分']);
   assert.equal(model.chapters[1].sectionIndex, 1);
   assert.equal(pickText([{ name: '作者' }]), '作者');
+});
+
+test('non-linear and notes sections are excluded from narration', () => {
+  const sections = [{ id: 'ch1.xhtml', linear: 'yes' }, { id: 'notes.xhtml', linear: 'yes' }, { id: 'cover.xhtml', linear: 'no' }];
+  const chapters = [{ title: '第一章', sectionIndex: 0 }, { title: '注释', sectionIndex: 1 }, { title: '封面', sectionIndex: 2 }];
+  assert.equal(isAuxiliarySection(sections[1]), true);
+  assert.equal(isAuxiliarySection(sections[2]), true);
+  assert.deepEqual(narratableChapters(chapters, sections).map(chapter => chapter.title), ['第一章']);
+  assert.equal(chapterIndexForSection([{ sectionIndex: 2 }], 2), 0);
+});
+
+test('superscript footnote markers are removed with the rest of the apparatus', () => {
+  assert.deepEqual(paragraphsFromHtml('<p>正文<sup>12</sup>继续。</p>'), ['正文 继续。']);
 });
 
 test('a last-chapter position is not mistaken for a finished book', () => {
@@ -134,6 +148,25 @@ test('listening runs continuously across a chapter boundary', async () => {
   assert.deepEqual(changes, [1]);
   assert.equal(narration.state, State.ENDED);
   assert.equal(narration.chapter, 1);
+});
+
+test('the book title is announced once before the first chapter', async () => {
+  const spoken = [];
+  const narration = new Narration({ speak: async text => { spoken.push(text); } });
+  narration.load(demoBook);
+  narration.bookTitle = '两章书';
+  await narration.start();
+  assert.deepEqual(spoken, ['两章书', '第一章', '甲一。', '甲二。', '第二章', '乙一。']);
+});
+
+test('paragraph scope stops after the selected paragraph', async () => {
+  const spoken = [];
+  const narration = new Narration({ speak: async text => { spoken.push(text); } });
+  narration.load(demoBook);
+  narration.endAt = { chapter: 0, paragraph: 0 };
+  await narration.start({ chapter: 0, paragraph: 0 });
+  assert.deepEqual(spoken, ['第一章', '甲一。']);
+  assert.equal(narration.state, State.ENDED);
 });
 
 test('pause then resume restarts the interrupted paragraph', async () => {

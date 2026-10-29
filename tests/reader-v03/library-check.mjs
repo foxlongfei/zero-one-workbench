@@ -59,22 +59,30 @@ try {
   const title = (await card.locator('h3').innerText()).trim();
   check('keyword search returns a public-domain book', title.length > 0, title);
 
-  await card.getByText('导入 EPUB').click();
-  await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 1, null, { timeout: 120000 });
-  const firstFormat = await page.locator('#shelf .book').first().getAttribute('data-format');
-  check('EPUB from Standard Ebooks is stored on the local shelf', firstFormat === 'EPUB', String(firstFormat));
+  await page.locator('#libraryList .library-card').nth(0).locator('.library-select').check();
+  await page.locator('#libraryList .library-card').nth(1).locator('.library-select').check();
+  check('batch selection reports two books', (await page.locator('#librarySelected').innerText()).includes('2'), await page.locator('#librarySelected').innerText());
+  await page.locator('#batchEpub').click();
+  await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 2, null, { timeout: 180000 });
+  const formats = await page.evaluate(() => [...document.querySelectorAll('#shelf .book')].map(book => book.dataset.format));
+  check('batch EPUB import stores both books on the local shelf', formats.length === 2 && formats.every(format => format === 'EPUB'), JSON.stringify(formats));
 
   await page.locator('header [data-nav="library"]').click();
+  await page.locator('#librarySearch').fill('pride and prejudice');
+  await page.locator('#librarySearch').press('Enter');
   await page.waitForFunction(() => window.__rw03.library().loading === false && window.__rw03.library().results > 0, null, { timeout: 60000 });
   await page.locator('#libraryList .library-card').first().getByText('导入 AZW3').click();
-  await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 2, null, { timeout: 120000 });
-  const formats = await page.evaluate(() => [...document.querySelectorAll('#shelf .book')].map(book => book.dataset.format));
-  check('AZW3 from Standard Ebooks is stored on the local shelf', formats.includes('AZW3'), JSON.stringify(formats));
+  await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 3, null, { timeout: 120000 });
+  const formats2 = await page.evaluate(() => [...document.querySelectorAll('#shelf .book')].map(book => book.dataset.format));
+  check('AZW3 from Standard Ebooks is stored on the local shelf', formats2.includes('AZW3'), JSON.stringify(formats2));
 
   await page.locator('#shelf .book[data-format="AZW3"] [data-action="read"]').click();
   await page.waitForSelector('#screen-reader:not([hidden])', { timeout: 30000 });
   await page.waitForFunction(() => document.querySelectorAll('#chapterList button').length > 0, null, { timeout: 30000 });
-  check('AZW3 opens in the reader through foliate-js', (await page.locator('#chapterList button').count()) > 0, await page.locator('#chapterList').innerText());
+  check('AZW3 opens in the reader through foliate-js', (await page.locator('#chapterList button').count()) > 50, await page.locator('#chapterList').innerText());
+  await page.locator('#tocToggle').click();
+  check('long AZW3 exposes a book-style TOC', (await page.locator('#tocDialogList button').count()) === (await page.locator('#chapterList button').count()), `${await page.locator('#tocDialogList button').count()} vs ${await page.locator('#chapterList button').count()}`);
+  await page.locator('#tocDialog button[value="close"]').click();
   check('reader does not report a load failure', !(await page.locator('#status').innerText()).includes('失败'), await page.locator('#status').innerText());
   check('no page errors during the library run', errors.length === 0, errors.join(' | '));
   await writeFile('artifacts/reader-v03/library-evidence.json', `${JSON.stringify(evidence, null, 2)}\n`);

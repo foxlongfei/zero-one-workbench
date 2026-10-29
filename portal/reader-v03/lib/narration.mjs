@@ -35,6 +35,8 @@ export class Narration {
     this.settleMs = settleMs;
     this.speakTitles = true;
     this.chapterPauseMs = DEFAULT_CHAPTER_PAUSE_MS;
+    this.bookTitle = '';
+    this.endAt = null;
     this.lastAnnounced = null;
     this.book = null;
     this.state = State.IDLE;
@@ -56,6 +58,9 @@ export class Narration {
     this.state = State.IDLE;
     this.lastAnnounced = null;
     this.announcedChapter = null;
+    this.announcedBook = false;
+    this.bookTitle = '';
+    this.endAt = null;
     this.jump(position ?? { chapter: 0, paragraph: 0 });
   }
 
@@ -99,7 +104,15 @@ export class Narration {
 
   async start(position = null) {
     if (!this.book) throw new Error('还没有打开的书');
-    if (position) this.jump(position, { silent: true });
+    if (position) {
+      // A new pass from the very beginning should announce the book title
+      // again, even though the same Book object is still loaded.
+      if (position.chapter === 0 && position.paragraph === 0 && this.state === State.ENDED) {
+        this.announcedBook = false;
+        this.announcedChapter = null;
+      }
+      this.jump(position, { silent: true });
+    }
     if (this.state === State.PAUSED) return this.resume();
     await this.#run();
   }
@@ -164,6 +177,13 @@ export class Narration {
   async #chapterLeadIn(signal) {
     const title = chapterAnnouncement(this.book?.chapters?.[this.chapter], { spokenTitles: this.speakTitles });
     const atStart = this.paragraph === 0 && this.chunkIndex === 0;
+    if (atStart && this.chapter === 0 && !this.announcedBook && this.bookTitle) {
+      this.announcedBook = true;
+      this.onChunk({ chapter: 0, paragraph: 0, chunk: 0, text: this.bookTitle, announcement: true, bookTitle: true });
+      await Promise.race([this.speak(this.bookTitle, { signal }), this.#aborted(signal)]);
+      const pause = pauseBefore({ paragraph: 0 }, { chapterPauseMs: this.chapterPauseMs });
+      if (pause) await sleep(pause, { signal });
+    }
     if (atStart && this.announcedChapter !== this.chapter) {
       this.announcedChapter = this.chapter;
       const pause = pauseBefore({ paragraph: 0 }, { chapterPauseMs: this.chapterPauseMs });
@@ -200,6 +220,9 @@ export class Narration {
         paragraph = 0;
         break;
       }
+      return false;
+    }
+    if (this.endAt && (chapter > this.endAt.chapter || (chapter === this.endAt.chapter && paragraph > this.endAt.paragraph))) {
       return false;
     }
     const chapterChanged = chapter !== this.chapter;
@@ -246,6 +269,7 @@ export class Narration {
 
   #skip(direction) {
     if (!this.book) return;
+    this.endAt = null;
     const paragraphs = this.book.chapters[this.chapter]?.paragraphs ?? [];
     let chapter = this.chapter;
     let paragraph = this.paragraph + direction;
@@ -269,6 +293,7 @@ export class Narration {
 
   #goToChapter(chapter) {
     if (!this.book || chapter < 0 || chapter >= this.book.chapters.length) return;
+    this.endAt = null;
     this.chapter = chapter;
     this.paragraph = 0;
     this.chunkIndex = 0;

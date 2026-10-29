@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { chunkForSpeech, cleanForSpeech, isPageArtefact, sentenceUnits, spokenLength } from '../../portal/reader-v03/lib/reading-rhythm.mjs';
+import { chunkForSpeech, cleanForSpeech, isNoteArtefact, isPageArtefact, sentenceUnits, spokenLength } from '../../portal/reader-v03/lib/reading-rhythm.mjs';
 import { PACING, chapterAnnouncement, pacingOf, pauseBefore } from '../../portal/reader-v03/lib/chapter-flow.mjs';
 
 test('page furniture and invisible characters never reach the voice', () => {
@@ -13,6 +13,13 @@ test('page furniture and invisible characters never reach the voice', () => {
   assert.ok(!isPageArtefact('他在第 42 页做了标记。'), 'a number inside a sentence is content');
   assert.equal(cleanForSpeech('月光\u00AD照在\t窗台上。\n17\n他睡着了。'), '月光照在 窗台上。 他睡着了。');
   assert.equal(cleanForSpeech('原文<b>粗体</b>结束。（编者注：此处略有删节）'), '原文粗体结束。');
+});
+
+test('standalone notes and annotations are never read aloud', () => {
+  assert.ok(isNoteArtefact('注：这是作者注释。'));
+  assert.ok(isNoteArtefact('译者注：此处有删节。'));
+  assert.ok(!isNoteArtefact('注意：这是正文里的提醒。'));
+  assert.equal(cleanForSpeech('正文第一段。\n注：这是注释\n正文第二段。'), '正文第一段。 正文第二段。');
 });
 
 test('sentences are split only after a terminator, keeping closing quotes', () => {

@@ -40,10 +40,9 @@ try {
   await page.goto(`http://127.0.0.1:${PORT}/portal/reader-v03/index.html?testHooks=1`);
   await page.waitForSelector('#importButton:enabled', { timeout: 30000 });
 
-  for (const [index, file] of ['morning.txt', 'quiet-house.epub', 'quiet-house.fb2', 'quiet-house.cbz'].entries()) {
-    await page.locator('#files').setInputFiles(resolve('tests/reader-v03/fixtures', file));
-    await page.waitForFunction(count => document.querySelectorAll('#shelf .book').length === count, index + 1, { timeout: 30000 });
-  }
+  await page.locator('#files').setInputFiles(['morning.txt', 'quiet-house.epub', 'quiet-house.fb2', 'quiet-house.cbz']
+    .map(file => resolve('tests/reader-v03/fixtures', file)));
+  await page.waitForFunction(() => document.querySelectorAll('#shelf .book').length === 4, null, { timeout: 60000 });
   const formats = await page.evaluate(() => [...document.querySelectorAll('#shelf .book')].map(book => book.dataset.format));
   check('TXT/EPUB/FB2/CBZ all import', ['TXT', 'EPUB', 'FB2', 'CBZ'].every(format => formats.includes(format)), JSON.stringify(formats));
   check('CBZ listen action is disabled', await page.locator('#shelf .book[data-format="CBZ"] [data-action="listen"]').isDisabled());

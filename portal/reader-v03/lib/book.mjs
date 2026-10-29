@@ -12,7 +12,7 @@ export const decodeEntities = value => String(value ?? '')
 // and unit tests). Preserves CJK text and drops scripts, styles and nav landmarks.
 export function paragraphsFromHtml(html) {
   const cleaned = String(html ?? '')
-    .replace(/<(script|style|nav|svg)[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<(script|style|nav|svg|aside|sup)[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/<\/?(p|div|h[1-6]|li|blockquote|section|article|br|tr|td|th|dt|dd|pre)[^>]*>/gi, '\n');
   return decodeEntities(cleaned)
@@ -88,3 +88,19 @@ export const totalParagraphs = book => book?.chapters.reduce((sum, chapter) => s
 export const isBookFinished = progress => Boolean(
   progress && (progress.finished === true || Number(progress.fraction) >= 0.999),
 );
+
+// EPUB spine entries marked non-linear, and clearly named notes/endnotes/
+// annotations, are book apparatus rather than the narrative. Keep them out of
+// the narration chapter list while preserving the original sectionIndex used
+// by foliate.
+export const isAuxiliarySection = section => {
+  if (!section) return true;
+  if (section.linear === 'no') return true;
+  return /(?:^|[/_.-])(notes?|endnotes?|annotations?|colophon|copyright|toc)(?:[._/-]|$)/i.test(String(section.id ?? ''));
+};
+
+export const narratableChapters = (chapters, sections) =>
+  (chapters ?? []).filter(chapter => !isAuxiliarySection(sections?.[chapter.sectionIndex]));
+
+export const chapterIndexForSection = (chapters, sectionIndex) =>
+  (chapters ?? []).findIndex(chapter => (chapter.sectionIndex ?? 0) === sectionIndex);
