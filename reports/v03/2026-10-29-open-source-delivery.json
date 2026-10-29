@@ -3,13 +3,13 @@
   "product": "陪你读书 V0.3",
   "owner": "D博士",
   "status": "PUBLISHED_PENDING_USER_ACCEPTANCE",
-  "deployed_commit": "1bbd63e1cb348e3c1f7112c55f64d555191e79df",
-  "previous_commit": "8b97338cefba45dcd75720d45976e60eedc61a13",
+  "deployed_commit": "fe107996cbe8943f49e43124fddfdc575a33e1f8",
+  "previous_commit": "625c6666493d201d9fbbbe7c347087dba41df057",
   "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/reader-v03/index.html",
   "deployment_readback": {
     "http_status": 200,
-    "local_app_sha256": "ed32b2983832ecfc4d9a2d9caeec4b64cd9f818001b122cfc688942f42acd4a8",
-    "public_app_sha256": "ed32b2983832ecfc4d9a2d9caeec4b64cd9f818001b122cfc688942f42acd4a8",
+    "local_app_sha256": "a4a360aade5591506c5919ed06808856356f06961c6f3a6d75495abb18fef105",
+    "public_app_sha256": "a4a360aade5591506c5919ed06808856356f06961c6f3a6d75495abb18fef105",
     "match": true,
     "piper_asset_http_status": 200
   },
@@ -110,7 +110,12 @@
         "TXT standalone 注/注解/译者注 lines",
         "superscript footnote markers"
       ]
-    }
+    },
+    "paid_services": "none",
+    "removed_paid_interfaces": [
+      "OpenAI-compatible cloud TTS endpoint",
+      "AI discussion via ?aiEndpoint="
+    ]
   },
   "tests": {
     "unit": {
@@ -139,7 +144,7 @@
       "command": "node tests/reader-v03/neural-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --playwright=<temp playwright>",
       "pass": 11,
       "page_errors": 0,
-      "elapsed_ms": 58023
+      "elapsed_ms": 54457
     },
     "library_local": {
       "command": "node tests/reader-v03/library-check.mjs --playwright=<temp playwright>",
@@ -193,5 +198,6 @@
     "reports/v03/2026-10-29-public-library-evidence.json",
     "reports/v03/2026-10-29-formats-evidence.json",
     "reports/v03/2026-10-29-long-read-evidence.json"
-  ]
+  ],
+  "paid_services_removed": true
 }

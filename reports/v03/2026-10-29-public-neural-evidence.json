@@ -34,12 +34,12 @@
     {
       "name": "authorised reference audio is trained into a local voice",
       "pass": true,
-      "details": "{\"loaded\":true,\"trainingReady\":true,\"pack\":\"zs\",\"voiceId\":\"pv_761e7d21\",\"hasEmbedding\":true,\"voices\":1}"
+      "details": "{\"loaded\":true,\"trainingReady\":true,\"pack\":\"zs\",\"voiceId\":\"pv_36b945ee\",\"hasEmbedding\":true,\"voices\":1}"
     },
     {
       "name": "trained voice is listed in the UI",
       "pass": true,
-      "details": "测试家人的声音\n测试家人 · 2026/10/29 03:46:22\n正在使用\n删除"
+      "details": "测试家人的声音\n测试家人 · 2026/10/29 04:06:28\n正在使用\n删除"
     },
     {
       "name": "the trained neural voice is used for reading",
@@ -49,7 +49,7 @@
     {
       "name": "trained voice survives a reload",
       "pass": true,
-      "details": "{\"loaded\":false,\"trainingReady\":false,\"pack\":\"zs\",\"voiceId\":\"pv_761e7d21\",\"hasEmbedding\":true,\"voices\":1}"
+      "details": "{\"loaded\":false,\"trainingReady\":false,\"pack\":\"zs\",\"voiceId\":\"pv_36b945ee\",\"hasEmbedding\":true,\"voices\":1}"
     },
     {
       "name": "no page errors during the neural run",
@@ -59,5 +59,5 @@
   ],
   "errors": [],
   "baseUrl": "https://foxlongfei.github.io/zero-one-workbench",
-  "elapsedMs": 58023
+  "elapsedMs": 54457
 }
