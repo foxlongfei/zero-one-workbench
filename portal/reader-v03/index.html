@@ -296,6 +296,10 @@ footer a{color:var(--muted)}
           <label class="field">声音来源
             <select id="engineSelect" aria-label="声音来源"></select>
           </label>
+          <label class="field" id="fieldReaderPiperVoice" hidden>神经声音
+            <select id="readerPiperVoiceSelect" aria-label="神经声音"></select>
+            <span class="hint">训练好的家人声音会出现在这里；也可到「声音」页训练或删除。</span>
+          </label>
           <label class="field" id="fieldBrowserVoice">本机声音<select id="browserVoice" aria-label="本机声音"></select></label>
           <label class="field" id="fieldRate">语速 <input id="rate" type="range" min=".6" max="1.8" step=".05" value="1"></label>
           <p class="hint" id="engineHint"></p>
@@ -469,6 +473,6 @@ footer a{color:var(--muted)}
   });
 })();
 </script>
-<script type="module" src="./app.mjs?v=20261029-2"></script>
+<script type="module" src="./app.mjs?v=20261029-4"></script>
 </body>
 </html>

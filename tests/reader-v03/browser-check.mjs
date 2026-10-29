@@ -244,6 +244,32 @@ try {
   check('EPUB pagination stays open', await epubPage.locator('foliate-view').count() === 1 && !(await epubStatus()).includes('失败'), await epubStatus());
   await epubPage.close();
 
+  // ---- long EPUB: the page must follow the spoken paragraph --------------
+  // A heading-only fixture always fits on one page, so it cannot catch a
+  // paginator that highlights a paragraph on a page the listener cannot see.
+  const followPage = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  watch(followPage);
+  await followPage.goto(url);
+  await followPage.waitForSelector('#importButton:enabled');
+  await followPage.locator('#files').setInputFiles(resolve('tests/reader-v03/fixtures/long-chapter.epub'));
+  await followPage.waitForFunction(() => document.querySelector('#status')?.textContent.includes('已导入 1 本'));
+  await followPage.locator('#shelf .book').filter({ hasText: '长卷' }).locator('[data-action="read"]').click();
+  await followPage.waitForSelector('foliate-view');
+  await followPage.waitForFunction(() => document.querySelectorAll('#chapterList button').length === 1, null, { timeout: 15000 });
+  await followPage.locator('#playButton').click();
+  await followPage.waitForFunction(() => document.querySelector('#playButton')?.dataset.state === 'speaking', null, { timeout: 10000 });
+  for (let index = 0; index < 50; index++) await followPage.locator('#nextPara').click();
+  await followPage.waitForFunction(() => (window.__rw03.sync()?.paragraph ?? 0) >= 40, null, { timeout: 15000 });
+  await followPage.waitForTimeout(800);
+  const followed = await followPage.evaluate(() => ({
+    sync: window.__rw03.sync(),
+    visible: window.__rw03.syncVisible(),
+    page: document.querySelector('foliate-view')?.renderer?.page,
+  }));
+  check('long EPUB turns the page to the spoken paragraph', followed.visible && followed.page > 1, JSON.stringify(followed));
+  await followPage.locator('#playButton').click();
+  await followPage.close();
+
   // ---- last-chapter resume + note ownership (fresh session) --------------
   // Two regressions live here: treating the last chapter as an already-finished
   // book (which restarts at chapter 0), and writing a note with the audio

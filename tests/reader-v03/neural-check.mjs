@@ -96,6 +96,10 @@ try {
   await page.waitForFunction(() => document.querySelector('#playButton')?.dataset.state === 'speaking', null, { timeout: 180000 });
   await page.waitForFunction(() => (document.querySelector('#nowSentence')?.textContent || '').length > 5, null, { timeout: 180000 });
   check('the trained neural voice is used for reading', (await page.locator('#engineBadge').getAttribute('data-kind')) === 'piper', await page.locator('#engineBadge').innerText());
+  check('the reader voice picker offers the trained voice',
+    (await page.locator('#fieldReaderPiperVoice').isVisible())
+      && (await page.locator('#readerPiperVoiceSelect').innerText()).includes('测试家人'),
+    await page.locator('#readerPiperVoiceSelect').innerText());
   await page.locator('#playButton').click();
 
   await page.reload();

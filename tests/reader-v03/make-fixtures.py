@@ -58,4 +58,22 @@ with ZipFile(out / 'quiet-house.cbz', 'w', ZIP_DEFLATED) as z:
         svg = f'<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800"><rect width="600" height="800" fill="#f7f3e9"/><text x="40" y="60" font-size="32">{title}</text>{text}</svg>'
         z.writestr(f'{index:02}.svg', svg)
 
-print(f'wrote {out}/morning.txt, quiet-house.epub, quiet-house.fb2 and quiet-house.cbz')
+long_paras = ''.join(
+    f'<p>第{i + 1}段。今天天气很好，我们一起读书吧。</p>' for i in range(180)
+)
+with ZipFile(out / 'long-chapter.epub', 'w') as z:
+    z.writestr('mimetype', 'application/epub+zip', compress_type=ZIP_STORED)
+    z.writestr('META-INF/container.xml', '<?xml version="1.0"?><container xmlns="urn:oasis:names:tc:opendocument:xmlns:container" version="1.0"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>', compress_type=ZIP_DEFLATED)
+    z.writestr('OEBPS/content.opf', '''<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">
+<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+<dc:identifier id="uid">read-with-you-v03-long-chapter</dc:identifier>
+<dc:title>长卷</dc:title><dc:creator>零一编辑部</dc:creator><dc:language>zh-CN</dc:language>
+</metadata>
+<manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+<item id="c1" href="c1.xhtml" media-type="application/xhtml+xml"/></manifest>
+<spine><itemref idref="c1"/></spine></package>''', compress_type=ZIP_DEFLATED)
+    z.writestr('OEBPS/nav.xhtml', '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>目录</title></head><body><nav epub:type="toc" xmlns:epub="http://www.idpf.org/2007/ops"><ol><li><a href="c1.xhtml">长卷</a></li></ol></nav></body></html>', compress_type=ZIP_DEFLATED)
+    z.writestr('OEBPS/c1.xhtml', f'<html xmlns="http://www.w3.org/1999/xhtml"><head><title>长卷</title></head><body><h1>长卷</h1>{long_paras}</body></html>', compress_type=ZIP_DEFLATED)
+
+print(f'wrote {out}/morning.txt, quiet-house.epub, quiet-house.fb2, quiet-house.cbz and long-chapter.epub')

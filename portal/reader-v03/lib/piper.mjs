@@ -74,6 +74,125 @@ export const primePiperAudio = () => {
 
 export const detectPiperLanguage = text => (/[\u3400-\u9fff]/.test(String(text ?? '')) ? 'zh' : 'en');
 
+// Piper's experimental zs-v1 graph returns a very low-level signal (roughly
+// -22 dBFS peak on the demo voice), so playback on a phone sounds tiny. Raise
+// it to a normal speech level while leaving headroom; RMS decides the gain and
+// the peak cap prevents clipping. This runs only after synthesis, on-device.
+export const normalizeSpeechSamples = (samples, {
+  sampleRate = 22050,
+  targetRms = 0.12,
+  targetPeak = 0.92,
+  maxGain = 16,
+  fadeMs = 5,
+} = {}) => {
+  const input = samples instanceof Float32Array ? samples : new Float32Array(samples ?? []);
+  const output = input.slice();
+  if (!input.length) return output;
+  let peak = 0;
+  let sum = 0;
+  for (let i = 0; i < input.length; i++) {
+    const value = Number(input[i]);
+    if (!Number.isFinite(value)) continue;
+    const absolute = Math.abs(value);
+    if (absolute > peak) peak = absolute;
+    sum += value * value;
+  }
+  const rms = Math.sqrt(sum / input.length);
+  if (!(peak > 0) || !(rms > 0)) return output;
+  const gain = Math.max(0.01, Math.min(maxGain, targetPeak / peak, targetRms / rms));
+  for (let i = 0; i < input.length; i++) {
+    const value = Number(input[i]);
+    output[i] = Number.isFinite(value) ? Math.max(-1, Math.min(1, value * gain)) : 0;
+  }
+  // A few milliseconds of fade avoids a click at the start and end of each
+  // sentence after the level change.
+  const rate = Number(sampleRate) > 0 ? Number(sampleRate) : 22050;
+  const fade = Math.min(Math.floor(rate * Math.max(0, fadeMs) / 1000), Math.floor(output.length / 2));
+  for (let i = 0; i < fade; i++) {
+    const factor = i / fade;
+    output[i] *= factor;
+    output[output.length - 1 - i] *= factor;
+  }
+  return output;
+};
+
+// A phone recording can be quiet, DC-offset, mostly silence, or several
+// minutes long. CAM++ only needs 5-15 seconds, so remove silence, take the
+// loudest 15-second window, and peak-normalise before extracting the embedding.
+// This is still the user's authorised sample; nothing leaves the device.
+export const prepareReferenceSamples = (samples, sampleRate = 16000, {
+  maxSeconds = 15,
+  targetPeak = 0.95,
+  maxGain = 20,
+} = {}) => {
+  const input = samples instanceof Float32Array ? samples : new Float32Array(samples ?? []);
+  if (!input.length) return input.slice();
+  const rate = Number(sampleRate) > 0 ? Number(sampleRate) : 16000;
+
+  let mean = 0;
+  for (let i = 0; i < input.length; i++) mean += Number(input[i]) || 0;
+  mean /= input.length;
+  // Avoid a second full-length buffer for long phone recordings. Only the
+  // trimmed clip is copied; peak/trim scan the input in place.
+  let peak = 0;
+  for (let i = 0; i < input.length; i++) peak = Math.max(peak, Math.abs((Number(input[i]) || 0) - mean));
+  if (!(peak > 0)) return new Float32Array(input.length);
+
+  // Keep 50 ms either side of the first/last audible sample.
+  const threshold = peak * 0.02;
+  let start = 0;
+  while (start < input.length - 1 && Math.abs((Number(input[start]) || 0) - mean) < threshold) start += 1;
+  let end = input.length - 1;
+  while (end > start && Math.abs((Number(input[end]) || 0) - mean) < threshold) end -= 1;
+  const padding = Math.floor(rate * 0.05);
+  start = Math.max(0, start - padding);
+  end = Math.min(input.length - 1, end + padding);
+  let clip = new Float32Array(end - start + 1);
+  for (let i = 0; i < clip.length; i++) clip[i] = (Number(input[start + i]) || 0) - mean;
+
+  // Long imports are limited to the loudest 15-second window so the embedding
+  // is not averaged over minutes of unrelated audio and room noise. A sliding
+  // window keeps memory constant even for a 30-minute phone recording.
+  const maxSamples = Math.max(1, Math.floor(rate * (Number(maxSeconds) > 0 ? Number(maxSeconds) : 15)));
+  if (clip.length > maxSamples) {
+    let energy = 0;
+    for (let i = 0; i < maxSamples; i++) energy += clip[i] * clip[i];
+    let bestEnergy = energy;
+    let bestStart = 0;
+    const step = Math.max(1, Math.floor(rate * 0.5));
+    for (let offset = step; offset + maxSamples <= clip.length; offset += step) {
+      for (let i = offset - step; i < offset; i++) {
+        energy -= clip[i] * clip[i];
+        energy += clip[i + maxSamples] * clip[i + maxSamples];
+      }
+      if (energy > bestEnergy) { bestEnergy = energy; bestStart = offset; }
+    }
+    const lastStart = clip.length - maxSamples;
+    if (lastStart > 0 && lastStart % step !== 0) {
+      energy = 0;
+      for (let i = lastStart; i < clip.length; i++) energy += clip[i] * clip[i];
+      if (energy > bestEnergy) { bestEnergy = energy; bestStart = lastStart; }
+    }
+    clip = clip.slice(bestStart, bestStart + maxSamples);
+  }
+
+  let clipPeak = 0;
+  for (let i = 0; i < clip.length; i++) clipPeak = Math.max(clipPeak, Math.abs(clip[i]));
+  if (!(clipPeak > 0)) return clip;
+  const gain = Math.min(maxGain, targetPeak / clipPeak);
+  const output = new Float32Array(clip.length);
+  for (let i = 0; i < clip.length; i++) {
+    output[i] = Math.max(-1, Math.min(1, clip[i] * gain));
+  }
+  const fade = Math.min(Math.floor(rate * 0.01), Math.floor(output.length / 2));
+  for (let i = 0; i < fade; i++) {
+    const factor = i / fade;
+    output[i] *= factor;
+    output[output.length - 1 - i] *= factor;
+  }
+  return output;
+};
+
 const playSamples = (samples, sampleRate, { signal } = {}) => new Promise((resolve, reject) => {
   if (signal?.aborted) return reject(abortError());
   const ctx = getContext();
@@ -168,7 +287,8 @@ export class PiperRuntime {
     await this.load({ withEncoder: true });
     const ctx = getContext();
     const decoded = await ctx.decodeAudioData((await blob.arrayBuffer()).slice(0));
-    const embedding = await this.encoder.encode(decoded);
+    const reference = prepareReferenceSamples(decoded.getChannelData(0), decoded.sampleRate);
+    const embedding = await this.encoder.encode(reference, decoded.sampleRate);
     return new Float32Array(embedding);
   }
 
@@ -194,7 +314,8 @@ export class PiperRuntime {
   async speak(text, { embedding, speed = 1, signal } = {}) {
     primePiperAudio();
     const audio = await this.synthesize(text, { embedding, speed, signal });
-    await playSamples(audio.samples, audio.sampleRate, { signal });
+    const samples = normalizeSpeechSamples(audio.samples, { sampleRate: audio.sampleRate });
+    await playSamples(samples, audio.sampleRate, { signal });
   }
 
   stop() {

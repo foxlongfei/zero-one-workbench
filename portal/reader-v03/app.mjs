@@ -10,7 +10,7 @@ import { splitChapters, percent, formatMilliseconds, normalizeText } from './lib
 import { Narration, State } from './lib/narration.mjs';
 import { bookFromTxt, chapterIndexForSection, isBookFinished, mapEpubSections, narratableChapters, pickText, paragraphsFromHtml, totalParagraphs } from './lib/book.mjs';
 import { BrowserEngine, LibraryVoiceEngine, ToneEngine, isAbort } from './lib/engines.mjs';
-import { DEMO_VOICE_URL, PIPER_PACKS, PiperEngine, PiperRuntime, primePiperAudio } from './lib/piper.mjs';
+import { DEMO_VOICE_URL, PIPER_PACKS, PiperEngine, PiperRuntime, primePiperAudio } from './lib/piper.mjs?v=20261029-4';
 import { fetchLibraryBook, searchStandardEbooks } from './lib/library.mjs';
 import * as store from './lib/store.mjs';
 import { BUILTIN_SOURCES, resolveDaypart, resolvePlaylist } from './lib/listening-world.mjs';
@@ -59,21 +59,35 @@ const saveSettings = () => localStorage.setItem(SETTINGS_KEY, JSON.stringify(set
 const PIPER_VOICES_KEY = 'piper-voices';
 
 const piperVoiceById = id => piperVoices.find(voice => voice.id === id) || null;
+const piperVoiceLabel = voice => (voice.speaker ? `${voice.name} · ${voice.speaker}` : voice.name);
 
-function renderPiperVoiceSelect() {
-  const select = $('piperVoiceSelect');
-  if (!select) return;
-  const options = [
+function piperVoiceOptions() {
+  return [
     { id: 'demo', name: `示范声音${piperDemo ? '（模型示例）' : '（需加载模型）'}` },
     ...piperVoices,
   ];
-  select.replaceChildren(...options.map(voice => new Option(
-    voice.speaker ? `${voice.name} · ${voice.speaker}` : voice.name,
-    voice.id,
-    false,
-    voice.id === activePiperVoiceId,
-  )));
+}
+
+function updateReaderPiperVoiceVisibility() {
+  const field = $('fieldReaderPiperVoice');
+  if (!field) return;
+  field.hidden = settings.engine !== 'piper' || !piperPack().requiresEmbedding;
+}
+
+function renderPiperVoiceSelect() {
+  const options = piperVoiceOptions();
+  for (const id of ['piperVoiceSelect', 'readerPiperVoiceSelect']) {
+    const select = $(id);
+    if (!select) continue;
+    select.replaceChildren(...options.map(voice => new Option(
+      piperVoiceLabel(voice),
+      voice.id,
+      false,
+      voice.id === activePiperVoiceId,
+    )));
+  }
   $('piperDeleteVoice').hidden = activePiperVoiceId === 'demo';
+  updateReaderPiperVoiceVisibility();
 }
 
 function refreshPiperPackUI() {
@@ -86,6 +100,7 @@ function refreshPiperPackUI() {
   if (hint) hint.textContent = definition.requiresEmbedding
     ? 'zs-v1 可用示范声音或你训练的声音；训练会把参考音频转成只在本机保存的声音特征。'
     : 'Mera 是固定单声线离线包，不需要参考声音，也不能训练；切换回 zs-v1 才能训练家人声音。';
+  updateReaderPiperVoiceVisibility();
 }
 
 function renderPiperVoiceList() {
@@ -407,7 +422,10 @@ const buildEngine = (kind = settings.engine) => {
 const engineHint = engine => {
   if (!engine) return '还没有可用的朗读引擎。';
   if (engine.kind === 'browser') return '本机浏览器语音：不联网、不上传文本；音质取决于设备。';
-  if (engine.kind === 'piper') return `${piperPack().name}：模型和文本都在本机；首次使用需下载${piperPack().sizeHint}。`;
+  if (engine.kind === 'piper') {
+    const voice = activePiperVoiceId === 'demo' ? '示范声音' : (piperVoiceById(activePiperVoiceId)?.name || '训练声音');
+    return `${piperPack().name} · ${voice}：模型和文本都在本机；首次使用需下载${piperPack().sizeHint}。`;
+  }
   if (engine.kind === 'library') return `家庭授权声音「${engine.name}」：文本只发送到你的声音库。`;
   return '离线测试音：仅用于自动化测试。';
 };
@@ -1074,7 +1092,15 @@ function highlightEpubParagraph(chapterIndex, paragraphIndex) {
   doc.querySelectorAll('.rw-active').forEach(el => el.classList.remove('rw-active'));
   target.classList.add('rw-active');
   ensureActiveParagraphStyle(doc);
-  target.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
+  // In foliate's paginated view the iframe is one wide column inside a
+  // scrollable container, so the paragraph's own scrollIntoView cannot turn
+  // the page reliably. Ask the paginator to scroll to the element instead;
+  // this is what makes EPUB/AZW3/MOBI/FB2 follow the audio page by page.
+  if (typeof foliateView.renderer?.scrollToAnchor === 'function') {
+    foliateView.renderer.scrollToAnchor(target);
+  } else {
+    target.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
+  }
   lastSync = {
     chapter: chapterIndex,
     paragraph: paragraphIndex,
@@ -1745,8 +1771,9 @@ function renderVoiceActions(voice) {
 function refreshVoiceScreens() {
   const engineSelect = $('voiceEngineSelect');
   const definition = piperPack();
+  const voiceName = activePiperVoiceId === 'demo' ? '示范声音' : (piperVoiceById(activePiperVoiceId)?.name || '训练声音');
   const piperLabel = currentPiperRuntime()?.loaded
-    ? `${definition.name}（${definition.requiresEmbedding ? (activePiperVoiceId === 'demo' ? '示范声音' : '已训练声音') : '单声线'}）`
+    ? `${definition.name}（${definition.requiresEmbedding ? voiceName : '单声线'}）`
     : `${definition.name}（首次需下载）`;
   const options = [
     ['browser', '本机浏览器语音（离线、不上传）'],
@@ -1784,6 +1811,7 @@ function updateEngineControls() {
   browser.replaceChildren(...voices.map(voice => new Option(`${voice.name} · ${voice.lang}`, voice.voiceURI, false, voice.voiceURI === settings.browserVoiceURI)));
   $('fieldBrowserVoice').hidden = settings.engine !== 'browser';
   refreshPiperPackUI();
+  renderPiperVoiceSelect();
   $('rate').value = String(settings.rate);
   $('libraryUrl').value = settings.library.baseUrl;
   $('libraryToken').value = settings.library.token ? '••••••••' : '';
@@ -2057,6 +2085,11 @@ function wireEvents() {
     switchEngine('piper');
     status(event.target.value === 'demo' ? '已选择示范神经声音' : '已选择本机训练声音');
   };
+  $('readerPiperVoiceSelect').onchange = event => {
+    setActivePiperVoice(event.target.value);
+    switchEngine('piper');
+    status(event.target.value === 'demo' ? '已选择示范神经声音' : '已选择本机训练声音');
+  };
   $('piperConsent').onchange = updatePiperTrainState;
   $('piperSpeaker').oninput = updatePiperTrainState;
   $('piperRefFile').onchange = event => {
@@ -2204,6 +2237,28 @@ if (params.get('testHooks') === '1') {
     }),
     library: () => ({ results: libraryResults.length, loading: libraryLoading, selected: librarySelection.size }),
     sync: () => lastSync,
+    syncVisible: () => {
+      let active = null;
+      let rect = null;
+      if (foliateView) {
+        const content = foliateView.renderer?.getContents?.()[0];
+        active = content?.doc?.querySelector('.rw-active');
+        if (!active) return false;
+        const own = active.getBoundingClientRect();
+        const frame = content.doc.defaultView?.frameElement?.getBoundingClientRect();
+        rect = frame
+          ? { left: own.left + frame.left, right: own.right + frame.left, top: own.top + frame.top, bottom: own.bottom + frame.top }
+          : own;
+      } else {
+        active = $('txtPage')?.querySelector('p.active');
+        if (!active) return false;
+        rect = active.getBoundingClientRect();
+      }
+      const stage = $('readerStage')?.getBoundingClientRect();
+      return Boolean(stage && rect
+        && rect.right > stage.left && rect.left < stage.right
+        && rect.bottom > stage.top && rect.top < stage.bottom);
+    },
     scope: () => narration?.endAt ?? null,
   };
 }
