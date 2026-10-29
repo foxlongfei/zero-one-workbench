@@ -10,7 +10,9 @@ import { splitChapters, percent, formatMilliseconds, normalizeText } from './lib
 import { Narration, State } from './lib/narration.mjs';
 import { bookFromTxt, chapterIndexForSection, isBookFinished, mapEpubSections, narratableChapters, pickText, paragraphsFromHtml, totalParagraphs } from './lib/book.mjs';
 import { BrowserEngine, LibraryVoiceEngine, ToneEngine, isAbort } from './lib/engines.mjs';
-import { DEMO_VOICE_URL, PIPER_PACKS, PiperEngine, PiperRuntime, primePiperAudio } from './lib/piper.mjs?v=20261029-4';
+import { DEMO_VOICE_URL, PIPER_PACKS, PiperEngine, PiperRuntime, primePiperAudio } from './lib/piper.mjs?v=20261029-5';
+import { KOKORO, KOKORO_VOICES, KokoroEngine, KokoroRuntime, kokoroVoiceById, primeKokoroAudio } from './lib/kokoro.mjs?v=20261029-5';
+import { ZIPVOICE, ZipVoiceEngine, ZipVoiceRuntime, primeZipVoiceAudio } from './lib/zipvoice.mjs?v=20261029-4';
 import { fetchLibraryBook, searchStandardEbooks } from './lib/library.mjs';
 import * as store from './lib/store.mjs';
 import { BUILTIN_SOURCES, resolveDaypart, resolvePlaylist } from './lib/listening-world.mjs';
@@ -34,6 +36,8 @@ const DEFAULT_SETTINGS = {
   rate: 1,
   library: { baseUrl: params.get('voiceLibrary') || '', token: '', voiceId: '' },
   piper: { pack: 'zs', voiceId: 'demo' },
+  kokoro: { voiceId: 'zf_001' },
+  zipvoice: { voiceId: '' },
   music: { volume: 0.18, ducking: true },
   statistics: { days: {}, listenedMs: 0 },
   worldFavourites: [],
@@ -43,6 +47,8 @@ const mergeSettings = patch => ({
   ...patch,
   library: { ...settings.library, ...patch.library },
   piper: { ...settings.piper, ...patch.piper },
+  kokoro: { ...settings.kokoro, ...patch.kokoro },
+  zipvoice: { ...settings.zipvoice, ...patch.zipvoice },
   music: { ...settings.music, ...patch.music },
   statistics: { ...settings.statistics, ...patch.statistics },
 });
@@ -72,6 +78,111 @@ function updateReaderPiperVoiceVisibility() {
   const field = $('fieldReaderPiperVoice');
   if (!field) return;
   field.hidden = settings.engine !== 'piper' || !piperPack().requiresEmbedding;
+}
+
+const kokoroVoiceName = id => kokoroVoiceById(id).name;
+
+function updateReaderKokoroVoiceVisibility() {
+  const field = $('fieldReaderKokoroVoice');
+  if (field) field.hidden = settings.engine !== 'kokoro';
+}
+
+function renderKokoroVoiceSelect() {
+  for (const id of ['kokoroVoiceSelect', 'readerKokoroVoiceSelect']) {
+    const select = $(id);
+    if (!select) continue;
+    select.replaceChildren(...KOKORO_VOICES.map(voice => new Option(
+      `${voice.name} · ${voice.gender}`,
+      voice.id,
+      false,
+      voice.id === settings.kokoro.voiceId,
+    )));
+  }
+  updateReaderKokoroVoiceVisibility();
+}
+
+const ZIPVOICE_VOICES_KEY = 'zipvoice-voices';
+const zipVoiceById = id => zipVoices.find(voice => voice.id === id) || null;
+const zipVoiceLabel = voice => voice ? voice.name : '高音质声音';
+
+function updateReaderZipVoiceVisibility() {
+  const field = $('fieldReaderZipVoice');
+  if (field) field.hidden = settings.engine !== 'zipvoice';
+}
+
+function renderZipVoiceSelect() {
+  const options = zipVoices.length
+    ? zipVoices.map(voice => new Option(zipVoiceLabel(voice), voice.id, false, voice.id === settings.zipvoice.voiceId))
+    : [new Option('还没有保存高音质声音', '', true, true)];
+  for (const id of ['zipvoiceVoiceSelect', 'readerZipVoiceSelect']) {
+    const select = $(id);
+    if (select) select.replaceChildren(...options.map(option => option.cloneNode(true)));
+  }
+  $('zipvoiceDeleteVoice').hidden = !zipVoiceById(settings.zipvoice.voiceId);
+  updateReaderZipVoiceVisibility();
+}
+
+function renderZipVoiceList() {
+  const list = $('zipvoiceVoiceList');
+  if (!list) return;
+  list.replaceChildren();
+  if (!zipVoices.length) {
+    const hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = '还没有保存高音质声音。先录制或选择一段 3–10 秒参考声音，并填写逐字稿。';
+    list.append(hint);
+    return;
+  }
+  for (const voice of zipVoices) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.padding = '.7rem';
+    const title = document.createElement('strong');
+    title.textContent = voice.name;
+    const meta = document.createElement('p');
+    meta.className = 'hint';
+    meta.textContent = `逐字稿：${voice.transcript}`;
+    const use = document.createElement('button');
+    use.type = 'button';
+    use.textContent = voice.id === activeZipVoiceId ? '正在使用' : '使用';
+    use.disabled = voice.id === activeZipVoiceId;
+    use.onclick = () => {
+      setActiveZipVoice(voice.id);
+      switchEngine('zipvoice');
+    };
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.textContent = '删除';
+    remove.onclick = async () => {
+      if (!confirm(`删除高音质声音「${voice.name}」及其本机参考录音？`)) return;
+      zipVoices = zipVoices.filter(item => item.id !== voice.id);
+      await saveZipVoices();
+      if (activeZipVoiceId === voice.id) setActiveZipVoice(zipVoices[0]?.id || '');
+      else { renderZipVoiceSelect(); renderZipVoiceList(); }
+      status('已删除高音质声音及其参考录音');
+    };
+    card.append(title, meta, use, remove);
+    list.append(card);
+  }
+}
+
+function setActiveZipVoice(id, { persist = true } = {}) {
+  const voice = zipVoiceById(id);
+  activeZipVoiceId = voice ? voice.id : '';
+  settings.zipvoice.voiceId = activeZipVoiceId;
+  if (persist) saveSettings();
+  renderZipVoiceSelect();
+  renderZipVoiceList();
+}
+
+const saveZipVoices = () => store.putRecord(ZIPVOICE_VOICES_KEY, zipVoices);
+
+async function loadZipVoices() {
+  const saved = await store.getRecord(ZIPVOICE_VOICES_KEY, []);
+  zipVoices = Array.isArray(saved) ? saved : [];
+  const wanted = settings.zipvoice.voiceId;
+  setActiveZipVoice(wanted, { persist: false });
+  if (wanted && wanted !== activeZipVoiceId) saveSettings();
 }
 
 function renderPiperVoiceSelect() {
@@ -258,6 +369,236 @@ async function previewPiper() {
   }
 }
 
+function updateKokoroProgress(progress = {}) {
+  const wrap = $('kokoroProgressWrap');
+  const bar = $('kokoroProgressBar');
+  if (!wrap || !bar) return;
+  if (progress.stage === 'ready') {
+    wrap.hidden = false;
+    bar.style.width = '100%';
+    $('kokoroStatus').textContent = `${KOKORO.name} 已就绪（本机）`;
+    setTimeout(() => { wrap.hidden = true; }, 800);
+    refreshVoiceScreens?.();
+    refreshEngineBadge?.();
+    renderReadiness();
+    return;
+  }
+  const value = Math.max(0, Math.min(1, Number(progress.progress) || 0));
+  wrap.hidden = false;
+  bar.style.width = `${Math.round(value * 100)}%`;
+  $('kokoroStatus').textContent = `Kokoro：${progress.message || '加载中'} ${Math.round(value * 100)}%`;
+}
+
+async function loadKokoroModel() {
+  const button = $('kokoroLoad');
+  if (button) button.disabled = true;
+  $('kokoroStatus').textContent = `正在加载 ${KOKORO.name}…`;
+  try {
+    await ensureKokoroRuntime().load();
+    $('kokoroStatus').textContent = `${KOKORO.name} 已就绪（本机）`;
+    switchEngine('kokoro');
+    status(`${KOKORO.name} 已加载；模型由浏览器缓存，下次减少下载。`);
+  } catch (error) {
+    $('kokoroStatus').textContent = `加载失败：${error.message}`;
+    if (settings.engine === 'kokoro') {
+      settings.engine = 'browser';
+      saveSettings();
+      updateEngineControls();
+      refreshEngineBadge();
+    }
+    status(`Kokoro 加载失败：${error.message}。已切回浏览器语音。`, 'error');
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function previewKokoro() {
+  const result = $('kokoroTestResult');
+  result.textContent = '正在本机合成…';
+  try {
+    const engine = buildEngine('kokoro');
+    await engine.speak('你好，我在这里陪着你读书。今天想听哪一段？');
+    result.textContent = `试听完成（${KOKORO.name} · ${kokoroVoiceName(settings.kokoro.voiceId)}，本机）`;
+  } catch (error) {
+    result.textContent = `试听失败：${error.message}`;
+  }
+}
+
+function updateZipVoiceProgress(progress = {}) {
+  const wrap = $('zipvoiceProgressWrap');
+  const bar = $('zipvoiceProgressBar');
+  if (!wrap || !bar) return;
+  if (progress.stage === 'ready') {
+    wrap.hidden = false;
+    bar.style.width = '100%';
+    $('zipvoiceStatus').textContent = `${ZIPVOICE.name} 已就绪（本机）`;
+    setTimeout(() => { wrap.hidden = true; }, 800);
+    refreshVoiceScreens?.();
+    refreshEngineBadge?.();
+    return;
+  }
+  const message = String(progress.message || '');
+  if (!message) return;
+  const download = message.match(/Downloading data\.\.\. \((\d+)\/(\d+)\)/);
+  if (download) {
+    const value = Number(download[2]) ? Number(download[1]) / Number(download[2]) : 0;
+    wrap.hidden = false;
+    bar.style.width = `${Math.round(value * 100)}%`;
+    $('zipvoiceStatus').textContent = `ZipVoice：下载模型 ${Math.round(value * 100)}%`;
+    return;
+  }
+  wrap.hidden = false;
+  $('zipvoiceStatus').textContent = `ZipVoice：${message === 'Running...' ? '正在初始化模型…' : message}`;
+}
+
+async function loadZipVoiceModel() {
+  const button = $('zipvoiceLoad');
+  if (button) button.disabled = true;
+  $('zipvoiceStatus').textContent = `正在加载 ${ZIPVOICE.name}…`;
+  try {
+    await ensureZipVoiceRuntime().load();
+    $('zipvoiceStatus').textContent = `${ZIPVOICE.name} 已就绪（本机）`;
+    switchEngine('zipvoice');
+    status(`${ZIPVOICE.name} 已加载；模型由浏览器缓存，生成较慢但都在本机。`);
+    return true;
+  } catch (error) {
+    $('zipvoiceStatus').textContent = `加载失败：${error.message}`;
+    if (settings.engine === 'zipvoice') {
+      settings.engine = 'browser';
+      saveSettings();
+      updateEngineControls();
+      refreshEngineBadge();
+    }
+    status(`ZipVoice 加载失败：${error.message}。已切回浏览器语音。`, 'error');
+    return false;
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function previewZipVoice() {
+  const result = $('zipvoiceTrainStatus');
+  const voice = zipVoiceById(settings.zipvoice.voiceId);
+  if (!voice) { result.textContent = '请先保存一段高音质声音。'; return; }
+  result.textContent = '正在本机生成高音质试听（可能要几十秒）…';
+  try {
+    const engine = buildEngine('zipvoice');
+    await engine.speak('你好，我在这里陪着你读书。今天想听哪一段？');
+    result.textContent = `试听完成（${voice.name}，ZipVoice 本机）`;
+  } catch (error) {
+    result.textContent = `试听失败：${error.message}`;
+  }
+}
+
+function updateZipVoiceTrainState() {
+  const ready = Boolean(
+    $('zipvoiceConsent')?.checked
+    && $('zipvoiceSpeaker')?.value.trim()
+    && $('zipvoiceTranscript')?.value.trim()
+    && zipvoiceReferenceBlob,
+  );
+  $('zipvoiceTrain').disabled = !ready;
+}
+
+function setZipVoiceReference(blob, sourceLabel = '参考声音') {
+  zipvoiceReferenceBlob = blob;
+  const preview = $('zipvoiceRefPreview');
+  if (preview.dataset.url) URL.revokeObjectURL(preview.dataset.url);
+  preview.dataset.url = URL.createObjectURL(blob);
+  preview.src = preview.dataset.url;
+  preview.hidden = false;
+  $('zipvoiceRecordStatus').textContent = `${sourceLabel}已就绪；请把录音里说的话原样填到逐字稿。`;
+  updateZipVoiceTrainState();
+}
+
+async function toggleZipVoiceRecording() {
+  if (zipvoiceRecorder && zipvoiceRecorder.state === 'recording') { zipvoiceRecorder.stop(); return; }
+  if (!navigator.mediaDevices?.getUserMedia) {
+    $('zipvoiceRecordStatus').textContent = '当前浏览器不支持录音，请改为选择音频文件。';
+    return;
+  }
+  try {
+    if (!window.isSecureContext) throw new Error('录音需要 HTTPS 或 localhost');
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    const chunks = [];
+    zipvoiceRecorder = new MediaRecorder(stream);
+    zipvoiceRecorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+    zipvoiceRecorder.onstop = () => {
+      stream.getTracks().forEach(track => track.stop());
+      clearTimeout(zipvoiceRecordTimer);
+      zipvoiceRecordTimer = null;
+      const blob = new Blob(chunks, { type: zipvoiceRecorder?.mimeType || 'audio/webm' });
+      zipvoiceRecorder = null;
+      setZipVoiceReference(blob, '录制的参考声音');
+      $('zipvoiceRecord').textContent = '重新录制 8 秒参考声音';
+    };
+    zipvoiceRecorder.start();
+    $('zipvoiceRecord').textContent = '停止录制';
+    $('zipvoiceRecordStatus').textContent = '录音中……请用自然语速读一小段话，8 秒后自动停止。';
+    zipvoiceRecordTimer = setTimeout(() => {
+      if (zipvoiceRecorder?.state === 'recording') zipvoiceRecorder.stop();
+    }, 8000);
+  } catch (error) {
+    $('zipvoiceRecordStatus').textContent = `无法录音：${error.message}`;
+  }
+}
+
+async function trainZipVoice() {
+  const speaker = $('zipvoiceSpeaker').value.trim();
+  const transcript = $('zipvoiceTranscript').value.trim();
+  if (!$('zipvoiceConsent').checked) { $('zipvoiceTrainStatus').textContent = '请先勾选授权声明。'; return; }
+  if (!speaker) { $('zipvoiceTrainStatus').textContent = '请填写声音本人称呼。'; return; }
+  if (!zipvoiceReferenceBlob) { $('zipvoiceTrainStatus').textContent = '请先录制或选择参考声音。'; return; }
+  if (!transcript) { $('zipvoiceTrainStatus').textContent = '请填写参考声音的逐字稿。'; return; }
+  $('zipvoiceTrain').disabled = true;
+  $('zipvoiceTrainStatus').textContent = '正在保存参考声音…';
+  try {
+    const profile = {
+      id: `zv_${crypto.randomUUID().slice(0, 8)}`,
+      name: `${speaker}的高音质声音`,
+      speaker,
+      relation: $('zipvoiceRelation').value.trim(),
+      audio: zipvoiceReferenceBlob,
+      transcript,
+      createdAt: now(),
+      consent: {
+        granted: true,
+        grantedBy: speaker,
+        statement: '本人授权在本机使用这段声音样本进行语音合成与试听。',
+        grantedAt: now(),
+      },
+    };
+    zipVoices = [profile, ...zipVoices.filter(item => item.name !== profile.name)];
+    await saveZipVoices();
+    setActiveZipVoice(profile.id);
+    settings.engine = 'zipvoice';
+    saveSettings();
+    updateEngineControls();
+    refreshEngineBadge();
+    $('zipvoiceTrainStatus').textContent = '已保存参考声音；首次使用会下载约 200 MB 模型。';
+    const loaded = await loadZipVoiceModel();
+    if (loaded) await previewZipVoice();
+    zipvoiceReferenceBlob = null;
+    $('zipvoiceRefPreview').hidden = true;
+    $('zipvoiceConsent').checked = false;
+    $('zipvoiceRecord').textContent = '录制 8 秒参考声音';
+    updateZipVoiceTrainState();
+  } catch (error) {
+    $('zipvoiceTrainStatus').textContent = `保存失败：${error.message}`;
+    updateZipVoiceTrainState();
+  }
+}
+
+async function deleteActiveZipVoice() {
+  const voice = zipVoiceById(settings.zipvoice.voiceId);
+  if (!voice) return;
+  if (!confirm(`删除高音质声音「${voice.name}」及其本机参考录音？`)) return;
+  zipVoices = zipVoices.filter(item => item.id !== voice.id);
+  await saveZipVoices();
+  setActiveZipVoice(zipVoices[0]?.id || '');
+  status('已删除高音质声音及其参考录音');
+}
+
 function updatePiperTrainState() {
   const ready = Boolean(
     $('piperConsent')?.checked
@@ -380,6 +721,23 @@ let activePiperEmbedding = null;
 let piperReferenceBlob = null;
 let piperRecorder = null;
 let piperRecordTimer = null;
+let kokoroRuntime = null;
+let zipvoiceRuntime = null;
+let zipVoices = [];
+let activeZipVoiceId = '';
+let zipvoiceReferenceBlob = null;
+let zipvoiceRecorder = null;
+let zipvoiceRecordTimer = null;
+
+const ensureKokoroRuntime = () => {
+  if (!kokoroRuntime) kokoroRuntime = new KokoroRuntime({ onProgress: updateKokoroProgress });
+  return kokoroRuntime;
+};
+
+const ensureZipVoiceRuntime = () => {
+  if (!zipvoiceRuntime) zipvoiceRuntime = new ZipVoiceRuntime({ onProgress: updateZipVoiceProgress });
+  return zipvoiceRuntime;
+};
 
 const piperPack = () => PIPER_PACKS[settings.piper.pack] || PIPER_PACKS.zs;
 const currentPiperRuntime = () => piperRuntimes.get(settings.piper.pack) || null;
@@ -397,6 +755,18 @@ const ensurePiperRuntime = (pack = settings.piper.pack) => {
 };
 
 const buildEngine = (kind = settings.engine) => {
+  if (kind === 'kokoro') {
+    return new KokoroEngine({
+      runtime: ensureKokoroRuntime(),
+      voice: settings.kokoro.voiceId,
+      speed: settings.rate,
+    });
+  }
+  if (kind === 'zipvoice') {
+    const profile = zipVoiceById(settings.zipvoice.voiceId);
+    if (!profile) return null;
+    return new ZipVoiceEngine({ runtime: ensureZipVoiceRuntime(), profile, speed: settings.rate });
+  }
   if (kind === 'piper') {
     const definition = piperPack();
     return new PiperEngine({
@@ -422,6 +792,12 @@ const buildEngine = (kind = settings.engine) => {
 const engineHint = engine => {
   if (!engine) return '还没有可用的朗读引擎。';
   if (engine.kind === 'browser') return '本机浏览器语音：不联网、不上传文本；音质取决于设备。';
+  if (engine.kind === 'kokoro') {
+    return `${KOKORO.name} · ${kokoroVoiceName(settings.kokoro.voiceId)}：模型和文本都在本机；首次使用需下载${KOKORO.sizeHint}。`;
+  }
+  if (engine.kind === 'zipvoice') {
+    return `${ZIPVOICE.name} · ${engine.profile?.name || '未选择声音'}：模型、参考录音和文本都在本机；首次使用需下载${ZIPVOICE.sizeHint}，生成较慢。`;
+  }
   if (engine.kind === 'piper') {
     const voice = activePiperVoiceId === 'demo' ? '示范声音' : (piperVoiceById(activePiperVoiceId)?.name || '训练声音');
     return `${piperPack().name} · ${voice}：模型和文本都在本机；首次使用需下载${piperPack().sizeHint}。`;
@@ -810,7 +1186,7 @@ function renderReadiness() {
   const set = (kind, state, text) => {
     const line = box.querySelector(`.readiness-line[data-kind="${kind}"]`);
     if (line) line.dataset.ready = state;
-    const label = { browser: 'readyBrowser', piper: 'readyPiper', library: 'readyLibrary' }[kind];
+    const label = { browser: 'readyBrowser', kokoro: 'readyKokoro', piper: 'readyPiper', library: 'readyLibrary' }[kind];
     if (label && $(label)) $(label).textContent = text;
   };
   const browserVoices = window.speechSynthesis?.getVoices?.() ?? [];
@@ -825,6 +1201,13 @@ function renderReadiness() {
     set('browser', 'yes', chinese.length
       ? `已就绪：本机有 ${chinese.length} 个中文声音，不联网、不上传文本。`
       : `已就绪：本机有 ${browserVoices.length} 个声音，暂无中文声音，朗读中文可能不准。`);
+  }
+  if (!window.WebAssembly) {
+    set('kokoro', 'no', '此浏览器不支持 WebAssembly，无法运行本机神经模型。');
+  } else if (kokoroRuntime?.loaded) {
+    set('kokoro', 'yes', `已就绪：${KOKORO.name} · ${kokoroVoiceName(settings.kokoro.voiceId)}，模型已缓存。`);
+  } else {
+    set('kokoro', 'no', `可选；${KOKORO.name}首次使用需下载${KOKORO.sizeHint}，之后本机运行。`);
   }
   const definition = piperPack();
   if (!window.WebAssembly) {
@@ -1443,6 +1826,8 @@ async function startListening(position = null, { scope = 'book' } = {}) {
     return;
   }
   primePiperAudio();
+  primeKokoroAudio();
+  primeZipVoiceAudio();
   currentEngine = buildEngine();
   if (!currentEngine) return;
   refreshEngineBadge();
@@ -1473,6 +1858,7 @@ function togglePlay() {
     return;
   }
   primePiperAudio();
+  primeKokoroAudio();
   currentEngine = buildEngine();
   if (!currentEngine) return;
   // State is read synchronously: pause must land before any await, otherwise a
@@ -1519,7 +1905,7 @@ function recordListening(milliseconds) {
 
 function refreshEngineBadge() {
   const engine = currentEngine || buildEngine();
-  const label = { browser: '本机语音', piper: '开源神经', library: '家庭声音', tone: '测试音' }[engine?.kind] || '引擎';
+  const label = { browser: '本机语音', kokoro: '自然中文', piper: 'Piper 神经', zipvoice: '高音质克隆', library: '家庭声音', tone: '测试音' }[engine?.kind] || '引擎';
   $('engineBadge').textContent = label;
   $('engineBadge').dataset.kind = engine?.kind || '';
   $('engineHint').textContent = engineHint(engine);
@@ -1775,9 +2161,17 @@ function refreshVoiceScreens() {
   const piperLabel = currentPiperRuntime()?.loaded
     ? `${definition.name}（${definition.requiresEmbedding ? voiceName : '单声线'}）`
     : `${definition.name}（首次需下载）`;
+  const kokoroLabel = kokoroRuntime?.loaded
+    ? `${KOKORO.name}（${kokoroVoiceName(settings.kokoro.voiceId)}）`
+    : `${KOKORO.name}（首次需下载）`;
+  const zipLabel = zipVoices.length
+    ? `${ZIPVOICE.name}（${zipVoiceLabel(zipVoiceById(settings.zipvoice.voiceId))}）`
+    : `${ZIPVOICE.name}（需先保存参考声音）`;
   const options = [
     ['browser', '本机浏览器语音（离线、不上传）'],
-    ['piper', `开源神经语音：${piperLabel}`],
+    ['kokoro', `开源自然中文：${kokoroLabel}`],
+    ['piper', `Piper 神经语音：${piperLabel}`],
+    ['zipvoice', `高音质克隆：${zipLabel}`],
     ['library', activeVoice ? `家庭授权声音：${activeVoice.name}` : '家庭授权声音（未选择）'],
   ];
   engineSelect.replaceChildren(...options.map(([value, label]) => new Option(label, value, false, settings.engine === value)));
@@ -1795,9 +2189,15 @@ function renderPrivacyStats() {
   el.replaceChildren();
   const lines = [
     `今日朗读 ${formatMilliseconds(stats.days[today] || 0)}，累计 ${formatMilliseconds(stats.listenedMs || 0)}。`,
+    kokoroRuntime?.loaded
+      ? `${KOKORO.name} 自然中文：模型与文本都在本机，首次下载后由浏览器缓存，不产生按次费用。`
+      : `${KOKORO.name} 尚未加载；加载后模型与文本都在本机。`,
     currentPiperRuntime()?.loaded
       ? `${piperPack().name} 开源神经语音：模型与文本都在本机，首次下载后由浏览器缓存，不产生按次费用。`
       : `${piperPack().name} 尚未加载；加载后模型与文本都在本机。`,
+    zipvoiceRuntime?.loaded
+      ? `${ZIPVOICE.name}：参考录音、逐字稿和文本都在本机；模型权重为非商用授权。`
+      : `${ZIPVOICE.name} 尚未加载；参考录音只在本机。`,
     libraryConfigured() ? `家庭声音库：${settings.library.baseUrl}（仅发送当前朗读文本与声音 id）。` : '家庭声音库未连接。',
   ];
   lines.forEach(line => { const p = document.createElement('p'); p.textContent = line; el.append(p); });
@@ -1812,6 +2212,8 @@ function updateEngineControls() {
   $('fieldBrowserVoice').hidden = settings.engine !== 'browser';
   refreshPiperPackUI();
   renderPiperVoiceSelect();
+  renderKokoroVoiceSelect();
+  renderZipVoiceSelect();
   $('rate').value = String(settings.rate);
   $('libraryUrl').value = settings.library.baseUrl;
   $('libraryToken').value = settings.library.token ? '••••••••' : '';
@@ -1825,6 +2227,11 @@ function switchEngine(kind) {
   currentEngine = null;
   updateEngineControls();
   refreshEngineBadge();
+  if (kind === 'kokoro' && !kokoroRuntime?.loaded) loadKokoroModel();
+  if (kind === 'zipvoice') {
+    if (!zipVoiceById(settings.zipvoice.voiceId)) status('高音质克隆需要先保存一段参考声音和逐字稿。', 'warn');
+    else if (!zipvoiceRuntime?.loaded) loadZipVoiceModel();
+  }
   if (kind === 'piper') {
     const definition = piperPack();
     if (definition.requiresEmbedding && !activePiperEmbedding) status('神经声音还没有可用特征；请加载示范声音或训练自己的声音。', 'warn');
@@ -2065,6 +2472,46 @@ function wireEvents() {
     }
   };
 
+  $('kokoroLoad').onclick = () => loadKokoroModel();
+  $('kokoroTest').onclick = () => previewKokoro();
+  $('kokoroVoiceSelect').onchange = event => {
+    settings.kokoro.voiceId = event.target.value;
+    saveSettings();
+    renderKokoroVoiceSelect();
+    currentEngine = null;
+    refreshEngineBadge();
+    status(`已选择 ${kokoroVoiceName(event.target.value)}`);
+  };
+  $('readerKokoroVoiceSelect').onchange = event => {
+    settings.kokoro.voiceId = event.target.value;
+    saveSettings();
+    renderKokoroVoiceSelect();
+    switchEngine('kokoro');
+    status(`已选择 ${kokoroVoiceName(event.target.value)}`);
+  };
+  $('zipvoiceLoad').onclick = () => loadZipVoiceModel();
+  $('zipvoiceTest').onclick = () => previewZipVoice();
+  $('zipvoiceDeleteVoice').onclick = () => deleteActiveZipVoice();
+  $('zipvoiceVoiceSelect').onchange = event => {
+    setActiveZipVoice(event.target.value);
+    switchEngine('zipvoice');
+    status(`已选择 ${zipVoiceLabel(zipVoiceById(event.target.value))}`);
+  };
+  $('readerZipVoiceSelect').onchange = event => {
+    setActiveZipVoice(event.target.value);
+    switchEngine('zipvoice');
+    status(`已选择 ${zipVoiceLabel(zipVoiceById(event.target.value))}`);
+  };
+  $('zipvoiceRefFile').onchange = event => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (file) setZipVoiceReference(file, '参考声音文件');
+  };
+  $('zipvoiceRecord').onclick = () => toggleZipVoiceRecording();
+  $('zipvoiceTrain').onclick = () => trainZipVoice();
+  $('zipvoiceConsent').onchange = updateZipVoiceTrainState;
+  $('zipvoiceSpeaker').oninput = updateZipVoiceTrainState;
+  $('zipvoiceTranscript').oninput = updateZipVoiceTrainState;
   $('piperLoad').onclick = () => loadPiperModel();
   $('toPiperTraining').onclick = () => $('piperTraining').scrollIntoView({ behavior: 'smooth', block: 'start' });
   $('piperPackSelect').onchange = event => {
@@ -2182,7 +2629,7 @@ function wireEvents() {
   };
 
   window.speechSynthesis?.addEventListener?.('voiceschanged', () => { updateEngineControls(); renderReadiness(); });
-  document.addEventListener('pointerdown', () => primePiperAudio(), { once: true, passive: true });
+  document.addEventListener('pointerdown', () => { primePiperAudio(); primeKokoroAudio(); primeZipVoiceAudio(); }, { once: true, passive: true });
   document.addEventListener('keydown', event => {
     if (event.target.matches?.('input,textarea,select')) return;
     if (!$('screen-reader').hidden && event.code === 'Space') { event.preventDefault(); toggleFromKeyboard(); }
@@ -2197,6 +2644,7 @@ async function init() {
   await store.openReaderDb();
   await loadPiperDemoVoice();
   await loadPiperVoices();
+  await loadZipVoices();
   await refreshShelf();
   await restoreMusic();
   updateEngineControls();
@@ -2227,6 +2675,16 @@ if (params.get('testHooks') === '1') {
     title: () => bookModel?.title ?? '',
     chapters: () => bookModel?.chapters.length ?? 0,
     startedAt: () => narration?.startedAt ?? 0,
+    kokoro: () => ({
+      loaded: Boolean(kokoroRuntime?.loaded),
+      voiceId: settings.kokoro.voiceId,
+      voices: KOKORO_VOICES.length,
+    }),
+    zipvoice: () => ({
+      loaded: Boolean(zipvoiceRuntime?.loaded),
+      voiceId: settings.zipvoice.voiceId,
+      voices: zipVoices.length,
+    }),
     piper: () => ({
       loaded: Boolean(currentPiperRuntime()?.loaded),
       trainingReady: Boolean(piperRuntimes.get('zs')?.trainingReady),

@@ -214,7 +214,11 @@ footer a{color:var(--muted)}
         </div>
         <div class="readiness-line" data-kind="piper">
           <span class="dot" aria-hidden="true"></span>
-          <span><strong>开源神经语音</strong> <span class="muted" id="readyPiper">首次使用需下载约 70 MB 模型，之后缓存</span></span>
+          <span><strong>Piper 神经语音</strong> <span class="muted" id="readyPiper">首次使用需下载约 70 MB 模型，之后缓存</span></span>
+        </div>
+        <div class="readiness-line" data-kind="kokoro">
+          <span class="dot" aria-hidden="true"></span>
+          <span><strong>Kokoro 自然中文</strong> <span class="muted" id="readyKokoro">可选；首次使用需下载约 330 MB，之后缓存</span></span>
         </div>
         <div class="readiness-line" data-kind="library">
           <span class="dot" aria-hidden="true"></span>
@@ -296,9 +300,17 @@ footer a{color:var(--muted)}
           <label class="field">声音来源
             <select id="engineSelect" aria-label="声音来源"></select>
           </label>
-          <label class="field" id="fieldReaderPiperVoice" hidden>神经声音
-            <select id="readerPiperVoiceSelect" aria-label="神经声音"></select>
+          <label class="field" id="fieldReaderPiperVoice" hidden>Piper 神经声音
+            <select id="readerPiperVoiceSelect" aria-label="Piper 神经声音"></select>
             <span class="hint">训练好的家人声音会出现在这里；也可到「声音」页训练或删除。</span>
+          </label>
+          <label class="field" id="fieldReaderKokoroVoice" hidden>Kokoro 中文声线
+            <select id="readerKokoroVoiceSelect" aria-label="Kokoro 中文声线"></select>
+            <span class="hint">专业中文声线，自然度更好；首次使用需下载约 330 MB。不能克隆家人声音。</span>
+          </label>
+          <label class="field" id="fieldReaderZipVoice" hidden>ZipVoice 高音质声音
+            <select id="readerZipVoiceSelect" aria-label="ZipVoice 高音质声音"></select>
+            <span class="hint">用参考录音和逐字稿在本机克隆；首次约 200 MB，生成较慢。</span>
           </label>
           <label class="field" id="fieldBrowserVoice">本机声音<select id="browserVoice" aria-label="本机声音"></select></label>
           <label class="field" id="fieldRate">语速 <input id="rate" type="range" min=".6" max="1.8" step=".05" value="1"></label>
@@ -340,6 +352,15 @@ footer a{color:var(--muted)}
         <div id="engineStatus" class="hint"></div>
       </div>
       <div class="card">
+        <h2>开源自然中文 · Kokoro（本机）</h2>
+        <p class="hint">Kokoro-82M-v1.1-zh 使用 100 个专业中文声线训练，中文自然度和停顿比 Piper 实验权重更稳。模型和文本都在本机合成，不上传；首次下载约 330 MB，之后由浏览器缓存。它不能克隆某个人的声音，克隆请用下方 Piper 训练或 ZipVoice 高音质克隆。</p>
+        <div class="row"><button id="kokoroLoad" class="primary" type="button">下载 / 加载模型</button><span id="kokoroStatus" class="hint">未加载</span></div>
+        <div class="progress-line" id="kokoroProgressWrap" hidden style="margin:.6rem 0"><i id="kokoroProgressBar"></i></div>
+        <label class="field" id="fieldKokoroVoice">中文声线<select id="kokoroVoiceSelect"></select></label>
+        <div class="row"><button id="kokoroTest" type="button">试听当前声线</button><span id="kokoroTestResult" class="hint"></span></div>
+        <p class="hint">模型：<a href="https://huggingface.co/hexgrad/Kokoro-82M-v1.1-zh" rel="noreferrer">Kokoro-82M-v1.1-zh</a>（Apache-2.0） · 运行库：onnxruntime-web（MIT） · 中文音素：pinyin-pro（MIT）。</p>
+      </div>
+      <div class="card">
         <h2>开源神经语音 · Piper Plus（本机）</h2>
         <p class="hint">多语言开源 VITS 模型，中文/英文等语言在浏览器本机合成，不上传文本。首次下载约 70 MB，之后由浏览器缓存；模型与声音训练均在本机完成。</p>
         <div class="row"><button id="piperLoad" class="primary" type="button">下载 / 加载模型</button><span id="piperStatus" class="hint">未加载</span></div>
@@ -355,6 +376,28 @@ footer a{color:var(--muted)}
         <div class="row"><button id="piperTest" type="button">试听当前神经声音</button><span id="piperTestResult" class="hint"></span></div>
         <p class="hint">模型：<a href="https://huggingface.co/ayousanz/piper-plus-base" rel="noreferrer">Piper Plus zs-v1</a>（MIT） · 声音编码器：CAM++（Apache-2.0） · 运行库：<a href="https://github.com/ayutaz/piper-plus" rel="noreferrer">piper-plus</a>（MIT）。示范声音是模型发布方提供的试听样例，不是真人录音。</p>
         <p class="hint"><button id="toPiperTraining" type="button" class="ghost" style="padding:0;min-height:0;text-decoration:underline">训练我的声音 →</button></p>
+      </div>
+      <div class="card">
+        <h2>高音质克隆 · ZipVoice（实验，本机）</h2>
+        <p class="hint">ZipVoice 是 123M 参数的零样本克隆模型，中文自然度明显好于 Piper 实验权重。需要一段 3–10 秒参考录音，以及和录音完全一致的逐字稿；音频、逐字稿和合成都在本机完成，不上传。首次下载约 200 MB，生成一段可能需要数秒到数十秒。模型权重为 CC-BY-NC，仅限非商业用途。</p>
+        <div class="row"><button id="zipvoiceLoad" class="primary" type="button">下载 / 加载模型</button><span id="zipvoiceStatus" class="hint">未加载</span></div>
+        <div class="progress-line" id="zipvoiceProgressWrap" hidden style="margin:.6rem 0"><i id="zipvoiceProgressBar"></i></div>
+        <label class="field">当前高音质声音<select id="zipvoiceVoiceSelect"></select></label>
+        <label class="field">参考声音文件（WAV / MP3 / M4A / WebM）<input id="zipvoiceRefFile" type="file" accept="audio/*"></label>
+        <div class="row"><button id="zipvoiceRecord" type="button">录制 8 秒参考声音</button><span id="zipvoiceRecordStatus" class="hint"></span></div>
+        <audio id="zipvoiceRefPreview" controls hidden style="width:100%;margin-top:.5rem"></audio>
+        <label class="field">逐字稿（必须与参考声音完全一致）<textarea id="zipvoiceTranscript" rows="3" placeholder="把参考录音里说的话原样写下来"></textarea></label>
+        <label class="field">声音本人称呼<input id="zipvoiceSpeaker" type="text" placeholder="例如：妈妈、爷爷、小雨"></label>
+        <label class="field">关系（可选）<input id="zipvoiceRelation" type="text" placeholder="例如：孩子、长辈"></label>
+        <label class="row" style="gap:.5rem;align-items:flex-start"><input id="zipvoiceConsent" type="checkbox"> <span>我确认这是本人声音，或已取得声音本人对语音合成和试听的明确授权；我了解合成结果会标注为合成语音。</span></label>
+        <div class="row" style="margin-top:.6rem">
+          <button id="zipvoiceTrain" class="primary" type="button" disabled>保存并使用这个声音</button>
+          <button id="zipvoiceTest" type="button">试听当前高音质声音</button>
+          <button id="zipvoiceDeleteVoice" type="button" hidden>删除当前高音质声音</button>
+          <span id="zipvoiceTrainStatus" class="hint"></span>
+        </div>
+        <div id="zipvoiceVoiceList" class="voice-train-grid" style="margin-top:.8rem"></div>
+        <p class="hint">模型：<a href="https://github.com/k2-fsa/ZipVoice" rel="noreferrer">ZipVoice</a>（代码 Apache-2.0） · 推理：<a href="https://github.com/k2-fsa/sherpa-onnx" rel="noreferrer">sherpa-onnx</a>（Apache-2.0） · 权重 CC-BY-NC。较慢时可改用 Kokoro 或 Piper。</p>
       </div>
       <div class="card">
         <h2>高级：自建家庭声音库（服务端）</h2>
@@ -473,6 +516,6 @@ footer a{color:var(--muted)}
   });
 })();
 </script>
-<script type="module" src="./app.mjs?v=20261029-4"></script>
+<script type="module" src="./app.mjs?v=20261029-11"></script>
 </body>
 </html>

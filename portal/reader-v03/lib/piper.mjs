@@ -116,6 +116,79 @@ export const normalizeSpeechSamples = (samples, {
   return output;
 };
 
+// The experimental zs-v1 weights have a sharp presence peak that sounds
+// piercing on phone speakers. A gentle high-pass, a presence cut, a high-shelf
+// and a low-pass make the same voice warmer without changing the model. The
+// filter is deliberately mild; it is a comfort fix, not a quality upgrade.
+const biquadCoefficients = (type, frequency, sampleRate, { gain = 0, q = 0.707 } = {}) => {
+  const rate = Number(sampleRate) > 0 ? Number(sampleRate) : 22050;
+  const f0 = Math.min(Math.max(20, Number(frequency) || 1000), rate * 0.45);
+  const w0 = 2 * Math.PI * f0 / rate;
+  const cos = Math.cos(w0);
+  const sin = Math.sin(w0);
+  if (type === 'peaking') {
+    const A = Math.pow(10, gain / 40);
+    const alpha = sin / (2 * Math.max(0.1, q));
+    return [
+      1 + alpha * A, -2 * cos, 1 - alpha * A,
+      1 + alpha / A, -2 * cos, 1 - alpha / A,
+    ];
+  }
+  if (type === 'highshelf') {
+    const A = Math.pow(10, gain / 40);
+    const alpha = sin / 2 * Math.sqrt((A + 1 / A) * (1 - 1) + 2);
+    const twoSqrtAAlpha = 2 * Math.sqrt(A) * alpha;
+    return [
+      A * ((A + 1) + (A - 1) * cos + twoSqrtAAlpha),
+      -2 * A * ((A - 1) + (A + 1) * cos),
+      A * ((A + 1) + (A - 1) * cos - twoSqrtAAlpha),
+      (A + 1) - (A - 1) * cos + twoSqrtAAlpha,
+      2 * ((A - 1) - (A + 1) * cos),
+      (A + 1) - (A - 1) * cos - twoSqrtAAlpha,
+    ];
+  }
+  const alpha = sin / (2 * Math.max(0.1, q));
+  if (type === 'lowpass') {
+    return [
+      (1 - cos) / 2, 1 - cos, (1 - cos) / 2,
+      1 + alpha, -2 * cos, 1 - alpha,
+    ];
+  }
+  // highpass
+  return [
+    (1 + cos) / 2, -(1 + cos), (1 + cos) / 2,
+    1 + alpha, -2 * cos, 1 - alpha,
+  ];
+};
+
+const filterBiquad = (samples, coefficients) => {
+  const [b0, b1, b2, a0, a1, a2] = coefficients;
+  const output = new Float32Array(samples.length);
+  let x1 = 0;
+  let x2 = 0;
+  let y1 = 0;
+  let y2 = 0;
+  for (let i = 0; i < samples.length; i++) {
+    const x0 = Number(samples[i]) || 0;
+    const y0 = (b0 / a0) * x0 + (b1 / a0) * x1 + (b2 / a0) * x2
+      - (a1 / a0) * y1 - (a2 / a0) * y2;
+    output[i] = Math.max(-1, Math.min(1, y0));
+    x2 = x1; x1 = x0; y2 = y1; y1 = y0;
+  }
+  return output;
+};
+
+export const softenSpeechSamples = (samples, { sampleRate = 22050, normalize = true } = {}) => {
+  const input = samples instanceof Float32Array ? samples : new Float32Array(samples ?? []);
+  if (!input.length) return input.slice();
+  const rate = Number(sampleRate) > 0 ? Number(sampleRate) : 22050;
+  let output = filterBiquad(input, biquadCoefficients('highpass', 85, rate, { q: 0.7 }));
+  output = filterBiquad(output, biquadCoefficients('peaking', 3200, rate, { gain: -4, q: 1 }));
+  output = filterBiquad(output, biquadCoefficients('highshelf', 4500, rate, { gain: -7 }));
+  output = filterBiquad(output, biquadCoefficients('lowpass', 8500, rate, { q: 0.7 }));
+  return normalize ? normalizeSpeechSamples(output, { sampleRate: rate }) : output;
+};
+
 // A phone recording can be quiet, DC-offset, mostly silence, or several
 // minutes long. CAM++ only needs 5-15 seconds, so remove silence, take the
 // loudest 15-second window, and peak-normalise before extracting the embedding.
@@ -314,7 +387,7 @@ export class PiperRuntime {
   async speak(text, { embedding, speed = 1, signal } = {}) {
     primePiperAudio();
     const audio = await this.synthesize(text, { embedding, speed, signal });
-    const samples = normalizeSpeechSamples(audio.samples, { sampleRate: audio.sampleRate });
+    const samples = softenSpeechSamples(audio.samples, { sampleRate: audio.sampleRate });
     await playSamples(samples, audio.sampleRate, { signal });
   }
 

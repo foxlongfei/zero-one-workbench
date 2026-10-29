@@ -11,6 +11,7 @@ import {
   detectPiperLanguage,
   normalizeSpeechSamples,
   prepareReferenceSamples,
+  softenSpeechSamples,
 } from '../../portal/reader-v03/lib/piper.mjs';
 
 test('Piper Plus metadata points at the open zs-v1 model and licence', () => {
@@ -70,4 +71,29 @@ test('phone reference is trimmed, limited to 15 seconds and normalised', () => {
   let peak = 0;
   for (const value of output) peak = Math.max(peak, Math.abs(value));
   assert.ok(peak > 0.8 && peak <= 1, `peak ${peak}`);
+});
+
+test('Kokoro v1.1-zh metadata and Chinese voices are open and finite', async () => {
+  const { KOKORO, KOKORO_VOICES, kokoroVoiceById } = await import('../../portal/reader-v03/lib/kokoro.mjs');
+  assert.match(KOKORO.modelId, /kokoro-v1\.1-zh-onnx$/i);
+  assert.match(KOKORO.license, /Apache-2\.0/);
+  assert.ok(KOKORO_VOICES.length >= 8);
+  assert.ok(KOKORO_VOICES.every(voice => /^z[fm]_\d{3}$/.test(voice.id)));
+  assert.equal(kokoroVoiceById('zm_010').gender, '男');
+  assert.equal(kokoroVoiceById('missing').id, KOKORO_VOICES[0].id);
+});
+
+test('warmth filter cuts piercing highs more than the voice band', () => {
+  const rate = 22050;
+  const makeTone = frequency => {
+    const samples = new Float32Array(rate);
+    for (let i = 0; i < samples.length; i++) samples[i] = 0.2 * Math.sin(2 * Math.PI * frequency * i / rate);
+    return samples;
+  };
+  const rms = samples => Math.sqrt(samples.reduce((sum, value) => sum + value * value, 0) / samples.length);
+  const voice = softenSpeechSamples(makeTone(600), { sampleRate: rate, normalize: false });
+  const harsh = softenSpeechSamples(makeTone(8000), { sampleRate: rate, normalize: false });
+  assert.ok(rms(voice) > 0.05, `voice rms ${rms(voice)}`);
+  assert.ok(rms(harsh) < rms(voice) * 0.4, `harsh rms ${rms(harsh)} vs voice ${rms(voice)}`);
+  assert.ok(softenSpeechSamples(new Float32Array(0)).length === 0);
 });
