@@ -8,7 +8,9 @@ const targets = [
   {name:'fortune-teller',path:'/portal/fortune-teller/index.html',selector:'#panel-bazi'},
   {name:'C01',path:'/portal/reader-integrated.html',selector:'#shelfScreen'},
   {name:'reader-v03',path:'/portal/reader-v03/index.html',selector:'#importButton'},
-  {name:'watch-world',path:'/portal/watch-world.html',selector:'body'}
+  {name:'watch-world',path:'/portal/watch-world.html',selector:'body'},
+  {name:'world-reader',path:'/portal/world-reader/index.html',selector:'#status-label'},
+  {name:'world-reader-issue',path:'/portal/world-reader/issues/world-reader-2026-10-28/index.html',selector:'#speak'}
 ];
 (async()=>{
  const browser=await chromium.launch({headless:true});
@@ -34,6 +36,15 @@ const targets = [
      if(!Array.isArray(data.channels)||!data.channels.some(c=>c.streamUrl&&c.mediaCheckStatus==='passed'))errors.push('no verified stream in catalog');
     }
    }
+    if(target.name==='world-reader'){
+      await page.waitForFunction(()=>document.querySelector('#status-label')?.textContent==='1 期已发布');
+      if(await page.locator('#latest .issue').count()!==1)errors.push('published issue missing or duplicated');
+      if(!await page.locator('#latest a[href$="issues/world-reader-2026-10-28/index.html"]').count())errors.push('published issue link is missing');
+    }
+    if(target.name==='world-reader-issue'){
+     if(!await page.locator('a[href="https://globalvoices.org/2026/10/28/bangladesh-weighs-tougher-cyber-law-as-ai-generated-abuse-targets-women/"]').count())errors.push('missing permanent source link');
+     if(!await page.locator('#speech-status').count())errors.push('missing read-aloud status');
+    }
    await page.screenshot({path:'artifacts/portal-delivery/'+target.name+'.png',fullPage:true});
    results.push({name:target.name,url:base+target.path,http:response?.status(),errors});
    if(errors.length)failed=true;

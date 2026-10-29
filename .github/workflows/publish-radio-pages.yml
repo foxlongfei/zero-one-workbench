@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate published World Reader index
+        run: node scripts/world-reader/check-public-index.cjs
       - name: Prepare static site
         run: |
           mkdir -p _site

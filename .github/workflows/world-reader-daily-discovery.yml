@@ -1,0 +1,48 @@
+name: World Reader daily discovery
+
+on:
+  schedule:
+    - cron: '15 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: world-reader-daily-discovery
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    if: vars.WORLD_READER_AUTOMATION_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: scripts/world-reader/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci --prefix scripts/world-reader
+      - name: Obtain short-lived Drive identity through GitHub OIDC
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WORLD_READER_WIF_PROVIDER }}
+          service_account: ${{ vars.WORLD_READER_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+          export_environment_variables: true
+          access_token_scopes: https://www.googleapis.com/auth/drive
+      - name: Verify the existing Drive workspace
+        env:
+          WORLD_READER_DRIVE_ROOT_ID: ${{ vars.WORLD_READER_DRIVE_ROOT_ID }}
+        run: npm --prefix scripts/world-reader run drive:verify
+      - name: Discover new sources and prepare licensed Chinese drafts
+        env:
+          WORLD_READER_DRIVE_ROOT_ID: ${{ vars.WORLD_READER_DRIVE_ROOT_ID }}
+          WORLD_READER_AI_API_BASE: ${{ vars.WORLD_READER_AI_API_BASE }}
+          WORLD_READER_AI_MODEL: ${{ vars.WORLD_READER_AI_MODEL }}
+          WORLD_READER_AI_API_KEY: ${{ secrets.WORLD_READER_AI_API_KEY }}
+        run: npm --prefix scripts/world-reader run discover

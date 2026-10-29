@@ -1,0 +1,59 @@
+name: World Reader authorized test email
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_id:
+        description: Published issue ID
+        required: true
+        type: string
+      confirm_test_delivery:
+        description: Confirm that the configured test recipient authorized this test
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: world-reader-test-email-${{ inputs.issue_id }}
+  cancel-in-progress: false
+
+jobs:
+  send-test:
+    if: inputs.confirm_test_delivery
+    environment: world-reader-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: scripts/world-reader/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci --prefix scripts/world-reader
+      - name: Obtain short-lived Drive identity through GitHub OIDC
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WORLD_READER_WIF_PROVIDER }}
+          service_account: ${{ vars.WORLD_READER_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+          export_environment_variables: true
+          access_token_scopes: https://www.googleapis.com/auth/drive
+      - name: Verify the existing Drive archive folder
+        env:
+          WORLD_READER_DRIVE_ROOT_ID: ${{ vars.WORLD_READER_DRIVE_ROOT_ID }}
+        run: npm --prefix scripts/world-reader run drive:verify
+      - name: Verify public page and EPUB, then send once to the test recipient
+        env:
+          WORLD_READER_PUBLIC_BASE_URL: https://foxlongfei.github.io/zero-one-workbench/portal/world-reader/
+          WORLD_READER_ISSUE_ID: ${{ inputs.issue_id }}
+          WORLD_READER_DRIVE_ROOT_ID: ${{ vars.WORLD_READER_DRIVE_ROOT_ID }}
+          WORLD_READER_TEST_RECIPIENT: ${{ vars.WORLD_READER_TEST_RECIPIENT }}
+          WORLD_READER_EMAIL_FROM: ${{ vars.WORLD_READER_EMAIL_FROM }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: node scripts/world-reader/publish-and-email.mjs

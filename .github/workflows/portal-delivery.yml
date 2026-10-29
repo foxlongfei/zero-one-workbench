@@ -5,6 +5,11 @@ on:
     branches: [main]
     paths:
       - 'portal/**'
+      - 'scripts/world-reader/**'
+      - 'tests/world-reader/**'
+      - '.github/workflows/publish-radio-pages.yml'
+      - '.github/workflows/world-reader-daily-discovery.yml'
+      - '.github/workflows/world-reader-test-email.yml'
       - 'scripts/portal-delivery-smoke.cjs'
       - 'scripts/fortune-teller-browser-verify.cjs'
       - '.github/workflows/portal-delivery.yml'
@@ -12,6 +17,11 @@ on:
     branches: [main]
     paths:
       - 'portal/**'
+      - 'scripts/world-reader/**'
+      - 'tests/world-reader/**'
+      - '.github/workflows/publish-radio-pages.yml'
+      - '.github/workflows/world-reader-daily-discovery.yml'
+      - '.github/workflows/world-reader-test-email.yml'
       - 'scripts/portal-delivery-smoke.cjs'
       - 'scripts/fortune-teller-browser-verify.cjs'
       - '.github/workflows/portal-delivery.yml'
@@ -26,6 +36,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Verify World Reader licensing and archive gates
+        run: |
+          node --test tests/world-reader/*.test.cjs tests/world-reader/*.test.mjs
+          node scripts/world-reader/check-public-index.cjs
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

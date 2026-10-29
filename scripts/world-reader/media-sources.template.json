@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "globalvoices",
+      "active": true,
+      "mediaName": "Global Voices",
+      "mediaCountryOrRegion": "Global media network (headquarters region unverified)",
+      "adapter": "wordpress-rest",
+      "apiUrl": "https://globalvoices.org/wp-json/wp/v2/posts",
+      "defaultContentType": "analysis",
+      "license": {
+        "status": "approved",
+        "name": "Creative Commons Attribution 3.0",
+        "canTranslate": true,
+        "evidenceUrl": "https://creativecommons.org/licenses/by/3.0/",
+        "checkedAt": "2026-10-29",
+        "attributionRequired": true
+      },
+      "imagePolicy": "omit",
+      "editorialNote": "文章正文可按 CC BY 3.0 署名改编；不复制图片、嵌入内容或第三方素材。每篇文章仍须确认页面许可标注与作者元数据。"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "world-reader-automation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test ../../tests/world-reader/*.test.cjs ../../tests/world-reader/*.test.mjs",
+    "drive:verify": "node verify-drive-workspace.mjs",
+    "discover": "node run-daily-discovery.mjs",
+    "epub:build": "node ../../scripts/build-world-reader-epub.cjs"
+  },
+  "dependencies": {
+    "google-auth-library": "11.3.2"
+  }
+}
