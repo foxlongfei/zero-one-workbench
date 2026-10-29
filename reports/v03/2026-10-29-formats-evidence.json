@@ -14,7 +14,7 @@
     {
       "name": "FB2 opens with its three chapters",
       "pass": true,
-      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+      "details": "1. 第一章 清晨\n2. 第二章 午后\n3. 第三章 夜晚"
     },
     {
       "name": "CBZ opens as image pages",
@@ -24,7 +24,7 @@
     {
       "name": "MOBI opens with chapters",
       "pass": true,
-      "details": "01.svg\n02.svg\n03.svg"
+      "details": "1. 01.svg\n2. 02.svg\n3. 03.svg"
     },
     {
       "name": "no page errors during the format run",

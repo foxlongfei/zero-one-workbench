@@ -4,17 +4,17 @@
     {
       "name": "demo neural voice is available without a download",
       "pass": true,
-      "details": "{\"loaded\":false,\"trainingReady\":false,\"voiceId\":\"demo\",\"hasEmbedding\":true,\"voices\":0}"
+      "details": "{\"loaded\":false,\"trainingReady\":false,\"pack\":\"zs\",\"voiceId\":\"demo\",\"hasEmbedding\":true,\"voices\":0}"
     },
     {
       "name": "Piper Plus model loads in the browser",
       "pass": true,
-      "details": "{\"loaded\":true,\"trainingReady\":false,\"voiceId\":\"demo\",\"hasEmbedding\":true,\"voices\":0}"
+      "details": "{\"loaded\":true,\"trainingReady\":false,\"pack\":\"zs\",\"voiceId\":\"demo\",\"hasEmbedding\":true,\"voices\":0}"
     },
     {
       "name": "model load is reported to the user",
       "pass": true,
-      "details": "模型已就绪（本机）"
+      "details": "Piper Plus zs-v1 已就绪（本机）"
     },
     {
       "name": "demo neural voice synthesises in the browser",
@@ -22,14 +22,24 @@
       "details": ""
     },
     {
+      "name": "second offline voice pack loads",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "second offline voice pack synthesises",
+      "pass": true,
+      "details": "试听完成（Mera 多语言，本机）"
+    },
+    {
       "name": "authorised reference audio is trained into a local voice",
       "pass": true,
-      "details": "{\"loaded\":true,\"trainingReady\":true,\"voiceId\":\"pv_19ad5c2b\",\"hasEmbedding\":true,\"voices\":1}"
+      "details": "{\"loaded\":true,\"trainingReady\":true,\"pack\":\"zs\",\"voiceId\":\"pv_761e7d21\",\"hasEmbedding\":true,\"voices\":1}"
     },
     {
       "name": "trained voice is listed in the UI",
       "pass": true,
-      "details": "测试家人的声音\n测试家人 · 2026/10/29 02:59:00\n正在使用\n删除"
+      "details": "测试家人的声音\n测试家人 · 2026/10/29 03:46:22\n正在使用\n删除"
     },
     {
       "name": "the trained neural voice is used for reading",
@@ -39,7 +49,7 @@
     {
       "name": "trained voice survives a reload",
       "pass": true,
-      "details": "{\"loaded\":false,\"trainingReady\":false,\"voiceId\":\"pv_19ad5c2b\",\"hasEmbedding\":true,\"voices\":1}"
+      "details": "{\"loaded\":false,\"trainingReady\":false,\"pack\":\"zs\",\"voiceId\":\"pv_761e7d21\",\"hasEmbedding\":true,\"voices\":1}"
     },
     {
       "name": "no page errors during the neural run",
@@ -49,5 +59,5 @@
   ],
   "errors": [],
   "baseUrl": "https://foxlongfei.github.io/zero-one-workbench",
-  "elapsedMs": 47487
+  "elapsedMs": 58023
 }

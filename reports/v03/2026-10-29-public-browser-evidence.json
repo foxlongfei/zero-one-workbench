@@ -14,17 +14,17 @@
     {
       "name": "readiness states local speech is ready",
       "pass": true,
-      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n开源神经语音 可选；首次使用需下载约 70 MB 模型，之后本机运行。\n自选语音 API 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n自建家庭声音库 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n「本机朗读」开箱可用；「开源神经语音」可下载模型后离线朗读并训练家人声音；其他两项按需连接。"
+      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n开源神经语音 可选；Piper Plus zs-v1首次使用需下载约 70 MB（含声音编码器），之后本机运行。\n自选语音 API 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n自建家庭声音库 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n「本机朗读」开箱可用；「开源神经语音」可下载模型后朗读并训练家人声音；其他两项按需连接。"
     },
     {
       "name": "readiness admits the optional sources are unset",
       "pass": true,
-      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n开源神经语音 可选；首次使用需下载约 70 MB 模型，之后本机运行。\n自选语音 API 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n自建家庭声音库 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n「本机朗读」开箱可用；「开源神经语音」可下载模型后离线朗读并训练家人声音；其他两项按需连接。"
+      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n开源神经语音 可选；Piper Plus zs-v1首次使用需下载约 70 MB（含声音编码器），之后本机运行。\n自选语音 API 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n自建家庭声音库 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n「本机朗读」开箱可用；「开源神经语音」可下载模型后朗读并训练家人声音；其他两项按需连接。"
     },
     {
       "name": "readiness does not claim an unset family library",
       "pass": true,
-      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n开源神经语音 可选；首次使用需下载约 70 MB 模型，之后本机运行。\n自选语音 API 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n自建家庭声音库 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n「本机朗读」开箱可用；「开源神经语音」可下载模型后离线朗读并训练家人声音；其他两项按需连接。"
+      "details": "本机朗读 已就绪（测试音）：不联网即可连续朗读。\n开源神经语音 可选；Piper Plus zs-v1首次使用需下载约 70 MB（含声音编码器），之后本机运行。\n自选语音 API 尚未配置，可选；配置后音质更好但需要自己的语音服务。\n自建家庭声音库 尚未连接，可选；需要自己运行声音库服务并由家人授权录制。\n\n「本机朗读」开箱可用；「开源神经语音」可下载模型后朗读并训练家人声音；其他两项按需连接。"
     },
     {
       "name": "sample book imports with no account or key",
@@ -54,12 +54,12 @@
     {
       "name": "EPUB cover rendered",
       "pass": true,
-      "details": "<img src=\"blob:https://foxlongfei.github.io/b0124e84-7623-4003-a3cf-dd81884d8016\" alt=\"\" loading=\"lazy\">"
+      "details": "<img src=\"blob:https://foxlongfei.github.io/a5d8a79f-c082-4d65-8ba5-4fe0379c209e\" alt=\"\" loading=\"lazy\">"
     },
     {
       "name": "TXT split into three chapters",
       "pass": true,
-      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+      "details": "1. 第一章 清晨\n2. 第二章 午后\n3. 第三章 夜晚"
     },
     {
       "name": "TXT body rendered",
@@ -67,9 +67,19 @@
       "details": "第一章 清晨\n\n天刚亮的时候，小院的竹门被风轻轻推开。\n\n雨后的石阶上留着浅浅的水痕。\n\n她把昨夜的疑问写在纸上，决定今天去问图书管理员。"
     },
     {
+      "name": "book-style TOC dialog lists every chapter",
+      "pass": true,
+      "details": "1. 第一章 清晨\n2. 第二章 午后\n3. 第三章 夜晚"
+    },
+    {
       "name": "playback starts",
       "pass": true,
       "details": ""
+    },
+    {
+      "name": "audio cursor synchronises the visible TXT paragraph",
+      "pass": true,
+      "details": "{\"chapter\":0,\"paragraph\":1,\"text\":\"雨后的石阶上留着浅浅的水痕。\"}"
     },
     {
       "name": "chapter jump works while listening",
@@ -84,7 +94,7 @@
     {
       "name": "chapter list follows the audio",
       "pass": true,
-      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+      "details": "1. 第一章 清晨\n2. 第二章 午后\n3. 第三章 夜晚"
     },
     {
       "name": "pause freezes the cursor",
@@ -109,7 +119,7 @@
     {
       "name": "note saved with quote",
       "pass": true,
-      "details": "第二章 午后 · 2026/10/29 02:58:33\n管理员说，书里的问题不必急着回答。\n\n这一段的雨声让我想起小时候的院子。\n\n回到这段话\n删除"
+      "details": "第二章 午后 · 2026/10/29 03:45:43\n管理员说，书里的问题不必急着回答。\n\n这一段的雨声让我想起小时候的院子。\n\n回到这段话\n删除"
     },
     {
       "name": "progress and book survive a reload",
@@ -129,12 +139,17 @@
     {
       "name": "EPUB TOC from navigation document",
       "pass": true,
-      "details": "第一章 清晨\n第二章 午后\n第三章 夜晚"
+      "details": "1. 第一章 清晨\n2. 第二章 午后\n3. 第三章 夜晚"
     },
     {
       "name": "EPUB chapter jump",
       "pass": true,
       "details": "第三章 夜晚 vs 第三章 夜晚"
+    },
+    {
+      "name": "EPUB chapter jump synchronises the visible paragraph",
+      "pass": true,
+      "details": "{\"chapter\":2,\"paragraph\":0,\"text\":\"第三章 夜晚\"}"
     },
     {
       "name": "EPUB pagination stays open",
@@ -144,7 +159,7 @@
     {
       "name": "notes follow the chapter being read, not an old audio cursor",
       "pass": true,
-      "details": "第三章 夜晚 · 2026/10/29 02:58:38"
+      "details": "第三章 夜晚 · 2026/10/29 03:45:47"
     },
     {
       "name": "pause on the last chapter keeps the audio cursor there",
@@ -160,6 +175,21 @@
       "name": "TXT pane is rendered when listening starts from the shelf",
       "pass": true,
       "details": "第三章 夜晚\n\n回到家，她在灯下把白天的发现读给家人听。\n\n家人没有打断她，只在每一段之后安静地点头。\n\n灯灭之前，她把最后一句读了两遍。"
+    },
+    {
+      "name": "paragraph scope stops after the selected paragraph",
+      "pass": true,
+      "details": "{\"chapter\":2,\"paragraph\":0}"
+    },
+    {
+      "name": "paragraph scope reports completion without marking the book finished",
+      "pass": true,
+      "details": "本段已读完。点「读本段」再听这一段，或点「读全书」继续往下听。"
+    },
+    {
+      "name": "whole-book scope clears the paragraph boundary",
+      "pass": true,
+      "details": ""
     },
     {
       "name": "radio catalogue lists classical channels",

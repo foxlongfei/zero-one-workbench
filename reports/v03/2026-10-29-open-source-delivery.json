@@ -3,13 +3,13 @@
   "product": "陪你读书 V0.3",
   "owner": "D博士",
   "status": "PUBLISHED_PENDING_USER_ACCEPTANCE",
-  "deployed_commit": "02d1a9d049a98b4b127a6e7a99f924d9117b5cd1",
-  "previous_commit": "eed04ae0d53c7ad94607b801541aefcb34611c89",
+  "deployed_commit": "1bbd63e1cb348e3c1f7112c55f64d555191e79df",
+  "previous_commit": "8b97338cefba45dcd75720d45976e60eedc61a13",
   "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/reader-v03/index.html",
   "deployment_readback": {
     "http_status": 200,
-    "local_app_sha256": "6c92e903767143f1083e2dc4dc1a50aa7093d11a05ee5b84bb4d66835a9f4ef0",
-    "public_app_sha256": "6c92e903767143f1083e2dc4dc1a50aa7093d11a05ee5b84bb4d66835a9f4ef0",
+    "local_app_sha256": "ed32b2983832ecfc4d9a2d9caeec4b64cd9f818001b122cfc688942f42acd4a8",
+    "public_app_sha256": "ed32b2983832ecfc4d9a2d9caeec4b64cd9f818001b122cfc688942f42acd4a8",
     "match": true,
     "piper_asset_http_status": 200
   },
@@ -35,7 +35,23 @@
       "first_load_size": "about 70 MB (40 MB TTS + 28 MB encoder when training)",
       "fully_local_after_model_load": true,
       "demo_voice_embedding": "portal/reader-v03/data/piper-demo-voice.json",
-      "demo_voice_note": "Derived from the model publisher's zh-ft sample; demonstration only, not a real user recording."
+      "demo_voice_note": "Derived from the model publisher's zh-ft sample; demonstration only, not a real user recording.",
+      "offline_packs": [
+        {
+          "id": "zs",
+          "name": "Piper Plus zs-v1",
+          "size": "about 70 MB with encoder",
+          "training": true,
+          "license": "MIT / Apache-2.0"
+        },
+        {
+          "id": "mera",
+          "name": "Mera multilingual",
+          "size": "about 39 MB",
+          "training": false,
+          "license": "Apache-2.0"
+        }
+      ]
     },
     "voice_training": {
       "method": "local zero-shot speaker conditioning (CAM++ embedding)",
@@ -64,45 +80,75 @@
       "FB2",
       "CBZ"
     ],
-    "cbz_behavior": "image pages can be read and paginated; narration is explicitly disabled because there is no text layer"
+    "cbz_behavior": "image pages can be read and paginated; narration is explicitly disabled because there is no text layer",
+    "home_library": {
+      "default_screen": "my shelf + Standard Ebooks catalogue",
+      "old_shelf_removed": true,
+      "local_batch_import": true,
+      "public_library_batch_import": [
+        "epub",
+        "azw3"
+      ],
+      "selection_count": "live"
+    },
+    "reading": {
+      "toc": "book-style modal + sidebar, numbered chapters",
+      "txt": "whole chapter rendered, active paragraph scrolled into view",
+      "long_form_verified_chapters": 24,
+      "long_azw3_verified": "65-chapter Standard Ebooks title opened with TOC",
+      "progress_bar": true,
+      "audio_text_sync": "paragraph-level for TXT and EPUB/AZW3/MOBI/FB2",
+      "scopes": [
+        "current paragraph",
+        "whole book from current position"
+      ],
+      "title_rule": "book title once at a whole-book start; chapter titles and body; no notes/annotations",
+      "note_filtering": [
+        "EPUB aside/footnote/endnote/annotation/noteref",
+        "non-linear spine",
+        "notes/cover/toc sections",
+        "TXT standalone 注/注解/译者注 lines",
+        "superscript footnote markers"
+      ]
+    }
   },
   "tests": {
     "unit": {
       "command": "node --test tests/reader-v03/core.test.mjs tests/reader-v03/pacing.test.mjs tests/reader-v03/voice-library.test.mjs tests/reader-v03/library.test.mjs tests/reader-v03/piper.test.mjs",
-      "pass": 33,
+      "pass": 39,
       "fail": 0
     },
     "browser_local": {
       "command": "node tests/reader-v03/browser-check.mjs --playwright=<temp playwright>",
-      "pass": 49,
+      "pass": 55,
       "page_errors": 0
     },
     "browser_public": {
       "command": "node tests/reader-v03/browser-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --no-voice-library",
-      "pass": 40,
+      "pass": 46,
       "page_errors": 0,
       "excluded": "self-hosted voice library section (https page cannot call loopback server)"
     },
     "neural_local": {
       "command": "node tests/reader-v03/neural-check.mjs --playwright=<temp playwright>",
-      "pass": 9,
+      "pass": 11,
       "page_errors": 0,
-      "elapsed_ms": 36725
+      "elapsed_ms": 51550
     },
     "neural_public": {
       "command": "node tests/reader-v03/neural-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --playwright=<temp playwright>",
-      "pass": 9,
+      "pass": 11,
       "page_errors": 0,
-      "elapsed_ms": 47487
+      "elapsed_ms": 58023
     },
     "library_local": {
       "command": "node tests/reader-v03/library-check.mjs --playwright=<temp playwright>",
-      "pass": 8,
+      "pass": 10,
       "page_errors": 0
     },
     "library_public": {
       "command": "node tests/reader-v03/library-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --playwright=<temp playwright>",
-      "pass": 8,
+      "pass": 10,
       "page_errors": 0
     },
     "formats_local": {
@@ -121,20 +167,31 @@
       "command": "PORTAL_BASE_URL=https://foxlongfei.github.io/zero-one-workbench node scripts/portal-delivery-smoke.cjs",
       "routes": 6,
       "failed_routes": 0
+    },
+    "long_read": {
+      "command": "node tests/reader-v03/long-read-check.mjs --playwright=<temp playwright>",
+      "pass": 8,
+      "page_errors": 0,
+      "chapters": 24,
+      "continuous_chapters": "21 to 24"
     }
   },
   "known_gaps": [
-    "voice training is zero-shot speaker conditioning, not gradient fine-tuning; quality depends on the reference clip and experimental model",
-    "first neural use needs network access to unpkg/jsDelivr/Hugging Face and downloads about 70 MB",
+    "voice training is local zero-shot speaker conditioning, not gradient fine-tuning",
+    "Mera is a fixed single voice and cannot be trained",
+    "text/audio sync is paragraph-level, not word-level timestamps",
+    "first neural use needs network access to unpkg/jsDelivr/Hugging Face and downloads about 39-70 MB",
     "real-device microphone, iOS Safari, lock-screen playback and audio focus are not yet accepted",
     "Standard Ebooks public-domain status follows United States law",
     "no cloud sync; clearing site data removes books, notes and trained voices",
     "two independent blind tests and the user's own acceptance have not happened"
   ],
   "evidence": [
-    "docs/v0.3/2026-10-29-open-source-voice-and-library.md",
-    "artifacts/reader-v03/neural-evidence.json",
-    "artifacts/reader-v03/library-evidence.json",
-    "artifacts/reader-v03/formats-evidence.json"
+    "docs/v0.3/2026-10-29-reader-home-and-sync.md",
+    "reports/v03/2026-10-29-public-browser-evidence.json",
+    "reports/v03/2026-10-29-public-neural-evidence.json",
+    "reports/v03/2026-10-29-public-library-evidence.json",
+    "reports/v03/2026-10-29-formats-evidence.json",
+    "reports/v03/2026-10-29-long-read-evidence.json"
   ]
 }

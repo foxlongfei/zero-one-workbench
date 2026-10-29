@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "a 24-chapter book opens as a long book",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "book-style TOC lists all 24 chapters",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "TOC jump lands on chapter 21",
+      "pass": true,
+      "details": "第21章 长书第21章"
+    },
+    {
+      "name": "long-form playback starts and synchronises text",
+      "pass": true,
+      "details": ""
+    },
+    {
+      "name": "continuous playback crosses to the last chapter",
+      "pass": true,
+      "details": "{\"chapter\":23,\"paragraph\":1,\"text\":\"这是第24章的第二句正文。\"}"
+    },
+    {
+      "name": "finishing the book is reported",
+      "pass": true,
+      "details": "这本书已经读完了。再点播放会从第一章重听，也可以从书架换一本。"
+    },
+    {
+      "name": "reading progress bar is filled",
+      "pass": true,
+      "details": "width: 98%;"
+    },
+    {
+      "name": "no page errors during long-form reading",
+      "pass": true,
+      "details": ""
+    }
+  ],
+  "errors": []
+}
