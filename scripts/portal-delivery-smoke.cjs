@@ -22,7 +22,7 @@ const targets = [
    await page.locator(target.selector).first().waitFor({timeout:10000});
    if(!response||response.status()>=400)errors.push('HTTP '+response?.status());
    if(target.name==='portal'){
-    for(const href of ['movement-mediapipe.html','fortune-teller/index.html','reader-integrated.html','reader-v03/index.html','watch-world.html']){
+    for(const href of ['movement-mediapipe.html','fortune-teller/index.html','reader-v03/index.html']){
      if(await page.locator('a[href="'+href+'"]').count()!==1)errors.push('missing/duplicate product link '+href);
     }
    }

@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-29",
+  "product": "陪你读书 V0.3",
+  "owner": "D博士",
+  "status": "PUBLISHED_INCREMENT_PENDING_USER_ACCEPTANCE",
+  "deployed_commit": "9bf44d8581946b2ee0ec43f75cc48b971daca8c8",
+  "previous_commit": "796b779c4217ae9ef95f80117ac638ee8f4d9a24",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/reader-v03/index.html",
+  "deployment_readback": {
+    "http_status": 200,
+    "local_app_sha256": "3695ec381aed40f2e38b74f0f580f11b24056f1d861d9409f0ee0704fab84f4c",
+    "public_app_sha256": "3695ec381aed40f2e38b74f0f580f11b24056f1d861d9409f0ee0704fab84f4c",
+    "match": true
+  },
+  "tests": {
+    "unit": {
+      "command": "node --test tests/reader-v03/core.test.mjs tests/reader-v03/pacing.test.mjs tests/reader-v03/voice-library.test.mjs",
+      "pass": 29,
+      "fail": 0
+    },
+    "browser_local": {
+      "command": "node tests/reader-v03/browser-check.mjs --playwright=<temp playwright>",
+      "pass": 49,
+      "page_errors": 0
+    },
+    "browser_public": {
+      "command": "node tests/reader-v03/browser-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --no-voice-library",
+      "pass": 40,
+      "page_errors": 0,
+      "excluded": "family voice library section: an https page is not allowed to call a loopback server"
+    },
+    "portal_delivery_smoke": {
+      "command": "PORTAL_BASE_URL=https://foxlongfei.github.io/zero-one-workbench node scripts/portal-delivery-smoke.cjs",
+      "routes": 6,
+      "failed_routes": 0
+    }
+  },
+  "increment": [
+    "a paused position in the last chapter is no longer treated as a finished book",
+    "listening from the shelf renders the TXT pane and aligns the EPUB view before audio starts",
+    "notes use the chapter currently being read instead of the last audio cursor",
+    "listening statistics convert stored milliseconds to minutes exactly once",
+    "browser regression checks added for last-chapter resume, note ownership, and TXT pane readiness"
+  ],
+  "known_gaps": [
+    "no neural TTS endpoint is connected and verified; browser speechSynthesis remains the default",
+    "family voice library still uses formant approximation, not neural voice cloning",
+    "real-device microphone, lock-screen playback, audio focus and consented family voice end-to-end acceptance are pending",
+    "listening world has two live radio streams and one placeholder podcast; no full Radio Browser catalogue or subtitles",
+    "no V0.3-specific CI workflow yet",
+    "EPUB in-page book switching can retain the previous view",
+    "two independent blind tests and the user's own acceptance have not happened"
+  ]
+}
