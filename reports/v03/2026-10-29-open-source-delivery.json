@@ -3,13 +3,13 @@
   "product": "陪你读书 V0.3",
   "owner": "D博士",
   "status": "PUBLISHED_PENDING_USER_ACCEPTANCE",
-  "deployed_commit": "eed04ae0d53c7ad94607b801541aefcb34611c89",
-  "previous_commit": "9bf44d8581946b2ee0ec43f75cc48b971daca8c8",
+  "deployed_commit": "02d1a9d049a98b4b127a6e7a99f924d9117b5cd1",
+  "previous_commit": "eed04ae0d53c7ad94607b801541aefcb34611c89",
   "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/reader-v03/index.html",
   "deployment_readback": {
     "http_status": 200,
-    "local_app_sha256": "5903ee9f597a0b91a7336b0d3eedb46df33efc6765b9e2d481540f232bfd0b75",
-    "public_app_sha256": "5903ee9f597a0b91a7336b0d3eedb46df33efc6765b9e2d481540f232bfd0b75",
+    "local_app_sha256": "6c92e903767143f1083e2dc4dc1a50aa7093d11a05ee5b84bb4d66835a9f4ef0",
+    "public_app_sha256": "6c92e903767143f1083e2dc4dc1a50aa7093d11a05ee5b84bb4d66835a9f4ef0",
     "match": true,
     "piper_asset_http_status": 200
   },
@@ -17,7 +17,16 @@
     "neural_tts": {
       "model": "Piper Plus zs-v1 (base.onnx)",
       "runtime": "piper-plus 0.8.2 in the browser",
-      "languages": ["zh", "en", "ja", "ko", "es", "fr", "pt", "sv"],
+      "languages": [
+        "zh",
+        "en",
+        "ja",
+        "ko",
+        "es",
+        "fr",
+        "pt",
+        "sv"
+      ],
       "licenses": {
         "piper_plus_runtime": "MIT",
         "zs_v1_weights": "MIT",
@@ -40,11 +49,21 @@
     "open_library": {
       "source": "Standard Ebooks",
       "search": true,
-      "download_formats": ["epub", "azw3"],
+      "download_formats": [
+        "epub",
+        "azw3"
+      ],
       "rights_note": "Public domain in the United States; other regions must check local law.",
       "hosting": "publisher endpoint with CORS; books stored locally in IndexedDB"
     },
-    "formats_verified": ["TXT", "EPUB", "AZW3", "MOBI", "FB2", "CBZ"],
+    "formats_verified": [
+      "TXT",
+      "EPUB",
+      "AZW3",
+      "MOBI",
+      "FB2",
+      "CBZ"
+    ],
     "cbz_behavior": "image pages can be read and paginated; narration is explicitly disabled because there is no text layer"
   },
   "tests": {
@@ -74,7 +93,7 @@
       "command": "node tests/reader-v03/neural-check.mjs --base-url=https://foxlongfei.github.io/zero-one-workbench --playwright=<temp playwright>",
       "pass": 9,
       "page_errors": 0,
-      "elapsed_ms": 48317
+      "elapsed_ms": 47487
     },
     "library_local": {
       "command": "node tests/reader-v03/library-check.mjs --playwright=<temp playwright>",
@@ -90,7 +109,13 @@
       "command": "node tests/reader-v03/formats-check.mjs --playwright=<temp playwright>",
       "pass": 6,
       "page_errors": 0,
-      "formats": ["CBZ", "FB2", "EPUB", "TXT", "MOBI"]
+      "formats": [
+        "CBZ",
+        "FB2",
+        "EPUB",
+        "TXT",
+        "MOBI"
+      ]
     },
     "portal_delivery_smoke": {
       "command": "PORTAL_BASE_URL=https://foxlongfei.github.io/zero-one-workbench node scripts/portal-delivery-smoke.cjs",

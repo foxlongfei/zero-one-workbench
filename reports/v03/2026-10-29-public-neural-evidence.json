@@ -24,12 +24,12 @@
     {
       "name": "authorised reference audio is trained into a local voice",
       "pass": true,
-      "details": "{\"loaded\":true,\"trainingReady\":true,\"voiceId\":\"pv_0efa357b\",\"hasEmbedding\":true,\"voices\":1}"
+      "details": "{\"loaded\":true,\"trainingReady\":true,\"voiceId\":\"pv_19ad5c2b\",\"hasEmbedding\":true,\"voices\":1}"
     },
     {
       "name": "trained voice is listed in the UI",
       "pass": true,
-      "details": "测试家人的声音\n测试家人 · 2026/10/29 02:55:33\n正在使用\n删除"
+      "details": "测试家人的声音\n测试家人 · 2026/10/29 02:59:00\n正在使用\n删除"
     },
     {
       "name": "the trained neural voice is used for reading",
@@ -39,7 +39,7 @@
     {
       "name": "trained voice survives a reload",
       "pass": true,
-      "details": "{\"loaded\":false,\"trainingReady\":false,\"voiceId\":\"pv_0efa357b\",\"hasEmbedding\":true,\"voices\":1}"
+      "details": "{\"loaded\":false,\"trainingReady\":false,\"voiceId\":\"pv_19ad5c2b\",\"hasEmbedding\":true,\"voices\":1}"
     },
     {
       "name": "no page errors during the neural run",
@@ -49,5 +49,5 @@
   ],
   "errors": [],
   "baseUrl": "https://foxlongfei.github.io/zero-one-workbench",
-  "elapsedMs": 48317
+  "elapsedMs": 47487
 }

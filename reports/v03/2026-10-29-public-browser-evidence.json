@@ -54,7 +54,7 @@
     {
       "name": "EPUB cover rendered",
       "pass": true,
-      "details": "<img src=\"blob:https://foxlongfei.github.io/5c76eaff-baf9-4d3b-90bd-69be07439dfa\" alt=\"\" loading=\"lazy\">"
+      "details": "<img src=\"blob:https://foxlongfei.github.io/b0124e84-7623-4003-a3cf-dd81884d8016\" alt=\"\" loading=\"lazy\">"
     },
     {
       "name": "TXT split into three chapters",
@@ -109,7 +109,7 @@
     {
       "name": "note saved with quote",
       "pass": true,
-      "details": "第二章 午后 · 2026/10/29 02:55:55\n管理员说，书里的问题不必急着回答。\n\n这一段的雨声让我想起小时候的院子。\n\n回到这段话\n删除"
+      "details": "第二章 午后 · 2026/10/29 02:58:33\n管理员说，书里的问题不必急着回答。\n\n这一段的雨声让我想起小时候的院子。\n\n回到这段话\n删除"
     },
     {
       "name": "progress and book survive a reload",
@@ -144,7 +144,7 @@
     {
       "name": "notes follow the chapter being read, not an old audio cursor",
       "pass": true,
-      "details": "第三章 夜晚 · 2026/10/29 02:55:58"
+      "details": "第三章 夜晚 · 2026/10/29 02:58:38"
     },
     {
       "name": "pause on the last chapter keeps the audio cursor there",
