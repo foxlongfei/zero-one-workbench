@@ -38,6 +38,18 @@ node tests/reader-v03/neural-check.mjs --playwright=<playwright>
 → PASS, 12 checks, 0 page errors
 ```
 
+公网读回（提交 `f958cc2`）：
+
+```text
+node tests/reader-v03/browser-check.mjs --playwright=<playwright> --chrome=<chromium> --base-url=https://foxlongfei.github.io/zero-one-workbench --no-voice-library
+→ PASS, 47 checks, 0 page errors
+
+node tests/reader-v03/neural-check.mjs --playwright=<playwright> --base-url=https://foxlongfei.github.io/zero-one-workbench
+→ PASS, 12 checks, 0 page errors
+```
+
+本地与公网 `index.html`、`app.mjs`、`lib/piper.mjs` 的 SHA-256 一致，部署读回记录见 `reports/v03/2026-10-29-voice-picker-audio-followup.json`。
+
 ## 5. 边界
 
 - 没有新增外部训练文件导入；训练声音仍是本机 IndexedDB 里的 192 维特征。

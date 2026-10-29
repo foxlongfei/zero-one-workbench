@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-29",
+  "product": "陪你读书 V0.3",
+  "owner": "D博士",
+  "status": "PUBLISHED_PENDING_USER_ACCEPTANCE",
+  "deployed_commit": "f958cc20df090e0f11aebacaa987557d9e6bef01",
+  "previous_commit": "14239fd1126673afc0d741bff74c2fec867fbd76",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/reader-v03/index.html",
+  "deployment_readback": {
+    "http_status": 200,
+    "local_app_sha256": "3a349c60f97f0d07798f6c2d6f9295ef6adc2d5836b5fb795a4892b6a71179ba",
+    "public_app_sha256": "3a349c60f97f0d07798f6c2d6f9295ef6adc2d5836b5fb795a4892b6a71179ba",
+    "local_piper_sha256": "43e4049f3bed535a863734812f08a31c834a5e02ef66064e97fadf1469e17752",
+    "public_piper_sha256": "43e4049f3bed535a863734812f08a31c834a5e02ef66064e97fadf1469e17752",
+    "local_index_sha256": "b8b7a00f0348e6cf40cf4f8c6a9e351d6b2c49249a49a5903e35d6907d018c04",
+    "public_index_sha256": "b8b7a00f0348e6cf40cf4f8c6a9e351d6b2c49249a49a5903e35d6907d018c04",
+    "match": true
+  },
+  "fixes": [
+    "trained voices are selectable from the reading panel, not only from the voice screen",
+    "the voice picker lists the demo voice and every locally trained voice, and persists the choice",
+    "neural speech is RMS-normalised on-device and peak-capped with a 5 ms fade",
+    "reference recordings are DC-removed, trimmed, limited to the loudest 15 seconds and peak-normalised",
+    "EPUB/AZW3/MOBI/FB2 pagination follows the spoken paragraph through the foliate scrollToAnchor API",
+    "a long-chapter EPUB fixture and browser assertions prove the page turns past paragraph 40"
+  ],
+  "tests": {
+    "unit": {
+      "command": "node --test tests/reader-v03/core.test.mjs tests/reader-v03/pacing.test.mjs tests/reader-v03/voice-library.test.mjs tests/reader-v03/library.test.mjs tests/reader-v03/piper.test.mjs",
+      "pass": 41,
+      "fail": 0
+    },
+    "browser_local": {
+      "command": "node tests/reader-v03/browser-check.mjs --playwright=<playwright> --chrome=<chromium>",
+      "pass": 56,
+      "page_errors": 0
+    },
+    "browser_public": {
+      "command": "node tests/reader-v03/browser-check.mjs --playwright=<playwright> --chrome=<chromium> --base-url=https://foxlongfei.github.io/zero-one-workbench --no-voice-library",
+      "pass": 47,
+      "page_errors": 0,
+      "excluded": "family voice library section: an https page is not allowed to call a loopback server"
+    },
+    "neural_local": {
+      "command": "node tests/reader-v03/neural-check.mjs --playwright=<playwright>",
+      "pass": 12,
+      "page_errors": 0,
+      "elapsed_ms": 45093
+    },
+    "neural_public": {
+      "command": "node tests/reader-v03/neural-check.mjs --playwright=<playwright> --base-url=https://foxlongfei.github.io/zero-one-workbench",
+      "pass": 12,
+      "page_errors": 0,
+      "elapsed_ms": 48877
+    }
+  },
+  "known_gaps": [
+    "voice training is local zero-shot speaker conditioning, not gradient fine-tuning",
+    "normalisation improves loudness but cannot remove the noise of the experimental zs-v1 weights",
+    "text/audio sync remains paragraph-level, not word-level timestamps",
+    "external Piper .onnx voices cannot be imported yet; training stores a 192-dimension embedding in IndexedDB",
+    "real-device speaker, Bluetooth, iOS Safari, lock-screen playback and audio focus are not yet accepted",
+    "two independent blind tests and the user's own acceptance have not happened"
+  ],
+  "evidence": [
+    "docs/v0.3/2026-10-29-voice-picker-and-audio-followup.md",
+    "artifacts/reader-v03/browser-evidence.json (generated, gitignored)",
+    "artifacts/reader-v03/neural-evidence.json (generated, gitignored)"
+  ]
+}
