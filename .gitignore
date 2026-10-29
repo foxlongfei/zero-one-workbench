@@ -8,3 +8,7 @@ server/voice-library/data/
 
 # Local browser-test screenshots/evidence (reports under docs/ are tracked).
 /artifacts/
+node_modules/
+
+scripts/world-reader/node_modules/
+
