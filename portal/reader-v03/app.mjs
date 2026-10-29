@@ -172,12 +172,14 @@ function updatePiperProgress(progress = {}) {
   const bar = $('piperProgressBar');
   if (!wrap || !bar) return;
   const value = Math.max(0, Math.min(1, Number(progress.progress) || 0));
+  if (progress.stage === 'model' && value === 0) status('正在加载开源神经语音模型（首次约 70 MB，之后缓存）…');
   wrap.hidden = false;
   bar.style.width = `${Math.round(value * 100)}%`;
   $('piperStatus').textContent = progress.stage === 'ready'
     ? '模型已就绪（本机）'
     : `${progress.message || progress.stage || '加载中'} ${Math.round(value * 100)}%`;
   if (progress.stage === 'ready') {
+    status('开源神经语音已就绪。');
     setTimeout(() => { wrap.hidden = true; }, 800);
     refreshVoiceScreens?.();
     refreshEngineBadge?.();
@@ -196,7 +198,13 @@ async function loadPiperModel() {
     status('开源神经语音已加载；模型由浏览器缓存，下次减少下载。');
   } catch (error) {
     $('piperStatus').textContent = `加载失败：${error.message}`;
-    status(`神经语音加载失败：${error.message}。已保留浏览器语音。`, 'error');
+    if (settings.engine === 'piper') {
+      settings.engine = 'browser';
+      saveSettings();
+      updateEngineControls();
+      refreshEngineBadge();
+    }
+    status(`神经语音加载失败：${error.message}。已切回浏览器语音。`, 'error');
   } finally {
     button.disabled = false;
   }
