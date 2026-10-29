@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-29",
+  "product": "陪你读书 V0.3",
+  "owner": "D博士",
+  "status": "PUBLISHED_PENDING_USER_ACCEPTANCE",
+  "deployed_commit": "5deb6bbd12b9e9c44a5ceffe9c15f3aa67508c1a",
+  "previous_commit": "2c14bbb43a6e7c7ae2c4b71eef3448662a522f2c",
+  "public_url": "https://foxlongfei.github.io/zero-one-workbench/portal/reader-v03/index.html",
+  "deployment_readback": {
+    "http_status": 200,
+    "files": {
+      "index.html": "1e766d082953866ef375ee4ed6df040741d4ee0c675cb7353bb2fabb758ebddb",
+      "app.mjs": "90003ac148bca657439864edf1624248066ac37bd428719375d3359c4a62cd28",
+      "lib/kokoro.mjs": "2621292dc00b7c7cd739a82067e2d0a3d52a83bb2d741651488fee0c49f6abac",
+      "lib/zipvoice.mjs": "fc17e481627db48ae313a5df3126ab2cfe6f0de3e8bef3fd1d8ea801c651a814",
+      "lib/zh-g2p.mjs": "4ccf60e759f77e0625fef7564f74cff99dfe0ed137b1015e389c1f84b29ce3d3",
+      "vendor/pinyin-pro/index.mjs": "79ed0e72f07ce6a2793f0fef4fdb943fc3f6e8bb3deae6462444f107d395fa35"
+    },
+    "match": true
+  },
+  "features": {
+    "kokoro": {
+      "model": "Kokoro-82M-v1.1-zh",
+      "onnx_export": "xun/kokoro-v1.1-zh-onnx fp32",
+      "runtime": "onnxruntime-web (wasm)",
+      "voices_exposed": 9,
+      "voices_in_model": 100,
+      "download": "about 330 MB, cached in the browser",
+      "license": "base model Apache-2.0; pinyin-pro and onnxruntime-web MIT",
+      "g2p": "local pinyin-pro Zhuyin tokens with a simplified third-tone sandhi pass",
+      "can_clone": false
+    },
+    "zipvoice": {
+      "model": "ZipVoice-Distill int8 (zh/en, Emilia)",
+      "runtime": "sherpa-onnx WASM from the k2-fsa static Space",
+      "download": "about 200 MB, cached by the browser/HTTP cache",
+      "license": "code Apache-2.0; weights CC-BY-NC (non-commercial)",
+      "clone_input": "3-10 second reference audio plus its exact transcript",
+      "storage": "reference audio and transcript in local IndexedDB only",
+      "speed": "slower than Piper; no streaming"
+    },
+    "piper": {
+      "change": "warmth filter (85 Hz high-pass, -4 dB presence cut, -7 dB high shelf, 8.5 kHz low-pass) before RMS normalisation",
+      "purpose": "reduce the piercing high-frequency edge of the experimental zs-v1 weights",
+      "limit": "comfort fix, not a model upgrade"
+    }
+  },
+  "tests": {
+    "unit": {
+      "command": "node --test tests/reader-v03/core.test.mjs tests/reader-v03/pacing.test.mjs tests/reader-v03/voice-library.test.mjs tests/reader-v03/library.test.mjs tests/reader-v03/piper.test.mjs",
+      "pass": 43,
+      "fail": 0
+    },
+    "browser_local": {
+      "command": "node tests/reader-v03/browser-check.mjs --playwright=<playwright> --chrome=<chromium>",
+      "pass": 56,
+      "page_errors": 0
+    },
+    "browser_public": {
+      "command": "node tests/reader-v03/browser-check.mjs --playwright=<playwright> --chrome=<chromium> --base-url=https://foxlongfei.github.io/zero-one-workbench --no-voice-library",
+      "pass": 47,
+      "page_errors": 0,
+      "excluded": "self-hosted family voice library section (https page cannot call loopback)"
+    },
+    "kokoro_local": {
+      "command": "node tests/reader-v03/kokoro-check.mjs --playwright=<playwright>",
+      "pass": 7,
+      "page_errors": 0
+    },
+    "kokoro_public": {
+      "command": "node tests/reader-v03/kokoro-check.mjs --playwright=<playwright> --base-url=https://foxlongfei.github.io/zero-one-workbench",
+      "pass": 7,
+      "page_errors": 0
+    },
+    "zipvoice_local": {
+      "command": "node tests/reader-v03/zipvoice-check.mjs --playwright=<playwright>",
+      "pass": 9,
+      "page_errors": 0,
+      "elapsed_ms": 47417
+    },
+    "zipvoice_public": {
+      "command": "node tests/reader-v03/zipvoice-check.mjs --playwright=<playwright> --base-url=https://foxlongfei.github.io/zero-one-workbench",
+      "pass": 9,
+      "page_errors": 0,
+      "elapsed_ms": 48247
+    }
+  },
+  "known_gaps": [
+    "Kokoro uses a 330 MB fp32 ONNX export; the same model's int8 export produced unintelligible audio in onnxruntime-web WASM",
+    "only 9 of Kokoro's 100 Chinese voices are exposed in the UI",
+    "Kokoro G2P is pinyin-pro plus simplified tone sandhi, not the full misaki jieba/POS frontend; some polyphones may still be wrong",
+    "ZipVoice weights are CC-BY-NC and non-commercial; generation is slower than Piper and not streaming",
+    "ZipVoice requires a 3-10 second reference clip and its exact transcript",
+    "ZipVoice runtime/model files are fetched from the k2-fsa static Space; it is an external dependency",
+    "real-device speaker, Bluetooth, iOS Safari, lock-screen playback and audio focus are not yet accepted",
+    "broadcast-quality emotional cloning still needs a self-hosted GPU model such as IndexTTS-2.5 or CosyVoice 3; not part of this increment"
+  ],
+  "evidence": [
+    "docs/v0.3/2026-10-29-natural-chinese-and-zipvoice.md",
+    "artifacts/reader-v03/kokoro-evidence.json (generated, gitignored)",
+    "artifacts/reader-v03/zipvoice-evidence.json (generated, gitignored)"
+  ]
+}

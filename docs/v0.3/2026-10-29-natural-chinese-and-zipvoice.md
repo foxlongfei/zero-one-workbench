@@ -53,6 +53,21 @@ node tests/reader-v03/zipvoice-check.mjs --playwright=<playwright>
 
 ZipVoice 测试会真实下载约 200 MB 模型并生成一段试听；Kokoro 测试会下载约 330 MB 的 fp32 模型。两者都是独立脚本，不拖慢日常浏览器回归。
 
+公网读回（提交 `5deb6bb`）：
+
+```text
+node tests/reader-v03/browser-check.mjs --playwright=<playwright> --chrome=<chromium> --base-url=https://foxlongfei.github.io/zero-one-workbench --no-voice-library
+→ PASS, 47 checks, 0 page errors
+
+node tests/reader-v03/kokoro-check.mjs --playwright=<playwright> --base-url=https://foxlongfei.github.io/zero-one-workbench
+→ PASS, 7 checks, 0 page errors
+
+node tests/reader-v03/zipvoice-check.mjs --playwright=<playwright> --base-url=https://foxlongfei.github.io/zero-one-workbench
+→ PASS, 9 checks, 0 page errors
+```
+
+本地与公网 `index.html`、`app.mjs`、`lib/kokoro.mjs`、`lib/zipvoice.mjs`、`lib/zh-g2p.mjs`、`vendor/pinyin-pro/index.mjs` 的 SHA-256 一致；读回记录见 `reports/v03/2026-10-29-natural-chinese-and-zipvoice.json`。
+
 ## 6. 边界
 
 - Kokoro 是固定声线，不能克隆；当前只暴露 9 个声线，未逐一做主观盲测。
