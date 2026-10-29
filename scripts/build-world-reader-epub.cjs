@@ -30,6 +30,13 @@ function validateIssue(issue) {
   if (!issue || !/^[a-z0-9-]+$/.test(issue.issueId || '')) errors.push('期刊 ID 无效');
   if (!issue?.title || !/^\d{4}-\d{2}-\d{2}$/.test(issue.issueDate || '')) errors.push('期刊标题或日期缺失');
   if (!Array.isArray(issue?.articles) || issue.articles.length === 0) errors.push('没有可发布文章');
+  if (issue?.newsLinks !== undefined && !Array.isArray(issue.newsLinks)) errors.push('国际媒体链接必须是数组');
+  for (const [index, item] of (issue?.newsLinks || []).entries()) {
+    const label = `国际媒体链接 ${index + 1}`;
+    if (!item?.outlet?.trim() || !item?.headline?.trim()) errors.push(`${label}缺少媒体名称或中文标题`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(item?.publishedAt || '')) errors.push(`${label}发布日期无效`);
+    if (!isHttpsUrl(item?.url)) errors.push(`${label}原文链接必须是 HTTPS`);
+  }
 
   for (const [index, article] of (issue?.articles || []).entries()) {
     const label = `文章 ${index + 1}`;
@@ -120,7 +127,9 @@ async function buildEpub(issue) {
   zip.file('OEBPS/nav.xhtml', `<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="zh-CN" xml:lang="zh-CN"><head><title>目录</title></head><body><nav epub:type="toc" id="toc"><h1>目录</h1><ol><li><a href="cover.xhtml">封面</a></li>${nav.join('')}<li><a href="source-index.xhtml">图片版权与资料来源</a></li></ol></nav></body></html>`);
   const omittedImages = issue.articles.flatMap((article) => article.omittedImageSources || []).map((image) => `<li>${escapeXml(image.description)} · 创作者：${escapeXml(image.creator)}；<a href="${escapeXml(image.sourceUrl)}">来源</a>；许可：${escapeXml(image.licenseType)}（<a href="${escapeXml(image.licenseEvidenceUrl)}">许可说明</a>）；状态：未转载</li>`).join('');
   const imageIndex = omittedImages ? `<section><h2>未转载图片来源</h2><ul>${omittedImages}</ul></section>` : '<p>本期未使用图片。</p>';
-  zip.file('OEBPS/source-index.xhtml', `<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN"><head><title>图片版权与资料来源</title></head><body><h1>图片版权与资料来源</h1>${sources.join('')}${imageIndex}</body></html>`);
+  const newsRows = (issue.newsLinks || []).map((item) => `<li><strong>${escapeXml(item.outlet)} · ${escapeXml(item.publishedAt)}</strong>：<a href="${escapeXml(item.url)}">${escapeXml(item.headline)}</a>${item.note ? `（${escapeXml(item.note)}）` : ''}</li>`).join('');
+  const newsIndex = newsRows ? `<section><h2>国际媒体新闻链接</h2><p>${escapeXml(issue.newsLinksNote || '本节仅提供新闻线索链接，不代表这些媒体报道了同一事件或相互核实。')}</p><ul>${newsRows}</ul></section>` : '';
+  zip.file('OEBPS/source-index.xhtml', `<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN"><head><title>版权与资料来源</title></head><body><h1>版权与资料来源</h1>${sources.join('')}${newsIndex}${imageIndex}</body></html>`);
   zip.file('OEBPS/package.opf', `<?xml version="1.0" encoding="utf-8"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="pub-id" xml:lang="zh-CN"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="pub-id">urn:zero-one:${escapeXml(issue.issueId)}</dc:identifier><dc:title>${escapeXml(issue.title)}</dc:title><dc:language>zh-CN</dc:language><meta property="dcterms:modified">${escapeXml(issue.issueDate)}T00:00:00Z</meta></metadata><manifest>${manifest.join('')}</manifest><spine>${spine.join('')}<itemref idref="sources"/></spine></package>`);
   return zip.generateAsync({ type: 'nodebuffer', mimeType: 'application/epub+zip', compression: 'DEFLATE', compressionOptions: { level: 6 } });
 }

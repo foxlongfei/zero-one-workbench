@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>阅读任务</title>
+  <style>
+    body{max-width:760px;margin:0 auto;padding:24px;color:#172a27;background:#f6f7f3;font:17px/1.8 Georgia,"Noto Serif CJK SC",serif}h1,h2{line-height:1.3}h1{font-size:30px}h2{font-size:21px;margin-top:30px}.meta,label{font:14px/1.6 system-ui,sans-serif}.meta{color:#5e706b}.reading{border-top:1px solid #d6dfda;padding:18px 0}.reading p{margin:0 0 15px}label{display:block;margin:14px 0}textarea{display:block;width:100%;min-height:68px;margin-top:6px;padding:10px;border:1px solid #aebdb6;border-radius:3px;font:15px/1.5 system-ui,sans-serif}input,select{padding:8px;border:1px solid #aebdb6;border-radius:3px;font:15px system-ui,sans-serif}button{padding:10px 16px;border:0;border-radius:3px;background:#145b4c;color:white;font:600 14px system-ui,sans-serif;cursor:pointer}#completion{padding:20px 0;color:#145b4c;font:600 16px/1.6 system-ui,sans-serif}
+  </style>
+</head>
+<body data-packet="7F3A">
+  <main>
+    <h1>阅读任务</h1>
+    <p class="meta">请阅读两则材料后独立答题。无需查找资料；答卷不收集姓名或邮箱。</p>
+    <section class="reading" aria-label="阅读材料">
+      <h2>要闻</h2>
+      <p>Global Voices 于 2026 年 10 月 22 日报道委内瑞拉持续的电力短缺。报道援引多个地区的情况称，部分地区每日计划停电可持续 6 至 15 小时；巴基西梅托一处透析单位曾因断电使 42 名患者未能接受治疗。</p>
+      <p>委内瑞拉社会冲突观察机构统计，2026 年 1 至 8 月有逾 4,000 场抗议；报道转述其协调人称，约为此前可比时期的三倍，8 月日均约 22 场。这些数字来自报道引用的机构或受访者，不是实时停电监测。</p>
+      <h2>背景阅读</h2>
+      <p>2025 年 11 月，强降雨和洪水影响阿尔巴尼亚东部科尔察地区。Devoll 河沿岸废弃物堵塞排水设施，洪水时垃圾扩散，影响农田、居民点和当地生态；乡村青年很少参与寻找解决办法。</p>
+      <p>2026 年，地方组织在 Maliq 市镇培训了 44 名青年，内容包括手机新闻采集、短视频制作和图形设计。项目在 Pojan 和 Lozhan 举办两场沿河数字活动，青年记录污染点并制作可视化资料；30 份作品发布到社交媒体。项目方称线上请愿收到 506 个签名。</p>
+      <p>第二则材料基于对项目执行方的邮件访谈。人数、作品数和签名数来自组织自述；材料没有独立环境测量，也未证明市政清理已经完成。</p>
+    </section>
+    <form id="response-form">
+      <h2>理解问题</h2>
+      <label>参与者匿名编号（由协调人提供）<input name="participantCode" required maxlength="20" autocomplete="off"></label>
+      <label>1. 委内瑞拉报道提到的部分地区每日计划停电多久？<textarea name="q1" required></textarea></label>
+      <label>2. 报道提到多少名透析患者曾因断电未能治疗？<textarea name="q2" required></textarea></label>
+      <label>3. 2026 年 1 至 8 月的抗议统计是多少？8 月日均约多少场？<textarea name="q3" required></textarea></label>
+      <label>4. 阿尔巴尼亚项目培训了多少名青年，至少两项培训内容是什么？<textarea name="q4" required></textarea></label>
+      <label>5. 青年如何记录污染，发布了多少份作品？<textarea name="q5" required></textarea></label>
+      <label>6. 506 个请愿签名来自什么来源？是否经过独立核验？<textarea name="q6" required></textarea></label>
+      <label>7. 哪些河流治理结果仍未被证明？<textarea name="q7" required></textarea></label>
+      <label>你对答案的把握程度（1 = 很低，5 = 很高）<select name="confidence" required><option value="">请选择</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+      <label>整体阅读清晰度（1 = 很难理解，5 = 很清楚）<select name="clarity" required><option value="">请选择</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+      <label>还有哪里不清楚？没有可留空<textarea name="unclear"></textarea></label>
+      <button type="submit">提交并下载答卷</button>
+    </form>
+    <p id="completion" hidden>答卷已下载。请只将 JSON 文件交给协调人，不要加入身份信息。</p>
+  </main>
+  <script src="./response.js"></script>
+</body>
+</html>

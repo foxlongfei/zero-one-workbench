@@ -86,9 +86,32 @@ test('generates a readable EPUB structure for an approved test fixture', async (
   const packageXml = await zip.file('OEBPS/package.opf').async('string');
   assert.match(packageXml, /<spine>/);
   assert.match(await zip.file('OEBPS/cover.xhtml').async('string'), /测试期刊/);
-  assert.match(await zip.file('OEBPS/source-index.xhtml').async('string'), /图片版权与资料来源/);
+  assert.match(await zip.file('OEBPS/source-index.xhtml').async('string'), /版权与资料来源/);
   assert.match(await zip.file('OEBPS/chapter-1.xhtml').async('string'), /原文与来源/);
   assert.match(await zip.file('OEBPS/chapter-1.xhtml').async('string'), /ai_generated_summary/);
+});
+
+test('includes link-only international news sources in the EPUB source index', async () => {
+  const issue = approvedFixture();
+  issue.newsLinksNote = '这些链接涉及不同事件，不构成交叉验证。';
+  issue.newsLinks = [{
+    outlet: '测试国际媒体',
+    publishedAt: '2026-10-29',
+    headline: '测试新闻链接',
+    url: 'https://example.test/news',
+    note: '只提供链接'
+  }];
+  const zip = await JSZip.loadAsync(await buildEpub(issue));
+  const sourceIndex = await zip.file('OEBPS/source-index.xhtml').async('string');
+  assert.match(sourceIndex, /测试国际媒体/);
+  assert.match(sourceIndex, /https:\/\/example\.test\/news/);
+  assert.match(sourceIndex, /不构成交叉验证/);
+});
+
+test('rejects invalid URLs in the international news source list', () => {
+  const issue = approvedFixture();
+  issue.newsLinks = [{ outlet: '测试媒体', publishedAt: '2026-10-29', headline: '测试', url: 'http://example.test/news' }];
+  assert.ok(validateIssue(issue).some((error) => error.includes('国际媒体链接 1原文链接必须是 HTTPS')));
 });
 
 test('embeds a licensed image with attribution in the chapter and source index', async () => {

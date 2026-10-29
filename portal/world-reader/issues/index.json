@@ -1,6 +1,17 @@
 {
   "issues": [
     {
+      "id": "world-reader-2026-10-29",
+      "status": "published",
+      "title": "听世界 · 世界读本：2026-10-29 新闻与深度篇",
+      "emailSummary": "时事要闻链接覆盖 BBC、Fox News、DW、France 24、The Guardian，并附 Global Voices 委内瑞拉电力危机摘要；另有阿尔巴尼亚青年环境倡议深度篇。",
+      "issueDate": "2026-10-29",
+      "articleCount": 2,
+      "pageUrl": "issues/world-reader-2026-10-29/index.html",
+      "epubUrl": "issues/world-reader-2026-10-29/world-reader-2026-10-29.epub",
+      "sourceUrl": "https://globalvoices.org/2026/10/29/in-albania-rural-youth-are-campaigning-to-solve-local-environmental-problems/"
+    },
+    {
       "id": "world-reader-2026-10-28",
       "status": "published",
       "title": "听世界 · 世界读本：2026-10-28 试刊",
