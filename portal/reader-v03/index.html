@@ -450,6 +450,25 @@ footer a{color:var(--muted)}
   <div><a href="../reader-integrated.html">旧版阅读器（C01）</a> · <a href="../index.html">返回零一空间</a></div>
 </footer>
 
-<script type="module" src="./app.mjs"></script>
+<script>
+// A cached old app bundle can reference controls that no longer exist. The
+// visible symptom is a null onclick assignment during startup. Reload once with
+// a fresh query so the HTML, app bundle and controls come from the same build.
+(() => {
+  const KEY = 'rw03-startup-recovery';
+  window.addEventListener('error', event => {
+    if (!/Cannot set properties of null/.test(String(event.message || ''))) return;
+    const status = document.getElementById('status');
+    if (status) status.textContent = '检测到旧版本缓存，正在加载最新版本…';
+    if (sessionStorage.getItem(KEY)) return;
+    sessionStorage.setItem(KEY, '1');
+    setTimeout(() => sessionStorage.removeItem(KEY), 10000);
+    const url = new URL(location.href);
+    url.searchParams.set('v', Date.now().toString());
+    location.replace(url);
+  });
+})();
+</script>
+<script type="module" src="./app.mjs?v=20261029-2"></script>
 </body>
 </html>
