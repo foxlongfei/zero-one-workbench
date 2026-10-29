@@ -147,7 +147,7 @@ export class Narration {
         }
         this.onChunk({ chapter: this.chapter, paragraph: this.paragraph, chunk: this.chunkIndex, text, last: this.chunkIndex >= this.chunks.length - 1 });
         const started = this.clock();
-        // Browser/endpoint engines are asked for `rate` scaled wall clock;
+        // Browser/neural engines are asked for `rate` scaled wall clock;
         // estimate listening time so statistics stay truthful per engine speed.
         await Promise.race([
           this.speak(text, { signal: controller.signal }),

@@ -36,6 +36,8 @@
 
 ## 5. 离线声音模块
 
+产品不包含需要付费的云 TTS 或 AI 讨论接口；两个离线声音包、浏览器语音和自建声音库都不需要按次付费。
+
 - 保留 Piper Plus `zs-v1`：可训练家人声音，约 70 MB（含 CAM++）。
 - 新增第二个离线声音包 `kizuna-intelligence/piper-plus-mera-multilingual`：
   - Apache-2.0，约 39 MB；

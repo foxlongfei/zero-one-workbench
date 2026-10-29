@@ -9,7 +9,7 @@ import { makeBook } from '../vendor/foliate-js/view.js';
 import { splitChapters, percent, formatMilliseconds, normalizeText } from './lib/text.mjs';
 import { Narration, State } from './lib/narration.mjs';
 import { bookFromTxt, chapterIndexForSection, isBookFinished, mapEpubSections, narratableChapters, pickText, paragraphsFromHtml, totalParagraphs } from './lib/book.mjs';
-import { BrowserEngine, EndpointEngine, LibraryVoiceEngine, ToneEngine, isAbort } from './lib/engines.mjs';
+import { BrowserEngine, LibraryVoiceEngine, ToneEngine, isAbort } from './lib/engines.mjs';
 import { DEMO_VOICE_URL, PIPER_PACKS, PiperEngine, PiperRuntime, primePiperAudio } from './lib/piper.mjs';
 import { fetchLibraryBook, searchStandardEbooks } from './lib/library.mjs';
 import * as store from './lib/store.mjs';
@@ -32,7 +32,6 @@ const DEFAULT_SETTINGS = {
   engine: 'browser',
   browserVoiceURI: '',
   rate: 1,
-  endpoint: { baseUrl: '', model: '', voice: '', apiKey: '' },
   library: { baseUrl: params.get('voiceLibrary') || '', token: '', voiceId: '' },
   piper: { pack: 'zs', voiceId: 'demo' },
   music: { volume: 0.18, ducking: true },
@@ -42,7 +41,6 @@ const DEFAULT_SETTINGS = {
 const mergeSettings = patch => ({
   ...settings,
   ...patch,
-  endpoint: { ...settings.endpoint, ...patch.endpoint },
   library: { ...settings.library, ...patch.library },
   piper: { ...settings.piper, ...patch.piper },
   music: { ...settings.music, ...patch.music },
@@ -392,13 +390,6 @@ const buildEngine = (kind = settings.engine) => {
       speed: settings.rate,
     });
   }
-  if (kind === 'endpoint' && settings.endpoint.baseUrl) {
-    try {
-      return new EndpointEngine({ ...settings.endpoint, speed: settings.rate, name: settings.endpoint.model || '神经网络语音' });
-    } catch (error) {
-      status(`没接通语音服务：${error.message}`, 'warn');
-    }
-  }
   if (kind === 'library' && activeVoice) {
     return new LibraryVoiceEngine({
       voiceId: activeVoice.id, name: activeVoice.name, speed: settings.rate,
@@ -417,7 +408,6 @@ const engineHint = engine => {
   if (!engine) return '还没有可用的朗读引擎。';
   if (engine.kind === 'browser') return '本机浏览器语音：不联网、不上传文本；音质取决于设备。';
   if (engine.kind === 'piper') return `${piperPack().name}：模型和文本都在本机；首次使用需下载${piperPack().sizeHint}。`;
-  if (engine.kind === 'endpoint') return `神经网络语音「${engine.name}」：朗读文本会发送到 ${engine.baseUrl}。`;
   if (engine.kind === 'library') return `家庭授权声音「${engine.name}」：文本只发送到你的声音库。`;
   return '离线测试音：仅用于自动化测试。';
 };
@@ -802,7 +792,7 @@ function renderReadiness() {
   const set = (kind, state, text) => {
     const line = box.querySelector(`.readiness-line[data-kind="${kind}"]`);
     if (line) line.dataset.ready = state;
-    const label = { browser: 'readyBrowser', piper: 'readyPiper', endpoint: 'readyEndpoint', library: 'readyLibrary' }[kind];
+    const label = { browser: 'readyBrowser', piper: 'readyPiper', library: 'readyLibrary' }[kind];
     if (label && $(label)) $(label).textContent = text;
   };
   const browserVoices = window.speechSynthesis?.getVoices?.() ?? [];
@@ -828,8 +818,6 @@ function renderReadiness() {
   } else {
     set('piper', 'no', `可选；${definition.name}首次使用需下载${definition.sizeHint}，之后本机运行。`);
   }
-  set('endpoint', settings.endpoint.baseUrl ? 'yes' : 'no',
-    settings.endpoint.baseUrl ? `已配置：${settings.endpoint.baseUrl}（文本会发往该服务）。` : '尚未配置，可选；配置后音质更好但需要自己的语音服务。');
   set('library', libraryConfigured() ? 'yes' : 'no',
     libraryConfigured() ? `已连接：${settings.library.baseUrl}。` : '尚未连接，可选；需要自己运行声音库服务并由家人授权录制。');
 }
@@ -1505,17 +1493,15 @@ function recordListening(milliseconds) {
 
 function refreshEngineBadge() {
   const engine = currentEngine || buildEngine();
-  const label = { browser: '本机语音', piper: '开源神经', endpoint: '神经网络', library: '家庭声音', tone: '测试音' }[engine?.kind] || '引擎';
+  const label = { browser: '本机语音', piper: '开源神经', library: '家庭声音', tone: '测试音' }[engine?.kind] || '引擎';
   $('engineBadge').textContent = label;
   $('engineBadge').dataset.kind = engine?.kind || '';
   $('engineHint').textContent = engineHint(engine);
 }
 
 // --------------------------------------------------------------------------
-// Notes (local only; AI discussion is opt-in via ?aiEndpoint=)
+// Notes (local only)
 // --------------------------------------------------------------------------
-const aiEndpoint = { baseUrl: params.get('aiEndpoint') || '', key: '' };
-
 const currentParagraphText = () => bookModel?.chapters[currentChapter]?.paragraphs[currentParagraph] ?? '';
 
 async function renderNotes() {
@@ -1546,12 +1532,6 @@ async function renderNotes() {
       card.append(quote);
     }
     card.append(body);
-    if (note.ai) {
-      const ai = document.createElement('div');
-      ai.className = 'hint';
-      ai.textContent = `AI 讨论：${note.ai}`;
-      card.append(ai);
-    }
     const actions = document.createElement('div');
     actions.className = 'actions';
     const jump = document.createElement('button');
@@ -1575,7 +1555,7 @@ async function renderNotes() {
   }
 }
 
-async function saveNote({ text, quote = '', ai = '' }) {
+async function saveNote({ text, quote = '' }) {
   if (!activeBook || !text.trim()) return null;
   const chapter = currentChapter;
   const note = {
@@ -1586,7 +1566,6 @@ async function saveNote({ text, quote = '', ai = '' }) {
     chapterTitle: bookModel?.chapters[chapter]?.title || '',
     quote,
     text: text.trim(),
-    ai,
     createdAt: now(),
   };
   await store.putNote(note);
@@ -1595,27 +1574,6 @@ async function saveNote({ text, quote = '', ai = '' }) {
   return note;
 }
 
-async function askAI(question) {
-  if (!aiEndpoint.baseUrl) {
-    return '还没有接通 AI 讨论服务：用 ?aiEndpoint=https://你的服务/v1 打开本页即可，文本只会发送到你指定的服务。';
-  }
-  const chapter = bookModel?.chapters[currentChapter]?.title || '';
-  const response = await fetch(`${aiEndpoint.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', ...(aiEndpoint.key ? { authorization: `Bearer ${aiEndpoint.key}` } : {}) },
-    body: JSON.stringify({
-      model: params.get('aiModel') || 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: '你是孩子的阅读伙伴，用温暖、简短、适合一起讨论的中文回答，并提一个帮助思考的问题。' },
-        { role: 'user', content: `我在读《${bookModel?.title || ''}》${chapter ? `的${chapter}` : ''}。\n原文：${currentParagraphText().slice(0, 600)}\n我的问题：${question}` },
-      ],
-      temperature: 0.7,
-    }),
-  });
-  if (!response.ok) throw new Error(`AI 服务返回 ${response.status}`);
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content?.trim() || 'AI 没有返回内容';
-}
 
 // --------------------------------------------------------------------------
 // Background music
@@ -1739,7 +1697,7 @@ function renderVoiceList(statusText = '') {
 
 // Creator-side controls for an authorised voice. They call the voice library
 // API, which re-checks consent: revoking changes the record the synthesis
-// endpoint reads, so this is not cosmetic. Deletion is final and confirmed.
+// API still checks consent, so this is not cosmetic. Deletion is final and confirmed.
 function renderVoiceActions(voice) {
   const wrap = document.createElement('div');
   wrap.className = 'actions row';
@@ -1793,7 +1751,6 @@ function refreshVoiceScreens() {
   const options = [
     ['browser', '本机浏览器语音（离线、不上传）'],
     ['piper', `开源神经语音：${piperLabel}`],
-    ['endpoint', settings.endpoint.baseUrl ? `神经网络语音：${settings.endpoint.model || settings.endpoint.voice || '已配置服务'}` : '神经网络语音（未配置）'],
     ['library', activeVoice ? `家庭授权声音：${activeVoice.name}` : '家庭授权声音（未选择）'],
   ];
   engineSelect.replaceChildren(...options.map(([value, label]) => new Option(label, value, false, settings.engine === value)));
@@ -1814,7 +1771,6 @@ function renderPrivacyStats() {
     currentPiperRuntime()?.loaded
       ? `${piperPack().name} 开源神经语音：模型与文本都在本机，首次下载后由浏览器缓存，不产生按次费用。`
       : `${piperPack().name} 尚未加载；加载后模型与文本都在本机。`,
-    settings.endpoint.apiKey ? `神经网络音频已启用：文本只发往 ${settings.endpoint.baseUrl}，密钥仅保存在本机。` : '神经网络语音未设置密钥：文本不会离开本机。',
     libraryConfigured() ? `家庭声音库：${settings.library.baseUrl}（仅发送当前朗读文本与声音 id）。` : '家庭声音库未连接。',
   ];
   lines.forEach(line => { const p = document.createElement('p'); p.textContent = line; el.append(p); });
@@ -1829,10 +1785,6 @@ function updateEngineControls() {
   $('fieldBrowserVoice').hidden = settings.engine !== 'browser';
   refreshPiperPackUI();
   $('rate').value = String(settings.rate);
-  $('endpointUrl').value = settings.endpoint.baseUrl;
-  $('endpointModel').value = settings.endpoint.model;
-  $('endpointVoice').value = settings.endpoint.voice;
-  $('endpointKey').value = settings.endpoint.apiKey ? '••••••••' : '';
   $('libraryUrl').value = settings.library.baseUrl;
   $('libraryToken').value = settings.library.token ? '••••••••' : '';
   $('ducking').checked = settings.music.ducking;
@@ -1850,7 +1802,6 @@ function switchEngine(kind) {
     if (definition.requiresEmbedding && !activePiperEmbedding) status('神经声音还没有可用特征；请加载示范声音或训练自己的声音。', 'warn');
     if (!currentPiperRuntime()?.loaded) loadPiperModel(definition.id);
   }
-  if (kind === 'endpoint' && !settings.endpoint.baseUrl) status('神经网络语音还没有配置服务地址，请到「声音」页填写。', 'warn');
   if (kind === 'library' && !activeVoice) status('还没有选择家庭授权声音，请到「声音」页选择或录制。', 'warn');
 }
 
@@ -2064,27 +2015,6 @@ function wireEvents() {
     saveSettings();
     currentEngine = null;
   };
-  $('saveEndpoint').onclick = () => {
-    settings.endpoint = {
-      baseUrl: $('endpointUrl').value.trim(),
-      model: $('endpointModel').value.trim(),
-      voice: $('endpointVoice').value.trim(),
-      apiKey: $('endpointKey').value.startsWith('•') ? settings.endpoint.apiKey : $('endpointKey').value.trim(),
-    };
-    saveSettings();
-    currentEngine = null;
-    updateEngineControls();
-    status(settings.endpoint.baseUrl ? '语音服务已保存在本机。' : '已清除语音服务地址。');
-  };
-  $('clearEndpoint').onclick = () => {
-    settings.endpoint = { baseUrl: '', model: '', voice: '', apiKey: '' };
-    if (settings.engine === 'endpoint') settings.engine = 'browser';
-    saveSettings();
-    currentEngine = null;
-    updateEngineControls();
-    refreshEngineBadge();
-    status('已清除语音服务设置。');
-  };
   $('saveLibrary').onclick = async () => {
     settings.library = {
       baseUrl: $('libraryUrl').value.trim().replace(/\/+$/, ''),
@@ -2196,22 +2126,7 @@ function wireEvents() {
     if (!text.trim()) { status('写点什么再保存吧。', 'warn'); return; }
     await saveNote({ text, quote: currentParagraphText().slice(0, 160) });
     $('noteText').value = '';
-    $('aiAnswer').hidden = true;
   };
-  $('aiNote').onclick = async () => {
-    const question = $('noteText').value.trim() || '这段话是什么意思？';
-    const box = $('aiAnswer');
-    box.hidden = false;
-    box.textContent = '正在和 AI 讨论…';
-    try {
-      const answer = await askAI(question);
-      box.textContent = answer;
-      await saveNote({ text: `问：${question}\n答：${answer}`, quote: currentParagraphText().slice(0, 160), ai: answer });
-    } catch (error) {
-      box.textContent = `AI 讨论失败：${error.message}`;
-    }
-  };
-
   $('consentCheck').onchange = updateConsentState;
   $('consentName').oninput = updateConsentState;
   $('startRecording').onclick = () => {

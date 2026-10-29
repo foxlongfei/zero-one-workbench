@@ -99,7 +99,7 @@ node tests/reader-v03/formats-check.mjs --playwright=<playwright>
 - 用户训练声音必须勾选授权声明，特征只存本机 IndexedDB，可删除；
 - 合成音频在界面标注为合成语音；不得用于冒充他人；
 - 文本、参考音频、声音特征不上传；首次加载模型会访问 unpkg / jsDelivr / Hugging Face，之后浏览器缓存；
-- 自选 OpenAI 兼容语音 API 与自建声音库仍会把当前朗读文本发送到用户指定的服务，界面明确标注。
+- 需要付费的云 TTS 与 AI 讨论接口已移除；保留的神经语音、浏览器语音和自建声音库都不需要按次付费。
 
 ## 6. 未完成的真实缺口
 

@@ -3,14 +3,10 @@
 // Every engine implements the same tiny contract so the listening loop does not
 // care where audio comes from:
 //   speak(text, { signal }) -> Promise<void>  (resolves when audio finished)
-//   name, kind ('browser' | 'endpoint' | 'library'), needsNetwork
+//   name, kind ('browser' | 'library' | 'tone'), needsNetwork
 //
 // * BrowserEngine   – Web Speech API, zero setup, built-in voices (offline on macOS/iOS/Windows,
 //                     network-assisted in Chrome).
-// * EndpointEngine  – any OpenAI-compatible `POST /v1/audio/speech` endpoint (Kokoro-FastAPI,
-//                     openai-edge-tts, Piper/LocalAI gateways, self-hosted Kokoro). This is how a
-//                     high-quality neural voice is used without shipping model weights, and how
-//                     keyed cloud voices can be used with a key stored only in this browser.
 // * LibraryVoiceEngine – voices served by server/voice-library (cloned / customised family
 //                     voices, see server docs). Authorisation and consent are enforced server
 //                     side, never trusted from the client.
@@ -205,39 +201,6 @@ export class ToneEngine {
     });
   }
   stop() {}
-}
-
-export class EndpointEngine {
-  kind = 'endpoint';
-  needsNetwork = true;
-  constructor({ baseUrl, apiKey = '', model = '', voice = '', speed = 1, format = 'mp3', name = '朗读服务' } = {}) {
-    Object.assign(this, { baseUrl, apiKey, model, voice, speed, format, name });
-    if (!baseUrl) throw new Error('缺少朗读服务地址');
-  }
-  url() {
-    const base = this.baseUrl.replace(/\/+$/, '');
-    if (/\/audio\/speech$/.test(base)) return base;
-    if (/\/v1$/.test(base)) return `${base}/audio/speech`;
-    return `${base}/v1/audio/speech`;
-  }
-  async speak(text, { signal } = {}) {
-    const body = { input: text, response_format: this.format, speed: this.speed };
-    if (this.model) body.model = this.model;
-    if (this.voice) body.voice = this.voice;
-    const headers = { 'content-type': 'application/json' };
-    if (this.apiKey) headers.authorization = `Bearer ${this.apiKey}`;
-    const response = await fetch(this.url(), { method: 'POST', headers, body: JSON.stringify(body), signal });
-    if (!response.ok) {
-      const detail = (await response.text().catch(() => '')).slice(0, 200);
-      throw new Error(`朗读服务返回 ${response.status}${detail ? `：${detail}` : ''}`);
-    }
-    const data = await response.arrayBuffer();
-    if (!data.byteLength) throw new Error('朗读服务返回了空音频');
-    const ctx = getAudioContext();
-    await ctx.resume?.();
-    const audioBuffer = await decodeArrayBuffer(data);
-    await playBuffer(ctx, audioBuffer, { signal });
-  }
 }
 
 // Voice ids issued by server/voice-library. Fetches one chunk of PCM audio.

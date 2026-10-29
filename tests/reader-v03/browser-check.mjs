@@ -90,7 +90,7 @@ try {
   check('empty shelf shows the way in', await page.locator('#shelfEmpty').isVisible());
   const readiness = await page.locator('#readiness').innerText();
   check('readiness states local speech is ready', (await page.locator('#readiness [data-kind="browser"]').getAttribute('data-ready')) === 'yes', readiness);
-  check('readiness admits the optional sources are unset', (await page.locator('#readiness [data-kind="endpoint"]').getAttribute('data-ready')) === 'no', readiness);
+  check('readiness reports the neural model is optional until loaded', (await page.locator('#readiness [data-kind="piper"]').getAttribute('data-ready')) === 'no', readiness);
   check('readiness does not claim an unset family library',
     (await page.locator('#readiness [data-kind="library"]').getAttribute('data-ready')) === (withVoiceLibrary ? 'yes' : 'no'), readiness);
   await page.locator('#emptyTrySample').click();
@@ -342,7 +342,7 @@ try {
   await page.waitForFunction(() => {
     const badge = document.querySelector('#engineBadge');
     const kind = badge?.dataset.kind;
-    return kind === 'library' || kind === 'endpoint';
+    return kind === 'library';
   }, null, { timeout: 5000 });
   check('engine switches to the authorised voice', (await page.locator('#engineHint').innerText()).includes('家庭授权声音'), await page.locator('#engineHint').innerText());
 

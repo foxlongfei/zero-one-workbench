@@ -14,7 +14,7 @@ C01（`reader-integrated.html`）的结构是「一个 HTML 里塞脚本」，�
 | `lib/text.mjs` | TXT 分章、段落清洗 | `core.test.mjs` |
 | `lib/book.mjs` | 书模型、目录映射到 spine 序号、格式识别 | `core.test.mjs` |
 | `lib/narration.mjs` | 朗读游标（段/章）、跨章续读、暂停重读被打断的段落 | `core.test.mjs` |
-| `lib/engines.mjs` | 可插拔语音引擎：浏览器合成 / OpenAI 兼容端点 / 家庭声音库 / 离线测试音 | `core.test.mjs` |
+| `lib/engines.mjs` | 可插拔语音引擎：浏览器合成 / Piper Plus 本机神经语音 / 家庭声音库 / 离线测试音（付费云端点已移除） | `core.test.mjs` |
 | `lib/store.mjs` | IndexedDB v4（books / settings / notes / blobs） | `core.test.mjs` |
 | `lib/listening-world.mjs` | 电台目录、版权标注、时段推荐 | `core.test.mjs` |
 | `server/voice-library/*` | 家人声音库：授权、样本、合成、撤销 | `voice-library.test.mjs` |
