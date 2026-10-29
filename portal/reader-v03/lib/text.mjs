@@ -73,3 +73,8 @@ export function secondsToMinutes(seconds) {
   if (hours) return `${hours} 小时 ${minutes} 分`;
   return `${minutes} 分钟`;
 }
+
+// Listening statistics are stored in milliseconds. Formatting them as seconds
+// would show one minute after a full hour; keep the unit conversion in one
+// place so every label agrees.
+export const formatMilliseconds = milliseconds => secondsToMinutes((Number(milliseconds) || 0) / 1000);

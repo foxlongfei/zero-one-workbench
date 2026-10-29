@@ -81,3 +81,10 @@ export function fillChapter(chapter, paragraphs) {
 }
 
 export const totalParagraphs = book => book?.chapters.reduce((sum, chapter) => sum + chapter.paragraphs.length, 0) ?? 0;
+
+// Only an explicit finish (the narration loop reached the end) or a full
+// fraction counts as finished. Merely being on the last chapter is still a
+// valid resume point: resetting it to chapter 0 would lose the listener's place.
+export const isBookFinished = progress => Boolean(
+  progress && (progress.finished === true || Number(progress.fraction) >= 0.999),
+);

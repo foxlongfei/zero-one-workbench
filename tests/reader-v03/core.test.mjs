@@ -4,8 +4,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { chunkText, splitChapters, isChapterTitle, splitSentences, secondsToMinutes, percent } from '../../portal/reader-v03/lib/text.mjs';
-import { bookFromTxt, mapEpubSections, paragraphsFromHtml, pickText, totalParagraphs } from '../../portal/reader-v03/lib/book.mjs';
+import { chunkText, splitChapters, isChapterTitle, splitSentences, secondsToMinutes, formatMilliseconds, percent } from '../../portal/reader-v03/lib/text.mjs';
+import { bookFromTxt, isBookFinished, mapEpubSections, paragraphsFromHtml, pickText, totalParagraphs } from '../../portal/reader-v03/lib/book.mjs';
 import { Narration, State } from '../../portal/reader-v03/lib/narration.mjs';
 import { resolvePlaylist, resolveDaypart, BUILTIN_SOURCES } from '../../portal/reader-v03/lib/listening-world.mjs';
 
@@ -56,6 +56,13 @@ test('english sentence splitting and formatting helpers', () => {
   assert.equal(secondsToMinutes(90), '2 分钟');
 });
 
+test('listening statistics convert stored milliseconds exactly once', () => {
+  assert.equal(formatMilliseconds(0), '0 分钟');
+  assert.equal(formatMilliseconds(90_000), '2 分钟');
+  assert.equal(formatMilliseconds(3_600_000), '1 小时 0 分');
+  assert.equal(formatMilliseconds(3_720_000), '1 小时 2 分');
+});
+
 // ---------------------------------------------------------------------------
 // book
 // ---------------------------------------------------------------------------
@@ -87,6 +94,14 @@ test('maps EPUB spine sections to TOC titles', () => {
   assert.deepEqual(model.chapters.map(c => c.title), ['第一章', '第二章', '第 3 部分']);
   assert.equal(model.chapters[1].sectionIndex, 1);
   assert.equal(pickText([{ name: '作者' }]), '作者');
+});
+
+test('a last-chapter position is not mistaken for a finished book', () => {
+  assert.equal(isBookFinished(null), false);
+  assert.equal(isBookFinished({ chapter: 2, paragraph: 0 }), false);
+  assert.equal(isBookFinished({ chapter: 2, paragraph: 4, fraction: 0.97 }), false);
+  assert.equal(isBookFinished({ chapter: 2, paragraph: 4, finished: true }), true);
+  assert.equal(isBookFinished({ chapter: 2, paragraph: 4, fraction: 1 }), true);
 });
 
 // ---------------------------------------------------------------------------

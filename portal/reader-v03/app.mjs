@@ -6,9 +6,9 @@
 // all persistence goes through lib/store.mjs (IndexedDB, local only).
 
 import { makeBook } from '../vendor/foliate-js/view.js';
-import { splitChapters, percent, secondsToMinutes } from './lib/text.mjs';
+import { splitChapters, percent, formatMilliseconds } from './lib/text.mjs';
 import { Narration, State } from './lib/narration.mjs';
-import { bookFromTxt, mapEpubSections, pickText, paragraphsFromHtml, totalParagraphs } from './lib/book.mjs';
+import { bookFromTxt, isBookFinished, mapEpubSections, pickText, paragraphsFromHtml, totalParagraphs } from './lib/book.mjs';
 import { BrowserEngine, EndpointEngine, LibraryVoiceEngine, ToneEngine, isAbort } from './lib/engines.mjs';
 import * as store from './lib/store.mjs';
 import { BUILTIN_SOURCES, resolveDaypart, resolvePlaylist } from './lib/listening-world.mjs';
@@ -340,6 +340,7 @@ async function removeBook(book) {
 let foliateView = null;
 let bookModel = null;
 let renderToken = 0;
+let currentChapter = 0;
 let currentParagraph = 0;
 
 const isTxt = book => formatOf(book) === 'TXT';
@@ -368,7 +369,10 @@ async function openBook(book, { listen = false } = {}) {
     refreshEngineBadge();
     status(`已打开《${bookModel.title || titleOf(book)}》· ${bookModel.chapters.length} 章 · ${totalParagraphs(bookModel)} 段`);
     if (listen) {
-      await startListening({ chapter: saved.chapter ?? 0, paragraph: saved.paragraph ?? 0 });
+      // startPosition() is the one place that turns a finished book back into a
+      // fresh pass. Passing the saved cursor directly would reopen a finished
+      // book on its last paragraph and stop again immediately.
+      await startListening();
     } else {
       await showParagraph(saved.chapter ?? 0, saved.paragraph ?? 0, { scroll: true });
     }
@@ -473,6 +477,9 @@ async function openEpub(book, saved, token) {
     $('position').textContent = `${tocItem?.label ? `${tocItem.label} · ` : ''}${percent(fraction ?? 0)}`;
     if (!narration?.active && cfi) {
       const chapter = chapterIndexFromCfi(cfi);
+      currentChapter = chapter;
+      currentParagraph = 0;
+      markCurrentChapter(chapter);
       saveProgress(book.id, {
         chapter, paragraph: 0, chapterTitle: bookModel.chapters[chapter]?.title || '',
         fraction: fraction ?? 0, listening: false, cfi,
@@ -527,14 +534,17 @@ function setCursor(chapter, paragraph) {
   if (!bookModel) return;
   const ch = bookModel.chapters[chapter];
   if (!ch) return;
-  narration?.jump({ chapter, paragraph });
+  const target = Math.max(0, Math.min(Math.max(0, ch.paragraphs.length - 1), paragraph | 0));
+  currentChapter = chapter;
+  currentParagraph = target;
+  narration?.jump({ chapter, paragraph: target });
   if (narration?.state === State.SPEAKING) {
     narration.pause();
     narration.resume();
   }
   markCurrentChapter(chapter);
-  $('nowChapter').textContent = `${ch.title}（第 ${paragraph + 1}/${ch.paragraphs.length} 段）`;
-  $('nowSentence').textContent = (ch.paragraphs[paragraph] || '').slice(0, 70);
+  $('nowChapter').textContent = `${ch.title}（第 ${target + 1}/${ch.paragraphs.length} 段）`;
+  $('nowSentence').textContent = (ch.paragraphs[target] || '').slice(0, 70);
 }
 
 function renderChapterList() {
@@ -548,7 +558,7 @@ function renderChapterList() {
     button.type = 'button';
     button.textContent = chapter.title;
     button.dataset.chapter = String(index);
-    button.setAttribute('aria-current', String(index === (narration?.chapter ?? 0)));
+    button.setAttribute('aria-current', String(index === currentChapter));
     button.onclick = () => goToChapter(index);
     li.append(button);
     list.append(li);
@@ -563,15 +573,16 @@ function markCurrentChapter(index) {
 
 // Show the paragraph at (chapter, paragraph): EPUB turns to the section, TXT
 // renders a scrolling page of twelve paragraphs centred on it.
-async function showParagraph(chapterIndex, paragraphIndex, { scroll = false } = {}) {
+async function showParagraph(chapterIndex, paragraphIndex, { scroll = false, persist = true } = {}) {
   if (!bookModel) return;
   chapterIndex = Math.max(0, Math.min(bookModel.chapters.length - 1, chapterIndex | 0));
   const chapter = bookModel.chapters[chapterIndex];
+  currentChapter = chapterIndex;
   currentParagraph = Math.max(0, Math.min(Math.max(0, chapter.paragraphs.length - 1), paragraphIndex | 0));
   markCurrentChapter(chapterIndex);
   $('nowChapter').textContent = chapter.title;
   $('position').textContent = `${chapter.title} · 第 ${currentParagraph + 1}/${chapter.paragraphs.length} 段`;
-  if (activeBook && !narration?.active) {
+  if (persist && activeBook && !narration?.active) {
     // Only written when a book is actually shown: opening another book resets
     // the shared reader pane while the previous book's progress is still in
     // flight, and those stray writes must not land on the new book.
@@ -640,7 +651,7 @@ async function page(direction) {
     await (direction > 0 ? foliateView.next() : foliateView.prev());
     return;
   }
-  let chapter = narration?.chapter ?? 0;
+  let chapter = currentChapter;
   let paragraph = currentParagraph + direction * 12;
   if (paragraph < 0) {
     if (chapter === 0) paragraph = 0;
@@ -660,6 +671,8 @@ function closeBook() {
   foliateView = null;
   activeBook = null;
   bookModel = null;
+  currentChapter = 0;
+  currentParagraph = 0;
   $('readerTitle').textContent = '未打开书籍';
   $('nowChapter').textContent = '选一本书开始';
   $('nowSentence').textContent = '—';
@@ -705,6 +718,8 @@ function createNarration() {
       if (!bookModel) return;
       const ch = bookModel.chapters[chapter];
       if (!ch) return;
+      currentChapter = chapter;
+      currentParagraph = paragraph;
       $('nowChapter').textContent = `${ch.title}（第 ${paragraph + 1}/${ch.paragraphs.length} 段）`;
       if (chapterChanged) {
         markCurrentChapter(chapter);
@@ -729,6 +744,7 @@ function createNarration() {
       if (state === State.SPEAKING || state === State.PAUSED || chapterChanged) recordListening(0);
     },
     onChunk: ({ chapter, paragraph, text }) => {
+      currentChapter = chapter;
       currentParagraph = paragraph;
       $('nowSentence').textContent = text.length > 70 ? `${text.slice(0, 70)}…` : text;
       $('playButton').dataset.chapter = String(chapter);
@@ -767,11 +783,7 @@ async function ensureNarration() {
 
 // Pressing play on a finished book starts a fresh pass instead of
 // "resuming" the last paragraph and ending again within a second.
-const isFinished = () => {
-  const saved = activeBook ? bookProgress(activeBook.id) : null;
-  if (saved?.finished) return true;
-  return Boolean(saved && bookModel && saved.chapter >= bookModel.chapters.length - 1);
-};
+const isFinished = () => isBookFinished(activeBook ? bookProgress(activeBook.id) : null);
 
 function startPosition() {
   const saved = positionFromProgress();
@@ -794,7 +806,12 @@ async function startListening(position = null) {
   currentEngine = buildEngine();
   if (!currentEngine) return;
   refreshEngineBadge();
-  const engine = await narrationFor(position || startPosition());
+  const target = position || startPosition();
+  // Put the reading pane on the same paragraph as the audio before speaking.
+  // TXT books have no renderer until this runs, and a finished EPUB must turn
+  // back to the first section when listening restarts from the beginning.
+  await showParagraph(target.chapter ?? 0, target.paragraph ?? 0, { scroll: true, persist: false });
+  const engine = await narrationFor(target);
   await engine.start();
 }
 
@@ -810,9 +827,10 @@ function togglePlay() {
       return;
     }
     if (narration.state === State.PAUSED) return narration.resume();
+    if (isFinished()) return startListening();
     return narration.start(startPosition());
   }
-  return narrationFor(startPosition()).then(engine => engine.start());
+  return startListening();
 }
 
 // Space bar / remote "play" reuse the same synchronous transition path.
@@ -829,7 +847,7 @@ const skip = action => {
 function renderStats() {
   const stats = settings.statistics;
   const today = new Date().toISOString().slice(0, 10);
-  $('listenStats').textContent = `今日已听 ${secondsToMinutes((stats.days[today] || 0) / 60000)} · 累计 ${secondsToMinutes((stats.listenedMs || 0) / 60000)}`;
+  $('listenStats').textContent = `今日已听 ${formatMilliseconds(stats.days[today] || 0)} · 累计 ${formatMilliseconds(stats.listenedMs || 0)}`;
 }
 
 function recordListening(milliseconds) {
@@ -856,7 +874,7 @@ function refreshEngineBadge() {
 // --------------------------------------------------------------------------
 const aiEndpoint = { baseUrl: params.get('aiEndpoint') || '', key: '' };
 
-const currentParagraphText = () => bookModel?.chapters[narration?.chapter ?? 0]?.paragraphs[currentParagraph] ?? '';
+const currentParagraphText = () => bookModel?.chapters[currentChapter]?.paragraphs[currentParagraph] ?? '';
 
 async function renderNotes() {
   if (!activeBook) return;
@@ -917,7 +935,7 @@ async function renderNotes() {
 
 async function saveNote({ text, quote = '', ai = '' }) {
   if (!activeBook || !text.trim()) return null;
-  const chapter = narration?.chapter ?? 0;
+  const chapter = currentChapter;
   const note = {
     id: `note-${crypto.randomUUID()}`,
     bookId: activeBook.id,
@@ -939,7 +957,7 @@ async function askAI(question) {
   if (!aiEndpoint.baseUrl) {
     return '还没有接通 AI 讨论服务：用 ?aiEndpoint=https://你的服务/v1 打开本页即可，文本只会发送到你指定的服务。';
   }
-  const chapter = bookModel?.chapters[narration?.chapter ?? 0]?.title || '';
+  const chapter = bookModel?.chapters[currentChapter]?.title || '';
   const response = await fetch(`${aiEndpoint.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', ...(aiEndpoint.key ? { authorization: `Bearer ${aiEndpoint.key}` } : {}) },
@@ -1140,12 +1158,12 @@ function refreshVoiceScreens() {
 function renderPrivacyStats() {
   const stats = settings.statistics;
   const today = new Date().toISOString().slice(0, 10);
-  $('listenStats').textContent = `今日已听 ${secondsToMinutes((stats.days[today] || 0) / 60000)} · 累计 ${secondsToMinutes((stats.listenedMs || 0) / 60000)}`;
+  $('listenStats').textContent = `今日已听 ${formatMilliseconds(stats.days[today] || 0)} · 累计 ${formatMilliseconds(stats.listenedMs || 0)}`;
   const el = $('privacyStats');
   if (!el) return;
   el.replaceChildren();
   const lines = [
-    `今日朗读 ${secondsToMinutes((stats.days[today] || 0) / 60000)}，累计 ${secondsToMinutes((stats.listenedMs || 0) / 60000)}。`,
+    `今日朗读 ${formatMilliseconds(stats.days[today] || 0)}，累计 ${formatMilliseconds(stats.listenedMs || 0)}。`,
     settings.endpoint.apiKey ? `神经网络音频已启用：文本只发往 ${settings.endpoint.baseUrl}，密钥仅保存在本机。` : '神经网络语音未设置密钥：文本不会离开本机。',
     libraryConfigured() ? `家庭声音库：${settings.library.baseUrl}（仅发送当前朗读文本与声音 id）。` : '家庭声音库未连接。',
   ];

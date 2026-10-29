@@ -236,6 +236,44 @@ try {
   check('EPUB pagination stays open', await epubPage.locator('foliate-view').count() === 1 && !(await epubStatus()).includes('失败'), await epubStatus());
   await epubPage.close();
 
+  // ---- last-chapter resume + note ownership (fresh session) --------------
+  // Two regressions live here: treating the last chapter as an already-finished
+  // book (which restarts at chapter 0), and writing a note with the audio
+  // cursor instead of the chapter being read. Both lose the listener's place.
+  const statePage = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  watch(statePage);
+  await statePage.goto(url);
+  await statePage.waitForSelector('#importButton:enabled');
+  await statePage.locator('#files').setInputFiles(resolve('tests/reader-v03/fixtures/morning.txt'));
+  await statePage.waitForFunction(() => document.querySelector('#status')?.textContent.includes('已导入 1 本'));
+  await statePage.locator('#shelf .book').filter({ hasText: 'morning' }).locator('[data-action="read"]').click();
+  await statePage.waitForFunction(() => document.querySelectorAll('#chapterList button').length === 3, null, { timeout: 15000 });
+  await statePage.evaluate(() => [...document.querySelectorAll('#chapterList button')][2].click());
+  await statePage.waitForFunction(() => document.querySelector('#nowChapter')?.textContent.includes('第三章'), null, { timeout: 8000 });
+  await statePage.locator('#screen-reader details').filter({ hasText: '笔记' }).locator('summary').click();
+  await statePage.locator('#noteText').fill('第三章的笔记应当属于第三章。');
+  await statePage.locator('#saveNote').click();
+  await statePage.waitForFunction(() => document.querySelectorAll('#noteList .note').length === 1);
+  const noteHeader = await statePage.locator('#noteList .note .muted').first().innerText();
+  check('notes follow the chapter being read, not an old audio cursor', noteHeader.includes('第三章'), noteHeader);
+
+  await statePage.locator('#playButton').click();
+  await statePage.waitForFunction(() => document.querySelector('#playButton')?.dataset.chapter === '2', null, { timeout: 10000 });
+  await statePage.locator('#playButton').click();
+  await statePage.waitForFunction(() => document.querySelector('#playButton')?.dataset.state === 'paused', null, { timeout: 8000 });
+  const lastChapterCursor = await statePage.locator('#playButton').evaluate(el => `${el.dataset.chapter}:${el.dataset.paragraph}`);
+  check('pause on the last chapter keeps the audio cursor there', lastChapterCursor.startsWith('2:'), lastChapterCursor);
+
+  await statePage.reload();
+  await statePage.waitForSelector('#importButton:enabled');
+  await statePage.locator('#resumeListen').click();
+  await statePage.waitForSelector('#screen-reader:not([hidden])');
+  await statePage.waitForFunction(() => document.querySelector('#playButton')?.dataset.chapter === '2', null, { timeout: 15000 });
+  const resumedLast = await statePage.locator('#nowChapter').innerText();
+  check('resume from the last chapter does not restart the book', resumedLast.includes('第三章'), resumedLast);
+  check('TXT pane is rendered when listening starts from the shelf', await statePage.locator('#txtPage p').count() > 0, await statePage.locator('#txtPage').innerText());
+  await statePage.close();
+
   // ---- 听世界 -------------------------------------------------------------
   await page.locator('header [data-nav="world"]').click();
   await page.waitForSelector('#screen-world:not([hidden])');
