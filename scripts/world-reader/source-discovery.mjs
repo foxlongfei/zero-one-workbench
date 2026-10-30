@@ -37,6 +37,12 @@ function isHttpsUrl(value) {
   }
 }
 
+function editorialLineFor(source) {
+  const editorialLine = source.editorialLine || (source.defaultContentType === 'news' ? 'news' : 'deep');
+  if (!['news', 'deep'].includes(editorialLine)) throw new Error('稿件必须归属新闻线或深度线');
+  return editorialLine;
+}
+
 export function canAutomaticallyAdapt(source) {
   return source?.active === true
     && source?.license?.status === 'approved'
@@ -58,7 +64,7 @@ function inWindow(value, after, before) {
   return date && date > after && date <= before;
 }
 
-function normalizePost(post, source, allowed) {
+function normalizePost(post, source, allowed, editorialLine) {
   const publishedAt = sourceDate(post.date_gmt || post.date);
   const link = post.link;
   if (!publishedAt || !isHttpsUrl(link) || !post.slug) return null;
@@ -73,6 +79,8 @@ function normalizePost(post, source, allowed) {
     publishedAt: publishedAt.toISOString(),
     originalUrl: link,
     contentType: source.defaultContentType || 'news',
+    editorialLine,
+    eventId: source.eventId || null,
     rights: source.license,
     imagePolicy: source.imagePolicy,
     status: allowed ? 'awaiting_summary' : 'review_required'
@@ -92,6 +100,7 @@ export async function discoverWordPressPosts(source, {
   if (source?.adapter !== 'wordpress-rest' || !isHttpsUrl(source.apiUrl)) {
     throw new Error('媒体源必须使用 HTTPS WordPress REST API');
   }
+  const editorialLine = editorialLineFor(source);
   const afterDate = sourceDate(after);
   const beforeDate = sourceDate(before);
   if (!afterDate || !beforeDate || afterDate >= beforeDate) throw new Error('采集时间窗口无效');
@@ -119,7 +128,7 @@ export async function discoverWordPressPosts(source, {
     if (Number.isFinite(pageCount) && pageCount > 0) totalPages = pageCount;
     for (const post of posts) {
       if (!inWindow(post.date_gmt || post.date, afterDate, beforeDate)) continue;
-      const item = normalizePost(post, source, allowed);
+      const item = normalizePost(post, source, allowed, editorialLine);
       if (!item || seenIds.has(item.id) || seenIds.has(item.originalUrl)) continue;
       if (allowed) {
         if (typeof summarize !== 'function') {

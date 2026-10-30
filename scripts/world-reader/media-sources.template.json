@@ -9,6 +9,7 @@
       "adapter": "wordpress-rest",
       "apiUrl": "https://globalvoices.org/wp-json/wp/v2/posts",
       "defaultContentType": "analysis",
+      "editorialLine": "deep",
       "license": {
         "status": "approved",
         "name": "Creative Commons Attribution 3.0",
@@ -104,6 +105,7 @@
       "adapter": "rss-feed",
       "feedUrl": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "defaultContentType": "news",
+      "editorialLine": "news",
       "license": { "status": "review_required", "name": "BBC Terms of Use", "canTranslate": false, "evidenceUrl": "https://www.bbc.com/usingthebbc/terms-of-use/", "checkedAt": "2026-10-29", "attributionRequired": true },
       "imagePolicy": "omit",
       "editorialNote": "只自动采集 RSS 元数据和短导语；不抓正文、不自动翻译或发布。事实报道与评论分开标注。"
@@ -116,6 +118,7 @@
       "adapter": "rss-feed",
       "feedUrl": "https://moxie.foxnews.com/google-publisher/world.xml",
       "defaultContentType": "news",
+      "editorialLine": "news",
       "license": { "status": "review_required", "name": "Fox News Terms of Use", "canTranslate": false, "evidenceUrl": "https://www.foxnews.com/story/terms-of-use", "checkedAt": "2026-10-29", "attributionRequired": true },
       "imagePolicy": "omit",
       "editorialNote": "只自动采集 RSS 元数据和短导语；将事实报道、社论和评论分开标记，不默认视作中立共识。"
@@ -128,6 +131,7 @@
       "adapter": "rss-feed",
       "feedUrl": "https://rss.dw.com/rdf/rss-en-all",
       "defaultContentType": "news",
+      "editorialLine": "news",
       "license": { "status": "review_required", "name": "DW Legal Notice", "canTranslate": false, "evidenceUrl": "https://www.dw.com/en/legal-notice/s-30648", "checkedAt": "2026-10-29", "attributionRequired": true },
       "imagePolicy": "omit",
       "editorialNote": "只自动采集 RSS 元数据和短导语；全文改编须逐篇核验许可。"
@@ -140,6 +144,7 @@
       "adapter": "rss-feed",
       "feedUrl": "https://www.france24.com/en/rss",
       "defaultContentType": "news",
+      "editorialLine": "news",
       "license": { "status": "review_required", "name": "France 24 Legal Notice", "canTranslate": false, "evidenceUrl": "https://www.france24.com/en/legal-notice", "checkedAt": "2026-10-29", "attributionRequired": true },
       "imagePolicy": "omit",
       "editorialNote": "只自动采集 RSS 元数据和短导语；不自动转载或翻译原文。"
@@ -152,6 +157,7 @@
       "adapter": "rss-feed",
       "feedUrl": "https://www.theguardian.com/world/rss",
       "defaultContentType": "news",
+      "editorialLine": "news",
       "license": { "status": "review_required", "name": "The Guardian Terms of Service", "canTranslate": false, "evidenceUrl": "https://www.theguardian.com/help/terms-of-service", "checkedAt": "2026-10-29", "attributionRequired": true },
       "imagePolicy": "omit",
       "editorialNote": "只自动采集 RSS 元数据和短导语；评论和独立调查单独标注并进行来源交叉检查。"

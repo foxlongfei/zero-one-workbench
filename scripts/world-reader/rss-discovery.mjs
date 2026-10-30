@@ -62,6 +62,12 @@ function isHttpsUrl(value) {
   }
 }
 
+function editorialLineFor(source) {
+  const editorialLine = source.editorialLine || 'news';
+  if (!['news', 'deep'].includes(editorialLine)) throw new Error('稿件必须归属新闻线或深度线');
+  return editorialLine;
+}
+
 export async function discoverRssFeedItems(source, {
   after,
   before = new Date(),
@@ -72,6 +78,7 @@ export async function discoverRssFeedItems(source, {
   if (source?.adapter !== 'rss-feed' || !isHttpsUrl(source.feedUrl)) {
     throw new Error('媒体源必须使用 HTTPS RSS feed');
   }
+  const editorialLine = editorialLineFor(source);
   const afterDate = new Date(after);
   const beforeDate = new Date(before);
   if (Number.isNaN(afterDate.valueOf()) || Number.isNaN(beforeDate.valueOf()) || afterDate >= beforeDate) {
@@ -108,6 +115,8 @@ export async function discoverRssFeedItems(source, {
       publishedAt: publishedAt.toISOString(),
       originalUrl,
       contentType: source.defaultContentType || 'news',
+      editorialLine,
+      eventId: source.eventId || null,
       sourceDescription: description.slice(0, MAX_DESCRIPTION_CHARACTERS),
       rights: source.license,
       imagePolicy: 'omit',

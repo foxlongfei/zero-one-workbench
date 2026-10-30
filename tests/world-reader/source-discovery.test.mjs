@@ -50,6 +50,8 @@ test('polls new WordPress articles, deduplicates, and labels machine summaries',
   assert.equal(items.length, 1);
   assert.equal(items[0].status, 'draft_ready');
   assert.equal(items[0].chineseContentType, 'ai_generated_summary');
+  assert.equal(items[0].editorialLine, 'deep');
+  assert.equal(items[0].eventId, null);
   assert.equal(summaryCalls, 1);
 });
 
@@ -71,6 +73,8 @@ test('does not request source body or call summarizer for unlicensed media', asy
   });
   assert.equal(items.length, 1);
   assert.equal(items[0].status, 'review_required');
+  assert.equal(items[0].editorialLine, 'deep');
+  assert.equal(items[0].eventId, null);
   assert.equal('sourceContent' in items[0], false);
   assert.equal(requestedFields.includes('content'), false);
   assert.equal(summaryCalls, 0);
@@ -129,6 +133,8 @@ test('collects bounded RSS metadata and marks it for editorial review', async ()
   assert.equal(items.length, 1);
   assert.equal(items[0].originalTitle, 'News & Analysis');
   assert.equal(items[0].status, 'review_required');
+  assert.equal(items[0].editorialLine, 'news');
+  assert.equal(items[0].eventId, null);
   assert.equal(items[0].sourceDescription, 'A short report.');
   assert.equal('sourceContent' in items[0], false);
 });
@@ -166,4 +172,14 @@ test('rejects insecure RSS endpoints', async () => {
   await assert.rejects(discoverRssFeedItems({
     id: 'unsafe', active: true, adapter: 'rss-feed', feedUrl: 'http://example.test/feed'
   }, { after: '2026-10-29T00:00:00Z', before: '2026-10-30T00:00:00Z' }), /HTTPS RSS/);
+});
+
+test('rejects sources outside the two editorial lines', async () => {
+  await assert.rejects(discoverRssFeedItems({
+    id: 'invalid-line',
+    active: true,
+    adapter: 'rss-feed',
+    feedUrl: 'https://example.test/feed',
+    editorialLine: 'mixed'
+  }, { after: '2026-10-29T00:00:00Z', before: '2026-10-30T00:00:00Z' }), /新闻线或深度线/);
 });
