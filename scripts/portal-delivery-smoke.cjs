@@ -9,8 +9,7 @@ const targets = [
   {name:'C01',path:'/portal/reader-integrated.html',selector:'#shelfScreen'},
   {name:'reader-v03',path:'/portal/reader-v03/index.html',selector:'#importButton'},
   {name:'watch-world',path:'/portal/watch-world.html',selector:'body'},
-  {name:'world-reader',path:'/portal/world-reader/index.html',selector:'#status-label'},
-  {name:'world-reader-issue',path:'/portal/world-reader/issues/world-reader-2026-10-28/index.html',selector:'#speak'}
+  {name:'world-reader',path:'/portal/world-reader/index.html',selector:'#status-label'}
 ];
 (async()=>{
  const browser=await chromium.launch({headless:true});
@@ -37,13 +36,28 @@ const targets = [
     }
    }
     if(target.name==='world-reader'){
-      await page.waitForFunction(()=>document.querySelector('#status-label')?.textContent==='1 期已发布');
-      if(await page.locator('#latest .issue').count()!==1)errors.push('published issue missing or duplicated');
-      if(!await page.locator('#latest a[href$="issues/world-reader-2026-10-28/index.html"]').count())errors.push('published issue link is missing');
-    }
-    if(target.name==='world-reader-issue'){
-     if(!await page.locator('a[href="https://globalvoices.org/2026/10/28/bangladesh-weighs-tougher-cyber-law-as-ai-generated-abuse-targets-women/"]').count())errors.push('missing permanent source link');
-     if(!await page.locator('#speech-status').count())errors.push('missing read-aloud status');
+      await page.waitForFunction(()=>/^\d+ 期已发布$/.test(document.querySelector('#status-label')?.textContent.trim()||''));
+      const catalogResponse=await page.request.get(base+'/portal/world-reader/issues/index.json');
+      if(!catalogResponse.ok())errors.push('issue catalog HTTP '+catalogResponse.status());
+      else {
+       const catalog=await catalogResponse.json();
+       const published=(catalog.issues||[]).filter(issue=>issue.status==='published').sort((a,b)=>b.issueDate.localeCompare(a.issueDate));
+       const latest=published[0];
+       if(!latest)errors.push('published issue missing');
+       else {
+        const latestHref=new URL(latest.pageUrl,base+'/portal/world-reader/').href;
+        if(!await page.locator('#latest a[href="'+latestHref+'"]').count())errors.push('latest published issue link is missing');
+        const issuePage=await browser.newPage({viewport:{width:1280,height:800}});
+        issuePage.on('pageerror',error=>errors.push('issue page: '+String(error)));
+        const issueResponse=await issuePage.goto(base+'/portal/world-reader/'+latest.pageUrl,{waitUntil:'domcontentloaded',timeout:30000});
+        await issuePage.locator('#speak').first().waitFor({timeout:10000});
+        if(!issueResponse||issueResponse.status()>=400)errors.push('latest issue HTTP '+issueResponse?.status());
+        if(!await issuePage.locator('#speech-status').count())errors.push('latest issue missing read-aloud status');
+        const sourceLinks=await issuePage.locator('.sources a').evaluateAll(links=>links.map(link=>link.href));
+        if(!sourceLinks.includes(latest.sourceUrl))errors.push('latest issue is missing its catalog source link');
+        await issuePage.close();
+       }
+      }
     }
    await page.screenshot({path:'artifacts/portal-delivery/'+target.name+'.png',fullPage:true});
    results.push({name:target.name,url:base+target.path,http:response?.status(),errors});
