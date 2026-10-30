@@ -36,13 +36,17 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: scripts/world-reader/package-lock.json
+      - name: Install locked World Reader dependencies
+        run: npm ci --prefix scripts/world-reader
       - name: Verify World Reader licensing and archive gates
         run: |
           node --test tests/world-reader/*.test.cjs tests/world-reader/*.test.mjs
           node scripts/world-reader/check-public-index.cjs
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
       - name: Install pinned browser test dependency
         run: |
           npm install --no-save --no-package-lock playwright@1.55.0
