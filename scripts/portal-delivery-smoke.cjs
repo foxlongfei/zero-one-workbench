@@ -2,6 +2,8 @@
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 const base = process.env.PORTAL_BASE_URL || 'http://127.0.0.1:4173';
+const artifactDir = process.env.PORTAL_DELIVERY_ARTIFACT_DIR || 'artifacts/portal-delivery';
+fs.mkdirSync(artifactDir, { recursive: true });
 const targets = [
   {name:'portal',path:'/portal/index.html',selector:'a[href="movement-mediapipe.html"]'},
   {name:'A01',path:'/portal/movement-mediapipe.html',selector:'main'},
@@ -59,13 +61,13 @@ const targets = [
        }
       }
     }
-   await page.screenshot({path:'artifacts/portal-delivery/'+target.name+'.png',fullPage:true});
+  await page.screenshot({path:artifactDir+'/'+target.name+'.png',fullPage:true});
    results.push({name:target.name,url:base+target.path,http:response?.status(),errors});
    if(errors.length)failed=true;
    await page.close();
   }
  }finally{await browser.close()}
- fs.writeFileSync('artifacts/portal-delivery/results.json',JSON.stringify({testedAt:new Date().toISOString(),kind:'browser navigation and catalog smoke test; NOT end-to-end product acceptance',results},null,2));
+ fs.writeFileSync(artifactDir+'/results.json',JSON.stringify({testedAt:new Date().toISOString(),kind:'browser navigation and catalog smoke test; NOT end-to-end product acceptance',results},null,2));
  console.log(JSON.stringify(results,null,2));
  if(failed)process.exitCode=1;
 })().catch(e=>{console.error(e);process.exitCode=1});
