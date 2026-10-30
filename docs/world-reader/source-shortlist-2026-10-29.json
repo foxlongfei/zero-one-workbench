@@ -1,0 +1,117 @@
+{
+  "generatedAt": "2026-10-29",
+  "policy": {
+    "focus": [
+      "deep",
+      "independent",
+      "complete",
+      "dated",
+      "objective",
+      "low-noise"
+    ],
+    "newsMode": "timestamped fact-only briefs, metadata and source links first; no automatic translation",
+    "deepMode": "multi-source independent reporting, investigations and separately labeled commentary; historical review remains in this line",
+    "minimumDistinctOutletsForCoreDeepTopics": 5,
+    "newsLineRequiresFiveSourcesPerItem": false,
+    "universalStarRating": false,
+    "voiceMode": "reuse existing reader-v03 voice stack"
+  },
+  "sources": [
+    {
+      "name": "Global Voices",
+      "category": "deep",
+      "status": "approved",
+      "license": "CC BY 3.0",
+      "notes": "Approved basis for the current issue; full context and attribution required; image omission remains enforced.",
+      "url": "https://globalvoices.org/"
+    },
+    {
+      "name": "Taiwan Insight",
+      "category": "deep",
+      "status": "candidate",
+      "license": "needs review",
+      "notes": "Strong regional reporting; requires explicit permission before reuse or translation.",
+      "url": "https://taiwaninsight.org/"
+    },
+    {
+      "name": "Hong Kong Free Press",
+      "category": "deep",
+      "status": "candidate",
+      "license": "needs review",
+      "notes": "Suitable for context-heavy regional issues; must confirm re-publication and image rights.",
+      "url": "https://hongkongfp.com/"
+    },
+    {
+      "name": "The Conversation",
+      "category": "deep",
+      "status": "candidate",
+      "license": "needs review",
+      "notes": "Useful long-form analysis; acceptable only if republishing permissions are explicit.",
+      "url": "https://theconversation.com/"
+    },
+    {
+      "name": "The China Project",
+      "category": "deep",
+      "status": "candidate",
+      "license": "needs review",
+      "notes": "Strong regional context coverage; must be individually checked for public reuse.",
+      "url": "https://thechinaproject.com/"
+    },
+    {
+      "name": "Reuters",
+      "category": "news",
+      "status": "candidate",
+      "license": "varies / check terms",
+      "notes": "Useful for fact-only translation when rights permit; no opinion expansion.",
+      "url": "https://www.reuters.com/"
+    },
+    {
+      "name": "AP News",
+      "category": "news",
+      "status": "candidate",
+      "license": "varies / check terms",
+      "notes": "Good candidate for objective event reporting; only permitted when reuse terms are explicit.",
+      "url": "https://apnews.com/"
+    },
+    {
+      "name": "BBC News",
+      "category": "news",
+      "status": "candidate",
+      "license": "varies / check terms",
+      "notes": "News translation candidate only; must not be treated as a fully open source.",
+      "url": "https://www.bbc.com/news"
+    },
+    {
+      "name": "Fox News",
+      "category": "news",
+      "status": "candidate",
+      "license": "terms review required; metadata-only RSS intake",
+      "notes": "Separate straight reporting from opinion and editorial framing; attribute claims and do not assume neutrality or consensus.",
+      "url": "https://www.foxnews.com/world"
+    },
+    {
+      "name": "DW",
+      "category": "news",
+      "status": "candidate",
+      "license": "terms review required; metadata-only RSS intake",
+      "notes": "German public international broadcaster; useful for an additional reporting frame, not a substitute for primary evidence.",
+      "url": "https://www.dw.com/en/top-stories/s-9097"
+    },
+    {
+      "name": "France24",
+      "category": "news",
+      "status": "candidate",
+      "license": "varies / check terms",
+      "notes": "Useful international reporting source; needs per-story licensing check.",
+      "url": "https://www.france24.com/"
+    },
+    {
+      "name": "The Guardian",
+      "category": "news",
+      "status": "candidate",
+      "license": "varies / check terms",
+      "notes": "Good fact-reporting source when explicit reuse terms are available; avoid commentary reuse.",
+      "url": "https://www.theguardian.com/"
+    }
+  ]
+}

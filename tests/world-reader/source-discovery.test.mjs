@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { canAutomaticallyAdapt, discoverWordPressPosts } from '../../scripts/world-reader/source-discovery.mjs';
+import { discoverRssFeedItems } from '../../scripts/world-reader/rss-discovery.mjs';
 
 const approvedSource = {
   id: 'globalvoices',
@@ -103,4 +104,66 @@ test('deduplicates an article already seen through another media source', async 
   });
   assert.deepEqual(items, []);
   assert.equal(summaryCalls, 0);
+});
+
+test('collects bounded RSS metadata and marks it for editorial review', async () => {
+  const source = {
+    id: 'bbc-world',
+    active: true,
+    mediaName: 'BBC News',
+    mediaCountryOrRegion: 'United Kingdom',
+    adapter: 'rss-feed',
+    feedUrl: 'https://feeds.example.test/world.xml',
+    license: { status: 'review_required', canTranslate: false }
+  };
+  const xml = `<rss version="2.0"><channel>
+    <item><title>News &amp; Analysis</title><link>https://example.test/story</link><guid>story-1</guid><pubDate>Thu, 29 Oct 2026 20:00:00 GMT</pubDate><description><![CDATA[<p>A short report.</p>]]></description></item>
+    <item><title>Old story</title><link>https://example.test/old</link><pubDate>Wed, 28 Oct 2026 20:00:00 GMT</pubDate></item>
+    <item><title>Insecure link</title><link>http://example.test/insecure</link><pubDate>Thu, 29 Oct 2026 21:00:00 GMT</pubDate></item>
+  </channel></rss>`;
+  const items = await discoverRssFeedItems(source, {
+    after: '2026-10-29T00:00:00Z',
+    before: '2026-10-30T00:00:00Z',
+    fetchImpl: async () => new Response(xml)
+  });
+  assert.equal(items.length, 1);
+  assert.equal(items[0].originalTitle, 'News & Analysis');
+  assert.equal(items[0].status, 'review_required');
+  assert.equal(items[0].sourceDescription, 'A short report.');
+  assert.equal('sourceContent' in items[0], false);
+});
+
+test('parses RDF date metadata and deduplicates by source URL', async () => {
+  const source = {
+    id: 'dw-world',
+    active: true,
+    mediaName: 'DW',
+    adapter: 'rss-feed',
+    feedUrl: 'https://feeds.example.test/world.rdf',
+    license: { status: 'review_required', canTranslate: false }
+  };
+  const xml = `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <item rdf:about="https://example.test/story"><title>RDF story</title><link>https://example.test/story</link><dc:date>2026-10-29T20:34:00Z</dc:date><dc:creator>DW News</dc:creator></item>
+  </rdf:RDF>`;
+  const items = await discoverRssFeedItems(source, {
+    after: '2026-10-29T00:00:00Z',
+    before: '2026-10-30T00:00:00Z',
+    fetchImpl: async () => new Response(xml)
+  });
+  assert.equal(items.length, 1);
+  assert.equal(items[0].publishedAt, '2026-10-29T20:34:00.000Z');
+  assert.equal(items[0].author, 'DW News');
+  const duplicates = await discoverRssFeedItems(source, {
+    after: '2026-10-29T00:00:00Z',
+    before: '2026-10-30T00:00:00Z',
+    seenIds: new Set(['https://example.test/story']),
+    fetchImpl: async () => new Response(xml)
+  });
+  assert.deepEqual(duplicates, []);
+});
+
+test('rejects insecure RSS endpoints', async () => {
+  await assert.rejects(discoverRssFeedItems({
+    id: 'unsafe', active: true, adapter: 'rss-feed', feedUrl: 'http://example.test/feed'
+  }, { after: '2026-10-29T00:00:00Z', before: '2026-10-30T00:00:00Z' }), /HTTPS RSS/);
 });

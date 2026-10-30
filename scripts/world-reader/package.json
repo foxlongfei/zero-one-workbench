@@ -9,6 +9,7 @@
     "epub:build": "node ../../scripts/build-world-reader-epub.cjs"
   },
   "dependencies": {
+    "fast-xml-parser": "5.11.2",
     "google-auth-library": "11.3.2"
   }
 }

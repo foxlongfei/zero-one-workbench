@@ -19,6 +19,142 @@
       },
       "imagePolicy": "omit",
       "editorialNote": "文章正文可按 CC BY 3.0 署名改编；不复制图片、嵌入内容或第三方素材。每篇文章仍须确认页面许可标注与作者元数据。"
+    },
+    {
+      "id": "the-conversation-intl",
+      "active": true,
+      "mediaName": "The Conversation",
+      "mediaCountryOrRegion": "International / cross-border analysis",
+      "adapter": "wordpress-rest",
+      "apiUrl": "https://theconversation.com/international/wp-json/wp/v2/posts",
+      "defaultContentType": "analysis",
+      "license": {
+        "status": "review_required",
+        "name": "The Conversation republishing terms",
+        "canTranslate": false,
+        "evidenceUrl": "https://theconversation.com/us/terms",
+        "checkedAt": "2026-10-29",
+        "attributionRequired": true
+      },
+      "imagePolicy": "omit",
+      "editorialNote": "候选来源：用于补充国际与中港台议题的深度分析；需回看其具体文章版权条款与作者归属再决定是否可全文改写。"
+    },
+    {
+      "id": "hong-kong-free-press",
+      "active": true,
+      "mediaName": "Hong Kong Free Press",
+      "mediaCountryOrRegion": "Hong Kong",
+      "adapter": "wordpress-rest",
+      "apiUrl": "https://hongkongfp.com/wp-json/wp/v2/posts",
+      "defaultContentType": "analysis",
+      "license": {
+        "status": "review_required",
+        "name": "Publication-specific terms",
+        "canTranslate": false,
+        "evidenceUrl": "https://hongkongfp.com/copyright/",
+        "checkedAt": "2026-10-29",
+        "attributionRequired": true
+      },
+      "imagePolicy": "omit",
+      "editorialNote": "候选来源：香港议题深度报道的高质量补充来源；在全文接入前必须核实重发/改编条款、作者声明与图像使用许可。"
+    },
+    {
+      "id": "taiwan-insight",
+      "active": true,
+      "mediaName": "Taiwan Insight",
+      "mediaCountryOrRegion": "Taiwan",
+      "adapter": "wordpress-rest",
+      "apiUrl": "https://taiwaninsight.org/wp-json/wp/v2/posts",
+      "defaultContentType": "analysis",
+      "license": {
+        "status": "review_required",
+        "name": "Publisher-specific licensing review",
+        "canTranslate": false,
+        "evidenceUrl": "https://taiwaninsight.org/about/",
+        "checkedAt": "2026-10-29",
+        "attributionRequired": true
+      },
+      "imagePolicy": "omit",
+      "editorialNote": "候选来源：覆盖台湾议题与区域研究分析；需要核实重发、全文再编及图像许可是否允许中文导读和摘要扩展。"
+    },
+    {
+      "id": "the-china-project",
+      "active": true,
+      "mediaName": "The China Project",
+      "mediaCountryOrRegion": "Mainland China / cross-strait context",
+      "adapter": "wordpress-rest",
+      "apiUrl": "https://thechinaproject.com/wp-json/wp/v2/posts",
+      "defaultContentType": "analysis",
+      "license": {
+        "status": "review_required",
+        "name": "Publisher-specific licensing review",
+        "canTranslate": false,
+        "evidenceUrl": "https://thechinaproject.com/about/",
+        "checkedAt": "2026-10-29",
+        "attributionRequired": true
+      },
+      "imagePolicy": "omit",
+      "editorialNote": "候选来源：补充中国大陆与两岸议题背景分析，但需完成版权、作者归属和全文改写许可的逐篇核验后才允许接入。"
+    },
+    {
+      "id": "bbc-world",
+      "active": true,
+      "mediaName": "BBC News",
+      "mediaCountryOrRegion": "United Kingdom",
+      "adapter": "rss-feed",
+      "feedUrl": "https://feeds.bbci.co.uk/news/world/rss.xml",
+      "defaultContentType": "news",
+      "license": { "status": "review_required", "name": "BBC Terms of Use", "canTranslate": false, "evidenceUrl": "https://www.bbc.com/usingthebbc/terms-of-use/", "checkedAt": "2026-10-29", "attributionRequired": true },
+      "imagePolicy": "omit",
+      "editorialNote": "只自动采集 RSS 元数据和短导语；不抓正文、不自动翻译或发布。事实报道与评论分开标注。"
+    },
+    {
+      "id": "fox-news-world",
+      "active": true,
+      "mediaName": "Fox News",
+      "mediaCountryOrRegion": "United States",
+      "adapter": "rss-feed",
+      "feedUrl": "https://moxie.foxnews.com/google-publisher/world.xml",
+      "defaultContentType": "news",
+      "license": { "status": "review_required", "name": "Fox News Terms of Use", "canTranslate": false, "evidenceUrl": "https://www.foxnews.com/story/terms-of-use", "checkedAt": "2026-10-29", "attributionRequired": true },
+      "imagePolicy": "omit",
+      "editorialNote": "只自动采集 RSS 元数据和短导语；将事实报道、社论和评论分开标记，不默认视作中立共识。"
+    },
+    {
+      "id": "dw-world",
+      "active": true,
+      "mediaName": "DW",
+      "mediaCountryOrRegion": "Germany",
+      "adapter": "rss-feed",
+      "feedUrl": "https://rss.dw.com/rdf/rss-en-all",
+      "defaultContentType": "news",
+      "license": { "status": "review_required", "name": "DW Legal Notice", "canTranslate": false, "evidenceUrl": "https://www.dw.com/en/legal-notice/s-30648", "checkedAt": "2026-10-29", "attributionRequired": true },
+      "imagePolicy": "omit",
+      "editorialNote": "只自动采集 RSS 元数据和短导语；全文改编须逐篇核验许可。"
+    },
+    {
+      "id": "france24-en",
+      "active": true,
+      "mediaName": "France 24",
+      "mediaCountryOrRegion": "France",
+      "adapter": "rss-feed",
+      "feedUrl": "https://www.france24.com/en/rss",
+      "defaultContentType": "news",
+      "license": { "status": "review_required", "name": "France 24 Legal Notice", "canTranslate": false, "evidenceUrl": "https://www.france24.com/en/legal-notice", "checkedAt": "2026-10-29", "attributionRequired": true },
+      "imagePolicy": "omit",
+      "editorialNote": "只自动采集 RSS 元数据和短导语；不自动转载或翻译原文。"
+    },
+    {
+      "id": "guardian-world",
+      "active": true,
+      "mediaName": "The Guardian",
+      "mediaCountryOrRegion": "United Kingdom",
+      "adapter": "rss-feed",
+      "feedUrl": "https://www.theguardian.com/world/rss",
+      "defaultContentType": "news",
+      "license": { "status": "review_required", "name": "The Guardian Terms of Service", "canTranslate": false, "evidenceUrl": "https://www.theguardian.com/help/terms-of-service", "checkedAt": "2026-10-29", "attributionRequired": true },
+      "imagePolicy": "omit",
+      "editorialNote": "只自动采集 RSS 元数据和短导语；评论和独立调查单独标注并进行来源交叉检查。"
     }
   ]
 }

@@ -1,7 +1,9 @@
+import { readFileSync } from 'node:fs';
 import { GoogleAuth } from 'google-auth-library';
 import { DRIVE_CONTENT_SCOPE, DriveStorage } from './drive-storage.mjs';
 import { createSummaryClient } from './ai-summary.mjs';
 import { discoverWordPressPosts } from './source-discovery.mjs';
+import { discoverRssFeedItems } from './rss-discovery.mjs';
 import { REQUIRED_FOLDERS, verifyDriveWorkspace } from './drive-workspace.mjs';
 
 const rootFolderId = process.env.WORLD_READER_DRIVE_ROOT_ID;
@@ -28,6 +30,14 @@ async function main() {
 
   const catalog = await store.readJson(sourcesFolder, 'media-sources.json');
   if (!Array.isArray(catalog?.sources)) throw new Error('请先将 media-sources.template.json 审核后上传为 Drive/01-媒体来源/media-sources.json');
+  const templateCatalog = JSON.parse(readFileSync(new URL('./media-sources.template.json', import.meta.url), 'utf8'));
+  const sourcesById = new Map((templateCatalog.sources || [])
+    .filter((source) => source.active === true && source.adapter === 'rss-feed' && source.id)
+    .map((source) => [source.id, source]));
+  for (const source of catalog.sources) {
+    if (source.id) sourcesById.set(source.id, source);
+  }
+  const sources = [...sourcesById.values()];
 
   const previous = await store.readJson(recordsFolder, 'source-discovery-state.json') || {
     lastCheckedAt: new Date(now.valueOf() - 24 * 60 * 60 * 1000).toISOString(),
@@ -49,17 +59,14 @@ async function main() {
 
   const results = [];
   let awaitingAi = false;
-  for (const source of catalog.sources) {
-    if (source.adapter !== 'wordpress-rest') {
+  for (const source of sources) {
+    if (!['wordpress-rest', 'rss-feed'].includes(source.adapter)) {
       results.push({ sourceId: source.id, outcome: 'unsupported_adapter' });
       continue;
     }
-    const items = await discoverWordPressPosts(source, {
-      after: from,
-      before: now,
-      seenIds,
-      summarize
-    });
+    const items = source.adapter === 'wordpress-rest'
+      ? await discoverWordPressPosts(source, { after: from, before: now, seenIds, summarize })
+      : await discoverRssFeedItems(source, { after: from, before: now, seenIds });
     for (const item of items) {
       const fileKey = safeName(item.id);
       const sourceRecord = {
@@ -92,7 +99,8 @@ async function main() {
     action: 'daily-source-discovery',
     recordKind: 'automated',
     window: { from: from.toISOString(), to: now.toISOString() },
-    sourceCount: catalog.sources.length,
+    sourceCount: sources.length,
+    rssSourceCount: sources.filter((source) => source.adapter === 'rss-feed').length,
     discoveredCount: results.length,
     outcomes: results,
     aiConfigured: Boolean(summarize),
