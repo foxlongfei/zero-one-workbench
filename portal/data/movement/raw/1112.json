@@ -1,0 +1,199 @@
+{
+ "id": 1112,
+ "uuid": "50037aaf-34f1-4018-b504-206623b77c46",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:39:51.172061+01:00",
+ "last_update_global": "2026-10-24T15:57:37.572460+02:00",
+ "category": {
+  "id": 11,
+  "name": "Chest"
+ },
+ "muscles": [
+  {
+   "id": 4,
+   "name": "Pectoralis major",
+   "name_en": "Chest",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-4.c9fa9a228bc8.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-4.955e74ea6083.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 2,
+   "name": "Anterior deltoid",
+   "name_en": "Shoulders",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-2.e1e1205a3202.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-2.74ea636ad97b.svg"
+  },
+  {
+   "id": 5,
+   "name": "Triceps brachii",
+   "name_en": "Triceps",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-5.8a2b934b5486.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-5.68eb84d675a5.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 8,
+   "name": "Bench"
+  },
+  {
+   "id": 9,
+   "name": "Incline bench"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "anon1337",
+ "images": [
+  {
+   "id": 357,
+   "uuid": "81f40bee-4adf-4317-8476-1a87706e3031",
+   "exercise": 1112,
+   "exercise_uuid": "50037aaf-34f1-4018-b504-206623b77c46",
+   "image": "https://wger.de/media/exercise-images/1112/81f40bee-4adf-4317-8476-1a87706e3031.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/1112/81f40bee-4adf-4317-8476-1a87706e3031.png.200x200_q85.png",
+    "medium": "https://wger.de/media/exercise-images/1112/81f40bee-4adf-4317-8476-1a87706e3031.png.400x400_q85.png"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "anon1337",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "anon1337"
+   ],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 3699,
+   "uuid": "bb7a238b-ccdc-42fe-9c91-3b431f7ae544",
+   "name": "Flexiones | declinadas (decline)",
+   "exercise": 1112,
+   "description": "<p>Las flexiones declinadas son otra versión modificada de la flexión tradicional que trabaja los músculos del tren superior de una forma diferente. Para realizar una flexión declinada, eleva los pies sobre una superficie elevada, como un banco, una silla o un escalón, mientras colocas las manos en el suelo en posición de flexión. Baja el cuerpo hacia el suelo manteniendo una línea recta desde los hombros hasta los tobillos y luego empuja de nuevo hasta la posición inicial.\nA diferencia de la flexión inclinada, la flexión declinada pone más énfasis en los hombros y los tríceps, sin dejar de implicar los músculos del pecho en menor medida. Al elevar los pies aumentas la dificultad del ejercicio, ya que cargas más peso sobre el tren superior y obligas a los hombros y los tríceps a trabajar más para volver a empujar el cuerpo hacia arriba. La flexión declinada puede ser una excelente manera de desafiar la fuerza de tu tren superior y mejorar tu capacidad para realizar otras variantes de flexiones. Como con cualquier ejercicio, asegúrate de usar una técnica correcta y empieza con una altura adecuada a tu fuerza y nivel de forma física.</p>\n",
+   "description_source": "Las flexiones declinadas son otra versión modificada de la flexión tradicional que trabaja los músculos del tren superior de una forma diferente. Para realizar una flexión declinada, eleva los pies sobre una superficie elevada, como un banco, una silla o un escalón, mientras colocas las manos en el suelo en posición de flexión. Baja el cuerpo hacia el suelo manteniendo una línea recta desde los hombros hasta los tobillos y luego empuja de nuevo hasta la posición inicial.\nA diferencia de la flexión inclinada, la flexión declinada pone más énfasis en los hombros y los tríceps, sin dejar de implicar los músculos del pecho en menor medida. Al elevar los pies aumentas la dificultad del ejercicio, ya que cargas más peso sobre el tren superior y obligas a los hombros y los tríceps a trabajar más para volver a empujar el cuerpo hacia arriba. La flexión declinada puede ser una excelente manera de desafiar la fuerza de tu tren superior y mejorar tu capacidad para realizar otras variantes de flexiones. Como con cualquier ejercicio, asegúrate de usar una técnica correcta y empieza con una altura adecuada a tu fuerza y nivel de forma física.",
+   "created": "2026-06-19T17:53:10.022928+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 5290,
+   "uuid": "0b3d975c-5eab-47c7-8420-9a2f2ac81daa",
+   "name": "Flexão Declinada",
+   "exercise": 1112,
+   "description": "<p>Com os pés elevados cerca de 30 cm em uma plataforma, alinhe ombros, cotovelos e mãos e faça flexões tradicionais. Isso enfatiza as fibras claviculares do peitoral maior.</p>\n",
+   "description_source": "Com os pés elevados cerca de 30 cm em uma plataforma, alinhe ombros, cotovelos e mãos e faça flexões tradicionais. Isso enfatiza as fibras claviculares do peitoral maior.",
+   "created": "2026-10-24T15:57:37.572438+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "jptjptjptjpt",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "jptjptjptjpt"
+   ]
+  },
+  {
+   "id": 3698,
+   "uuid": "1d780a97-cfe4-4401-b44d-cc4ec3fd0b3a",
+   "name": "Liegestütze | abfallend (Decline)",
+   "exercise": 1112,
+   "description": "<p>Abfallende Liegestütze sind eine weitere abgewandelte Version des klassischen Liegestützes, die die Oberkörpermuskulatur auf andere Weise trainiert. Um einen abfallenden Liegestütz auszuführen, stellst du deine Füße auf eine erhöhte Fläche wie eine Bank, einen Stuhl oder eine Stufe und setzt deine Hände in der Liegestützposition auf den Boden. Senke deinen Körper zum Boden, während du eine gerade Linie von den Schultern bis zu den Knöcheln hältst, und drücke dich dann wieder in die Ausgangsposition hoch.\nAnders als der Incline-Liegestütz legt der abfallende Liegestütz mehr Betonung auf die Schultern und den Trizeps, während die Brustmuskulatur weiterhin in geringerem Maße beansprucht wird. Indem du deine Füße erhöhst, steigerst du die Schwierigkeit der Übung, weil mehr Gewicht auf deinem Oberkörper lastet und deine Schultern und dein Trizeps härter arbeiten müssen, um deinen Körper wieder hochzudrücken. Der abfallende Liegestütz kann eine großartige Möglichkeit sein, deine Oberkörperkraft herauszufordern und deine Fähigkeit zu verbessern, andere Liegestützvarianten auszuführen. Achte wie bei jeder Übung auf eine saubere Ausführung und beginne mit einer Höhe, die zu deiner Kraft und deinem Fitnesslevel passt.</p>\n",
+   "description_source": "Abfallende Liegestütze sind eine weitere abgewandelte Version des klassischen Liegestützes, die die Oberkörpermuskulatur auf andere Weise trainiert. Um einen abfallenden Liegestütz auszuführen, stellst du deine Füße auf eine erhöhte Fläche wie eine Bank, einen Stuhl oder eine Stufe und setzt deine Hände in der Liegestützposition auf den Boden. Senke deinen Körper zum Boden, während du eine gerade Linie von den Schultern bis zu den Knöcheln hältst, und drücke dich dann wieder in die Ausgangsposition hoch.\nAnders als der Incline-Liegestütz legt der abfallende Liegestütz mehr Betonung auf die Schultern und den Trizeps, während die Brustmuskulatur weiterhin in geringerem Maße beansprucht wird. Indem du deine Füße erhöhst, steigerst du die Schwierigkeit der Übung, weil mehr Gewicht auf deinem Oberkörper lastet und deine Schultern und dein Trizeps härter arbeiten müssen, um deinen Körper wieder hochzudrücken. Der abfallende Liegestütz kann eine großartige Möglichkeit sein, deine Oberkörperkraft herauszufordern und deine Fähigkeit zu verbessern, andere Liegestützvarianten auszuführen. Achte wie bei jeder Übung auf eine saubere Ausführung und beginne mit einer Höhe, die zu deiner Kraft und deinem Fitnesslevel passt.",
+   "created": "2026-06-19T17:53:09.488730+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 2761,
+   "uuid": "e96ef564-4d07-4fe5-9a68-dab16aeac8a7",
+   "name": "Pompes déclinées",
+   "exercise": 1112,
+   "description": "<p>Les pompes déclinées sont une autre version modifiée de la pompe traditionnelle qui sollicite les muscles du haut du corps d'une manière différente. Pour effectuer une pompe déclinée, surélevez vos pieds sur une surface surélevée, telle qu'un banc, une chaise ou une marche, tout en plaçant vos mains au sol en position de pompe. Abaissez votre corps vers le sol tout en maintenant une ligne droite de vos épaules à vos chevilles, puis remontez à la position de départ\nContrairement à la pompe inclinée, la pompe déclinée met davantage l'accent sur les épaules et les triceps, tout en engageant les muscles de la poitrine dans une moindre mesure. En surélevant vos pieds, vous augmentez la difficulté de l'exercice en plaçant plus de poids sur le haut de votre corps, forçant vos épaules et vos triceps à travailler plus fort pour repousser votre corps vers le haut.\nLa pompe déclinée peut être un excellent moyen de mettre à l'épreuve la force de votre haut du corps et d'améliorer votre capacité à effectuer d'autres variations de pompes. Comme pour tout exercice, assurez-vous d'utiliser une forme appropriée et de commencer avec une hauteur adaptée à votre niveau de force et de forme physique.</p>\n",
+   "description_source": "Les pompes déclinées sont une autre version modifiée de la pompe traditionnelle qui sollicite les muscles du haut du corps d'une manière différente. Pour effectuer une pompe déclinée, surélevez vos pieds sur une surface surélevée, telle qu'un banc, une chaise ou une marche, tout en plaçant vos mains au sol en position de pompe. Abaissez votre corps vers le sol tout en maintenant une ligne droite de vos épaules à vos chevilles, puis remontez à la position de départ\nContrairement à la pompe inclinée, la pompe déclinée met davantage l'accent sur les épaules et les triceps, tout en engageant les muscles de la poitrine dans une moindre mesure. En surélevant vos pieds, vous augmentez la difficulté de l'exercice en plaçant plus de poids sur le haut de votre corps, forçant vos épaules et vos triceps à travailler plus fort pour repousser votre corps vers le haut.\nLa pompe déclinée peut être un excellent moyen de mettre à l'épreuve la force de votre haut du corps et d'améliorer votre capacité à effectuer d'autres variations de pompes. Comme pour tout exercice, assurez-vous d'utiliser une forme appropriée et de commencer avec une hauteur adaptée à votre niveau de force et de forme physique.",
+   "created": "2025-09-27T10:51:43.038588+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "AlucardEvil40",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "AlucardEvil40"
+   ]
+  },
+  {
+   "id": 2075,
+   "uuid": "ff551c76-3772-48f9-9cdb-396f45da05d7",
+   "name": "Push-Ups | Decline",
+   "exercise": 1112,
+   "description": "<p>Decline push-ups are another modified version of the traditional push-up that target the upper body muscles in a different way. To perform a decline push-up, elevate your feet on an elevated surface, such as a bench, chair, or step, while placing your hands on the ground in a push-up position. Lower your body towards the ground while maintaining a straight line from your shoulders to your ankles, and then push back up to the starting position.\nUnlike the inclined push-up, the decline push-up places more emphasis on the shoulders and triceps, while still engaging the chest muscles to a lesser extent. By elevating your feet, you increase the difficulty of the exercise by placing more weight on your upper body, forcing your shoulders and triceps to work harder to push your body back up. The decline push-up can be a great way to challenge your upper body strength and improve your ability to perform other push-up variations. As with any exercise, be sure to use proper form and start with a height that is appropriate for your strength and fitness level.</p>\n",
+   "description_source": "Decline push-ups are another modified version of the traditional push-up that target the upper body muscles in a different way. To perform a decline push-up, elevate your feet on an elevated surface, such as a bench, chair, or step, while placing your hands on the ground in a push-up position. Lower your body towards the ground while maintaining a straight line from your shoulders to your ankles, and then push back up to the starting position.\nUnlike the inclined push-up, the decline push-up places more emphasis on the shoulders and triceps, while still engaging the chest muscles to a lesser extent. By elevating your feet, you increase the difficulty of the exercise by placing more weight on your upper body, forcing your shoulders and triceps to work harder to push your body back up. The decline push-up can be a great way to challenge your upper body strength and improve your ability to perform other push-up variations. As with any exercise, be sure to use proper form and start with a height that is appropriate for your strength and fitness level.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "anon1337",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "anon1337"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "anon1337"
+ ],
+ "total_authors_history": [
+  "AlucardEvil40",
+  "wger.de",
+  "jptjptjptjpt",
+  "anon1337"
+ ]
+}

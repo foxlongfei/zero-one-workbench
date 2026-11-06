@@ -1,0 +1,170 @@
+{
+ "id": 1906,
+ "uuid": "6b127132-cc0b-4b40-ac8c-177a28ccb6e2",
+ "created": "2026-03-02T13:49:18.160128+01:00",
+ "last_update": "2026-03-02T13:49:18.160143+01:00",
+ "last_update_global": "2026-10-24T15:59:53.103755+02:00",
+ "category": {
+  "id": 9,
+  "name": "Legs"
+ },
+ "muscles": [
+  {
+   "id": 8,
+   "name": "Gluteus maximus",
+   "name_en": "Glutes",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-8.fbdfb46f3bc0.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-8.605e4e1a0277.svg"
+  },
+  {
+   "id": 6,
+   "name": "Rectus abdominis",
+   "name_en": "Abs",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-6.592f938fa8c7.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-6.370f77c2860e.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 14,
+   "name": "Obliquus externus abdominis",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-14.153978038d0b.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-14.afd582849ae9.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "cybro",
+ "images": [],
+ "translations": [
+  {
+   "id": 3053,
+   "uuid": "7b21d758-2e74-4e7f-9d8a-3e8209845d4a",
+   "name": "Hip Bridge",
+   "exercise": 1906,
+   "description": "<p>Get into bridge position, balance yourself on heels and start extending legs unilaterally.</p>\n<p>Keep hip extended as much as possible.</p>\n",
+   "description_source": "Get into bridge position, balance yourself on heels and start extending legs unilaterally.\n\nKeep hip extended as much as possible.",
+   "created": "2026-03-02T13:49:18.220853+01:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "cybro",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "cybro"
+   ]
+  },
+  {
+   "id": 4270,
+   "uuid": "351ac85e-0575-44eb-9890-4e56a92fe066",
+   "name": "Hüftbrücke",
+   "exercise": 1906,
+   "description": "<p>Gehe in die Brückenposition, balanciere dich auf den Fersen und beginne, die Beine einseitig zu strecken.</p>\n<p>Halte die Hüfte so weit wie möglich gestreckt.</p>\n",
+   "description_source": "Gehe in die Brückenposition, balanciere dich auf den Fersen und beginne, die Beine einseitig zu strecken.\n\nHalte die Hüfte so weit wie möglich gestreckt.",
+   "created": "2026-06-19T17:58:19.139702+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 4798,
+   "uuid": "872762ef-1083-4409-8966-775b1531757e",
+   "name": "Pont fessier",
+   "exercise": 1906,
+   "description": "<p>Mettez-vous en position de pont, tenez-vous en équilibre sur les talons et commencez à étendre les jambes de manière unilatérale.</p>\n<p>Gardez la hanche en extension autant que possible.</p>\n",
+   "description_source": "Mettez-vous en position de pont, tenez-vous en équilibre sur les talons et commencez à étendre les jambes de manière unilatérale.\n\nGardez la hanche en extension autant que possible.",
+   "created": "2026-06-19T18:46:07.965277+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 5603,
+   "uuid": "b795aaa4-2dcf-4920-8a92-51711afb4688",
+   "name": "Ponte de quadril",
+   "exercise": 1906,
+   "description": "<p>Fique na posição de ponte, apoiado nos calcanhares, e comece a estender as pernas unilateralmente.</p>\n<p>Mantenha o quadril estendido o máximo possível.</p>\n",
+   "description_source": "Fique na posição de ponte, apoiado nos calcanhares, e comece a estender as pernas unilateralmente.\n\nMantenha o quadril estendido o máximo possível.",
+   "created": "2026-10-24T15:59:53.103730+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "jptjptjptjpt",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "jptjptjptjpt"
+   ]
+  },
+  {
+   "id": 4271,
+   "uuid": "ae1c934b-3daf-4afd-8e29-d90f19a3bf28",
+   "name": "Puente de cadera",
+   "exercise": 1906,
+   "description": "<p>Colócate en posición de puente, mantén el equilibrio sobre los talones y comienza a extender las piernas de forma unilateral.</p>\n<p>Mantén la cadera lo más extendida posible.</p>\n",
+   "description_source": "Colócate en posición de puente, mantén el equilibrio sobre los talones y comienza a extender las piernas de forma unilateral.\n\nMantén la cadera lo más extendida posible.",
+   "created": "2026-06-19T17:58:19.644742+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "cybro"
+ ],
+ "total_authors_history": [
+  "wger.de",
+  "cybro",
+  "jptjptjptjpt"
+ ]
+}

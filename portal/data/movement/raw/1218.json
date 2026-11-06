@@ -1,0 +1,156 @@
+{
+ "id": 1218,
+ "uuid": "2b61df61-f71e-4b8f-9f95-6a565238a8ae",
+ "created": "2024-01-29T23:01:25.296720+01:00",
+ "last_update": "2024-01-29T23:01:25.296752+01:00",
+ "last_update_global": "2026-06-19T18:50:26.091844+02:00",
+ "category": {
+  "id": 8,
+  "name": "Arms"
+ },
+ "muscles": [
+  {
+   "id": 2,
+   "name": "Anterior deltoid",
+   "name_en": "Shoulders",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-2.e1e1205a3202.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-2.74ea636ad97b.svg"
+  },
+  {
+   "id": 4,
+   "name": "Pectoralis major",
+   "name_en": "Chest",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-4.c9fa9a228bc8.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-4.955e74ea6083.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 3,
+   "name": "Serratus anterior",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-3.356ffc861a30.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-3.4c09bf907827.svg"
+  },
+  {
+   "id": 5,
+   "name": "Triceps brachii",
+   "name_en": "Triceps",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-5.8a2b934b5486.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-5.68eb84d675a5.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "PaukOne",
+ "images": [],
+ "translations": [
+  {
+   "id": 3749,
+   "uuid": "ed19e04b-65b8-4d77-88c0-3f95c08d1105",
+   "name": "Flexiones de rodillas",
+   "exercise": 1218,
+   "description": "<ol>\n<li>Empieza arrodillándote en el suelo, manteniendo las rodillas juntas. Coloca las manos en el suelo frente a ti, un poco más separadas que el ancho de los hombros.</li>\n<li>Asegúrate de que tu cuerpo forme una línea recta desde la cabeza hasta las rodillas. Las manos deben quedar debajo de los hombros.</li>\n<li>Baja el tronco hacia el suelo flexionando los codos mientras mantienes el tronco estable. Mantén las rodillas en contacto con el suelo.</li>\n<li>Empuja con las manos para volver a la posición inicial. Asegúrate de mantener la contracción de los músculos del pecho, los hombros y los brazos en la parte alta del movimiento.</li>\n<li>Realiza el número de repeticiones deseado, controlando el movimiento y manteniendo una buena técnica.</li>\n</ol>\n",
+   "description_source": "1. Empieza arrodillándote en el suelo, manteniendo las rodillas juntas. Coloca las manos en el suelo frente a ti, un poco más separadas que el ancho de los hombros.\n2. Asegúrate de que tu cuerpo forme una línea recta desde la cabeza hasta las rodillas. Las manos deben quedar debajo de los hombros.\n3. Baja el tronco hacia el suelo flexionando los codos mientras mantienes el tronco estable. Mantén las rodillas en contacto con el suelo.\n4. Empuja con las manos para volver a la posición inicial. Asegúrate de mantener la contracción de los músculos del pecho, los hombros y los brazos en la parte alta del movimiento.\n5. Realiza el número de repeticiones deseado, controlando el movimiento y manteniendo una buena técnica.",
+   "created": "2026-06-19T17:53:36.475552+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 3748,
+   "uuid": "a9f19271-d409-4dbe-88b7-e555067c16b1",
+   "name": "Liegestütze auf den Knien",
+   "exercise": 1218,
+   "description": "<ol>\n<li>Knie dich zunächst auf den Boden und halte die Knie zusammen. Stütze deine Hände vor dir auf dem Boden ab, etwas weiter als schulterbreit auseinander.</li>\n<li>Achte darauf, dass dein Körper eine gerade Linie von Kopf bis Knie bildet. Die Hände sollten sich unter den Schultern befinden.</li>\n<li>Senke deinen Oberkörper Richtung Boden, indem du die Ellbogen beugst, während du den Rumpf stabil hältst. Halte die Knie in Kontakt mit dem Boden.</li>\n<li>Drücke dich über die Hände in die Ausgangsposition zurück. Achte darauf, am höchsten Punkt der Bewegung die Spannung in Brust-, Schulter- und Armmuskulatur zu halten.</li>\n<li>Führe die gewünschte Anzahl an Wiederholungen aus, kontrolliere die Bewegung und behalte eine saubere Ausführung bei.</li>\n</ol>\n",
+   "description_source": "1. Knie dich zunächst auf den Boden und halte die Knie zusammen. Stütze deine Hände vor dir auf dem Boden ab, etwas weiter als schulterbreit auseinander.\n2. Achte darauf, dass dein Körper eine gerade Linie von Kopf bis Knie bildet. Die Hände sollten sich unter den Schultern befinden.\n3. Senke deinen Oberkörper Richtung Boden, indem du die Ellbogen beugst, während du den Rumpf stabil hältst. Halte die Knie in Kontakt mit dem Boden.\n4. Drücke dich über die Hände in die Ausgangsposition zurück. Achte darauf, am höchsten Punkt der Bewegung die Spannung in Brust-, Schulter- und Armmuskulatur zu halten.\n5. Führe die gewünschte Anzahl an Wiederholungen aus, kontrolliere die Bewegung und behalte eine saubere Ausführung bei.",
+   "created": "2026-06-19T17:53:35.966758+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 2185,
+   "uuid": "f539a749-89df-4ded-a7aa-e8388de226b3",
+   "name": "Pompes sur les genoux",
+   "exercise": 1218,
+   "description": "<ol>\n<li>Commencez par vous agenouiller sur le sol, en gardant les genoux joints. Placez vos mains sur le sol devant vous, légèrement plus larges que la largeur des épaules.</li>\n<li>Assurez-vous que votre corps forme une ligne droite de la tête aux genoux. Les mains doivent être positionnées sous les épaules.</li>\n<li>Abaissez votre torse vers le sol en pliant les coudes tout en maintenant la stabilité du tronc. Les genoux restent en contact avec le sol.</li>\n<li>Poussez à travers les mains pour remonter à la position de départ. Assurez-vous de maintenir une contraction des muscles de la poitrine, des épaules et des bras en haut du mouvement.</li>\n<li>Effectuez le nombre souhaité de répétitions, en contrôlant le mouvement et en maintenant une bonne forme.</li>\n</ol>\n",
+   "description_source": "1. Commencez par vous agenouiller sur le sol, en gardant les genoux joints. Placez vos mains sur le sol devant vous, légèrement plus larges que la largeur des épaules.\n2. Assurez-vous que votre corps forme une ligne droite de la tête aux genoux. Les mains doivent être positionnées sous les épaules.\n3. Abaissez votre torse vers le sol en pliant les coudes tout en maintenant la stabilité du tronc. Les genoux restent en contact avec le sol.\n4. Poussez à travers les mains pour remonter à la position de départ. Assurez-vous de maintenir une contraction des muscles de la poitrine, des épaules et des bras en haut du mouvement.\n5. Effectuez le nombre souhaité de répétitions, en contrôlant le mouvement et en maintenant une bonne forme.",
+   "created": "2024-01-29T23:01:25.583380+01:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "PaukOne",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "PaukOne"
+   ]
+  },
+  {
+   "id": 2184,
+   "uuid": "8cb0d6b3-172e-4305-b8b1-48816c6d1687",
+   "name": "knee push-ups",
+   "exercise": 1218,
+   "description": "<ol>\n<li>Start by kneeling on the floor, keeping your knees together. Place your hands on the floor in front of you, slightly wider than shoulder-width apart.</li>\n<li>Make sure your body forms a straight line from head to knees. Hands should be positioned below shoulders.</li>\n<li>Lower your torso towards the ground, bending your elbows while keeping your trunk stable. Keep your knees in contact with the floor.</li>\n<li>Push through your hands to return to the starting position. Be sure to maintain contraction of chest, shoulder and arm muscles at the top of the movement.</li>\n<li>Perform the desired number of repetitions, controlling the movement and maintaining good form.</li>\n</ol>\n",
+   "description_source": "1. Start by kneeling on the floor, keeping your knees together. Place your hands on the floor in front of you, slightly wider than shoulder-width apart.\n2. Make sure your body forms a straight line from head to knees. Hands should be positioned below shoulders.\n3. Lower your torso towards the ground, bending your elbows while keeping your trunk stable. Keep your knees in contact with the floor.\n4. Push through your hands to return to the starting position. Be sure to maintain contraction of chest, shoulder and arm muscles at the top of the movement.\n5. Perform the desired number of repetitions, controlling the movement and maintaining good form.",
+   "created": "2024-01-29T23:01:25.453854+01:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "PaukOne",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "PaukOne"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "PaukOne"
+ ],
+ "total_authors_history": [
+  "wger.de",
+  "PaukOne"
+ ]
+}

@@ -1,0 +1,93 @@
+{
+ "id": 2690,
+ "uuid": "04931134-da5d-4d87-8e62-bdcc0d970b0c",
+ "created": "2026-10-13T12:47:10.113837+02:00",
+ "last_update": "2026-10-13T12:47:10.113851+02:00",
+ "last_update_global": "2026-10-13T12:47:10.176705+02:00",
+ "category": {
+  "id": 12,
+  "name": "Back"
+ },
+ "muscles": [
+  {
+   "id": 12,
+   "name": "Latissimus dorsi",
+   "name_en": "Lats",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-12.6a5de7a0e373.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-12.974a8c6def63.svg"
+  },
+  {
+   "id": 9,
+   "name": "Trapezius",
+   "name_en": "",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-9.b491050a7108.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-9.be1b5e41906b.svg"
+  }
+ ],
+ "muscles_secondary": [],
+ "equipment": [
+  {
+   "id": 6,
+   "name": "Pull-up bar"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "nalhilal",
+ "images": [],
+ "translations": [
+  {
+   "id": 5181,
+   "uuid": "119a65d0-e1be-459b-a740-3a381cc9cb43",
+   "name": "Active Hang",
+   "exercise": 2690,
+   "description": "<p>A static hold from a pull-up bar with straight elbows and actively depressed, stabilized shoulders. Grip a secure bar and let your body hang under control. Keep your elbows straight and gently draw your shoulders down, away from your ears. Maintain this active shoulder position without pulling up, swinging, or repeatedly moving the shoulder blades. Hold for up to 30 seconds. Stop earlier if your grip opens, shoulder control deteriorates, or pain occurs. Record actual seconds, grip, and any assistance used. This is distinct from a relaxed passive dead hang or a moving scapular pull-up.</p>\n",
+   "description_source": "A static hold from a pull-up bar with straight elbows and actively depressed, stabilized shoulders. Grip a secure bar and let your body hang under control. Keep your elbows straight and gently draw your shoulders down, away from your ears. Maintain this active shoulder position without pulling up, swinging, or repeatedly moving the shoulder blades. Hold for up to 30 seconds. Stop earlier if your grip opens, shoulder control deteriorates, or pain occurs. Record actual seconds, grip, and any assistance used. This is distinct from a relaxed passive dead hang or a moving scapular pull-up.",
+   "created": "2026-10-13T12:47:10.176690+02:00",
+   "language": 2,
+   "aliases": [
+    {
+     "id": 881,
+     "uuid": "8ac5a6f8-112b-40b5-aa45-dca4e0b8fa17",
+     "alias": "Active Bar Hang"
+    },
+    {
+     "id": 882,
+     "uuid": "e34d37e9-9565-4bf9-8bf5-51f3dc7e13c0",
+     "alias": "Active Shoulder Hang"
+    }
+   ],
+   "notes": [
+    {
+     "id": 928,
+     "uuid": "3b6032e2-394c-490d-b834-5db4a21c8975",
+     "translation": 5181,
+     "comment": "Keep elbows straight and shoulders actively stabilized. Stop for grip loss, loss of shoulder control, or pain."
+    }
+   ],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "nalhilal",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "nalhilal"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "nalhilal"
+ ],
+ "total_authors_history": [
+  "nalhilal"
+ ]
+}

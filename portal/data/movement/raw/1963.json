@@ -1,0 +1,189 @@
+{
+ "id": 1963,
+ "uuid": "2398e14f-02a6-4fdc-9f69-029e52dfe033",
+ "created": "2026-05-06T08:28:49.632086+02:00",
+ "last_update": "2026-05-06T08:28:49.632103+02:00",
+ "last_update_global": "2026-06-19T18:48:16.075231+02:00",
+ "category": {
+  "id": 9,
+  "name": "Legs"
+ },
+ "muscles": [
+  {
+   "id": 10,
+   "name": "Quadriceps femoris",
+   "name_en": "Quads",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-10.b1445ea1acf6.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-10.55e36d852778.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 11,
+   "name": "Biceps femoris",
+   "name_en": "Hamstrings",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-11.54ef31755917.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-11.a2bc76fe157a.svg"
+  },
+  {
+   "id": 8,
+   "name": "Gluteus maximus",
+   "name_en": "Glutes",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-8.fbdfb46f3bc0.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-8.605e4e1a0277.svg"
+  },
+  {
+   "id": 6,
+   "name": "Rectus abdominis",
+   "name_en": "Abs",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-6.592f938fa8c7.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-6.370f77c2860e.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "Anon#2",
+ "images": [
+  {
+   "id": 699,
+   "uuid": "db285682-1ab3-4be0-ae00-5117ecce1ee6",
+   "exercise": 1963,
+   "exercise_uuid": "2398e14f-02a6-4fdc-9f69-029e52dfe033",
+   "image": "https://wger.de/media/exercise-images/1963/db285682-1ab3-4be0-ae00-5117ecce1ee6.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/1963/db285682-1ab3-4be0-ae00-5117ecce1ee6.png.200x200_q85.png",
+    "medium": "https://wger.de/media/exercise-images/1963/db285682-1ab3-4be0-ae00-5117ecce1ee6.png.400x400_q85.png"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [],
+   "is_ai_generated": true
+  }
+ ],
+ "translations": [
+  {
+   "id": 3558,
+   "uuid": "128d16ac-6e04-42a3-955d-98e93ff90f19",
+   "name": "Langsame Kniebeuge",
+   "exercise": 1963,
+   "description": "<p>Eine tempobasierte Kniebeuge, die durch eine kontrollierte Bewegung die Muskelspannung erhöht und die Stabilität des Unterkörpers verbessert.</p>\n<ol>\n<li>Absenken: Senke dich 3 Sekunden lang langsam ab.</li>\n<li>Pause: Halte unten 1 Sekunde lang inne.</li>\n<li>Aufstehen: Kehre in normalem Tempo in die Ausgangsposition zurück.</li>\n<li>Haltung: Halte deine Brust aufrecht und das Gewicht auf den Fersen.</li>\n</ol>\n",
+   "description_source": "Eine tempobasierte Kniebeuge, die durch eine kontrollierte Bewegung die Muskelspannung erhöht und die Stabilität des Unterkörpers verbessert.\n1. Absenken: Senke dich 3 Sekunden lang langsam ab.\n2. Pause: Halte unten 1 Sekunde lang inne.\n3. Aufstehen: Kehre in normalem Tempo in die Ausgangsposition zurück.\n4. Haltung: Halte deine Brust aufrecht und das Gewicht auf den Fersen.",
+   "created": "2026-06-19T17:51:51.204920+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 3559,
+   "uuid": "eedb7e1e-2fd2-4cc5-815f-851d14f3ef3d",
+   "name": "Sentadilla lenta",
+   "exercise": 1963,
+   "description": "<p>Una sentadilla basada en el tempo que utiliza un movimiento controlado para aumentar la tensión muscular y mejorar la estabilidad del tren inferior.</p>\n<ol>\n<li>Bajada: Desciende lentamente durante 3 segundos.</li>\n<li>Pausa: Mantén la posición abajo durante 1 segundo.</li>\n<li>Subida: Vuelve a la posición inicial a un ritmo normal.</li>\n<li>Técnica: Mantén el pecho erguido y el peso sobre los talones.</li>\n</ol>\n",
+   "description_source": "Una sentadilla basada en el tempo que utiliza un movimiento controlado para aumentar la tensión muscular y mejorar la estabilidad del tren inferior.\n1. Bajada: Desciende lentamente durante 3 segundos.\n2. Pausa: Mantén la posición abajo durante 1 segundo.\n3. Subida: Vuelve a la posición inicial a un ritmo normal.\n4. Técnica: Mantén el pecho erguido y el peso sobre los talones.",
+   "created": "2026-06-19T17:51:51.728482+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 3118,
+   "uuid": "bfee6645-8215-4280-a261-72e86508e798",
+   "name": "Slow Squat",
+   "exercise": 1963,
+   "description": "<p>​A tempo-based squat that uses controlled movement to increase muscle tension and improve lower-body stability.</p>\n<ol>\n<li>​Lower: Descend slowly for 3 seconds.</li>\n<li>​Pause: Hold at the bottom for 1 second.</li>\n<li>​Stand: Return to the starting position at a normal pace.</li>\n<li>Form: Keep your chest up and weight in your heels.</li>\n</ol>\n",
+   "description_source": "​A tempo-based squat that uses controlled movement to increase muscle tension and improve lower-body stability.\n1. ​Lower: Descend slowly for 3 seconds.\n2. ​Pause: Hold at the bottom for 1 second.\n3. ​Stand: Return to the starting position at a normal pace.\n4. Form: Keep your chest up and weight in your heels.",
+   "created": "2026-05-06T08:28:49.731311+02:00",
+   "language": 2,
+   "aliases": [
+    {
+     "id": 643,
+     "uuid": "e3a13d12-9d2c-444e-a362-22f6c89900e5",
+     "alias": "Tempo Squat"
+    },
+    {
+     "id": 644,
+     "uuid": "4989300c-942f-43d8-b5df-15eeb74eb53d",
+     "alias": "​3-1-1 Squat"
+    }
+   ],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Anon#2",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Anon#2"
+   ]
+  },
+  {
+   "id": 4395,
+   "uuid": "6a4d4f0d-8d0e-4d68-bc67-7ce2490a6e81",
+   "name": "Squat lent",
+   "exercise": 1963,
+   "description": "<p>Un squat basé sur le tempo qui utilise un mouvement contrôlé pour augmenter la tension musculaire et améliorer la stabilité du bas du corps.</p>\n<ol>\n<li>Descente : Descendez lentement pendant 3 secondes.</li>\n<li>Pause : Maintenez la position basse pendant 1 seconde.</li>\n<li>Remontée : Revenez à la position de départ à un rythme normal.</li>\n<li>Technique : Gardez la poitrine ouverte et le poids dans les talons.</li>\n</ol>\n",
+   "description_source": "Un squat basé sur le tempo qui utilise un mouvement contrôlé pour augmenter la tension musculaire et améliorer la stabilité du bas du corps.\n1. Descente : Descendez lentement pendant 3 secondes.\n2. Pause : Maintenez la position basse pendant 1 seconde.\n3. Remontée : Revenez à la position de départ à un rythme normal.\n4. Technique : Gardez la poitrine ouverte et le poids dans les talons.",
+   "created": "2026-06-19T18:42:40.059705+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "Anon#2"
+ ],
+ "total_authors_history": [
+  "Anon#2",
+  "wger.de"
+ ]
+}

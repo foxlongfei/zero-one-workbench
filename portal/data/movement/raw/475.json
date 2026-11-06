@@ -1,0 +1,467 @@
+{
+ "id": 475,
+ "uuid": "8e420408-0682-4ab6-89f5-2681e54c7ce0",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:32:20.243159+01:00",
+ "last_update_global": "2026-04-15T22:23:56.751242+02:00",
+ "category": {
+  "id": 12,
+  "name": "Back"
+ },
+ "muscles": [
+  {
+   "id": 12,
+   "name": "Latissimus dorsi",
+   "name_en": "Lats",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-12.6a5de7a0e373.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-12.974a8c6def63.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 2,
+   "name": "Anterior deltoid",
+   "name_en": "Shoulders",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-2.e1e1205a3202.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-2.74ea636ad97b.svg"
+  },
+  {
+   "id": 1,
+   "name": "Biceps brachii",
+   "name_en": "Biceps",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-1.8790f8a0b3b9.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-1.e08c58a194b9.svg"
+  },
+  {
+   "id": 9,
+   "name": "Trapezius",
+   "name_en": "",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-9.b491050a7108.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-9.be1b5e41906b.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 6,
+   "name": "Pull-up bar"
+  }
+ ],
+ "license": {
+  "id": 1,
+  "full_name": " Creative Commons Attribution Share Alike 3",
+  "short_name": "CC-BY-SA 3",
+  "url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en"
+ },
+ "license_author": "wger.de",
+ "images": [
+  {
+   "id": 323,
+   "uuid": "b0554016-16fd-4dbe-be47-a2a17d16ae0e",
+   "exercise": 475,
+   "exercise_uuid": "8e420408-0682-4ab6-89f5-2681e54c7ce0",
+   "image": "https://wger.de/media/exercise-images/475/b0554016-16fd-4dbe-be47-a2a17d16ae0e.jpg",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/475/b0554016-16fd-4dbe-be47-a2a17d16ae0e.jpg.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/475/b0554016-16fd-4dbe-be47-a2a17d16ae0e.jpg.400x400_q85.jpg"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Imobard",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Imobard"
+   ],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 2028,
+   "uuid": "0b068941-65c4-4ce3-ad70-c006d2bc88e2",
+   "name": "Dominadas",
+   "exercise": 475,
+   "description": "<p>Toma la barra con los brazos a la altura de los hombros y las palmas de las manos hacia el frente. Intenta sacar el pecho, apretar el abdomen y tirar con las dorsales para elevarte hacia arriba hasta sobrepasar la barra con la barbilla intentando mantener el resto del cuerpo completamente estático</p>\n",
+   "description_source": "Toma la barra con los brazos a la altura de los hombros y las palmas de las manos hacia el frente. Intenta sacar el pecho, apretar el abdomen y tirar con las dorsales para elevarte hacia arriba hasta sobrepasar la barra con la barbilla intentando mantener el resto del cuerpo completamente estático",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Imobard",
+    "wger.de"
+   ]
+  },
+  {
+   "id": 1395,
+   "uuid": "232775eb-5456-4218-a90e-29356b40ca3b",
+   "name": "Flexões de braço",
+   "exercise": 475,
+   "description": "<p>Posição inicial:</p>\n<p>Comece pendurando-se na barra de pull-up, com as palmas das mãos voltadas para fora e os pés fora do chão.Suas mãos devem estar ligeiramente mais afastadas do que a largura dos ombros. Apenas ligeiramente, de modo que os cotovelos ainda estejam na frente do corpo e não diretamente para o lado.Seu corpo deve ser reto e apontado ligeiramente para a frente. Seus braços devem estar estendidos.</p>\n<p>Passos:</p>\n<ol>\n<li>Use sua força para puxar o corpo para cima de maneira uniforme, aproximando o peito da barra e o queixo logo acima dela. NÃO se levante usando impulso, como chutar.</li>\n<li>Abaixe cuidadosamente o corpo de volta à posição inicial.</li>\n<li>Repita.</li>\n</ol>\n<p>Dicas:</p>\n<ul>\n<li>Para fazer flexões corretamente, você deve primeiro aumentar a força em várias áreas-chave, incluindo ombros, braços e abdominais. Comece com flexões somente depois de ter construído força suficiente com outros exercícios.</li>\n</ul>\n",
+   "description_source": "Posição inicial:\n\nComece pendurando-se na barra de pull-up, com as palmas das mãos voltadas para fora e os pés fora do chão.Suas mãos devem estar ligeiramente mais afastadas do que a largura dos ombros. Apenas ligeiramente, de modo que os cotovelos ainda estejam na frente do corpo e não diretamente para o lado.Seu corpo deve ser reto e apontado ligeiramente para a frente. Seus braços devem estar estendidos.\n\nPassos:\n\n1. Use sua força para puxar o corpo para cima de maneira uniforme, aproximando o peito da barra e o queixo logo acima dela. NÃO se levante usando impulso, como chutar.\n2. Abaixe cuidadosamente o corpo de volta à posição inicial.\n3. Repita.\n\nDicas:\n\n* Para fazer flexões corretamente, você deve primeiro aumentar a força em várias áreas-chave, incluindo ombros, braços e abdominais. Comece com flexões somente depois de ter construído força suficiente com outros exercícios.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Eduardo Celino (imported from Feeel)",
+    "wger.de",
+    "flexagoon (imported from Feeel)",
+    "Vinicius Rodrigues (imported from Feeel)",
+    "mondstern (imported from Feeel)",
+    "Rodolfo Candido (imported from Feeel)",
+    "gbpu (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 36,
+   "uuid": "4e741c73-d40a-4fad-b0e0-76edd9bbe8df",
+   "name": "Klimmzüge",
+   "exercise": 475,
+   "description": "<p>Greife die Klimmzugstange mit breitem Griff, der Körper hängt zunächst frei nach unten. Ziehe nun die Brust raus und bringe den Körper nach oben, bis dein Kinn über der Stange liegt (oder der Nacken sie berührt, wenn du <em>nach hinten</em> gezogen hast), gehe nun langsam nach unten und wiederhole.</p>\n",
+   "description_source": "Greife die Klimmzugstange mit breitem Griff, der Körper hängt zunächst frei nach unten. Ziehe nun die Brust raus und bringe den Körper nach oben, bis dein Kinn über der Stange liegt (oder der Nacken sie berührt, wenn du *nach hinten* gezogen hast), gehe nun langsam nach unten und wiederhole.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [
+    {
+     "id": 376,
+     "uuid": "289c6deb-5a10-4695-8060-487f459197d1",
+     "translation": 36,
+     "comment": "Kopf in Nacken"
+    },
+    {
+     "id": 377,
+     "uuid": "da5044a1-bfc4-4792-8756-aebaaf7f7f23",
+     "translation": 36,
+     "comment": "Brust raus"
+    },
+    {
+     "id": 378,
+     "uuid": "e904dbce-ac17-4204-9aff-fa23b81a1da0",
+     "translation": 36,
+     "comment": "Ellenbogen nach hinten"
+    }
+   ],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 1394,
+   "uuid": "ac51d56d-5d06-4c54-8e33-4f14064a7853",
+   "name": "Optrekken",
+   "exercise": 475,
+   "description": "<p>Beginpositie:</p>\n<p>Begin met hangen aan de pull-up bar, handpalmen van je af en voeten van de vloer.Je handen moeten iets wijder dan schouderbreedte uit elkaar staan. Slechts een beetje, zodat de ellebogen nog steeds voor het lichaam zijn in plaats van haaks opzij.Je lichaam moet recht zijn en een beetje naar voren wijzen. Je armen moeten gestrekt zijn.</p>\n<p>Stappen:</p>\n<ol>\n<li>Gebruik uw kracht om uw lichaam gelijkmatig omhoog te trekken, waarbij u uw borst dichter bij de pull-up bar brengt en uw kin er net boven. Til jezelf NIET op door gebruik te maken van momentum, zoals schoppen.</li>\n<li>Laat je lichaam voorzichtig weer zakken naar de startpositie.</li>\n<li>Herhaal.</li>\n</ol>\n<p>Tips:</p>\n<ul>\n<li>Om pull-ups correct uit te voeren, moet je eerst kracht opbouwen in verschillende belangrijke gebieden, waaronder schouders, armen, en buikspieren. Begin pas met pull-ups nadat u voldoende kracht hebt opgebouwd met andere oefeningen.</li>\n</ul>\n",
+   "description_source": "Beginpositie:\n\nBegin met hangen aan de pull-up bar, handpalmen van je af en voeten van de vloer.Je handen moeten iets wijder dan schouderbreedte uit elkaar staan. Slechts een beetje, zodat de ellebogen nog steeds voor het lichaam zijn in plaats van haaks opzij.Je lichaam moet recht zijn en een beetje naar voren wijzen. Je armen moeten gestrekt zijn.\n\nStappen:\n\n1. Gebruik uw kracht om uw lichaam gelijkmatig omhoog te trekken, waarbij u uw borst dichter bij de pull-up bar brengt en uw kin er net boven. Til jezelf NIET op door gebruik te maken van momentum, zoals schoppen.\n2. Laat je lichaam voorzichtig weer zakken naar de startpositie.\n3. Herhaal.\n\nTips:\n\n* Om pull-ups correct uit te voeren, moet je eerst kracht opbouwen in verschillende belangrijke gebieden, waaronder schouders, armen, en buikspieren. Begin pas met pull-ups nadat u voldoende kracht hebt opgebouwd met andere oefeningen.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 6,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de",
+    "mondstern (imported from Feeel)",
+    "Heimen Stoffels (imported from Feeel)",
+    "Daan Vervacke (imported from Feeel)",
+    "J. Lavoie (imported from Feeel)",
+    "floris van den bosch (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1393,
+   "uuid": "8a2418b3-de51-4b64-9ae3-f98330250823",
+   "name": "Pull ups",
+   "exercise": 475,
+   "description": "<p>Posizione di partenza:</p>\n<p>Iniziare appendendosi alla barra di pull-up, con i palmi rivolti verso l'esterno e i piedi fuori dal pavimento.Le vostre mani dovrebbero essere leggermente più larghe della larghezza delle spalle. Solo leggermente, in modo che i gomiti siano ancora di fronte al corpo piuttosto che esattamente di lato.Il corpo deve essere dritto e puntato leggermente in avanti. Le braccia devono essere distese.</p>\n<p>Passi:</p>\n<ol>\n<li>Usa la tua forza per tirare il tuo corpo verso l'alto in modo uniforme, avvicinando il tuo petto alla barra del pull-up e il tuo mento appena sopra di essa. NON sollevarsi usando lo slancio, come i calci.</li>\n<li>Abbassare con attenzione il corpo fino alla posizione di partenza.</li>\n<li>Ripetere.</li>\n</ol>\n<p>Suggerimenti:</p>\n<ul>\n<li>Per fare correttamente le trazioni, dovete prima costruire la forza in diverse aree chiave, comprese le spalle, le braccia e gli addominali. Iniziate con le trazioni solo dopo aver acquisito abbastanza forza con altri esercizi.</li>\n</ul>\n",
+   "description_source": "Posizione di partenza:\n\nIniziare appendendosi alla barra di pull-up, con i palmi rivolti verso l'esterno e i piedi fuori dal pavimento.Le vostre mani dovrebbero essere leggermente più larghe della larghezza delle spalle. Solo leggermente, in modo che i gomiti siano ancora di fronte al corpo piuttosto che esattamente di lato.Il corpo deve essere dritto e puntato leggermente in avanti. Le braccia devono essere distese.\n\nPassi:\n\n1. Usa la tua forza per tirare il tuo corpo verso l'alto in modo uniforme, avvicinando il tuo petto alla barra del pull-up e il tuo mento appena sopra di essa. NON sollevarsi usando lo slancio, come i calci.\n2. Abbassare con attenzione il corpo fino alla posizione di partenza.\n3. Ripetere.\n\nSuggerimenti:\n\n* Per fare correttamente le trazioni, dovete prima costruire la forza in diverse aree chiave, comprese le spalle, le braccia e gli addominali. Iniziate con le trazioni solo dopo aver acquisito abbastanza forza con altri esercizi.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Gianluca Vespignani (imported from Feeel)",
+    "wger.de",
+    "mondstern (imported from Feeel)",
+    "J. Lavoie (imported from Feeel)",
+    "albanobattistella (imported from Feeel)",
+    "Marco Galli (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 107,
+   "uuid": "7ce6b090-5099-4cd0-83ae-1a02725c868b",
+   "name": "Pull-ups",
+   "exercise": 475,
+   "description": "<p>Grab the pull up bar with a wide grip, the body is hanging freely. Keep your chest out and pull yourself up till your chin reaches the bar or it touches your neck, if you want to pull behind you. Go with a slow and controlled movement down, always keeping the chest out.</p>\n",
+   "description_source": "Grab the pull up bar with a wide grip, the body is hanging freely. Keep your chest out and pull yourself up till your chin reaches the bar or it touches your neck, if you want to pull behind you. Go with a slow and controlled movement down, always keeping the chest out.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [
+    {
+     "id": 379,
+     "uuid": "ca41d23c-2d53-477e-a672-7f45a6810312",
+     "translation": 107,
+     "comment": "Keep your head up"
+    },
+    {
+     "id": 380,
+     "uuid": "75ccc607-8a36-4022-958e-01dc86ccfa95",
+     "translation": 107,
+     "comment": "Keep your chest out"
+    },
+    {
+     "id": 381,
+     "uuid": "577d31f2-2f08-4881-b12a-7918db1bb673",
+     "translation": 107,
+     "comment": "The elbows always point back, don't let them open sidewards"
+    }
+   ],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 1391,
+   "uuid": "e4eb4455-8ba5-49e8-bd90-f9c6674d6396",
+   "name": "Shyby",
+   "exercise": 475,
+   "description": "",
+   "description_source": "",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 9,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "wger.de",
+    "Miroslav Mazel (imported from Feeel)",
+    "Shimon (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1390,
+   "uuid": "eef69bbc-2e6b-446e-909a-f46a52a33c8e",
+   "name": "Tarik - up",
+   "exercise": 475,
+   "description": "<p>Posisi awal:</p>\n<p>Mulailah dengan menggantung dari bar pull-up, telapak tangan menghadap jauh dan kaki dari lantai.Tangan Anda harus sedikit lebih lebar dari selebar bahu. Hanya sedikit begitu, sehingga siku masih di depan tubuh daripada tepat ke samping.Tubuh Anda harus lurus dan sedikit mengarah ke depan. Lengan Anda harus diperpanjang.</p>\n<p>Langkah:</p>\n<ol>\n<li>Gunakan kekuatan Anda untuk menarik tubuh Anda secara merata, mendekatkan dada anda ke Palang pull-up dan dagu Anda tepat di atasnya. Jangan mengangkat diri menggunakan momentum, seperti menendang.</li>\n<li>Hati-hati menurunkan tubuh Anda kembali ke posisi awal.</li>\n<li>Ulangi.</li>\n</ol>\n<p>Tips:</p>\n<ul>\n<li>Untuk melakukan pull-up dengan benar, Anda harus terlebih dahulu membangun kekuatan di beberapa area utama, termasuk bahu, lengan, dan perut. Mulailah dengan pull-up hanya setelah Anda membangun kekuatan yang cukup dengan latihan lain.</li>\n</ul>\n",
+   "description_source": "Posisi awal:\n\nMulailah dengan menggantung dari bar pull-up, telapak tangan menghadap jauh dan kaki dari lantai.Tangan Anda harus sedikit lebih lebar dari selebar bahu. Hanya sedikit begitu, sehingga siku masih di depan tubuh daripada tepat ke samping.Tubuh Anda harus lurus dan sedikit mengarah ke depan. Lengan Anda harus diperpanjang.\n\nLangkah:\n\n1. Gunakan kekuatan Anda untuk menarik tubuh Anda secara merata, mendekatkan dada anda ke Palang pull-up dan dagu Anda tepat di atasnya. Jangan mengangkat diri menggunakan momentum, seperti menendang.\n2. Hati-hati menurunkan tubuh Anda kembali ke posisi awal.\n3. Ulangi.\n\nTips:\n\n* Untuk melakukan pull-up dengan benar, Anda harus terlebih dahulu membangun kekuatan di beberapa area utama, termasuk bahu, lengan, dan perut. Mulailah dengan pull-up hanya setelah Anda membangun kekuatan yang cukup dengan latihan lain.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 23,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "wger.de",
+    "Reza Almanda (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1392,
+   "uuid": "ea2239c2-4799-45f1-8bd1-8f885cafbc46",
+   "name": "Tractions",
+   "exercise": 475,
+   "description": "<p>Prenez la barre de traction avec les deux mains écartées. En gardant la poitrine en avant, tirez avec vos bras jusqu’à ce que votre mentons atteigne la barre. Controlez le mouvement lors de la montée et de la descente.</p>\n",
+   "description_source": "Prenez la barre de traction avec les deux mains écartées. En gardant la poitrine en avant, tirez avec vos bras jusqu’à ce que votre mentons atteigne la barre. Controlez le mouvement lors de la montée et de la descente.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Maxime Leroy (imported from Feeel)",
+    "wger.de",
+    "Clément Mondon (imported from Feeel)",
+    "mondstern (imported from Feeel)",
+    "J. Lavoie (imported from Feeel)",
+    "Miroslav Mazel (imported from Feeel)",
+    "Jonathan D. (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1396,
+   "uuid": "525459a0-ea9d-493f-82cf-cebfcfade671",
+   "name": "Έλξεις",
+   "exercise": 475,
+   "description": "<p>Θέση εκκίνησης:</p>\n<p>Ξεκινήστε κρεμάμενοι από τη ράβδο έλξης, με τις παλάμες προς τα έξω και τα πόδια να μην εφάπτονται στο πάτωμα.Τα χέρια σας πρέπει να είναι ελαφρά πιο ανοιχτά από το πλάτος των ώμων. Μόνο ελαφρά, έτσι ώστε οι αγκώνες να είναι ακόμα μπροστά από το σώμα και όχι ίσια στο πλάι.Το σώμα σας πρέπει να είναι ίσιο και ελαφρώς στραμμένο προς τα εμπρός. Τα χέρια σας πρέπει να είναι εκτεταμένα.</p>\n<p>Βήματα:</p>\n<ol>\n<li>Χρησιμοποιήστε τη δύναμή σας για να τραβήξετε το σώμα σας ομοιόμορφα προς τα πάνω, φέρνοντας το στήθος σας πιο κοντά στη ράβδο έλξης και το πηγούνι σας ακριβώς από πάνω. ΜΗΝ σηκώνετε τον εαυτό σας χρησιμοποιώντας ορμή, όπως κλοτσιές.</li>\n<li>Κατεβάστε προσεκτικά το σώμα σας προς τα κάτω στην αρχική θέση.</li>\n<li>Επαναλάβετε.</li>\n</ol>\n<p>Συμβουλές:</p>\n<ul>\n<li>Για να κάνετε σωστά τα έλξεις, πρέπει πρώτα να αναπτύξετε δύναμη σε πολλές σημαντικές περιοχές, όπως ώμοι, χέρια και κοιλιακοί. Ξεκινήστε τις έλξεις μόνο αφού έχετε αναπτύξει αρκετή δύναμη με άλλες ασκήσεις.</li>\n</ul>\n",
+   "description_source": "Θέση εκκίνησης:\n\nΞεκινήστε κρεμάμενοι από τη ράβδο έλξης, με τις παλάμες προς τα έξω και τα πόδια να μην εφάπτονται στο πάτωμα.Τα χέρια σας πρέπει να είναι ελαφρά πιο ανοιχτά από το πλάτος των ώμων. Μόνο ελαφρά, έτσι ώστε οι αγκώνες να είναι ακόμα μπροστά από το σώμα και όχι ίσια στο πλάι.Το σώμα σας πρέπει να είναι ίσιο και ελαφρώς στραμμένο προς τα εμπρός. Τα χέρια σας πρέπει να είναι εκτεταμένα.\n\nΒήματα:\n\n1. Χρησιμοποιήστε τη δύναμή σας για να τραβήξετε το σώμα σας ομοιόμορφα προς τα πάνω, φέρνοντας το στήθος σας πιο κοντά στη ράβδο έλξης και το πηγούνι σας ακριβώς από πάνω. ΜΗΝ σηκώνετε τον εαυτό σας χρησιμοποιώντας ορμή, όπως κλοτσιές.\n2. Κατεβάστε προσεκτικά το σώμα σας προς τα κάτω στην αρχική θέση.\n3. Επαναλάβετε.\n\nΣυμβουλές:\n\n* Για να κάνετε σωστά τα έλξεις, πρέπει πρώτα να αναπτύξετε δύναμη σε πολλές σημαντικές περιοχές, όπως ώμοι, χέρια και κοιλιακοί. Ξεκινήστε τις έλξεις μόνο αφού έχετε αναπτύξει αρκετή δύναμη με άλλες ασκήσεις.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 8,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de",
+    "Vangelis Skarmoutsos (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1397,
+   "uuid": "db6af30a-886d-4cb0-bc7f-11e4c3a89960",
+   "name": "اسحب",
+   "exercise": 475,
+   "description": "<p>وضع البداية:</p>\n<p>ابدأ بالتعلق من شريط السحب ، بحيث تكون راحة اليد متجهة بعيدًا والقدمين عن الأرض.يجب أن تكون يداك أعرض قليلاً من عرض الكتفين. بدرجة طفيفة فقط ، بحيث يظل المرفقان أمام الجسم بدلاً من الجانب بشكل مباشر.يجب أن يكون جسدك مستقيمًا وموجهًا للأمام قليلاً. يجب أن تمد ذراعيك.</p>\n<p>خطوات:</p>\n<ol>\n<li>استخدم قوتك لسحب جسمك بالتساوي ، مع تقريب صدرك من شريط السحب والذقن فوقه مباشرة. لا ترفع نفسك باستخدام الزخم ، مثل الركل.</li>\n<li>اخفض جسمك بحذر لأسفل إلى وضع البداية.</li>\n<li>كرر.</li>\n</ol>\n<p>نصائح:</p>\n<ul>\n<li>للقيام بتمارين السحب بشكل صحيح ، يجب عليك أولاً بناء القوة في العديد من المجالات الرئيسية ، بما في ذلك الكتفين والذراعين والبطن. ابدأ بتمارين السحب فقط بعد أن تكون قد اكتسبت قوة كافية مع تمارين أخرى.</li>\n</ul>\n",
+   "description_source": "وضع البداية:\n\nابدأ بالتعلق من شريط السحب ، بحيث تكون راحة اليد متجهة بعيدًا والقدمين عن الأرض.يجب أن تكون يداك أعرض قليلاً من عرض الكتفين. بدرجة طفيفة فقط ، بحيث يظل المرفقان أمام الجسم بدلاً من الجانب بشكل مباشر.يجب أن يكون جسدك مستقيمًا وموجهًا للأمام قليلاً. يجب أن تمد ذراعيك.\n\nخطوات:\n\n1. استخدم قوتك لسحب جسمك بالتساوي ، مع تقريب صدرك من شريط السحب والذقن فوقه مباشرة. لا ترفع نفسك باستخدام الزخم ، مثل الركل.\n2. اخفض جسمك بحذر لأسفل إلى وضع البداية.\n3. كرر.\n\nنصائح:\n\n* للقيام بتمارين السحب بشكل صحيح ، يجب عليك أولاً بناء القوة في العديد من المجالات الرئيسية ، بما في ذلك الكتفين والذراعين والبطن. ابدأ بتمارين السحب فقط بعد أن تكون قد اكتسبت قوة كافية مع تمارين أخرى.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 17,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de",
+    "Rex_sa (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1398,
+   "uuid": "0b223640-7b92-4737-831d-1bbdfee863cc",
+   "name": "引体向上",
+   "exercise": 475,
+   "description": "<p>起始姿势：先悬挂在单杠上，手掌朝前，双脚离地。双手比肩稍宽。不要太宽，肘部不要在身体两边，要在身体前面。身体应为伸直，略微向前的状态。手臂应处于伸展状态。</p>\n<p>步骤：</p>\n<ol>\n<li>用力均匀地拉起你的身体，使胸部靠近单杠，下巴刚好超过横杆。不要跃起或晃起身体，比如踢腿。</li>\n<li>小心地把身体放下来，回到起始位置。</li>\n<li>重复进行。</li>\n</ol>\n<p>提示：——引体向上要想做得正确，您必须先增强几个关键部位的力量，包括肩膀、手臂和腹肌。您应该通过其他练习积累了足够的力量后，再开始做引体向上。</p>\n",
+   "description_source": "起始姿势：先悬挂在单杠上，手掌朝前，双脚离地。双手比肩稍宽。不要太宽，肘部不要在身体两边，要在身体前面。身体应为伸直，略微向前的状态。手臂应处于伸展状态。\n\n步骤：\n\n1. 用力均匀地拉起你的身体，使胸部靠近单杠，下巴刚好超过横杆。不要跃起或晃起身体，比如踢腿。\n2. 小心地把身体放下来，回到起始位置。\n3. 重复进行。\n\n提示：——引体向上要想做得正确，您必须先增强几个关键部位的力量，包括肩膀、手臂和腹肌。您应该通过其他练习积累了足够的力量后，再开始做引体向上。",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 24,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "poi / poipoipoipoipoipoipoipoipoi (imported from Feeel)",
+    "Eric (imported from Feeel)",
+    "wger.de",
+    "bxezi (imported from Feeel)"
+   ]
+  }
+ ],
+ "variation_group": "0e31687f-8dd5-4c68-9dc6-df0d9dbb7590",
+ "videos": [
+  {
+   "id": 71,
+   "uuid": "83067ffe-ccb9-4e22-8507-5131b211ce74",
+   "exercise": 475,
+   "video": "https://wger.de/media/exercise-video/475/83067ffe-ccb9-4e22-8507-5131b211ce74.MOV",
+   "is_main": false,
+   "size": 57098527,
+   "duration": "18.77",
+   "width": 1920,
+   "height": 1080,
+   "codec": "hevc",
+   "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  }
+ ],
+ "author_history": [
+  "wger.de"
+ ],
+ "total_authors_history": [
+  "Gianluca Vespignani (imported from Feeel)",
+  "wger.de",
+  "Clément Mondon (imported from Feeel)",
+  "flexagoon (imported from Feeel)",
+  "Daan Vervacke (imported from Feeel)",
+  "Eric (imported from Feeel)",
+  "J. Lavoie (imported from Feeel)",
+  "Shimon (imported from Feeel)",
+  "floris van den bosch (imported from Feeel)",
+  "Miroslav Mazel (imported from Feeel)",
+  "Imobard",
+  "Marco Galli (imported from Feeel)",
+  "Reza Almanda (imported from Feeel)",
+  "Vangelis Skarmoutsos (imported from Feeel)",
+  "Maxime Leroy (imported from Feeel)",
+  "Eduardo Celino (imported from Feeel)",
+  "Goulart",
+  "Vinicius Rodrigues (imported from Feeel)",
+  "mondstern (imported from Feeel)",
+  "Heimen Stoffels (imported from Feeel)",
+  "albanobattistella (imported from Feeel)",
+  "Rodolfo Candido (imported from Feeel)",
+  "Rex_sa (imported from Feeel)",
+  "gbpu (imported from Feeel)",
+  "bxezi (imported from Feeel)",
+  "poi / poipoipoipoipoipoipoipoipoi (imported from Feeel)",
+  "Jonathan D. (imported from Feeel)"
+ ]
+}
