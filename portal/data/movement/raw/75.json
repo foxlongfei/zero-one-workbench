@@ -1,0 +1,426 @@
+{
+ "id": 75,
+ "uuid": "28321cf3-70e6-48a4-ade1-d11382180cb3",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:23:21.212978+01:00",
+ "last_update_global": "2026-10-10T19:12:50.716009+02:00",
+ "category": {
+  "id": 11,
+  "name": "Chest"
+ },
+ "muscles": [
+  {
+   "id": 4,
+   "name": "Pectoralis major",
+   "name_en": "Chest",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-4.c9fa9a228bc8.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-4.955e74ea6083.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 2,
+   "name": "Anterior deltoid",
+   "name_en": "Shoulders",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-2.e1e1205a3202.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-2.74ea636ad97b.svg"
+  },
+  {
+   "id": 5,
+   "name": "Triceps brachii",
+   "name_en": "Triceps",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-5.8a2b934b5486.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-5.68eb84d675a5.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 8,
+   "name": "Bench"
+  },
+  {
+   "id": 3,
+   "name": "Dumbbell"
+  }
+ ],
+ "license": {
+  "id": 1,
+  "full_name": " Creative Commons Attribution Share Alike 3",
+  "short_name": "CC-BY-SA 3",
+  "url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en"
+ },
+ "license_author": "wger.de",
+ "images": [
+  {
+   "id": 113,
+   "uuid": "87a312b7-d01e-4f69-9bda-1ed2f1fcd9ab",
+   "exercise": 75,
+   "exercise_uuid": "28321cf3-70e6-48a4-ade1-d11382180cb3",
+   "image": "https://wger.de/media/exercise-images/97/Dumbbell-bench-press-1.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/97/Dumbbell-bench-press-1.png.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/97/Dumbbell-bench-press-1.png.400x400_q85.jpg"
+   },
+   "is_main": true,
+   "style": "1",
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Everkinetic",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [],
+   "is_ai_generated": false
+  },
+  {
+   "id": 703,
+   "uuid": "7b700f5d-17fc-41a9-bd41-e98e45c15768",
+   "exercise": 75,
+   "exercise_uuid": "28321cf3-70e6-48a4-ade1-d11382180cb3",
+   "image": "https://wger.de/media/exercise-images/75/7b700f5d-17fc-41a9-bd41-e98e45c15768.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/75/7b700f5d-17fc-41a9-bd41-e98e45c15768.png.200x200_q85.png",
+    "medium": "https://wger.de/media/exercise-images/75/7b700f5d-17fc-41a9-bd41-e98e45c15768.png.400x400_q85.png"
+   },
+   "is_main": true,
+   "style": "2",
+   "license": 2,
+   "license_title": "Press De Banca Con Mancuernas",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [],
+   "is_ai_generated": true
+  },
+  {
+   "id": 114,
+   "uuid": "3c765b1e-eab9-4b61-8e2e-7d7591cb6ccb",
+   "exercise": 75,
+   "exercise_uuid": "28321cf3-70e6-48a4-ade1-d11382180cb3",
+   "image": "https://wger.de/media/exercise-images/97/Dumbbell-bench-press-2.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/97/Dumbbell-bench-press-2.png.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/97/Dumbbell-bench-press-2.png.400x400_q85.jpg"
+   },
+   "is_main": false,
+   "style": "1",
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Everkinetic",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 77,
+   "uuid": "06450bcb-03a8-4bd7-8349-ef677ee57ea3",
+   "name": "Bankdrücken KH",
+   "exercise": 75,
+   "description": "<p>Der Bewegungsablauf ist ähnlich zur Übung mit einer Langhantel.</p>\n<p>Nehme die Gewichte in die Hände und lege dich auf die Bank. Halte die Hanteln neben der Brust auf Brustwarzenhöhe und drücke sie nun nach oben, bis die Arme ausgestreckt sind. Lasse die Gewichte nun langsam und kontrolliert runter.</p>\n",
+   "description_source": "Der Bewegungsablauf ist ähnlich zur Übung mit einer Langhantel.\n\nNehme die Gewichte in die Hände und lege dich auf die Bank. Halte die Hanteln neben der Brust auf Brustwarzenhöhe und drücke sie nun nach oben, bis die Arme ausgestreckt sind. Lasse die Gewichte nun langsam und kontrolliert runter.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [
+    {
+     "id": 314,
+     "uuid": "db612a17-34f7-4486-bf73-f6608dc5795f",
+     "translation": 77,
+     "comment": "Explosive Bewegung nach oben"
+    },
+    {
+     "id": 315,
+     "uuid": "deeeebfc-62c9-4128-a24e-93ef0e9ffa5d",
+     "translation": 77,
+     "comment": "Der Körper bildet mit Arme und Schultern kein \"T\""
+    }
+   ],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 97,
+   "uuid": "0ec76f5d-1311-4d6d-bf79-00fa17c3061a",
+   "name": "Benchpress Dumbbells",
+   "exercise": 75,
+   "description": "<ol>\n<li>\n<p>Setup and Starting Position: Sit at the end of a flat bench with a dumbbell resting vertically against each thigh. Carefully lean back while driving the dumbbells toward your chest with your knees.</p>\n</li>\n<li>\n<p>The “Leg Drive” and Posture: Plant your feet firmly on the floor. Retract your shoulder blades (press them together against the bench) and maintain a slight natural lumbar curve.</p>\n</li>\n<li>\n<p>Starting Position: Push the dumbbells toward the ceiling. Your wrists should be aligned with your elbows. Rotate the dumbbells slightly inward (about 45 degrees) so that your elbows do not splay out too far to the sides, thereby protecting your shoulders.</p>\n</li>\n<li>\n<p>Eccentric Phase (Lowering): Lower the dumbbells in a controlled manner toward the sides of your chest. Your elbows should lower at an angle of about 45–60 degrees relative to your body. Feel the stretch in the lower part of your chest.</p>\n</li>\n<li>\n<p>Concentric Phase (Lift): Push the weight upward in a slight arc (toward the center), without letting the dumbbells collide at the top or fully locking out your elbows to maintain muscle tension. Exhale as you lift.</p>\n</li>\n</ol>\n<p>Translated with DeepL.com (free version)</p>\n",
+   "description_source": "1. Setup and Starting Position: Sit at the end of a flat bench with a dumbbell resting vertically against each thigh. Carefully lean back while driving the dumbbells toward your chest with your knees.\n\n2. The “Leg Drive” and Posture: Plant your feet firmly on the floor. Retract your shoulder blades (press them together against the bench) and maintain a slight natural lumbar curve.\n\n3. Starting Position: Push the dumbbells toward the ceiling. Your wrists should be aligned with your elbows. Rotate the dumbbells slightly inward (about 45 degrees) so that your elbows do not splay out too far to the sides, thereby protecting your shoulders.\n\n4. Eccentric Phase (Lowering): Lower the dumbbells in a controlled manner toward the sides of your chest. Your elbows should lower at an angle of about 45–60 degrees relative to your body. Feel the stretch in the lower part of your chest.\n\n5. Concentric Phase (Lift): Push the weight upward in a slight arc (toward the center), without letting the dumbbells collide at the top or fully locking out your elbows to maintain muscle tension. Exhale as you lift.\n\nTranslated with DeepL.com (free version)",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 2350,
+   "uuid": "61534d45-5984-4953-b49c-8c7b4bbefc44",
+   "name": "Développé couché avec haltères",
+   "exercise": 75,
+   "description": "<p>Le mouvement est très similaire au développé couché avec une barre, mais le poids est ramené plus bas sur la poitrine.\nTenez deux haltères et allongez-vous sur un banc. Tenez les haltères près de la poitrine et poussez-les vers le haut jusqu'à ce que les bras soient tendus. Laissez retomber les haltères lentement et de manière contrôlée.</p>\n",
+   "description_source": "Le mouvement est très similaire au développé couché avec une barre, mais le poids est ramené plus bas sur la poitrine.\nTenez deux haltères et allongez-vous sur un banc. Tenez les haltères près de la poitrine et poussez-les vers le haut jusqu'à ce que les bras soient tendus. Laissez retomber les haltères lentement et de manière contrôlée.",
+   "created": "2024-11-12T18:23:32.198935+01:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Garion",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Garion"
+   ]
+  },
+  {
+   "id": 2240,
+   "uuid": "fcb0e66d-876f-49a2-b80f-a2f7366c6719",
+   "name": "Panca Piana con Manubri",
+   "exercise": 75,
+   "description": "<p>Il movimento è molto simile a quello della panca con bilanciere, ma il peso viene portato al petto in un punto più basso.\nImpugnate due manubri e sdraiatevi su una panca. Tenete i pesi vicino al petto, all'altezza dei capezzoli, e spingeteli verso l'alto fino a tendere le braccia. Lasciare scendere il peso lentamente e in modo controllato.</p>\n",
+   "description_source": "Il movimento è molto simile a quello della panca con bilanciere, ma il peso viene portato al petto in un punto più basso.\nImpugnate due manubri e sdraiatevi su una panca. Tenete i pesi vicino al petto, all'altezza dei capezzoli, e spingeteli verso l'alto fino a tendere le braccia. Lasciare scendere il peso lentamente e in modo controllato.",
+   "created": "2024-04-04T15:17:13.156188+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "FEFFO",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "FEFFO"
+   ]
+  },
+  {
+   "id": 2626,
+   "uuid": "5231e38e-7a5f-4c90-ad89-7bdf5d6dd21c",
+   "name": "Press de banca con mancuernas",
+   "exercise": 75,
+   "description": "<p>Es un ejercicio multiarticular de fuerza y de hipertrofia destinado al desarrollo del tren superior, específicamente el pecho. Al usar mancuernas en lugar de barra, se corrige el desequilibrio de fuerza entre ambos lados del cuerpo y se permite un movimiento más natural y amigable para las articulaciones del hombro.</p>\n<ol>\n<li>\n<p>Preparación y Posición Inicial: Siéntate en el extremo de un banco plano con una mancuerna apoyada verticalmente en cada muslo. Túmbate hacia atrás con cuidado mientras impulsas las mancuernas con las rodillas hacia tu pecho.</p>\n</li>\n<li>\n<p>El \"Leg Drive\" y Postura: Apoya los pies firmemente en el suelo. Retrae las escápulas (junta los omóplatos contra el banco) y mantén un ligero arco lumbar natural.</p>\n</li>\n<li>\n<p>Posición de Salida: Empuja las mancuernas hacia el techo. Tus muñecas deben estar alineadas con los codos. Gira ligeramente las mancuernas hacia adentro (unos 45 grados) para que los codos no se abran en exceso hacia los lados, protegiendo así tus hombros.</p>\n</li>\n<li>\n<p>Fase Excéntrica (Bajada): Baja las mancuernas de forma controlada hacia los lados de tu pecho. Los codos deben bajar formando un ángulo de unos 45-60 grados respecto a tu cuerpo. Siente el estiramiento en el pectoral en la parte baja.</p>\n</li>\n<li>\n<p>Fase Concéntrica (Subida): Empuja el peso hacia arriba siguiendo una ligera trayectoria en arco (hacia el centro), sin llegar a chocar las mancuernas arriba ni bloquear los codos por completo para mantener la tensión muscular. Expulsa el aire al subir.</p>\n</li>\n</ol>\n",
+   "description_source": "Es un ejercicio multiarticular de fuerza y de hipertrofia destinado al desarrollo del tren superior, específicamente el pecho. Al usar mancuernas en lugar de barra, se corrige el desequilibrio de fuerza entre ambos lados del cuerpo y se permite un movimiento más natural y amigable para las articulaciones del hombro.\n\n1. Preparación y Posición Inicial: Siéntate en el extremo de un banco plano con una mancuerna apoyada verticalmente en cada muslo. Túmbate hacia atrás con cuidado mientras impulsas las mancuernas con las rodillas hacia tu pecho.\n\n2. El \"Leg Drive\" y Postura: Apoya los pies firmemente en el suelo. Retrae las escápulas (junta los omóplatos contra el banco) y mantén un ligero arco lumbar natural.\n\n3. Posición de Salida: Empuja las mancuernas hacia el techo. Tus muñecas deben estar alineadas con los codos. Gira ligeramente las mancuernas hacia adentro (unos 45 grados) para que los codos no se abran en exceso hacia los lados, protegiendo así tus hombros.\n\n4. Fase Excéntrica (Bajada): Baja las mancuernas de forma controlada hacia los lados de tu pecho. Los codos deben bajar formando un ángulo de unos 45-60 grados respecto a tu cuerpo. Siente el estiramiento en el pectoral en la parte baja.\n\n5. Fase Concéntrica (Subida): Empuja el peso hacia arriba siguiendo una ligera trayectoria en arco (hacia el centro), sin llegar a chocar las mancuernas arriba ni bloquear los codos por completo para mantener la tensión muscular. Expulsa el aire al subir.",
+   "created": "2025-09-09T17:59:21.785594+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "admin",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "admin"
+   ]
+  },
+  {
+   "id": 2789,
+   "uuid": "1436dd2b-dff2-4c25-8dfc-c2786cad865e",
+   "name": "Supino com halteres",
+   "exercise": 75,
+   "description": "<p>O movimento é muito semelhante ao supino com barra; no entanto, o peso é abaixado até o peito em um ponto mais baixo.</p>\n<p>Segure dois halteres e deite-se em um banco. Mantenha os pesos próximos ao peito, na altura dos mamilos, e empurre-os para cima até que os braços fiquem estendidos. Abaixe o peso de forma lenta e controlada.</p>\n",
+   "description_source": "O movimento é muito semelhante ao supino com barra; no entanto, o peso é abaixado até o peito em um ponto mais baixo.\n\nSegure dois halteres e deite-se em um banco. Mantenha os pesos próximos ao peito, na altura dos mamilos, e empurre-os para cima até que os braços fiquem estendidos. Abaixe o peso de forma lenta e controlada.",
+   "created": "2025-10-07T21:38:48.187931+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Jhonatan",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Jhonatan"
+   ]
+  },
+  {
+   "id": 5118,
+   "uuid": "55935f35-dd7e-4be8-bcfe-8df2dafe67cf",
+   "name": "Жим гантелей лежачи",
+   "exercise": 75,
+   "description": "<p>Жим гантелей лежачи — це багатосуглобова вправа, яка акцентовано навантажує великі грудні м'язи, а також активно задіює передні дельти (плечі) та трицепси. Завдяки використанню гантелей кожна рука працює незалежно, що дозволяє усунути дисбаланс у силі та краще розтягнути м'язи в нижній точці.\nТехніка виконання:</p>\n<ol>\n<li>Початкове положення: Сядьте на край горизонтальної лави, поставте гантелі на коліна. Акуратно ляжте на спину, одночасно підштовхуючи гантелі колінами до рівня грудей. Стопи щільно притисніть до підлоги, лопатки зведіть і притисніть до лави.</li>\n<li>Вихідна позиція: Підніміть гантелі вгору над грудьми на витягнутих руках. Долоні розгорнуті вперед (від себе).</li>\n<li>Рух вниз (ексцентрична фаза): На вдиху плавно опускайте гантелі вниз через сторони, розводячи лікті під кутом приблизно 45-60 градусів відносно тулуба (не розводьте лікті строго в сторони під кутом 90 градусів, щоб берегти плечові суглоби). Опускайте до відчуття комфортного розтягнення в грудях.</li>\n<li>Рух угору (концентрична фаза): На видиху потужним зусиллям грудних м'язів витисніть гантелі вгору по дугоподібній траєкторії. У верхній точці не ударяйте гантелі одна об одну і не блокуйте лікті повністю (залишайте їх ледь м'якими), щоб зберігати напругу в м'язах.</li>\n</ol>\n",
+   "description_source": "Жим гантелей лежачи — це багатосуглобова вправа, яка акцентовано навантажує великі грудні м'язи, а також активно задіює передні дельти (плечі) та трицепси. Завдяки використанню гантелей кожна рука працює незалежно, що дозволяє усунути дисбаланс у силі та краще розтягнути м'язи в нижній точці.\nТехніка виконання:\n1. Початкове положення: Сядьте на край горизонтальної лави, поставте гантелі на коліна. Акуратно ляжте на спину, одночасно підштовхуючи гантелі колінами до рівня грудей. Стопи щільно притисніть до підлоги, лопатки зведіть і притисніть до лави.\n2. Вихідна позиція: Підніміть гантелі вгору над грудьми на витягнутих руках. Долоні розгорнуті вперед (від себе).\n3. Рух вниз (ексцентрична фаза): На вдиху плавно опускайте гантелі вниз через сторони, розводячи лікті під кутом приблизно 45-60 градусів відносно тулуба (не розводьте лікті строго в сторони під кутом 90 градусів, щоб берегти плечові суглоби). Опускайте до відчуття комфортного розтягнення в грудях.\n4. Рух угору (концентрична фаза): На видиху потужним зусиллям грудних м'язів витисніть гантелі вгору по дугоподібній траєкторії. У верхній точці не ударяйте гантелі одна об одну і не блокуйте лікті повністю (залишайте їх ледь м'якими), щоб зберігати напругу в м'язах.",
+   "created": "2026-10-10T16:25:42.711625+02:00",
+   "language": 15,
+   "aliases": [
+    {
+     "id": 741,
+     "uuid": "6388f03a-c845-4266-b7e0-e8adfd248fea",
+     "alias": "Жим гантелей на горизонтальній лаві"
+    },
+    {
+     "id": 742,
+     "uuid": "d529f25f-6fda-4b8f-8589-99594f63a314",
+     "alias": "жим гантелей лежачи на спині"
+    },
+    {
+     "id": 743,
+     "uuid": "84b2a6c5-3091-4992-bca6-d8cc92898d65",
+     "alias": "жим від грудей з гантелями"
+    },
+    {
+     "id": 871,
+     "uuid": "ee3cb638-5adf-46ca-93ad-75a9d9c5ce43",
+     "alias": "жим гантелей на горизонтальній лаві"
+    }
+   ],
+   "notes": [
+    {
+     "id": 774,
+     "uuid": "7d178f47-0de8-4419-a760-6e0b33f2e8be",
+     "translation": 5118,
+     "comment": "Не розводьте лікті строго в сторони — тримайте їх під кутом 45–60 градусів до тіла, щоб захистити плечі."
+    },
+    {
+     "id": 775,
+     "uuid": "5974ac3b-22fb-4785-88bc-2198d48ff07f",
+     "translation": 5118,
+     "comment": "Тисніть ногами в підлогу — це створить жорстку опору для всього тіла."
+    },
+    {
+     "id": 776,
+     "uuid": "c01c2742-d1bf-4985-a785-274f196ace60",
+     "translation": 5118,
+     "comment": "Не стукайте гантелями вгорі — зупиняйте їх за кілька сантиметрів одна від одної."
+    }
+   ],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "aom44ja6w@mozmail.com",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "aom44ja6w@mozmail.com"
+   ]
+  }
+ ],
+ "variation_group": "f45f135e-4cd3-4023-a82a-83fca2078656",
+ "videos": [
+  {
+   "id": 17,
+   "uuid": "080c799b-8afd-4130-8d72-9cef0cd79f54",
+   "exercise": 75,
+   "video": "https://wger.de/media/exercise-video/75/080c799b-8afd-4130-8d72-9cef0cd79f54.MOV",
+   "is_main": false,
+   "size": 4543158,
+   "duration": "14.16",
+   "width": 1920,
+   "height": 1080,
+   "codec": "h264",
+   "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  },
+  {
+   "id": 18,
+   "uuid": "a8263fe5-3015-41e3-9781-2d255adcea63",
+   "exercise": 75,
+   "video": "https://wger.de/media/exercise-video/75/a8263fe5-3015-41e3-9781-2d255adcea63.MOV",
+   "is_main": false,
+   "size": 9894638,
+   "duration": "30.09",
+   "width": 1920,
+   "height": 1080,
+   "codec": "h264",
+   "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  },
+  {
+   "id": 19,
+   "uuid": "9d803f97-0a48-4483-8f1c-ee5b19d6021e",
+   "exercise": 75,
+   "video": "https://wger.de/media/exercise-video/75/9d803f97-0a48-4483-8f1c-ee5b19d6021e.MOV",
+   "is_main": false,
+   "size": 9938046,
+   "duration": "28.26",
+   "width": 1920,
+   "height": 1080,
+   "codec": "h264",
+   "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  },
+  {
+   "id": 20,
+   "uuid": "c9cbd391-1e22-4014-8794-04630c80665f",
+   "exercise": 75,
+   "video": "https://wger.de/media/exercise-video/75/c9cbd391-1e22-4014-8794-04630c80665f.MOV",
+   "is_main": false,
+   "size": 4576193,
+   "duration": "11.28",
+   "width": 1920,
+   "height": 1080,
+   "codec": "h264",
+   "codec_long": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  }
+ ],
+ "author_history": [
+  "wger.de"
+ ],
+ "total_authors_history": [
+  "Goulart",
+  "wger.de",
+  "Jhonatan",
+  "admin",
+  "Garion",
+  "FEFFO",
+  "aom44ja6w@mozmail.com"
+ ]
+}

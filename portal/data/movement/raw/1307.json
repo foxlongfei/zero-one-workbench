@@ -1,0 +1,214 @@
+{
+ "id": 1307,
+ "uuid": "dd9dcfd2-879f-422a-ad06-d2c187c58d1f",
+ "created": "2024-06-10T05:52:55.657941+02:00",
+ "last_update": "2024-06-10T05:52:55.657963+02:00",
+ "last_update_global": "2026-10-24T15:58:32.437734+02:00",
+ "category": {
+  "id": 10,
+  "name": "Abs"
+ },
+ "muscles": [
+  {
+   "id": 6,
+   "name": "Rectus abdominis",
+   "name_en": "Abs",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-6.592f938fa8c7.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-6.370f77c2860e.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 14,
+   "name": "Obliquus externus abdominis",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-14.153978038d0b.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-14.afd582849ae9.svg"
+  },
+  {
+   "id": 4,
+   "name": "Pectoralis major",
+   "name_en": "Chest",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-4.c9fa9a228bc8.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-4.955e74ea6083.svg"
+  },
+  {
+   "id": 10,
+   "name": "Quadriceps femoris",
+   "name_en": "Quads",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-10.b1445ea1acf6.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-10.55e36d852778.svg"
+  },
+  {
+   "id": 3,
+   "name": "Serratus anterior",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-3.356ffc861a30.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-3.4c09bf907827.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "hektkaso",
+ "images": [
+  {
+   "id": 714,
+   "uuid": "321d796a-f394-40b8-a1ea-874bbed6ecee",
+   "exercise": 1307,
+   "exercise_uuid": "dd9dcfd2-879f-422a-ad06-d2c187c58d1f",
+   "image": "https://wger.de/media/exercise-images/1307/321d796a-f394-40b8-a1ea-874bbed6ecee.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/1307/321d796a-f394-40b8-a1ea-874bbed6ecee.png.200x200_q85.png",
+    "medium": "https://wger.de/media/exercise-images/1307/321d796a-f394-40b8-a1ea-874bbed6ecee.png.400x400_q85.png"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [],
+   "is_ai_generated": true
+  }
+ ],
+ "translations": [
+  {
+   "id": 2272,
+   "uuid": "b75b7f9d-bfcd-4d04-91ea-f8a11c4a5751",
+   "name": "Front Plank",
+   "exercise": 1307,
+   "description": "<p>The plank is a bodyweight exercise. As a multi-functional movement, the plank not only targets your abdominal muscles but also the spine and hip. Plank strengthens and tightens your entire body, improves your posture and balance, reduces body fat, and can help boost your metabolism.\nExercises such as the “plank pose” help strengthen the stamina of stabilizing abdominal muscles. It can also help relieve back pain associated with a weakening of the function of the stabilizing muscles of the body.\nPlanks are a versatile exercise that targets many of the most important muscle groups in the body, so they can be applied by anyone to improve endurance and overall body strength.</p>\n",
+   "description_source": "The plank is a bodyweight exercise. As a multi-functional movement, the plank not only targets your abdominal muscles but also the spine and hip. Plank strengthens and tightens your entire body, improves your posture and balance, reduces body fat, and can help boost your metabolism.\nExercises such as the “plank pose” help strengthen the stamina of stabilizing abdominal muscles. It can also help relieve back pain associated with a weakening of the function of the stabilizing muscles of the body.\nPlanks are a versatile exercise that targets many of the most important muscle groups in the body, so they can be applied by anyone to improve endurance and overall body strength.",
+   "created": "2024-06-10T05:52:55.892978+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "hektkaso",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "hektkaso"
+   ]
+  },
+  {
+   "id": 3853,
+   "uuid": "3d3e3844-d2df-4fe3-9b83-833cd0df7f85",
+   "name": "Plancha frontal",
+   "exercise": 1307,
+   "description": "<p>La plancha es un ejercicio con el peso corporal. Como movimiento multifuncional, la plancha no solo trabaja tus abdominales, sino también la columna y la cadera. La plancha fortalece y tonifica todo tu cuerpo, mejora tu postura y tu equilibrio, reduce la grasa corporal y puede ayudar a acelerar tu metabolismo.\nEjercicios como la «posición de plancha» ayudan a fortalecer la resistencia de los músculos abdominales estabilizadores. También puede ayudar a aliviar el dolor de espalda asociado a un debilitamiento de la función de los músculos estabilizadores del cuerpo.\nLas planchas son un ejercicio versátil que trabaja muchos de los grupos musculares más importantes del cuerpo, por lo que cualquier persona puede aplicarlas para mejorar la resistencia y la fuerza corporal general.</p>\n",
+   "description_source": "La plancha es un ejercicio con el peso corporal. Como movimiento multifuncional, la plancha no solo trabaja tus abdominales, sino también la columna y la cadera. La plancha fortalece y tonifica todo tu cuerpo, mejora tu postura y tu equilibrio, reduce la grasa corporal y puede ayudar a acelerar tu metabolismo.\nEjercicios como la «posición de plancha» ayudan a fortalecer la resistencia de los músculos abdominales estabilizadores. También puede ayudar a aliviar el dolor de espalda asociado a un debilitamiento de la función de los músculos estabilizadores del cuerpo.\nLas planchas son un ejercicio versátil que trabaja muchos de los grupos musculares más importantes del cuerpo, por lo que cualquier persona puede aplicarlas para mejorar la resistencia y la fuerza corporal general.",
+   "created": "2026-06-19T17:54:32.971749+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 4575,
+   "uuid": "edc21014-7e72-4b9e-9aa4-90ecc0b3f59b",
+   "name": "Planche frontale",
+   "exercise": 1307,
+   "description": "<p>La planche est un exercice au poids du corps. Mouvement polyvalent, la planche ne cible pas seulement vos abdominaux, mais aussi la colonne vertébrale et les hanches. La planche renforce et raffermit l'ensemble de votre corps, améliore votre posture et votre équilibre, réduit la masse grasse et peut contribuer à stimuler votre métabolisme.\nDes exercices comme la « position de la planche » aident à renforcer l'endurance des muscles abdominaux stabilisateurs. Elle peut également aider à soulager les douleurs dorsales liées à un affaiblissement de la fonction des muscles stabilisateurs du corps.\nLa planche est un exercice polyvalent qui sollicite un grand nombre des principaux groupes musculaires du corps, si bien que tout le monde peut l'utiliser pour améliorer son endurance et sa force générale.</p>\n",
+   "description_source": "La planche est un exercice au poids du corps. Mouvement polyvalent, la planche ne cible pas seulement vos abdominaux, mais aussi la colonne vertébrale et les hanches. La planche renforce et raffermit l'ensemble de votre corps, améliore votre posture et votre équilibre, réduit la masse grasse et peut contribuer à stimuler votre métabolisme.\nDes exercices comme la « position de la planche » aident à renforcer l'endurance des muscles abdominaux stabilisateurs. Elle peut également aider à soulager les douleurs dorsales liées à un affaiblissement de la fonction des muscles stabilisateurs du corps.\nLa planche est un exercice polyvalent qui sollicite un grand nombre des principaux groupes musculaires du corps, si bien que tout le monde peut l'utiliser pour améliorer son endurance et sa force générale.",
+   "created": "2026-06-19T18:44:12.406168+02:00",
+   "language": 12,
+   "aliases": [
+    {
+     "id": 679,
+     "uuid": "5ca19c1f-c866-4513-a7c3-729d3bba2b5c",
+     "alias": "Gainage"
+    }
+   ],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 5416,
+   "uuid": "7490e5ee-6df4-40ba-bce1-2a505d9676b5",
+   "name": "Prancha frontal",
+   "exercise": 1307,
+   "description": "<p>A prancha é um exercício com peso corporal. Por ser um movimento multifuncional, ela não trabalha só a musculatura abdominal, mas também a coluna e o quadril. A prancha fortalece e firma o corpo todo, melhora a postura e o equilíbrio, reduz a gordura corporal e pode ajudar a acelerar o metabolismo.</p>\n<p>Exercícios como a prancha ajudam a aumentar a resistência dos músculos estabilizadores do abdômen. Também podem aliviar dores nas costas associadas ao enfraquecimento da função dos músculos estabilizadores do corpo.</p>\n<p>A prancha é um exercício versátil que trabalha muitos dos grupos musculares mais importantes do corpo, por isso pode ser usada por qualquer pessoa para melhorar a resistência e a força geral.</p>\n",
+   "description_source": "A prancha é um exercício com peso corporal. Por ser um movimento multifuncional, ela não trabalha só a musculatura abdominal, mas também a coluna e o quadril. A prancha fortalece e firma o corpo todo, melhora a postura e o equilíbrio, reduz a gordura corporal e pode ajudar a acelerar o metabolismo.\n\nExercícios como a prancha ajudam a aumentar a resistência dos músculos estabilizadores do abdômen. Também podem aliviar dores nas costas associadas ao enfraquecimento da função dos músculos estabilizadores do corpo.\n\nA prancha é um exercício versátil que trabalha muitos dos grupos musculares mais importantes do corpo, por isso pode ser usada por qualquer pessoa para melhorar a resistência e a força geral.",
+   "created": "2026-10-24T15:58:32.437709+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "jptjptjptjpt",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "jptjptjptjpt"
+   ]
+  },
+  {
+   "id": 3852,
+   "uuid": "de26037a-5ce9-42bc-90f2-cde85d9136f1",
+   "name": "Unterarmstütz (Plank)",
+   "exercise": 1307,
+   "description": "<p>Der Plank ist eine Körpergewichtsübung. Als multifunktionale Bewegung beansprucht der Plank nicht nur deine Bauchmuskulatur, sondern auch die Wirbelsäule und die Hüfte. Der Plank kräftigt und strafft deinen gesamten Körper, verbessert deine Haltung und dein Gleichgewicht, reduziert Körperfett und kann dabei helfen, deinen Stoffwechsel anzukurbeln.\nÜbungen wie die „Plank-Position“ helfen, die Ausdauer der stabilisierenden Bauchmuskulatur zu stärken. Sie können außerdem dabei helfen, Rückenschmerzen zu lindern, die mit einer geschwächten Funktion der stabilisierenden Muskeln des Körpers zusammenhängen.\nPlanks sind eine vielseitige Übung, die viele der wichtigsten Muskelgruppen des Körpers beansprucht, sodass sie von jedem genutzt werden können, um die Ausdauer und die gesamte Körperkraft zu verbessern.</p>\n",
+   "description_source": "Der Plank ist eine Körpergewichtsübung. Als multifunktionale Bewegung beansprucht der Plank nicht nur deine Bauchmuskulatur, sondern auch die Wirbelsäule und die Hüfte. Der Plank kräftigt und strafft deinen gesamten Körper, verbessert deine Haltung und dein Gleichgewicht, reduziert Körperfett und kann dabei helfen, deinen Stoffwechsel anzukurbeln.\nÜbungen wie die „Plank-Position“ helfen, die Ausdauer der stabilisierenden Bauchmuskulatur zu stärken. Sie können außerdem dabei helfen, Rückenschmerzen zu lindern, die mit einer geschwächten Funktion der stabilisierenden Muskeln des Körpers zusammenhängen.\nPlanks sind eine vielseitige Übung, die viele der wichtigsten Muskelgruppen des Körpers beansprucht, sodass sie von jedem genutzt werden können, um die Ausdauer und die gesamte Körperkraft zu verbessern.",
+   "created": "2026-06-19T17:54:32.410732+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "hektkaso"
+ ],
+ "total_authors_history": [
+  "wger.de",
+  "jptjptjptjpt",
+  "hektkaso"
+ ]
+}

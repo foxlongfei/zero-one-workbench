@@ -1,0 +1,1845 @@
+{
+ "schema": "zero-one.movement.exercise-catalog.v1",
+ "builtAt": "2026-10-25T08:45:08.985Z",
+ "pinned": {
+  "upstream": "wger.de/api/v2",
+  "project": "wger Workout Manager",
+  "projectUrl": "https://wger.de",
+  "repo": "https://github.com/wger-project/wger",
+  "pinnedAt": "2026-10-25",
+  "userAgent": "zero-one-movement-catalog/1.0 (+https://github.com/foxlongfei/zero-one-workbench)"
+ },
+ "count": 16,
+ "licenses": {
+  "upstreamServer": {
+   "name": "wger Workout Manager",
+   "license": "AGPL-3.0",
+   "url": "https://github.com/wger-project/wger/blob/master/LICENSE.txt"
+  },
+  "recordContent": {
+   "name": "CC-BY-SA 4.0 per record",
+   "attributionField": "upstream.author"
+  }
+ },
+ "items": [
+  {
+   "id": "exercise:wger:1551:push-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1551",
+    "recordId": 1551,
+    "uuid": "f5b84269-18af-4464-a61f-b767cbcd81dc",
+    "snapshot": "data/movement/raw/1551.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "Settebello",
+    "created": "2025-07-07T13:48:38.312917+02:00",
+    "lastUpdate": "2025-10-12T23:57:01.562559+02:00"
+   },
+   "names": {
+    "zh": "标准俯卧撑",
+    "en": "Push-Up",
+    "upstreamTranslations": [
+     {
+      "lang": "de",
+      "name": "Liegestütz"
+     },
+     {
+      "lang": "fr",
+      "name": "Pompe"
+     },
+     {
+      "lang": "es",
+      "name": "Push-Up"
+     },
+     {
+      "lang": "en",
+      "name": "Push-Up"
+     }
+    ],
+    "aliases": [
+     "俯卧撑",
+     "伏地挺身",
+     "push up",
+     "pushup",
+     "push-up"
+    ]
+   },
+   "category": {
+    "upstream": "Chest",
+    "family": "水平推"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "horizontal-push",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "prone-support",
+    "description": "手掌与前脚掌撑地，身体从头到脚跟保持一条直线，胸、髋、踝在同一直线上。夹紧臀部与腹部，让骨盆不塌不撅。",
+    "upstreamInstructions": [
+     "Instructions:",
+     "Start in a plank position with hands placed slightly wider than shoulder-width, feet together, and body in a straight line from head to heels.",
+     "Engage your core and lower your body by bending your elbows, keeping them close to your body or flared slightly outward.",
+     "Lower until your chest nearly touches the ground while maintaining a neutral spine.",
+     "Push through your palms to return to the starting position, fully extending your arms."
+    ],
+    "upstreamIntro": "The push-up is a fundamental bodyweight exercise that targets the chest, arms, and shoulders while engaging the core for stability. It requires no equipment and is excellent for building upper body strength.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Pectoralis major"
+    ],
+    "secondaryMuscles": [
+     "Anterior deltoid",
+     "Rectus abdominis",
+     "Triceps brachii"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 524,
+      "file": "assets/movement/wger/push-up-wger-image-524.png",
+      "sha256": "ece83e006d9e578d9f61281b50c1869e763d2e99bc005993868838250111b9b6",
+      "bytes": 2457879,
+      "license": "CC-BY-SA 4",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "licenseTitle": "Push-Up",
+      "author": "Settebello",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/1551/a6a9e561-3965-45c6-9f2b-ee671e1a3a45.png"
+     }
+    ],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "push-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:1218:knee-push-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1218",
+    "recordId": 1218,
+    "uuid": "2b61df61-f71e-4b8f-9f95-6a565238a8ae",
+    "snapshot": "data/movement/raw/1218.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "PaukOne",
+    "created": "2024-01-29T23:01:25.296720+01:00",
+    "lastUpdate": "2024-01-29T23:01:25.296752+01:00"
+   },
+   "names": {
+    "zh": "跪姿俯卧撑",
+    "en": "knee push-ups",
+    "upstreamTranslations": [
+     {
+      "lang": "es",
+      "name": "Flexiones de rodillas"
+     },
+     {
+      "lang": "de",
+      "name": "Liegestütze auf den Knien"
+     },
+     {
+      "lang": "fr",
+      "name": "Pompes sur les genoux"
+     },
+     {
+      "lang": "en",
+      "name": "knee push-ups"
+     }
+    ],
+    "aliases": [
+     "跪姿俯卧撑",
+     "膝盖俯卧撑",
+     "knee push up",
+     "modified push up"
+    ]
+   },
+   "category": {
+    "upstream": "Arms",
+    "family": "水平推"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "horizontal-push",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "kneeling-support",
+    "description": "膝盖着地、小腿抬起，膝到肩保持直线。手掌略宽于肩，臀部收紧，不要用腰部下坠代替屈肘。",
+    "upstreamInstructions": [
+     "Make sure your body forms a straight line from head to knees. Hands should be positioned below shoulders.",
+     "Lower your torso towards the ground, bending your elbows while keeping your trunk stable. Keep your knees in contact with the floor.",
+     "Push through your hands to return to the starting position. Be sure to maintain contraction of chest, shoulder and arm muscles at the top of the movement.",
+     "Perform the desired number of repetitions, controlling the movement and maintaining good form."
+    ],
+    "upstreamIntro": "- Start by kneeling on the floor, keeping your knees together. Place your hands on the floor in front of you, slightly wider than shoulder-width apart.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Anterior deltoid",
+     "Pectoralis major"
+    ],
+    "secondaryMuscles": [
+     "Serratus anterior",
+     "Triceps brachii"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "knee-push-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:713:wall-push-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=713",
+    "recordId": 713,
+    "uuid": "51a80676-92d8-4f91-b51a-4666888e40db",
+    "snapshot": "data/movement/raw/713.json",
+    "license": "CC-BY-SA 3",
+    "licenseName": " Creative Commons Attribution Share Alike 3",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+    "author": "Dexter",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2024-01-17T11:39:44.453799+01:00"
+   },
+   "names": {
+    "zh": "墙面俯卧撑",
+    "en": "Wall Pushup",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "Wall Pushup"
+     }
+    ],
+    "aliases": [
+     "墙面俯卧撑",
+     "推墙",
+     "wall push up",
+     "push against wall"
+    ]
+   },
+   "category": {
+    "upstream": "Arms",
+    "family": "水平推"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "office"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "horizontal-push",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "standing-support",
+    "description": "面对墙站立，双手与肩同宽撑在墙面约肩高，身体离墙约一臂距离并保持一条直线，屈肘靠近墙面再推回。",
+    "upstreamInstructions": [],
+    "upstreamIntro": "Pushup against a wall",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Anterior deltoid",
+     "Pectoralis major",
+     "Triceps brachii"
+    ],
+    "secondaryMuscles": [
+     "Gluteus maximus",
+     "Rectus abdominis",
+     "Serratus anterior",
+     "Trapezius"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "wall-push-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:386:diamond-push-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=386",
+    "recordId": 386,
+    "uuid": "de22963a-5d42-4999-860e-377f64359432",
+    "snapshot": "data/movement/raw/386.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "notdefine",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2024-01-17T11:29:44.825797+01:00"
+   },
+   "names": {
+    "zh": "钻石俯卧撑",
+    "en": "Diamond push ups",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "Diamond push ups"
+     },
+     {
+      "lang": "es",
+      "name": "Flexiones diamante"
+     },
+     {
+      "lang": "de",
+      "name": "Liegestüzten Diamond"
+     },
+     {
+      "lang": "it",
+      "name": "Piegamenti a diamante"
+     },
+     {
+      "lang": "fr",
+      "name": "Pompes diamant"
+     }
+    ],
+    "aliases": [
+     "钻石俯卧撑",
+     "窄距俯卧撑",
+     "diamond push up",
+     "close grip push up",
+     "triangle push up"
+    ]
+   },
+   "category": {
+    "upstream": "Chest",
+    "family": "水平推"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor"
+   ],
+   "level": "intermediate",
+   "pattern": {
+    "key": "horizontal-push",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "prone-support",
+    "description": "双手在胸口中线下并拢，拇指与食指相触形成一个菱形。肘部贴近身体两侧，下降时不要让手掌外翻或耸肩。",
+    "upstreamInstructions": [
+     "Lower: Bend your elbows to lower your chest toward your hands. Keep your body straight.",
+     "Push: Push back up until arms are fully extended.",
+     "New note Keep elbows close to your body and core tight."
+    ],
+    "upstreamIntro": "Start: Get into a plank. Place hands close together under your chest so thumbs and index fingers form a diamond shape.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Pectoralis major"
+    ],
+    "secondaryMuscles": [
+     "Triceps brachii"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "diamond-push-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:1964:wide-push-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1964",
+    "recordId": 1964,
+    "uuid": "1842e1be-ac67-4f34-a527-4ca2b72d8e11",
+    "snapshot": "data/movement/raw/1964.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "Anon#2",
+    "created": "2026-05-06T08:42:01.116443+02:00",
+    "lastUpdate": "2026-05-06T08:42:01.116465+02:00"
+   },
+   "names": {
+    "zh": "宽距俯卧撑",
+    "en": "Wide Push-Up",
+    "upstreamTranslations": [
+     {
+      "lang": "de",
+      "name": "Breiter Liegestütz"
+     },
+     {
+      "lang": "es",
+      "name": "Flexión con manos abiertas"
+     },
+     {
+      "lang": "fr",
+      "name": "Pompe prise large"
+     },
+     {
+      "lang": "en",
+      "name": "Wide Push-Up"
+     }
+    ],
+    "aliases": [
+     "宽距俯卧撑",
+     "宽手俯卧撑",
+     "wide push up",
+     "wide grip push up"
+    ]
+   },
+   "category": {
+    "upstream": "Chest",
+    "family": "水平推"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor"
+   ],
+   "level": "intermediate",
+   "pattern": {
+    "key": "horizontal-push",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "prone-support",
+    "description": "手掌明显宽于肩，手指略外旋。下降时肩胛保持稳定、不耸肩，推起时感受胸部收紧。",
+    "upstreamInstructions": [
+     "​Setup: Place hands wider than shoulder-width apart on the floor.",
+     "Lower: Descend until your chest nearly touches the floor, keeping your core tight.",
+     "​Push: Drive through your palms to return to the start position.",
+     "​Form: Don't let your lower back sag; keep a straight line from head to heels."
+    ],
+    "upstreamIntro": "​A push-up variation with a wider hand placement to increase the emphasis on the outer chest muscles and shoulders.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Pectoralis major"
+    ],
+    "secondaryMuscles": [
+     "Rectus abdominis",
+     "Triceps brachii"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "wide-push-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:1112:decline-push-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1112",
+    "recordId": 1112,
+    "uuid": "50037aaf-34f1-4018-b504-206623b77c46",
+    "snapshot": "data/movement/raw/1112.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "anon1337",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2024-01-17T11:39:51.172061+01:00"
+   },
+   "names": {
+    "zh": "下斜俯卧撑",
+    "en": "Push-Ups | Decline",
+    "upstreamTranslations": [
+     {
+      "lang": "es",
+      "name": "Flexiones | declinadas (decline)"
+     },
+     {
+      "lang": "pt",
+      "name": "Flexão Declinada"
+     },
+     {
+      "lang": "de",
+      "name": "Liegestütze | abfallend (Decline)"
+     },
+     {
+      "lang": "fr",
+      "name": "Pompes déclinées"
+     },
+     {
+      "lang": "en",
+      "name": "Push-Ups | Decline"
+     }
+    ],
+    "aliases": [
+     "下斜俯卧撑",
+     "脚高俯卧撑",
+     "抬脚俯卧撑",
+     "decline push up",
+     "feet elevated push up"
+    ]
+   },
+   "category": {
+    "upstream": "Chest",
+    "family": "水平推"
+   },
+   "equipment": {
+    "list": [
+     "Bench",
+     "Incline bench"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor"
+   ],
+   "level": "intermediate",
+   "pattern": {
+    "key": "horizontal-push",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "declined-prone-support",
+    "description": "双脚放在稳固台阶或床上，双手撑地。身体仍保持一条直线，不要为了降低难度把臀部抬高。",
+    "upstreamInstructions": [
+     "Unlike the inclined push-up, the decline push-up places more emphasis on the shoulders and triceps, while still engaging the chest muscles to a lesser extent. By elevating your feet, you increase the difficulty of the exercise by placing more weight on your upper body, forcing your shoulders and triceps to work harder to push your body back up. The decline push-up can be a great way to challenge your upper body strength and improve your ability to perform other push-up variations. As with any exercise, be sure to use proper form and start with a height that is appropriate for your strength and fitness level."
+    ],
+    "upstreamIntro": "Decline push-ups are another modified version of the traditional push-up that target the upper body muscles in a different way. To perform a decline push-up, elevate your feet on an elevated surface, such as a bench, chair, or step, while placing your hands on the ground in a push-up position. Lower your body towards the ground while maintaining a straight line from your shoulders to your ankles, and then push back up to the starting position.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Pectoralis major"
+    ],
+    "secondaryMuscles": [
+     "Anterior deltoid",
+     "Triceps brachii"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 357,
+      "file": "assets/movement/wger/decline-push-up-wger-image-357.png",
+      "sha256": "c3c71c10f8d18369823ddf4ad0ab4375c1a08e508123aa0eed7f59a43c16e737",
+      "bytes": 227323,
+      "license": "CC-BY-SA 4",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "licenseTitle": "",
+      "author": "anon1337",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/1112/81f40bee-4adf-4317-8476-1a87706e3031.png"
+     }
+    ],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "decline-push-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:1293:one-arm-push-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1293",
+    "recordId": 1293,
+    "uuid": "8911c37d-8907-4077-b883-86a7c5fcb606",
+    "snapshot": "data/movement/raw/1293.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "clafal",
+    "created": "2024-05-11T11:14:05.416164+02:00",
+    "lastUpdate": "2024-05-11T11:14:05.416182+02:00"
+   },
+   "names": {
+    "zh": "单臂俯卧撑",
+    "en": "One armed push-ups",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "One armed push-ups"
+     },
+     {
+      "lang": "it",
+      "name": "Piegamenti a una mano"
+     }
+    ],
+    "aliases": [
+     "单臂俯卧撑",
+     "单手俯卧撑",
+     "one arm push up",
+     "one arm pushup"
+    ]
+   },
+   "category": {
+    "upstream": "Abs",
+    "family": "水平推"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor"
+   ],
+   "level": "advanced",
+   "pattern": {
+    "key": "horizontal-push",
+    "movement": "flexion-extension",
+    "side": "unilateral"
+   },
+   "teaching": {
+    "position": "one-handed-prone-support",
+    "description": "这是高难度进阶动作。双脚可以分开以降低扭转要求，核心和臀部必须主动收紧，躯干尽量少旋转。先具备标准俯卧撑与器械外负荷基础再尝试。",
+    "upstreamInstructions": [],
+    "upstreamIntro": "Perform push-ups with one hand, alternating the sides",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Pectoralis major",
+     "Triceps brachii"
+    ],
+    "secondaryMuscles": [
+     "Anterior deltoid",
+     "Rectus abdominis"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "one-arm-push-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:1963:squat",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1963",
+    "recordId": 1963,
+    "uuid": "2398e14f-02a6-4fdc-9f69-029e52dfe033",
+    "snapshot": "data/movement/raw/1963.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "Anon#2",
+    "created": "2026-05-06T08:28:49.632086+02:00",
+    "lastUpdate": "2026-05-06T08:28:49.632103+02:00"
+   },
+   "names": {
+    "zh": "徒手深蹲",
+    "en": "Slow Squat",
+    "upstreamTranslations": [
+     {
+      "lang": "de",
+      "name": "Langsame Kniebeuge"
+     },
+     {
+      "lang": "es",
+      "name": "Sentadilla lenta"
+     },
+     {
+      "lang": "en",
+      "name": "Slow Squat"
+     },
+     {
+      "lang": "fr",
+      "name": "Squat lent"
+     }
+    ],
+    "aliases": [
+     "深蹲",
+     "徒手深蹲",
+     "squat",
+     "bodyweight squat",
+     "air squat"
+    ]
+   },
+   "category": {
+    "upstream": "Legs",
+    "family": "下肢蹲"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor",
+    "gym"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "squat",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "standing",
+    "description": "双脚与肩同宽，脚尖略外展。髋部向后向下，膝盖顺着脚尖方向，躯干保持挺拔，下到大腿接近水平再站起。",
+    "upstreamInstructions": [
+     "​Lower: Descend slowly for 3 seconds.",
+     "​Pause: Hold at the bottom for 1 second.",
+     "​Stand: Return to the starting position at a normal pace.",
+     "Form: Keep your chest up and weight in your heels."
+    ],
+    "upstreamIntro": "​A tempo-based squat that uses controlled movement to increase muscle tension and improve lower-body stability.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Quadriceps femoris"
+    ],
+    "secondaryMuscles": [
+     "Biceps femoris",
+     "Gluteus maximus",
+     "Rectus abdominis"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 699,
+      "file": "assets/movement/wger/squat-wger-image-699.png",
+      "sha256": "379715b79e8f9cb44b8cb5cfbbb49659ce7b418b320ac801708c269c1077d119",
+      "bytes": 3189595,
+      "license": "CC-BY-SA 4",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "licenseTitle": "",
+      "author": "Anon#2",
+      "aiGenerated": true,
+      "sourceUrl": "https://wger.de/media/exercise-images/1963/db285682-1ab3-4be0-ae00-5117ecce1ee6.png"
+     }
+    ],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "squat",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:984:lunge",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=984",
+    "recordId": 984,
+    "uuid": "3284fd27-5402-4821-9c32-29066d4e2667",
+    "snapshot": "data/movement/raw/984.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2026-07-23T12:25:02.411880+02:00"
+   },
+   "names": {
+    "zh": "弓步",
+    "en": "Lunges",
+    "upstreamTranslations": [
+     {
+      "lang": "it",
+      "name": "Affondi"
+     },
+     {
+      "lang": "de",
+      "name": "Ausfallschritte"
+     },
+     {
+      "lang": "fr",
+      "name": "Fentes"
+     },
+     {
+      "lang": "pt",
+      "name": "Investidas"
+     },
+     {
+      "lang": "hr",
+      "name": "Iskoraci"
+     },
+     {
+      "lang": "tr",
+      "name": "Lunge hareketi"
+     },
+     {
+      "lang": "en",
+      "name": "Lunges"
+     },
+     {
+      "lang": "id",
+      "name": "Paru-paru"
+     },
+     {
+      "lang": "nl",
+      "name": "Uitvalspassen"
+     },
+     {
+      "lang": "cs",
+      "name": "Výpady"
+     },
+     {
+      "lang": "es",
+      "name": "Zancadas con peso"
+     },
+     {
+      "lang": "el",
+      "name": "Προβολές"
+     },
+     {
+      "lang": "he",
+      "name": "מכרעים"
+     },
+     {
+      "lang": "ar",
+      "name": "الطعنات"
+     },
+     {
+      "lang": "zh",
+      "name": "弓步"
+     }
+    ],
+    "aliases": [
+     "弓步",
+     "箭步蹲",
+     "前弓步",
+     "lunge",
+     "forward lunge"
+    ]
+   },
+   "category": {
+    "upstream": "Legs",
+    "family": "下肢分腿"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "outdoor",
+    "gym"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "lunge",
+    "movement": "flexion-extension",
+    "side": "alternating"
+   },
+   "teaching": {
+    "position": "split-stance",
+    "description": "一脚向前迈出一步，两个膝盖都弯曲到接近直角，前膝与脚尖同向。后脚脚跟立起，躯干直立，然后前脚发力回到起点换侧。",
+    "upstreamInstructions": [
+     "Stand with back straight.",
+     "Steps:",
+     "Take a large step forward with your left leg.",
+     "Bring your pelvis down until you almost touch the floor with your right knee.",
+     "Bring your pelvis back up.",
+     "Return to the starting position by stepping back.",
+     "Repeat, switching legs each time."
+    ],
+    "upstreamIntro": "Starting position:",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Gluteus maximus",
+     "Quadriceps femoris"
+    ],
+    "secondaryMuscles": [
+     "Biceps femoris"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 364,
+      "file": "assets/movement/wger/lunge-wger-image-364.png",
+      "sha256": "c1dbce40431c06c9dbcea55a3df15f821c7e19435b7e68075ae7daa061393190",
+      "bytes": 81175,
+      "license": "CC-BY-SA 4",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "licenseTitle": "",
+      "author": "Franpol",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/984/5c7ffe68-e7b2-47f3-a22a-f9cc28640432.png"
+     }
+    ],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "lunge",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:475:pull-up",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=475",
+    "recordId": 475,
+    "uuid": "8e420408-0682-4ab6-89f5-2681e54c7ce0",
+    "snapshot": "data/movement/raw/475.json",
+    "license": "CC-BY-SA 3",
+    "licenseName": " Creative Commons Attribution Share Alike 3",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+    "author": "wger.de",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2024-01-17T11:32:20.243159+01:00"
+   },
+   "names": {
+    "zh": "引体向上",
+    "en": "Pull-ups",
+    "upstreamTranslations": [
+     {
+      "lang": "es",
+      "name": "Dominadas"
+     },
+     {
+      "lang": "pt",
+      "name": "Flexões de braço"
+     },
+     {
+      "lang": "de",
+      "name": "Klimmzüge"
+     },
+     {
+      "lang": "nl",
+      "name": "Optrekken"
+     },
+     {
+      "lang": "it",
+      "name": "Pull ups"
+     },
+     {
+      "lang": "en",
+      "name": "Pull-ups"
+     },
+     {
+      "lang": "cs",
+      "name": "Shyby"
+     },
+     {
+      "lang": "id",
+      "name": "Tarik - up"
+     },
+     {
+      "lang": "fr",
+      "name": "Tractions"
+     },
+     {
+      "lang": "el",
+      "name": "Έλξεις"
+     },
+     {
+      "lang": "ar",
+      "name": "اسحب"
+     },
+     {
+      "lang": "zh",
+      "name": "引体向上"
+     }
+    ],
+    "aliases": [
+     "引体向上",
+     "单杠引体",
+     "pull up",
+     "pullup",
+     "chin up"
+    ]
+   },
+   "category": {
+    "upstream": "Back",
+    "family": "上肢垂直拉"
+   },
+   "equipment": {
+    "list": [
+     "Pull-up bar"
+    ],
+    "key": "pull-up-bar"
+   },
+   "environment": [
+    "outdoor",
+    "gym"
+   ],
+   "level": "advanced",
+   "pattern": {
+    "key": "vertical-pull",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "hanging",
+    "description": "双手正握单杠，握距略宽于肩。肩胛先下沉，然后屈肘把下巴拉过杠，下降时有控制。先能完成悬垂和离心下降再尝试完整引体。",
+    "upstreamInstructions": [],
+    "upstreamIntro": "Grab the pull up bar with a wide grip, the body is hanging freely. Keep your chest out and pull yourself up till your chin reaches the bar or it touches your neck, if you want to pull behind you. Go with a slow and controlled movement down, always keeping the chest out.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Latissimus dorsi"
+    ],
+    "secondaryMuscles": [
+     "Anterior deltoid",
+     "Biceps brachii",
+     "Trapezius"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 323,
+      "file": "assets/movement/wger/pull-up-wger-image-323.png",
+      "sha256": "cc494be8d8f520e4a883ff8b43b2e41da97dfd0a6474c1c16ea6c03fa1740c08",
+      "bytes": 91689,
+      "license": "CC-BY-SA 3",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+      "licenseTitle": "",
+      "author": "Imobard",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/475/b0554016-16fd-4dbe-be47-a2a17d16ae0e.jpg"
+     }
+    ],
+    "videos": [
+     {
+      "id": 71,
+      "url": "https://wger.de/media/exercise-video/475/83067ffe-ccb9-4e22-8507-5131b211ce74.MOV",
+      "playable": true
+     }
+    ],
+    "videoStatus": "none"
+   },
+   "rig": "pull-up",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:2690:active-hang",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=2690",
+    "recordId": 2690,
+    "uuid": "04931134-da5d-4d87-8e62-bdcc0d970b0c",
+    "snapshot": "data/movement/raw/2690.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "nalhilal",
+    "created": "2026-10-13T12:47:10.113837+02:00",
+    "lastUpdate": "2026-10-13T12:47:10.113851+02:00"
+   },
+   "names": {
+    "zh": "悬垂",
+    "en": "Active Hang",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "Active Hang"
+     }
+    ],
+    "aliases": [
+     "悬垂",
+     "单杠悬垂",
+     "吊杠",
+     "dead hang",
+     "bar hang"
+    ]
+   },
+   "category": {
+    "upstream": "Back",
+    "family": "上肢悬垂"
+   },
+   "equipment": {
+    "list": [
+     "Pull-up bar"
+    ],
+    "key": "pull-up-bar"
+   },
+   "environment": [
+    "outdoor",
+    "gym"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "hang",
+    "movement": "isometric",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "hanging",
+    "description": "双手握住单杠自然悬垂，肩胛保持轻微收紧，避免完全松垮。这是单杠技能的基础，也是老年人保持握力和肩部健康的低门槛动作。",
+    "upstreamInstructions": [],
+    "upstreamIntro": "A static hold from a pull-up bar with straight elbows and actively depressed, stabilized shoulders. Grip a secure bar and let your body hang under control. Keep your elbows straight and gently draw your shoulders down, away from your ears. Maintain this active shoulder position without pulling up, swinging, or repeatedly moving the shoulder blades. Hold for up to 30 seconds. Stop earlier if your grip opens, shoulder control deteriorates, or pain occurs. Record actual seconds, grip, and any assistance used. This is distinct from a relaxed passive dead hang or a moving scapular pull-up.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Latissimus dorsi",
+     "Trapezius"
+    ],
+    "secondaryMuscles": [],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "hang",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:184:deadlift",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=184",
+    "recordId": 184,
+    "uuid": "ee8e8db4-2d82-49e1-ab7f-891e9a354934",
+    "snapshot": "data/movement/raw/184.json",
+    "license": "CC-BY-SA 3",
+    "licenseName": " Creative Commons Attribution Share Alike 3",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+    "author": "wger.de",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2024-01-17T11:26:46.125208+01:00"
+   },
+   "names": {
+    "zh": "硬拉",
+    "en": "Deadlifts",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "Deadlifts"
+     },
+     {
+      "lang": "de",
+      "name": "Kreuzheben"
+     },
+     {
+      "lang": "pt",
+      "name": "Levantamento terra"
+     },
+     {
+      "lang": "es",
+      "name": "Peso Muerto Convencional"
+     },
+     {
+      "lang": "fr",
+      "name": "Soulevés de terre"
+     },
+     {
+      "lang": "it",
+      "name": "Stacco"
+     }
+    ],
+    "aliases": [
+     "硬拉",
+     "杠铃硬拉",
+     "deadlift",
+     "barbell deadlift"
+    ]
+   },
+   "category": {
+    "upstream": "Back",
+    "family": "髋主导拉"
+   },
+   "equipment": {
+    "list": [
+     "Barbell"
+    ],
+    "key": "barbell"
+   },
+   "environment": [
+    "gym"
+   ],
+   "level": "intermediate",
+   "pattern": {
+    "key": "hinge",
+    "movement": "hip-hinge",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "hinge-stand",
+    "description": "髋部向后推，屈膝让杠铃贴着腿部下降，背部保持中立。脚掌踩实地面，髋膝协同发力站直，不要用腰背把重量拉起来。",
+    "upstreamInstructions": [
+     "Pull the weight up. At the highest point make a slight hollow back and pull the bar back. Hold 1 or 2 seconds that position. Go down, making sure the back is not bent. Once down you can either go back again as soon as the weights touch the floor, or make a pause, depending on the weight."
+    ],
+    "upstreamIntro": "Stand firmly, with your feet slightly more than shoulder wide apart. Stand directly behind the bar where it should barely touch your shin, your feet pointing a bit out. Bend down with a straight back, the knees also pointing somewhat out. Grab the bar with a shoulder wide grip, one overhand, one underhand (mixed grip).",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Latissimus dorsi"
+    ],
+    "secondaryMuscles": [
+     "Gluteus maximus"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 332,
+      "file": "assets/movement/wger/deadlift-wger-image-332.png",
+      "sha256": "a085b5120e7c5391978949ed81d446086d670e614ed3bad351d51f7df19ca2b5",
+      "bytes": 46593,
+      "license": "CC-BY-SA 3",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+      "licenseTitle": "",
+      "author": "philip",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/184/1709c405-620a-4d07-9658-fade2b66a2df.jpeg"
+     }
+    ],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "deadlift",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:1307:plank",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1307",
+    "recordId": 1307,
+    "uuid": "dd9dcfd2-879f-422a-ad06-d2c187c58d1f",
+    "snapshot": "data/movement/raw/1307.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "hektkaso",
+    "created": "2024-06-10T05:52:55.657941+02:00",
+    "lastUpdate": "2024-06-10T05:52:55.657963+02:00"
+   },
+   "names": {
+    "zh": "平板支撑",
+    "en": "Front Plank",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "Front Plank"
+     },
+     {
+      "lang": "es",
+      "name": "Plancha frontal"
+     },
+     {
+      "lang": "fr",
+      "name": "Planche frontale"
+     },
+     {
+      "lang": "pt",
+      "name": "Prancha frontal"
+     },
+     {
+      "lang": "de",
+      "name": "Unterarmstütz (Plank)"
+     }
+    ],
+    "aliases": [
+     "平板支撑",
+     "撑体",
+     "plank",
+     "front plank"
+    ]
+   },
+   "category": {
+    "upstream": "Abs",
+    "family": "核心抗伸展"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "gym",
+    "outdoor"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "core-anti-extension",
+    "movement": "isometric",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "forearm-plank",
+    "description": "前臂与脚尖撑地，肘在肩正下方。臀部收紧，骨盆中立，身体从后脑到脚跟成一条直线。宁短不塌腰。",
+    "upstreamInstructions": [
+     "Exercises such as the “plank pose” help strengthen the stamina of stabilizing abdominal muscles. It can also help relieve back pain associated with a weakening of the function of the stabilizing muscles of the body.",
+     "Planks are a versatile exercise that targets many of the most important muscle groups in the body, so they can be applied by anyone to improve endurance and overall body strength."
+    ],
+    "upstreamIntro": "The plank is a bodyweight exercise. As a multi-functional movement, the plank not only targets your abdominal muscles but also the spine and hip. Plank strengthens and tightens your entire body, improves your posture and balance, reduces body fat, and can help boost your metabolism.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Rectus abdominis"
+    ],
+    "secondaryMuscles": [
+     "Obliquus externus abdominis",
+     "Pectoralis major",
+     "Quadriceps femoris",
+     "Serratus anterior"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 714,
+      "file": "assets/movement/wger/plank-wger-image-714.png",
+      "sha256": "373df86cdf37e1ae0255d6c33e7fb29c25c8e64d88f62418553e67dca4e5ae04",
+      "bytes": 425764,
+      "license": "CC-BY-SA 4",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "licenseTitle": "",
+      "author": "hektkaso",
+      "aiGenerated": true,
+      "sourceUrl": "https://wger.de/media/exercise-images/1307/321d796a-f394-40b8-a1ea-874bbed6ecee.png"
+     }
+    ],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "plank",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:1906:glute-bridge",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=1906",
+    "recordId": 1906,
+    "uuid": "6b127132-cc0b-4b40-ac8c-177a28ccb6e2",
+    "snapshot": "data/movement/raw/1906.json",
+    "license": "CC-BY-SA 4",
+    "licenseName": "Creative Commons Attribution Share Alike 4",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+    "author": "cybro",
+    "created": "2026-03-02T13:49:18.160128+01:00",
+    "lastUpdate": "2026-03-02T13:49:18.160143+01:00"
+   },
+   "names": {
+    "zh": "臀桥",
+    "en": "Hip Bridge",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "Hip Bridge"
+     },
+     {
+      "lang": "de",
+      "name": "Hüftbrücke"
+     },
+     {
+      "lang": "fr",
+      "name": "Pont fessier"
+     },
+     {
+      "lang": "pt",
+      "name": "Ponte de quadril"
+     },
+     {
+      "lang": "es",
+      "name": "Puente de cadera"
+     }
+    ],
+    "aliases": [
+     "臀桥",
+     "桥式",
+     "glute bridge",
+     "bridge"
+    ]
+   },
+   "category": {
+    "upstream": "Legs",
+    "family": "髋伸展"
+   },
+   "equipment": {
+    "list": [
+     "none (bodyweight exercise)"
+    ],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "office"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "bridge",
+    "movement": "hip-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "supine",
+    "description": "仰卧屈膝，双脚踩地与髋同宽。收紧臀部把髋抬起到身体从肩到膝成一条直线，不要用腰顶起来，然后有控制地放下。",
+    "upstreamInstructions": [
+     "Keep hip extended as much as possible."
+    ],
+    "upstreamIntro": "Get into bridge position, balance yourself on heels and start extending legs unilaterally.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Gluteus maximus",
+     "Rectus abdominis"
+    ],
+    "secondaryMuscles": [
+     "Obliquus externus abdominis"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [],
+    "videos": [],
+    "videoStatus": "none"
+   },
+   "rig": "glute-bridge",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:622:calf-raise",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=622",
+    "recordId": 622,
+    "uuid": "7ce443b6-eb84-4f65-b05f-461c1cc8bcc0",
+    "snapshot": "data/movement/raw/622.json",
+    "license": "CC-BY-SA 3",
+    "licenseName": " Creative Commons Attribution Share Alike 3",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+    "author": "wger.de",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2024-01-17T11:35:53.031152+01:00"
+   },
+   "names": {
+    "zh": "站姿提踵",
+    "en": "Standing Calf Raises",
+    "upstreamTranslations": [
+     {
+      "lang": "es",
+      "name": "Elevación de talón de pie"
+     },
+     {
+      "lang": "fr",
+      "name": "Extension des mollets debout"
+     },
+     {
+      "lang": "it",
+      "name": "Sollevamento dei polpacci in piedi"
+     },
+     {
+      "lang": "en",
+      "name": "Standing Calf Raises"
+     },
+     {
+      "lang": "de",
+      "name": "Wadenheben Stehend"
+     }
+    ],
+    "aliases": [
+     "提踵",
+     "站姿提踵",
+     "小腿训练",
+     "calf raise",
+     "heel raise"
+    ]
+   },
+   "category": {
+    "upstream": "Calves",
+    "family": "踝跖屈"
+   },
+   "equipment": {
+    "list": [],
+    "key": "bodyweight"
+   },
+   "environment": [
+    "home",
+    "office"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "plantarflexion",
+    "movement": "flexion-extension",
+    "side": "bilateral"
+   },
+   "teaching": {
+    "position": "standing-support",
+    "description": "扶稳墙面或椅背，脚跟缓慢抬起，在最高点停一下再控制着落下。走路、上下楼和防跌倒都依赖这个动作；老年人可以先做双足，再过渡到单足。",
+    "upstreamInstructions": [],
+    "upstreamIntro": "Get onto the calf raises machine, you should able to completely push your calves down. Stand straight, don't make a hollow back and don't bend your legs. Pull yourself up as high as you can. Make a small pause of 1 - 2 seconds and go slowly down.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Gastrocnemius"
+    ],
+    "secondaryMuscles": [
+     "Soleus"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 437,
+      "file": "assets/movement/wger/calf-raise-wger-image-437.png",
+      "sha256": "5ed41b84f43bf23cf26b4b28b9d3f32e44629753f75bbd0d72b76786177894dc",
+      "bytes": 5665,
+      "license": "CC-BY-SA 3",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+      "licenseTitle": "",
+      "author": "clafal",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/622/9a429bd0-afd3-4ad0-8043-e9beec901c81.jpeg"
+     },
+     {
+      "id": 438,
+      "file": "assets/movement/wger/calf-raise-wger-image-438.png",
+      "sha256": "5ed41b84f43bf23cf26b4b28b9d3f32e44629753f75bbd0d72b76786177894dc",
+      "bytes": 5665,
+      "license": "CC-BY-SA 3",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+      "licenseTitle": "",
+      "author": "clafal",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/622/d6d57067-97de-462e-a8bb-15228d730323.jpeg"
+     },
+     {
+      "id": 439,
+      "file": "assets/movement/wger/calf-raise-wger-image-439.png",
+      "sha256": "37ad55c347f798b9cbffee48a2cb1db1e4555534fea596ecb8f0a4a4763875c0",
+      "bytes": 4578,
+      "license": "CC-BY-SA 3",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+      "licenseTitle": "",
+      "author": "clafal",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/622/0705bc22-fadd-4c19-9c94-649a0b1f927f.jpeg"
+     }
+    ],
+    "videos": [
+     {
+      "id": 14,
+      "url": "https://wger.de/media/exercise-video/622/35b7b625-77fd-4c09-8c57-3ad0f2f23175.MOV",
+      "playable": true
+     },
+     {
+      "id": 15,
+      "url": "https://wger.de/media/exercise-video/622/461171e5-2b16-407d-bf27-27aeef43f105.MOV",
+      "playable": true
+     }
+    ],
+    "videoStatus": "none"
+   },
+   "rig": "calf-raise",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  },
+  {
+   "id": "exercise:wger:92:biceps-curl",
+   "upstream": {
+    "project": "wger Workout Manager",
+    "projectUrl": "https://wger.de",
+    "api": "https://wger.de/api/v2/exerciseinfo/?id=92",
+    "recordId": 92,
+    "uuid": "1ae6a28d-10e7-4ecf-af4f-905f8193e2c6",
+    "snapshot": "data/movement/raw/92.json",
+    "license": "CC-BY-SA 3",
+    "licenseName": " Creative Commons Attribution Share Alike 3",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+    "author": "wger.de",
+    "created": "2023-08-06T10:17:17.422900+02:00",
+    "lastUpdate": "2024-01-17T11:21:59.622804+01:00"
+   },
+   "names": {
+    "zh": "哑铃弯举",
+    "en": "Biceps Curls With Dumbbell",
+    "upstreamTranslations": [
+     {
+      "lang": "en",
+      "name": "Biceps Curls With Dumbbell"
+     },
+     {
+      "lang": "de",
+      "name": "Bizeps KH-Curls"
+     },
+     {
+      "lang": "fr",
+      "name": "Curl biceps avec haltères"
+     },
+     {
+      "lang": "es",
+      "name": "Curl de bíceps con mancuerna"
+     },
+     {
+      "lang": "it",
+      "name": "Curl per Bicipiti con Manubrio"
+     },
+     {
+      "lang": "pt",
+      "name": "Rosca direta com halteres"
+     }
+    ],
+    "aliases": [
+     "弯举",
+     "哑铃弯举",
+     "二头弯举",
+     "biceps curl",
+     "dumbbell curl"
+    ]
+   },
+   "category": {
+    "upstream": "Arms",
+    "family": "上肢屈曲"
+   },
+   "equipment": {
+    "list": [
+     "Dumbbell"
+    ],
+    "key": "dumbbell"
+   },
+   "environment": [
+    "home",
+    "gym"
+   ],
+   "level": "beginner",
+   "pattern": {
+    "key": "elbow-flexion",
+    "movement": "flexion-extension",
+    "side": "alternating"
+   },
+   "teaching": {
+    "position": "standing-arms",
+    "description": "站直，手掌朝向身体或朝上，肘部贴近躯干。屈肘把重量带向肩部，下放时控制，不要用身体摆动甩起来。",
+    "upstreamInstructions": [
+     "Don't allow your body to swing during the exercise, all work is done by the biceps, which are the only mucles that should move (pay attention to the elbows)."
+    ],
+    "upstreamIntro": "Hold two dumbbells, the arms are streched, the hands are on your side, the palms face inwards. Bend the arms and bring the weight with a fast movement up. At the same time, rotate your arms by 90 degrees at the very beginning of the movement. At the highest point, rotate a little the weights further outwards. Without a pause, bring them down, slowly.",
+    "upstreamLanguage": "en",
+    "translationStatus": "upstream_english_verbatim; zh is project-authored teaching text"
+   },
+   "anatomy": {
+    "primaryMuscles": [
+     "Biceps brachii"
+    ],
+    "secondaryMuscles": [
+     "Brachialis"
+    ],
+    "muscleRoleSource": "wger record muscles / muscles_secondary (upstream), mapped to BodyParts3D mesh ids in anatomy catalog"
+   },
+   "media": {
+    "images": [
+     {
+      "id": 23,
+      "file": "assets/movement/wger/biceps-curl-wger-image-23.png",
+      "sha256": "9db73cea5e78b57534ee38a72b8a92cc2bdb0f882f7ace4d8f3bb6354d9909b4",
+      "bytes": 123420,
+      "license": "CC-BY-SA 3",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+      "licenseTitle": "",
+      "author": "Everkinetic",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/81/Biceps-curl-1.png"
+     },
+     {
+      "id": 24,
+      "file": "assets/movement/wger/biceps-curl-wger-image-24.png",
+      "sha256": "e1ac408080bfb00b4cc97665df0029d5d66207fb758857bbac0afafb5ff58881",
+      "bytes": 114031,
+      "license": "CC-BY-SA 3",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+      "licenseTitle": "",
+      "author": "Everkinetic",
+      "aiGenerated": false,
+      "sourceUrl": "https://wger.de/media/exercise-images/81/Biceps-curl-2.png"
+     }
+    ],
+    "videos": [
+     {
+      "id": 48,
+      "url": "https://wger.de/media/exercise-video/92/8bfb917c-3d0d-49b9-8073-5d7e01c1b894.MOV",
+      "playable": true
+     }
+    ],
+    "videoStatus": "none"
+   },
+   "rig": "curl",
+   "provenance": {
+    "contentStatus": "LICENSED_RECORD_IMPORTED",
+    "instructionStatus": "UPSTREAM_ENGLISH_VERBATIM_PLUS_PROJECT_ZH",
+    "limitation": "中文名称、教学要点、分类与难度为本项目编写；上游仅提供英文（或其它语言）说明与肌群。不把项目编写内容冒充上游专业内容。"
+   }
+  }
+ ]
+}

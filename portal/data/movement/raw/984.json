@@ -1,0 +1,460 @@
+{
+ "id": 984,
+ "uuid": "3284fd27-5402-4821-9c32-29066d4e2667",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2026-07-23T12:25:02.411880+02:00",
+ "last_update_global": "2026-07-23T12:25:02.411880+02:00",
+ "category": {
+  "id": 9,
+  "name": "Legs"
+ },
+ "muscles": [
+  {
+   "id": 8,
+   "name": "Gluteus maximus",
+   "name_en": "Glutes",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-8.fbdfb46f3bc0.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-8.605e4e1a0277.svg"
+  },
+  {
+   "id": 10,
+   "name": "Quadriceps femoris",
+   "name_en": "Quads",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-10.b1445ea1acf6.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-10.55e36d852778.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 11,
+   "name": "Biceps femoris",
+   "name_en": "Hamstrings",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-11.54ef31755917.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-11.a2bc76fe157a.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "",
+ "images": [
+  {
+   "id": 364,
+   "uuid": "5c7ffe68-e7b2-47f3-a22a-f9cc28640432",
+   "exercise": 984,
+   "exercise_uuid": "3284fd27-5402-4821-9c32-29066d4e2667",
+   "image": "https://wger.de/media/exercise-images/984/5c7ffe68-e7b2-47f3-a22a-f9cc28640432.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/984/5c7ffe68-e7b2-47f3-a22a-f9cc28640432.png.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/984/5c7ffe68-e7b2-47f3-a22a-f9cc28640432.png.400x400_q85.jpg"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Franpol",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Franpol"
+   ],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 1548,
+   "uuid": "076715aa-c841-4406-91e0-1e84b1c964da",
+   "name": "Affondi",
+   "exercise": 984,
+   "description": "<ol>\n<li>Stai in piedi a schiena dritta</li>\n<li>Fai un grande passo avanti con la gamba sinistra</li>\n<li>Abbassa il bacino fino a toccare quasi il pavimento con il ginocchio destro</li>\n<li>Tendi il bacino in avanti</li>\n<li>Ritorna in posizione eretta facendo un passo indietro</li>\n<li>Ripeti, alternando le gambe ogni volta</li>\n</ol>\n",
+   "description_source": "1. Stai in piedi a schiena dritta\n2. Fai un grande passo avanti con la gamba sinistra\n3. Abbassa il bacino fino a toccare quasi il pavimento con il ginocchio destro\n4. Tendi il bacino in avanti\n5. Ritorna in posizione eretta facendo un passo indietro\n6. Ripeti, alternando le gambe ogni volta",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Gianluca Vespignani (imported from Feeel)",
+    "mondstern (imported from Feeel)",
+    "J. Lavoie (imported from Feeel)",
+    "albanobattistella (imported from Feeel)",
+    "Marco Galli (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1543,
+   "uuid": "5fd169a1-09c3-470d-83b5-47e56c61ee07",
+   "name": "Ausfallschritte",
+   "exercise": 984,
+   "description": "<p>Ausgangsposition:</p>\n<p>Mit geradem Rücken stehen.</p>\n<p>Schritte:</p>\n<ol>\n<li>Machen Sie mit dem linken Bein einen großen Schritt nach vorn.</li>\n<li>Senken Sie Ihr Becken, bis Sie mit dem rechten Knie fast den Boden berühren.</li>\n<li>Bringen Sie Ihr Becken wieder nach oben.</li>\n<li>Kehren Sie in die Ausgangsposition zurück, indem Sie einen Schritt zurücktreten.</li>\n<li>Wiederholen Sie den Vorgang und wechseln Sie dabei jedes Mal die Beine.</li>\n</ol>\n",
+   "description_source": "Ausgangsposition:\n\nMit geradem Rücken stehen.\n\nSchritte:\n\n1. Machen Sie mit dem linken Bein einen großen Schritt nach vorn.\n2. Senken Sie Ihr Becken, bis Sie mit dem rechten Knie fast den Boden berühren.\n3. Bringen Sie Ihr Becken wieder nach oben.\n4. Kehren Sie in die Ausgangsposition zurück, indem Sie einen Schritt zurücktreten.\n5. Wiederholen Sie den Vorgang und wechseln Sie dabei jedes Mal die Beine.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "Miroslav Mazel (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1546,
+   "uuid": "3b533c1d-2601-4dc1-93ab-07df83e85cf7",
+   "name": "Fentes",
+   "exercise": 984,
+   "description": "<ol>\n<li>Tenez-vous debout, le dos droit</li>\n<li>Faites un grand pas en avant avec votre jambe gauche</li>\n<li>Descendez votre bassin jusqu'à ce que votre genou droit touche presque le sol.</li>\n<li>Remontez votre bassin</li>\n<li>Revenez à la position debout en faisant un pas en arrière</li>\n<li>Répétez l'opération en changeant de jambe à chaque fois</li>\n</ol>\n",
+   "description_source": "1. Tenez-vous debout, le dos droit\n2. Faites un grand pas en avant avec votre jambe gauche\n3. Descendez votre bassin jusqu'à ce que votre genou droit touche presque le sol.\n4. Remontez votre bassin\n5. Revenez à la position debout en faisant un pas en arrière\n6. Répétez l'opération en changeant de jambe à chaque fois",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Maxime Leroy (imported from Feeel)",
+    "Clément Mondon (imported from Feeel)",
+    "mondstern (imported from Feeel)",
+    "J. Lavoie (imported from Feeel)",
+    "Miroslav Mazel (imported from Feeel)",
+    "Jonathan D. (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1550,
+   "uuid": "bb6597c6-bfd4-4bda-b7c8-929796c90247",
+   "name": "Investidas",
+   "exercise": 984,
+   "description": "<ol>\n<li>Fique de pé com as costas retas</li>\n<li>Dê um grande passo adiante com sua perna esquerda</li>\n<li>Desça com sua pélvis até quase tocar o chão com o seu joelho direito</li>\n<li>Leve sua pélvis de volta para cima</li>\n<li>Retorne para a posição de pé, dando um passo atrás</li>\n<li>Repita, trocando de pernas a cada vez</li>\n</ol>\n",
+   "description_source": "1. Fique de pé com as costas retas\n2. Dê um grande passo adiante com sua perna esquerda\n3. Desça com sua pélvis até quase tocar o chão com o seu joelho direito\n4. Leve sua pélvis de volta para cima\n5. Retorne para a posição de pé, dando um passo atrás\n6. Repita, trocando de pernas a cada vez",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Eduardo Celino (imported from Feeel)",
+    "flexagoon (imported from Feeel)",
+    "Vinicius Rodrigues (imported from Feeel)",
+    "mondstern (imported from Feeel)",
+    "Rodolfo Candido (imported from Feeel)",
+    "gbpu (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1547,
+   "uuid": "55276d07-d918-4589-86ca-ccb36261fdb5",
+   "name": "Iskoraci",
+   "exercise": 984,
+   "description": "",
+   "description_source": "",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 22,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Milo Ivir (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1551,
+   "uuid": "916a8581-8b10-47cf-8ad2-08126a784c54",
+   "name": "Lunge hareketi",
+   "exercise": 984,
+   "description": "<ol>\n<li>Sırtınız düz bir şekilde durun</li>\n<li>Sol bacağınızla ileriye doğru büyük bir adım atın</li>\n<li>Sağ dizinizle neredeyse yere değene kadar leğen kemiğinizi aşağı indirin</li>\n<li>Leğen kemiğinizi geri yukarı kaldırın</li>\n<li>Geri adım atarak ayakta durumuna dönün</li>\n<li>Her seferinde bacakları değiştirerek tekrarlayın</li>\n</ol>\n",
+   "description_source": "1. Sırtınız düz bir şekilde durun\n2. Sol bacağınızla ileriye doğru büyük bir adım atın\n3. Sağ dizinizle neredeyse yere değene kadar leğen kemiğinizi aşağı indirin\n4. Leğen kemiğinizi geri yukarı kaldırın\n5. Geri adım atarak ayakta durumuna dönün\n6. Her seferinde bacakları değiştirerek tekrarlayın",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 16,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "Oğuz Ersen (imported from Feeel)",
+    "ToldYouThat (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1544,
+   "uuid": "b1844fd6-0360-4cd4-9008-bbe2e9c4e73d",
+   "name": "Lunges",
+   "exercise": 984,
+   "description": "<p>Starting position:</p>\n<p>Stand with back straight.</p>\n<p>Steps:</p>\n<ol>\n<li>Take a large step forward with your left leg.</li>\n<li>Bring your pelvis down until you almost touch the floor with your right knee.</li>\n<li>Bring your pelvis back up.</li>\n<li>Return to the starting position by stepping back.</li>\n<li>Repeat, switching legs each time.</li>\n</ol>\n",
+   "description_source": "Starting position:\n\nStand with back straight.\n\nSteps:\n\n1. Take a large step forward with your left leg.\n2. Bring your pelvis down until you almost touch the floor with your right knee.\n3. Bring your pelvis back up.\n4. Return to the starting position by stepping back.\n5. Repeat, switching legs each time.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Miroslav Mazel (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1541,
+   "uuid": "bb87b485-ee0a-4d34-a8d5-820ba5185b78",
+   "name": "Paru-paru",
+   "exercise": 984,
+   "description": "<ol>\n<li>Berdiri dengan punggung lurus</li>\n<li>Ambil langkah maju besar dengan kaki kiri</li>\n<li>Turunkan panggulmu hingga kau hampir menyentuh lantai dengan lutut kananmu.</li>\n<li>Panggul kembali</li>\n<li>Kembali ke posisi berdiri dengan melangkah mundur</li>\n<li>Ulangi, beralih kaki setiap kali</li>\n</ol>\n",
+   "description_source": "1. Berdiri dengan punggung lurus\n2. Ambil langkah maju besar dengan kaki kiri\n3. Turunkan panggulmu hingga kau hampir menyentuh lantai dengan lutut kananmu.\n4. Panggul kembali\n5. Kembali ke posisi berdiri dengan melangkah mundur\n6. Ulangi, beralih kaki setiap kali",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 23,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "Reza Almanda (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1549,
+   "uuid": "b8527e2d-21bf-4bcc-a8f2-4e067276804e",
+   "name": "Uitvalspassen",
+   "exercise": 984,
+   "description": "<ol>\n<li>Ga staan met een rechte rug.</li>\n<li>Doe een grote stap vooruit met je linkerbeen.</li>\n<li>Duw je bekken omlaag, zo ver tot je bijna de grond raakt met je rechterknie.</li>\n<li>Duw je bekken omhoog.</li>\n<li>Ga weer recht staan.</li>\n<li>Herhaal, en wissel beide benen af</li>\n</ol>\n",
+   "description_source": "1. Ga staan met een rechte rug.\n2. Doe een grote stap vooruit met je linkerbeen.\n3. Duw je bekken omlaag, zo ver tot je bijna de grond raakt met je rechterknie.\n4. Duw je bekken omhoog.\n5. Ga weer recht staan.\n6. Herhaal, en wissel beide benen af",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 6,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "Heimen Stoffels (imported from Feeel)",
+    "Daan Vervacke (imported from Feeel)",
+    "J. Lavoie (imported from Feeel)",
+    "floris van den bosch (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1542,
+   "uuid": "7f581238-94d3-426c-ba68-fc0c7367f2d2",
+   "name": "Výpady",
+   "exercise": 984,
+   "description": "<ol>\n<li>Postavte se zády rovně</li>\n<li>Udělejte velký krok vpřed levou nohou</li>\n<li>Přiveďte pánev dolů, dokud se téměř nedotknete podlahy pravým kolenem</li>\n<li>Přiveďte pánev zpět nahoru</li>\n<li>Vraťte se do stoje tím, že ustoupíte</li>\n<li>Opakujte, pokaždé přepněte nohy</li>\n</ol>\n",
+   "description_source": "1. Postavte se zády rovně\n2. Udělejte velký krok vpřed levou nohou\n3. Přiveďte pánev dolů, dokud se téměř nedotknete podlahy pravým kolenem\n4. Přiveďte pánev zpět nahoru\n5. Vraťte se do stoje tím, že ustoupíte\n6. Opakujte, pokaždé přepněte nohy",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 9,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "Miroslav Mazel (imported from Feeel)",
+    "Shimon (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1545,
+   "uuid": "fafe2bd7-f064-4c20-9305-4c694c0564e9",
+   "name": "Zancadas con peso",
+   "exercise": 984,
+   "description": "<ol>\n<li>Párese con la espalda recta</li>\n<li>Dé un gran paso adelante con su pierna izquierda</li>\n<li>Baje la pelvis hasta que casi toque el suelo con la rodilla derecha</li>\n<li>Vuelva a subir la pelvis</li>\n<li>Vuelva a la posición con el pie hacia atrás</li>\n<li>Repita, cambiando de pierna cada vez</li>\n</ol>\n",
+   "description_source": "1. Párese con la espalda recta\n2. Dé un gran paso adelante con su pierna izquierda\n3. Baje la pelvis hasta que casi toque el suelo con la rodilla derecha\n4. Vuelva a subir la pelvis\n5. Vuelva a la posición con el pie hacia atrás\n6. Repita, cambiando de pierna cada vez",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "mondstern (imported from Feeel)",
+    "Luis Alfredo Figueroa Bracamontes (imported from Feeel)",
+    "Gabriel Tandil (imported from Feeel)",
+    "Diego Sanguinetti (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1552,
+   "uuid": "29c16bf4-033a-4da8-85e4-69a89488957b",
+   "name": "Προβολές",
+   "exercise": 984,
+   "description": "<ol>\n<li>Σταθείτε με ίσια την πλάτη</li>\n<li>Κάντε ένα μεγάλο βήμα μπροστά με το αριστερό σας πόδι</li>\n<li>Φέρτε τη λεκάνη σας προς τα κάτω μέχρι να αγγίξετε σχεδόν το πάτωμα με το δεξί σας γόνατο</li>\n<li>Φέρτε τη λεκάνη σας πίσω προς τα πάνω</li>\n<li>Επιστρέψτε στην όρθια θέση με βήμα προς τα πίσω.</li>\n<li>Επαναλάβετε, αλλάζοντας πόδια κάθε φορά</li>\n</ol>\n",
+   "description_source": "1. Σταθείτε με ίσια την πλάτη\n2. Κάντε ένα μεγάλο βήμα μπροστά με το αριστερό σας πόδι\n3. Φέρτε τη λεκάνη σας προς τα κάτω μέχρι να αγγίξετε σχεδόν το πάτωμα με το δεξί σας γόνατο\n4. Φέρτε τη λεκάνη σας πίσω προς τα πάνω\n5. Επιστρέψτε στην όρθια θέση με βήμα προς τα πίσω.\n6. Επαναλάβετε, αλλάζοντας πόδια κάθε φορά",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 8,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Vangelis Skarmoutsos (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1553,
+   "uuid": "3cd2f8b6-343f-4984-b3fa-a5ef8b349b14",
+   "name": "מכרעים",
+   "exercise": 984,
+   "description": "",
+   "description_source": "",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 21,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Omer I.S. (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1554,
+   "uuid": "a960aa35-81bb-45ff-b66b-d4222f05c4c5",
+   "name": "الطعنات",
+   "exercise": 984,
+   "description": "<ol>\n<li>الوقوف ب ظهر مستو</li>\n<li>اتخاذ خطوة كبيرة إلى الأمام ب ساقك اليسرى</li>\n<li>جلب الحوض الخاص بك إلى أسفل حتى تلامس الارض بركبتك اليمنى</li>\n<li>جلب الحوض الخاص بك مرة أخرى</li>\n<li>العودة إلى وضعية الوقوف بالتراجع</li>\n<li>كرر، مع التبديل الساقين في كل مرة</li>\n</ol>\n",
+   "description_source": "1. الوقوف ب ظهر مستو\n2. اتخاذ خطوة كبيرة إلى الأمام ب ساقك اليسرى\n3. جلب الحوض الخاص بك إلى أسفل حتى تلامس الارض بركبتك اليمنى\n4. جلب الحوض الخاص بك مرة أخرى\n5. العودة إلى وضعية الوقوف بالتراجع\n6. كرر، مع التبديل الساقين في كل مرة",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 17,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Rex_sa (imported from Feeel)"
+   ]
+  },
+  {
+   "id": 1555,
+   "uuid": "6093ae6b-07e0-4287-b3d1-955a12163028",
+   "name": "弓步",
+   "exercise": 984,
+   "description": "<p>起始姿势：背部挺直站立。</p>\n<p>步骤：</p>\n<ol>\n<li>左腿向前迈出一大步。</li>\n<li>让骨盆向下，直到你的右膝几乎触地。</li>\n<li>将骨盆抬高。</li>\n<li>后退回到起始姿势。</li>\n<li>重复，每次换腿。</li>\n</ol>\n",
+   "description_source": "起始姿势：背部挺直站立。\n\n步骤：\n\n1. 左腿向前迈出一大步。\n2. 让骨盆向下，直到你的右膝几乎触地。\n3. 将骨盆抬高。\n4. 后退回到起始姿势。\n5. 重复，每次换腿。",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 24,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Eric (imported from Feeel)",
+    "poi / poipoipoipoipoipoipoipoipoi (imported from Feeel)",
+    "bxezi (imported from Feeel)"
+   ]
+  }
+ ],
+ "variation_group": "c8727770-8ec1-4fe3-ae70-238a9fc46570",
+ "videos": [],
+ "author_history": [],
+ "total_authors_history": [
+  "Gianluca Vespignani (imported from Feeel)",
+  "Clément Mondon (imported from Feeel)",
+  "Luis Alfredo Figueroa Bracamontes (imported from Feeel)",
+  "Gabriel Tandil (imported from Feeel)",
+  "Milo Ivir (imported from Feeel)",
+  "floris van den bosch (imported from Feeel)",
+  "Vangelis Skarmoutsos (imported from Feeel)",
+  "Reza Almanda (imported from Feeel)",
+  "Eduardo Celino (imported from Feeel)",
+  "Vinicius Rodrigues (imported from Feeel)",
+  "mondstern (imported from Feeel)",
+  "Heimen Stoffels (imported from Feeel)",
+  "Rodolfo Candido (imported from Feeel)",
+  "Rex_sa (imported from Feeel)",
+  "Franpol",
+  "Oğuz Ersen (imported from Feeel)",
+  "flexagoon (imported from Feeel)",
+  "Omer I.S. (imported from Feeel)",
+  "Daan Vervacke (imported from Feeel)",
+  "Eric (imported from Feeel)",
+  "J. Lavoie (imported from Feeel)",
+  "Shimon (imported from Feeel)",
+  "ToldYouThat (imported from Feeel)",
+  "Miroslav Mazel (imported from Feeel)",
+  "Diego Sanguinetti (imported from Feeel)",
+  "Marco Galli (imported from Feeel)",
+  "Maxime Leroy (imported from Feeel)",
+  "albanobattistella (imported from Feeel)",
+  "gbpu (imported from Feeel)",
+  "bxezi (imported from Feeel)",
+  "poi / poipoipoipoipoipoipoipoipoi (imported from Feeel)",
+  "Jonathan D. (imported from Feeel)"
+ ]
+}

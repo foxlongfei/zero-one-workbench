@@ -1,0 +1,259 @@
+{
+ "id": 92,
+ "uuid": "1ae6a28d-10e7-4ecf-af4f-905f8193e2c6",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:21:59.622804+01:00",
+ "last_update_global": "2026-10-24T15:57:27.756232+02:00",
+ "category": {
+  "id": 8,
+  "name": "Arms"
+ },
+ "muscles": [
+  {
+   "id": 1,
+   "name": "Biceps brachii",
+   "name_en": "Biceps",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-1.8790f8a0b3b9.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-1.e08c58a194b9.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 13,
+   "name": "Brachialis",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-13.3fd85231b089.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-13.0a7e5d52821b.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 3,
+   "name": "Dumbbell"
+  }
+ ],
+ "license": {
+  "id": 1,
+  "full_name": " Creative Commons Attribution Share Alike 3",
+  "short_name": "CC-BY-SA 3",
+  "url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en"
+ },
+ "license_author": "wger.de",
+ "images": [
+  {
+   "id": 23,
+   "uuid": "ca71df8e-a6d6-453f-a25a-f4cebae3b970",
+   "exercise": 92,
+   "exercise_uuid": "1ae6a28d-10e7-4ecf-af4f-905f8193e2c6",
+   "image": "https://wger.de/media/exercise-images/81/Biceps-curl-1.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/81/Biceps-curl-1.png.200x200_q85.png",
+    "medium": "https://wger.de/media/exercise-images/81/Biceps-curl-1.png.400x400_q85.png"
+   },
+   "is_main": true,
+   "style": "1",
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Everkinetic",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [],
+   "is_ai_generated": false
+  },
+  {
+   "id": 24,
+   "uuid": "13fbda16-5ef6-4f48-b58c-954c3078001c",
+   "exercise": 92,
+   "exercise_uuid": "1ae6a28d-10e7-4ecf-af4f-905f8193e2c6",
+   "image": "https://wger.de/media/exercise-images/81/Biceps-curl-2.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/81/Biceps-curl-2.png.200x200_q85.png",
+    "medium": "https://wger.de/media/exercise-images/81/Biceps-curl-2.png.400x400_q85.png"
+   },
+   "is_main": false,
+   "style": "1",
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Everkinetic",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 81,
+   "uuid": "48a59aa8-4568-409c-8afe-f8cb99c558ea",
+   "name": "Biceps Curls With Dumbbell",
+   "exercise": 92,
+   "description": "<p>Hold two dumbbells, the arms are streched, the hands are on your side, the palms face inwards. Bend the arms and bring the weight with a fast movement up. At the same time, rotate your arms by 90 degrees at the very beginning of the movement. At the highest point, rotate a little the weights further outwards. Without a pause, bring them down, slowly.</p>\n<p>Don't allow your body to swing during the exercise, all work is done by the biceps, which are the only mucles that should move (pay attention to the elbows).</p>\n",
+   "description_source": "Hold two dumbbells, the arms are streched, the hands are on your side, the palms face inwards. Bend the arms and bring the weight with a fast movement up. At the same time, rotate your arms by 90 degrees at the very beginning of the movement. At the highest point, rotate a little the weights further outwards. Without a pause, bring them down, slowly.\n\nDon't allow your body to swing during the exercise, all work is done by the biceps, which are the only mucles that should move (pay attention to the elbows).",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [
+    {
+     "id": 302,
+     "uuid": "17e2f36d-49f7-402e-a1d7-3fdcd4ce9d04",
+     "translation": 81,
+     "comment": "Fluid movements with no pauses at the top or the bottom"
+    }
+   ],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 26,
+   "uuid": "8cbbffcc-1989-43de-9200-03869480398c",
+   "name": "Bizeps KH-Curls",
+   "exercise": 92,
+   "description": "<p>Halte zwei Kurzhantel mit ausgestreckten Armen neben dem Körper, die Handflächen zeigen nach innen. Beuge die Arme und brige die Hanteln mit einer schnellen Bewegung nach oben wobei sie gleichzeitig um 90 Grad gedreht werden. Am höchsten Punkt kann man die Hanteln ganz leicht weiter nach außen drehen. Ohne Pause wird das Gewicht nun kontrolliert nach unten gebracht. Beachte, dass die Bewegung nach oben schneller ist als nach unten.</p>\n<p>Während des Bewegungablaufs darf der Körper nicht mitschwingen. Die Ellenbogen bleiben dabei immer an der Stelle.</p>\n",
+   "description_source": "Halte zwei Kurzhantel mit ausgestreckten Armen neben dem Körper, die Handflächen zeigen nach innen. Beuge die Arme und brige die Hanteln mit einer schnellen Bewegung nach oben wobei sie gleichzeitig um 90 Grad gedreht werden. Am höchsten Punkt kann man die Hanteln ganz leicht weiter nach außen drehen. Ohne Pause wird das Gewicht nun kontrolliert nach unten gebracht. Beachte, dass die Bewegung nach oben schneller ist als nach unten.\n\nWährend des Bewegungablaufs darf der Körper nicht mitschwingen. Die Ellenbogen bleiben dabei immer an der Stelle.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 4816,
+   "uuid": "0513d37f-0461-41d2-83ea-24f832bb3c39",
+   "name": "Curl biceps avec haltères",
+   "exercise": 92,
+   "description": "<p>Tenez deux haltères, les bras tendus, les mains le long du corps, les paumes tournées vers l'intérieur. Fléchissez les bras et montez la charge d'un mouvement rapide. En même temps, effectuez une rotation des bras de 90 degrés dès le tout début du mouvement. Au point le plus haut, tournez légèrement les charges davantage vers l'extérieur. Sans pause, redescendez-les lentement.</p>\n<p>Ne laissez pas votre corps se balancer pendant l'exercice : tout le travail est effectué par les biceps, qui sont les seuls muscles qui doivent bouger (faites attention aux coudes).</p>\n",
+   "description_source": "Tenez deux haltères, les bras tendus, les mains le long du corps, les paumes tournées vers l'intérieur. Fléchissez les bras et montez la charge d'un mouvement rapide. En même temps, effectuez une rotation des bras de 90 degrés dès le tout début du mouvement. Au point le plus haut, tournez légèrement les charges davantage vers l'extérieur. Sans pause, redescendez-les lentement.\n\nNe laissez pas votre corps se balancer pendant l'exercice : tout le travail est effectué par les biceps, qui sont les seuls muscles qui doivent bouger (faites attention aux coudes).",
+   "created": "2026-06-19T18:46:17.165259+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 2051,
+   "uuid": "a3ed40fb-83d3-4901-889f-6bba313e8c80",
+   "name": "Curl de bíceps con mancuerna",
+   "exercise": 92,
+   "description": "<p>Sujeta dos pesas, los brazos estirados, las manos a los lados, las palmas hacia dentro. Flexiona los brazos y sube el peso con un movimiento rápido. Al mismo tiempo, gira los brazos 90 grados al principio del movimiento. En el punto más alto, gira un poco las pesas hacia fuera. Sin pausa, bájalas lentamente.No permitas que tu cuerpo se balancee durante el ejercicio, todo el trabajo lo realizan los bíceps, que son los únicos músculos que deben moverse (presta atención a los codos).</p>\n",
+   "description_source": "Sujeta dos pesas, los brazos estirados, las manos a los lados, las palmas hacia dentro. Flexiona los brazos y sube el peso con un movimiento rápido. Al mismo tiempo, gira los brazos 90 grados al principio del movimiento. En el punto más alto, gira un poco las pesas hacia fuera. Sin pausa, bájalas lentamente.No permitas que tu cuerpo se balancee durante el ejercicio, todo el trabajo lo realizan los bíceps, que son los únicos músculos que deben moverse (presta atención a los codos).",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de",
+    "colundrum"
+   ]
+  },
+  {
+   "id": 2234,
+   "uuid": "4b929354-5515-4302-a78a-59db9f84a15e",
+   "name": "Curl per Bicipiti con Manubrio",
+   "exercise": 92,
+   "description": "<p>Impugnare due manubri, le braccia sono distese, le mani sono sul fianco, i palmi rivolti verso l'interno. Piegare le braccia e portare il peso con un movimento veloce verso l'alto. Allo stesso tempo, ruotate le braccia di 90 gradi all'inizio del movimento. Nel punto più alto, ruotate un po' i pesi verso l'esterno. Senza fare pause, riportateli giù, lentamente.\nNon lasciate che il corpo oscilli durante l'esercizio, tutto il lavoro è svolto dai bicipiti, che sono gli unici muscoli che devono muoversi (fate attenzione ai gomiti).</p>\n",
+   "description_source": "Impugnare due manubri, le braccia sono distese, le mani sono sul fianco, i palmi rivolti verso l'interno. Piegare le braccia e portare il peso con un movimento veloce verso l'alto. Allo stesso tempo, ruotate le braccia di 90 gradi all'inizio del movimento. Nel punto più alto, ruotate un po' i pesi verso l'esterno. Senza fare pause, riportateli giù, lentamente.\nNon lasciate che il corpo oscilli durante l'esercizio, tutto il lavoro è svolto dai bicipiti, che sono gli unici muscoli che devono muoversi (fate attenzione ai gomiti).",
+   "created": "2024-04-04T14:23:29.149881+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "FEFFO",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "FEFFO"
+   ]
+  },
+  {
+   "id": 5268,
+   "uuid": "65f4195b-4a07-436b-b547-9acf71370a94",
+   "name": "Rosca direta com halteres",
+   "exercise": 92,
+   "description": "<p>Segure dois halteres com os braços estendidos, as mãos ao lado do corpo e as palmas voltadas para dentro. Flexione os braços e leve o peso para cima com um movimento rápido. Ao mesmo tempo, gire os braços 90 graus logo no início do movimento. No ponto mais alto, gire um pouco mais os pesos para fora. Sem pausa, desça lentamente.</p>\n<p>Não deixe o corpo balançar durante o exercício: todo o trabalho é do bíceps, o único músculo que deve se mover, com atenção aos cotovelos.</p>\n",
+   "description_source": "Segure dois halteres com os braços estendidos, as mãos ao lado do corpo e as palmas voltadas para dentro. Flexione os braços e leve o peso para cima com um movimento rápido. Ao mesmo tempo, gire os braços 90 graus logo no início do movimento. No ponto mais alto, gire um pouco mais os pesos para fora. Sem pausa, desça lentamente.\n\nNão deixe o corpo balançar durante o exercício: todo o trabalho é do bíceps, o único músculo que deve se mover, com atenção aos cotovelos.",
+   "created": "2026-10-24T15:57:27.756217+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "jptjptjptjpt",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "jptjptjptjpt"
+   ]
+  }
+ ],
+ "variation_group": "674f258e-60c5-4c94-8495-cd918aabea77",
+ "videos": [
+  {
+   "id": 48,
+   "uuid": "8bfb917c-3d0d-49b9-8073-5d7e01c1b894",
+   "exercise": 92,
+   "video": "https://wger.de/media/exercise-video/92/8bfb917c-3d0d-49b9-8073-5d7e01c1b894.MOV",
+   "is_main": false,
+   "size": 31753930,
+   "duration": "10.94",
+   "width": 1920,
+   "height": 1080,
+   "codec": "hevc",
+   "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  }
+ ],
+ "author_history": [
+  "wger.de"
+ ],
+ "total_authors_history": [
+  "FEFFO",
+  "colundrum",
+  "wger.de",
+  "jptjptjptjpt",
+  "Goulart"
+ ]
+}
