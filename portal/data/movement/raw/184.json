@@ -1,0 +1,224 @@
+{
+ "id": 184,
+ "uuid": "ee8e8db4-2d82-49e1-ab7f-891e9a354934",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:26:46.125208+01:00",
+ "last_update_global": "2026-06-19T19:55:07.473226+02:00",
+ "category": {
+  "id": 12,
+  "name": "Back"
+ },
+ "muscles": [
+  {
+   "id": 12,
+   "name": "Latissimus dorsi",
+   "name_en": "Lats",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-12.6a5de7a0e373.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-12.974a8c6def63.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 8,
+   "name": "Gluteus maximus",
+   "name_en": "Glutes",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-8.fbdfb46f3bc0.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-8.605e4e1a0277.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 1,
+   "name": "Barbell"
+  }
+ ],
+ "license": {
+  "id": 1,
+  "full_name": " Creative Commons Attribution Share Alike 3",
+  "short_name": "CC-BY-SA 3",
+  "url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en"
+ },
+ "license_author": "wger.de",
+ "images": [
+  {
+   "id": 332,
+   "uuid": "1709c405-620a-4d07-9658-fade2b66a2df",
+   "exercise": 184,
+   "exercise_uuid": "ee8e8db4-2d82-49e1-ab7f-891e9a354934",
+   "image": "https://wger.de/media/exercise-images/184/1709c405-620a-4d07-9658-fade2b66a2df.jpeg",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/184/1709c405-620a-4d07-9658-fade2b66a2df.jpeg.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/184/1709c405-620a-4d07-9658-fade2b66a2df.jpeg.400x400_q85.jpg"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "philip",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "philip"
+   ],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 105,
+   "uuid": "22cca8fc-cfaf-4941-b0f7-faf9f2937c52",
+   "name": "Deadlifts",
+   "exercise": 184,
+   "description": "<p>Stand firmly, with your feet slightly more than shoulder wide apart. Stand directly behind the bar where it should barely touch your shin, your feet pointing a bit out. Bend down with a straight back, the knees also pointing somewhat out. Grab the bar with a shoulder wide grip, one overhand, one underhand (mixed grip).</p>\n<p>Pull the weight up. At the highest point make a slight hollow back and pull the bar back. Hold 1 or 2 seconds that position. Go down, making sure the back is not bent. Once down you can either go back again as soon as the weights touch the floor, or make a pause, depending on the weight.</p>\n",
+   "description_source": "Stand firmly, with your feet slightly more than shoulder wide apart. Stand directly behind the bar where it should barely touch your shin, your feet pointing a bit out. Bend down with a straight back, the knees also pointing somewhat out. Grab the bar with a shoulder wide grip, one overhand, one underhand (mixed grip).\n\nPull the weight up. At the highest point make a slight hollow back and pull the bar back. Hold 1 or 2 seconds that position. Go down, making sure the back is not bent. Once down you can either go back again as soon as the weights touch the floor, or make a pause, depending on the weight.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [
+    {
+     "id": 327,
+     "uuid": "b097ed1d-63bf-44ff-85df-df835d16ebb0",
+     "translation": 105,
+     "comment": "Don't arch your back!"
+    }
+   ],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 9,
+   "uuid": "521a5e4f-6f35-43e5-9d1c-6e75c4956e96",
+   "name": "Kreuzheben",
+   "exercise": 184,
+   "description": "<p>Stelle dich mit etwas mehr als schulterbreitem Stand vor der Stange, die Füße zeigen leicht nach außen, die Stange ist direkt darüber und sehr nahe am Schienbein. Beuge die Knie (zeigen ebenfalls etwas nach außen) und neige den Oberkörper (bleibt während der ganzen Übung gerade). Greife die Stange schulterbreit mit einem Unter- und einem Obergriff.</p>\n<p>Ziehe nun die Stange nach oben. An der höchsten Stelle mache ein leichtes Hohlkreuz und drücke die Schultern nach hinten. Gehe wieder runter, wobei du darauf achtest, dass der Rücken gerade bleibt und sich nicht krümmt. Du kannst unten angekommen eine kleine Pause einlegen oder sofort weitermachen.</p>\n",
+   "description_source": "Stelle dich mit etwas mehr als schulterbreitem Stand vor der Stange, die Füße zeigen leicht nach außen, die Stange ist direkt darüber und sehr nahe am Schienbein. Beuge die Knie (zeigen ebenfalls etwas nach außen) und neige den Oberkörper (bleibt während der ganzen Übung gerade). Greife die Stange schulterbreit mit einem Unter- und einem Obergriff.\n\nZiehe nun die Stange nach oben. An der höchsten Stelle mache ein leichtes Hohlkreuz und drücke die Schultern nach hinten. Gehe wieder runter, wobei du darauf achtest, dass der Rücken gerade bleibt und sich nicht krümmt. Du kannst unten angekommen eine kleine Pause einlegen oder sofort weitermachen.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [
+    {
+     "id": 534,
+     "uuid": "974f73db-2b9e-4185-8da1-3be44e2ae598",
+     "alias": "Deadlift"
+    }
+   ],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 2135,
+   "uuid": "e570cd82-5a8f-4768-a2f3-8d60bad5c6e8",
+   "name": "Levantamento terra",
+   "exercise": 184,
+   "description": "<p>Fique firme, com os pés ligeiramente mais afastados do que os ombros. Fique diretamente atrás da barra, onde ela mal deve tocar sua canela, com os pés apontando um pouco para fora. Curve-se com as costas retas, os joelhos também apontando um pouco para fora. Agarre a barra com uma pegada na largura dos ombros, uma pegada por baixo e uma pegada reversa.\nPuxe o peso para cima. No ponto mais alto, faça uma leve depressão para trás e puxe a barra para trás. Segure 1 ou 2 segundos nessa posição. Desça, certificando-se de que as costas não estão dobradas. Depois de descer, você pode voltar assim que os pesos tocarem o chão ou fazer uma pausa, dependendo do peso.</p>\n",
+   "description_source": "Fique firme, com os pés ligeiramente mais afastados do que os ombros. Fique diretamente atrás da barra, onde ela mal deve tocar sua canela, com os pés apontando um pouco para fora. Curve-se com as costas retas, os joelhos também apontando um pouco para fora. Agarre a barra com uma pegada na largura dos ombros, uma pegada por baixo e uma pegada reversa.\nPuxe o peso para cima. No ponto mais alto, faça uma leve depressão para trás e puxe a barra para trás. Segure 1 ou 2 segundos nessa posição. Desça, certificando-se de que as costas não estão dobradas. Depois de descer, você pode voltar assim que os pesos tocarem o chão ou fazer uma pausa, dependendo do peso.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de",
+    "bruunomooura"
+   ]
+  },
+  {
+   "id": 2711,
+   "uuid": "008699a5-abfb-4b1c-bbe9-e538c7d6228c",
+   "name": "Peso Muerto Convencional",
+   "exercise": 184,
+   "description": "<p>Considerado uno de los ejercicios de fuerza más completos, es fundamental para desarrollar la cadena posterior (espalda, glúteos, isquiotibiales) y la fuerza general de todo el cuerpo. La técnica correcta es crucial.</p>\n<p><strong>Instrucciones:</strong></p>\n<p>Párate con los pies separados al ancho de las caderas, con la barra sobre la mitad de tus pies (casi tocando tus canillas/espinillas). Agáchate manteniendo la <strong>espalda completamente recta</strong> y el pecho erguido; sujeta la barra justo por fuera de tus piernas (puedes usar un agarre prono o mixto).</p>\n<p>Para levantar, empuja el suelo con las piernas y extiende la cadera y las rodillas simultáneamente, manteniendo la barra siempre pegada a tu cuerpo. En la posición final, párate completamente erguido y aprieta los glúteos, <strong>sin hiperextender la espalda hacia atrás</strong>. Baja la barra de forma controlada invirtiendo el movimiento.</p>\n",
+   "description_source": "Considerado uno de los ejercicios de fuerza más completos, es fundamental para desarrollar la cadena posterior (espalda, glúteos, isquiotibiales) y la fuerza general de todo el cuerpo. La técnica correcta es crucial.\n\n**Instrucciones:**\n\nPárate con los pies separados al ancho de las caderas, con la barra sobre la mitad de tus pies (casi tocando tus canillas/espinillas). Agáchate manteniendo la **espalda completamente recta** y el pecho erguido; sujeta la barra justo por fuera de tus piernas (puedes usar un agarre prono o mixto).\n\nPara levantar, empuja el suelo con las piernas y extiende la cadera y las rodillas simultáneamente, manteniendo la barra siempre pegada a tu cuerpo. En la posición final, párate completamente erguido y aprieta los glúteos, **sin hiperextender la espalda hacia atrás**. Baja la barra de forma controlada invirtiendo el movimiento.",
+   "created": "2025-09-16T18:45:24.286065+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wgerjhn",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wgerjhn"
+   ]
+  },
+  {
+   "id": 4843,
+   "uuid": "8157f33a-00dc-44c8-8442-ff248fbe246f",
+   "name": "Soulevés de terre",
+   "exercise": 184,
+   "description": "<p>Tenez-vous fermement debout, les pieds un peu plus écartés que la largeur des épaules. Placez-vous directement derrière la barre, qui doit à peine toucher votre tibia, les pieds légèrement orientés vers l'extérieur. Penchez-vous en gardant le dos droit, les genoux eux aussi légèrement vers l'extérieur. Saisissez la barre avec une prise à largeur d'épaules, une main en pronation, l'autre en supination.</p>\n<p>Tirez la charge vers le haut. Au point le plus haut, creusez légèrement le dos et tirez la barre vers l'arrière. Tenez cette position 1 ou 2 secondes. Redescendez en veillant à ne pas arrondir le dos. Une fois en bas, vous pouvez soit repartir dès que les poids touchent le sol, soit marquer une pause, selon la charge.</p>\n",
+   "description_source": "Tenez-vous fermement debout, les pieds un peu plus écartés que la largeur des épaules. Placez-vous directement derrière la barre, qui doit à peine toucher votre tibia, les pieds légèrement orientés vers l'extérieur. Penchez-vous en gardant le dos droit, les genoux eux aussi légèrement vers l'extérieur. Saisissez la barre avec une prise à largeur d'épaules, une main en pronation, l'autre en supination.\n\nTirez la charge vers le haut. Au point le plus haut, creusez légèrement le dos et tirez la barre vers l'arrière. Tenez cette position 1 ou 2 secondes. Redescendez en veillant à ne pas arrondir le dos. Une fois en bas, vous pouvez soit repartir dès que les poids touchent le sol, soit marquer une pause, selon la charge.",
+   "created": "2026-06-19T18:46:31.069833+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 1166,
+   "uuid": "7c088d54-6732-4d5e-aae8-9be8d4a1f111",
+   "name": "Stacco",
+   "exercise": 184,
+   "description": "<p>StaccoStacco\nStacco</p>\n",
+   "description_source": "StaccoStacco\nStacco",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "rlamarca",
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": "100586dc-3923-44b3-a987-5f6c0ea17d1b",
+ "videos": [],
+ "author_history": [
+  "wger.de"
+ ],
+ "total_authors_history": [
+  "rlamarca",
+  "philip",
+  "wger.de",
+  "bruunomooura",
+  "wgerjhn"
+ ]
+}

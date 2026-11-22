@@ -1,0 +1,163 @@
+{
+ "id": 386,
+ "uuid": "de22963a-5d42-4999-860e-377f64359432",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:29:44.825797+01:00",
+ "last_update_global": "2026-06-19T18:57:05.511643+02:00",
+ "category": {
+  "id": 11,
+  "name": "Chest"
+ },
+ "muscles": [
+  {
+   "id": 4,
+   "name": "Pectoralis major",
+   "name_en": "Chest",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-4.c9fa9a228bc8.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-4.955e74ea6083.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 5,
+   "name": "Triceps brachii",
+   "name_en": "Triceps",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-5.8a2b934b5486.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-5.68eb84d675a5.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "notdefine",
+ "images": [],
+ "translations": [
+  {
+   "id": 1050,
+   "uuid": "7c18ee6b-a886-4e41-8eae-79bf2bea3d43",
+   "name": "Diamond push ups",
+   "exercise": 386,
+   "description": "<p>Start: Get into a plank. Place hands close together under your chest so thumbs and index fingers form a diamond shape.</p>\n<p>Lower: Bend your elbows to lower your chest toward your hands. Keep your body straight.</p>\n<p>Push: Push back up until arms are fully extended.</p>\n<p>New note Keep elbows close to your body and core tight.</p>\n",
+   "description_source": "Start: Get into a plank. Place hands close together under your chest so thumbs and index fingers form a diamond shape.\n\nLower: Bend your elbows to lower your chest toward your hands. Keep your body straight.\n\nPush: Push back up until arms are fully extended.\n\nNew note Keep elbows close to your body and core tight.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "notdefine",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "notdefine"
+   ]
+  },
+  {
+   "id": 4328,
+   "uuid": "9aaf091c-e143-4f46-93a7-6df35fd2bdef",
+   "name": "Flexiones diamante",
+   "exercise": 386,
+   "description": "<p>Inicio: Colócate en posición de plancha. Coloca las manos juntas debajo del pecho de modo que los pulgares y los índices formen la figura de un diamante.</p>\n<p>Bajada: Flexiona los codos para bajar el pecho hacia las manos. Mantén el cuerpo recto.</p>\n<p>Empuje: Empuja hacia arriba hasta que los brazos queden completamente extendidos.</p>\n<p>Nota: Mantén los codos cerca del cuerpo y el core activado.</p>\n",
+   "description_source": "Inicio: Colócate en posición de plancha. Coloca las manos juntas debajo del pecho de modo que los pulgares y los índices formen la figura de un diamante.\n\nBajada: Flexiona los codos para bajar el pecho hacia las manos. Mantén el cuerpo recto.\n\nEmpuje: Empuja hacia arriba hasta que los brazos queden completamente extendidos.\n\nNota: Mantén los codos cerca del cuerpo y el core activado.",
+   "created": "2026-06-19T17:58:50.526543+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 295,
+   "uuid": "ec1db965-6315-438c-84dd-d52677e65c62",
+   "name": "Liegestüzten Diamond",
+   "exercise": 386,
+   "description": "<p>Liegestütze mit Händen zusammen. Die Hände werden so nebeneinander gelegt, das Daumen und Zeigefinger eine Raute (Diamant) bilden</p>\n",
+   "description_source": "Liegestütze mit Händen zusammen. Die Hände werden so nebeneinander gelegt, das Daumen und Zeigefinger eine Raute (Diamant) bilden",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "notdefine",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "notdefine"
+   ]
+  },
+  {
+   "id": 1237,
+   "uuid": "2cc30b21-c069-4775-8ff9-1ea3711dcff9",
+   "name": "Piegamenti a diamante",
+   "exercise": 386,
+   "description": "<p><strong>Petto, spalle e tricipiti</strong>, avvicinando le mani; al contrario, rispetto ad un classico push-up, con i diamond push up puoi concentrare lo sforzo maggiormente sui tricipiti.</p>\n",
+   "description_source": "**Petto, spalle e tricipiti**, avvicinando le mani; al contrario, rispetto ad un classico push-up, con i diamond push up puoi concentrare lo sforzo maggiormente sui tricipiti.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "notdefine",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "clafal",
+    "notdefine"
+   ]
+  },
+  {
+   "id": 4873,
+   "uuid": "6a45da48-a8f7-4f80-94f7-31596b4928f7",
+   "name": "Pompes diamant",
+   "exercise": 386,
+   "description": "<p>Départ : mettez-vous en position de planche. Placez les mains rapprochées sous votre poitrine de sorte que les pouces et les index forment un losange.</p>\n<p>Descente : pliez les coudes pour abaisser votre poitrine vers vos mains. Gardez le corps droit.</p>\n<p>Poussée : repoussez vers le haut jusqu'à ce que les bras soient complètement tendus.</p>\n<p>Remarque : gardez les coudes près du corps et la sangle abdominale gainée.</p>\n",
+   "description_source": "Départ : mettez-vous en position de planche. Placez les mains rapprochées sous votre poitrine de sorte que les pouces et les index forment un losange.\n\nDescente : pliez les coudes pour abaisser votre poitrine vers vos mains. Gardez le corps droit.\n\nPoussée : repoussez vers le haut jusqu'à ce que les bras soient complètement tendus.\n\nRemarque : gardez les coudes près du corps et la sangle abdominale gainée.",
+   "created": "2026-06-19T18:46:46.671813+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": "07c5447d-9d49-4b29-a2e2-0f9169f749c5",
+ "videos": [],
+ "author_history": [
+  "notdefine"
+ ],
+ "total_authors_history": [
+  "clafal",
+  "wger.de",
+  "notdefine"
+ ]
+}

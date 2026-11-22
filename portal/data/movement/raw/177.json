@@ -1,0 +1,255 @@
+{
+ "id": 177,
+ "uuid": "8dedde58-a5dc-4a23-ad20-fd7cf524f8b5",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:26:43.686364+01:00",
+ "last_update_global": "2026-10-24T15:57:35.445421+02:00",
+ "category": {
+  "id": 15,
+  "name": "Cardio"
+ },
+ "muscles": [
+  {
+   "id": 14,
+   "name": "Obliquus externus abdominis",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-14.153978038d0b.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-14.afd582849ae9.svg"
+  },
+  {
+   "id": 9,
+   "name": "Trapezius",
+   "name_en": "",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-9.b491050a7108.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-9.be1b5e41906b.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 11,
+   "name": "Biceps femoris",
+   "name_en": "Hamstrings",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-11.54ef31755917.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-11.a2bc76fe157a.svg"
+  },
+  {
+   "id": 13,
+   "name": "Brachialis",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-13.3fd85231b089.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-13.0a7e5d52821b.svg"
+  },
+  {
+   "id": 8,
+   "name": "Gluteus maximus",
+   "name_en": "Glutes",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-8.fbdfb46f3bc0.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-8.605e4e1a0277.svg"
+  },
+  {
+   "id": 12,
+   "name": "Latissimus dorsi",
+   "name_en": "Lats",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-12.6a5de7a0e373.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-12.974a8c6def63.svg"
+  },
+  {
+   "id": 10,
+   "name": "Quadriceps femoris",
+   "name_en": "Quads",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-10.b1445ea1acf6.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-10.55e36d852778.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 3,
+  "full_name": "Creative Commons Public Domain 1.0",
+  "short_name": "CC0",
+  "url": "http://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "license_author": "BFad07",
+ "images": [],
+ "translations": [
+  {
+   "id": 1248,
+   "uuid": "a50b90e9-53b7-4eaf-903f-66f0ef6ebd68",
+   "name": "Bicicletta",
+   "exercise": 177,
+   "description": "<p>Il ciclismo, chiamato anche andare in bicicletta o andare in bicicletta, è l'uso di biciclette per il trasporto, la ricreazione, l'esercizio o lo sport. Le persone impegnate nel ciclismo sono indicate come ciclisti, ciclisti o motociclisti. Oltre alle biciclette a due ruote, il ciclismo comprende anche la guida di monocicli, tricicli, quadricicli, veicoli reclinati e simili a propulsione umana.</p>\n",
+   "description_source": "Il ciclismo, chiamato anche andare in bicicletta o andare in bicicletta, è l'uso di biciclette per il trasporto, la ricreazione, l'esercizio o lo sport. Le persone impegnate nel ciclismo sono indicate come ciclisti, ciclisti o motociclisti. Oltre alle biciclette a due ruote, il ciclismo comprende anche la guida di monocicli, tricicli, quadricicli, veicoli reclinati e simili a propulsione umana.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 3,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "BFad07",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "clafal",
+    "BFad07"
+   ]
+  },
+  {
+   "id": 2705,
+   "uuid": "484bb33b-2ac4-451d-a5d9-fc810abcd6aa",
+   "name": "Ciclismo",
+   "exercise": 177,
+   "description": "<p>El ciclismo es el uso de la bicicleta como ejercicio, transporte o deporte. Es una de las actividades cardiovasculares más completas y populares.</p>\n<p><strong>Descripción:</strong></p>\n<p>Como ejercicio, el ciclismo es una actividad de <strong>bajo impacto</strong>, ideal para la salud del corazón y para proteger las articulaciones (rodillas, tobillos). Fortalece principalmente el tren inferior del cuerpo: cuádriceps, isquiotibiales, glúteos y pantorrillas. Se puede practicar al aire libre (ciclismo de ruta o de montaña) o en interiores, utilizando una bicicleta estacionaria o en clases de spinning.</p>\n",
+   "description_source": "El ciclismo es el uso de la bicicleta como ejercicio, transporte o deporte. Es una de las actividades cardiovasculares más completas y populares.\n\n**Descripción:**\n\nComo ejercicio, el ciclismo es una actividad de **bajo impacto**, ideal para la salud del corazón y para proteger las articulaciones (rodillas, tobillos). Fortalece principalmente el tren inferior del cuerpo: cuádriceps, isquiotibiales, glúteos y pantorrillas. Se puede practicar al aire libre (ciclismo de ruta o de montaña) o en interiores, utilizando una bicicleta estacionaria o en clases de spinning.",
+   "created": "2025-09-16T17:05:04.543693+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wgerjhn",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wgerjhn"
+   ]
+  },
+  {
+   "id": 5285,
+   "uuid": "a1e39d6a-fdd2-43be-a2f2-abf582eca9ba",
+   "name": "Ciclismo",
+   "exercise": 177,
+   "description": "<p>Ajuste o selim da bicicleta na altura do quadril e pedale com o tronco estável e as mãos no guidão. Mantenha a cadência constante e regule a marcha ou a resistência conforme a intensidade desejada, com os joelhos alinhados com os pés durante a pedalada.</p>\n",
+   "description_source": "Ajuste o selim da bicicleta na altura do quadril e pedale com o tronco estável e as mãos no guidão. Mantenha a cadência constante e regule a marcha ou a resistência conforme a intensidade desejada, com os joelhos alinhados com os pés durante a pedalada.",
+   "created": "2026-10-24T15:57:35.445347+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "jptjptjptjpt",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "jptjptjptjpt"
+   ]
+  },
+  {
+   "id": 806,
+   "uuid": "035d5dfc-1a1b-480b-bc9b-b6f634f19aee",
+   "name": "Cycling",
+   "exercise": 177,
+   "description": "<p>Cycling, also called bicycling or biking, is the use of bicycles for transport, recreation, exercise or sport. People engaged in cycling are referred to as cyclists, bicyclists, or bikers. Apart from two-wheeled bicycles, cycling also includes the riding of unicycles, tricycles, quadracycles, recumbent and similar human-powered vehicles.</p>\n",
+   "description_source": "Cycling, also called bicycling or biking, is the use of bicycles for transport, recreation, exercise or sport. People engaged in cycling are referred to as cyclists, bicyclists, or bikers. Apart from two-wheeled bicycles, cycling also includes the riding of unicycles, tricycles, quadracycles, recumbent and similar human-powered vehicles.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 3,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "BFad07",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "BFad07"
+   ]
+  },
+  {
+   "id": 4429,
+   "uuid": "db8a6c32-ac3c-4d11-b8b2-205241d66e1b",
+   "name": "Cyclisme",
+   "exercise": 177,
+   "description": "<p>Le cyclisme, aussi appelé vélo, désigne l'utilisation de la bicyclette pour le transport, les loisirs, l'exercice ou le sport. Les personnes qui pratiquent le cyclisme sont appelées cyclistes. Outre les bicyclettes à deux roues, le cyclisme inclut également la pratique du monocycle, du tricycle, du quadricycle, du vélo couché et d'autres véhicules à propulsion humaine similaires.</p>\n",
+   "description_source": "Le cyclisme, aussi appelé vélo, désigne l'utilisation de la bicyclette pour le transport, les loisirs, l'exercice ou le sport. Les personnes qui pratiquent le cyclisme sont appelées cyclistes. Outre les bicyclettes à deux roues, le cyclisme inclut également la pratique du monocycle, du tricycle, du quadricycle, du vélo couché et d'autres véhicules à propulsion humaine similaires.",
+   "created": "2026-06-19T18:42:57.730393+02:00",
+   "language": 12,
+   "aliases": [
+    {
+     "id": 663,
+     "uuid": "a8b46ada-a203-4601-99b3-6fe0e8397cb8",
+     "alias": "Vélo"
+    }
+   ],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 1065,
+   "uuid": "74466d9b-7658-49b5-8127-c91a70fd2307",
+   "name": "Fahrrad fahren",
+   "exercise": 177,
+   "description": "",
+   "description_source": "",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 3,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "BFad07",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de",
+    "BFad07"
+   ]
+  },
+  {
+   "id": 236,
+   "uuid": "206fe75c-ede9-4a80-b050-9ec62c5759e3",
+   "name": "Велотренажор",
+   "exercise": 177,
+   "description": "<p>занятие на велотренажоре</p>\n",
+   "description_source": "занятие на велотренажоре",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 5,
+   "aliases": [],
+   "notes": [],
+   "license": 3,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "BFad07",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de",
+    "BFad07"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "BFad07"
+ ],
+ "total_authors_history": [
+  "wgerjhn",
+  "BFad07",
+  "wger.de",
+  "jptjptjptjpt",
+  "clafal"
+ ]
+}

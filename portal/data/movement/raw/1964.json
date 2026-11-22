@@ -1,0 +1,160 @@
+{
+ "id": 1964,
+ "uuid": "1842e1be-ac67-4f34-a527-4ca2b72d8e11",
+ "created": "2026-05-06T08:42:01.116443+02:00",
+ "last_update": "2026-05-06T08:42:01.116465+02:00",
+ "last_update_global": "2026-06-19T18:48:17.464732+02:00",
+ "category": {
+  "id": 11,
+  "name": "Chest"
+ },
+ "muscles": [
+  {
+   "id": 4,
+   "name": "Pectoralis major",
+   "name_en": "Chest",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-4.c9fa9a228bc8.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-4.955e74ea6083.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 6,
+   "name": "Rectus abdominis",
+   "name_en": "Abs",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-6.592f938fa8c7.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-6.370f77c2860e.svg"
+  },
+  {
+   "id": 5,
+   "name": "Triceps brachii",
+   "name_en": "Triceps",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-5.8a2b934b5486.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-5.68eb84d675a5.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "Anon#2",
+ "images": [],
+ "translations": [
+  {
+   "id": 3560,
+   "uuid": "38c63cd0-19ac-47ec-814d-53883b246a92",
+   "name": "Breiter Liegestütz",
+   "exercise": 1964,
+   "description": "<p>Eine Variante des Liegestützes mit weiterer Handposition, um die äußere Brustmuskulatur und die Schultern stärker zu beanspruchen.</p>\n<ol>\n<li>Aufbau: Setze die Hände weiter als schulterbreit auf dem Boden auf.</li>\n<li>Absenken: Senke dich ab, bis deine Brust den Boden fast berührt, und halte dabei deinen Rumpf angespannt.</li>\n<li>Drücken: Drücke dich über die Handflächen wieder in die Ausgangsposition.</li>\n<li>Haltung: Lass dein unteres Rücken nicht durchhängen; halte eine gerade Linie von Kopf bis Fersen.</li>\n</ol>\n",
+   "description_source": "Eine Variante des Liegestützes mit weiterer Handposition, um die äußere Brustmuskulatur und die Schultern stärker zu beanspruchen.\n1. Aufbau: Setze die Hände weiter als schulterbreit auf dem Boden auf.\n1. Absenken: Senke dich ab, bis deine Brust den Boden fast berührt, und halte dabei deinen Rumpf angespannt.\n1. Drücken: Drücke dich über die Handflächen wieder in die Ausgangsposition.\n1. Haltung: Lass dein unteres Rücken nicht durchhängen; halte eine gerade Linie von Kopf bis Fersen.",
+   "created": "2026-06-19T17:51:52.233284+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 3561,
+   "uuid": "ee178634-79b4-438a-bc77-abe7deb0b558",
+   "name": "Flexión con manos abiertas",
+   "exercise": 1964,
+   "description": "<p>Una variante de la flexión con una colocación de manos más amplia para aumentar el énfasis en los músculos externos del pecho y los hombros.</p>\n<ol>\n<li>Preparación: Coloca las manos en el suelo más separadas que el ancho de los hombros.</li>\n<li>Bajada: Desciende hasta que el pecho casi toque el suelo, manteniendo el core firme.</li>\n<li>Empuje: Empuja con las palmas para volver a la posición inicial.</li>\n<li>Técnica: No dejes que la zona lumbar se hunda; mantén una línea recta desde la cabeza hasta los talones.</li>\n</ol>\n",
+   "description_source": "Una variante de la flexión con una colocación de manos más amplia para aumentar el énfasis en los músculos externos del pecho y los hombros.\n1. Preparación: Coloca las manos en el suelo más separadas que el ancho de los hombros.\n1. Bajada: Desciende hasta que el pecho casi toque el suelo, manteniendo el core firme.\n1. Empuje: Empuja con las palmas para volver a la posición inicial.\n1. Técnica: No dejes que la zona lumbar se hunda; mantén una línea recta desde la cabeza hasta los talones.",
+   "created": "2026-06-19T17:51:52.743676+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 4396,
+   "uuid": "47ab52c4-5a76-41c0-869d-f5cd2a684415",
+   "name": "Pompe prise large",
+   "exercise": 1964,
+   "description": "<p>Une variante de la pompe avec une position des mains plus large pour accentuer le travail des pectoraux externes et des épaules.</p>\n<ol>\n<li>Installation : Placez les mains au sol, plus écartées que la largeur des épaules.</li>\n<li>Descente : Descendez jusqu'à ce que la poitrine effleure presque le sol, en gardant la sangle abdominale gainée.</li>\n<li>Poussée : Poussez à travers les paumes pour revenir à la position de départ.</li>\n<li>Technique : Ne laissez pas le bas du dos s'affaisser ; conservez une ligne droite de la tête aux talons.</li>\n</ol>\n",
+   "description_source": "Une variante de la pompe avec une position des mains plus large pour accentuer le travail des pectoraux externes et des épaules.\n1. Installation : Placez les mains au sol, plus écartées que la largeur des épaules.\n1. Descente : Descendez jusqu'à ce que la poitrine effleure presque le sol, en gardant la sangle abdominale gainée.\n1. Poussée : Poussez à travers les paumes pour revenir à la position de départ.\n1. Technique : Ne laissez pas le bas du dos s'affaisser ; conservez une ligne droite de la tête aux talons.",
+   "created": "2026-06-19T18:42:40.667068+02:00",
+   "language": 12,
+   "aliases": [
+    {
+     "id": 687,
+     "uuid": "ef045576-9231-4ccc-9aac-1ffee5ca4337",
+     "alias": "Pompe écartée"
+    }
+   ],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 3119,
+   "uuid": "ff601a10-ec6f-4d6e-8e1f-43a411282caa",
+   "name": "Wide Push-Up",
+   "exercise": 1964,
+   "description": "<p>​A push-up variation with a wider hand placement to increase the emphasis on the outer chest muscles and shoulders.</p>\n<ol>\n<li>​Setup: Place hands wider than shoulder-width apart on the floor.</li>\n<li>Lower: Descend until your chest nearly touches the floor, keeping your core tight.</li>\n<li>​Push: Drive through your palms to return to the start position.</li>\n<li>​Form: Don't let your lower back sag; keep a straight line from head to heels.</li>\n</ol>\n",
+   "description_source": "​A push-up variation with a wider hand placement to increase the emphasis on the outer chest muscles and shoulders.\n1. ​Setup: Place hands wider than shoulder-width apart on the floor.\n1. Lower: Descend until your chest nearly touches the floor, keeping your core tight.\n1. ​Push: Drive through your palms to return to the start position.\n1. ​Form: Don't let your lower back sag; keep a straight line from head to heels.",
+   "created": "2026-05-06T08:42:01.248641+02:00",
+   "language": 2,
+   "aliases": [
+    {
+     "id": 645,
+     "uuid": "ca6dfc86-fd67-4799-8a95-04d37a3e1a61",
+     "alias": "Wide Grip Push-Up"
+    }
+   ],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Anon#2",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Anon#2"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "Anon#2"
+ ],
+ "total_authors_history": [
+  "Anon#2",
+  "wger.de"
+ ]
+}

@@ -1,0 +1,185 @@
+{
+ "id": 1243,
+ "uuid": "58ca3e51-ea64-4771-a74a-a74d29f5c40c",
+ "created": "2024-02-28T19:46:47.790779+01:00",
+ "last_update": "2024-02-28T19:46:47.790799+01:00",
+ "last_update_global": "2026-10-24T15:58:26.768049+02:00",
+ "category": {
+  "id": 9,
+  "name": "Legs"
+ },
+ "muscles": [
+  {
+   "id": 7,
+   "name": "Gastrocnemius",
+   "name_en": "Calves",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-7.edbd8c381b0c.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-7.2f836b0cd383.svg"
+  },
+  {
+   "id": 15,
+   "name": "Soleus",
+   "name_en": "",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-15.ae8e305fc9e4.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-15.9bdd8751b3e7.svg"
+  }
+ ],
+ "muscles_secondary": [],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "erikocobra",
+ "images": [
+  {
+   "id": 453,
+   "uuid": "53d4fabe-c994-4907-873f-8d82813a9832",
+   "exercise": 1243,
+   "exercise_uuid": "58ca3e51-ea64-4771-a74a-a74d29f5c40c",
+   "image": "https://wger.de/media/exercise-images/1243/53d4fabe-c994-4907-873f-8d82813a9832.png",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/1243/53d4fabe-c994-4907-873f-8d82813a9832.png.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/1243/53d4fabe-c994-4907-873f-8d82813a9832.png.400x400_q85.jpg"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "Double Leg Calf Raise",
+   "license_object_url": "https://commons.wikimedia.org/wiki/File:Exercise_Heel_Raise_Two_Legs.png",
+   "license_author": "erikocobra",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "erikocobra"
+   ],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 3796,
+   "uuid": "85288ee7-5e22-4e89-8a3a-83f7d4310438",
+   "name": "Beidbeiniges Wadenheben",
+   "exercise": 1243,
+   "description": "<p>Das beidbeinige Wadenheben ist wichtig, um Kontrolle und Stabilität rund um Sprunggelenk und Knie zu stärken und aufzubauen sowie Gleichgewicht und Kontrolle für Hüfte und Becken zu schaffen.</p>\n",
+   "description_source": "Das beidbeinige Wadenheben ist wichtig, um Kontrolle und Stabilität rund um Sprunggelenk und Knie zu stärken und aufzubauen sowie Gleichgewicht und Kontrolle für Hüfte und Becken zu schaffen.",
+   "created": "2026-06-19T17:54:01.108424+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 2205,
+   "uuid": "1f7dcea9-f227-407c-ab11-3533c5526eab",
+   "name": "Double Leg Calf Raise",
+   "exercise": 1243,
+   "description": "<p>The double leg heel raise is important to strengthen and create control and stability around the ankle and knee, and provide balance and control for the hip and pelvis.</p>\n",
+   "description_source": "The double leg heel raise is important to strengthen and create control and stability around the ankle and knee, and provide balance and control for the hip and pelvis.",
+   "created": "2024-02-28T19:46:48.033282+01:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "erikocobra",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "erikocobra"
+   ]
+  },
+  {
+   "id": 3797,
+   "uuid": "7f308baf-1c91-42d0-95ee-92fe5c463491",
+   "name": "Elevación de talones a dos piernas",
+   "exercise": 1243,
+   "description": "<p>La elevación de talones a dos piernas es importante para fortalecer y crear control y estabilidad alrededor del tobillo y la rodilla, y para aportar equilibrio y control a la cadera y la pelvis.</p>\n",
+   "description_source": "La elevación de talones a dos piernas es importante para fortalecer y crear control y estabilidad alrededor del tobillo y la rodilla, y para aportar equilibrio y control a la cadera y la pelvis.",
+   "created": "2026-06-19T17:54:01.816438+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 5403,
+   "uuid": "e02ae67c-9c6f-468b-9323-d60d3e03bd0d",
+   "name": "Elevação de panturrilha bilateral",
+   "exercise": 1243,
+   "description": "<p>A elevação de panturrilha com as duas pernas é importante para fortalecer e criar controle e estabilidade em torno do tornozelo e do joelho, além de dar equilíbrio e controle ao quadril e à pelve.</p>\n",
+   "description_source": "A elevação de panturrilha com as duas pernas é importante para fortalecer e criar controle e estabilidade em torno do tornozelo e do joelho, além de dar equilíbrio e controle ao quadril e à pelve.",
+   "created": "2026-10-24T15:58:26.768029+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "jptjptjptjpt",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "jptjptjptjpt"
+   ]
+  },
+  {
+   "id": 4541,
+   "uuid": "605738f8-7be2-4f9f-89d3-e0c7f026235c",
+   "name": "Extension des mollets sur deux jambes",
+   "exercise": 1243,
+   "description": "<p>L'extension des talons sur deux jambes est importante pour renforcer et développer le contrôle et la stabilité autour de la cheville et du genou, et pour assurer l'équilibre et le contrôle de la hanche et du bassin.</p>\n",
+   "description_source": "L'extension des talons sur deux jambes est importante pour renforcer et développer le contrôle et la stabilité autour de la cheville et du genou, et pour assurer l'équilibre et le contrôle de la hanche et du bassin.",
+   "created": "2026-06-19T18:43:55.028631+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "erikocobra"
+ ],
+ "total_authors_history": [
+  "wger.de",
+  "erikocobra",
+  "jptjptjptjpt"
+ ]
+}

@@ -1,0 +1,215 @@
+{
+ "id": 1312,
+ "uuid": "edc3f6b7-96b0-4967-90d7-bba9d7d442cb",
+ "created": "2024-06-30T09:59:03.798621+02:00",
+ "last_update": "2026-04-12T13:23:05.795244+02:00",
+ "last_update_global": "2026-10-24T15:58:32.882513+02:00",
+ "category": {
+  "id": 9,
+  "name": "Legs"
+ },
+ "muscles": [
+  {
+   "id": 10,
+   "name": "Quadriceps femoris",
+   "name_en": "Quads",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-10.b1445ea1acf6.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-10.55e36d852778.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 7,
+   "name": "Gastrocnemius",
+   "name_en": "Calves",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-7.edbd8c381b0c.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-7.2f836b0cd383.svg"
+  },
+  {
+   "id": 8,
+   "name": "Gluteus maximus",
+   "name_en": "Glutes",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-8.fbdfb46f3bc0.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-8.605e4e1a0277.svg"
+  },
+  {
+   "id": 14,
+   "name": "Obliquus externus abdominis",
+   "name_en": "",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-14.153978038d0b.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-14.afd582849ae9.svg"
+  },
+  {
+   "id": 6,
+   "name": "Rectus abdominis",
+   "name_en": "Abs",
+   "is_front": true,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-6.592f938fa8c7.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-6.370f77c2860e.svg"
+  },
+  {
+   "id": 15,
+   "name": "Soleus",
+   "name_en": "",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-15.ae8e305fc9e4.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-15.9bdd8751b3e7.svg"
+  }
+ ],
+ "equipment": [
+  {
+   "id": 7,
+   "name": "none (bodyweight exercise)"
+  }
+ ],
+ "license": {
+  "id": 2,
+  "full_name": "Creative Commons Attribution Share Alike 4",
+  "short_name": "CC-BY-SA 4",
+  "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+ },
+ "license_author": "admin",
+ "images": [],
+ "translations": [
+  {
+   "id": 5417,
+   "uuid": "60bb4464-3ad8-4f76-84e3-68637891d086",
+   "name": "Agachamento com peso corporal",
+   "exercise": 1312,
+   "description": "<p>O agachamento é um tipo de exercício com peso corporal. É um dos exercícios mais populares para ganho de força e massa muscular. O agachamento é especialmente eficaz para focar nos músculos das pernas e do quadril.</p>\n<p>É um exercício fácil para iniciantes. Pode ajudar a fortalecer a musculatura das pernas, firmar os músculos do quadril e queimar calorias para perder peso.</p>\n<p>Ele firma os glúteos e as pernas. O agachamento é muito eficaz para firmar e fortalecer as pernas, atuando nos glúteos, nos flexores do quadril, no quadríceps, nos posteriores da coxa e nos músculos da parte interna da coxa. Além disso, o agachamento com peso corporal ajuda a modelar os glúteos.</p>\n",
+   "description_source": "O agachamento é um tipo de exercício com peso corporal. É um dos exercícios mais populares para ganho de força e massa muscular. O agachamento é especialmente eficaz para focar nos músculos das pernas e do quadril.\n\nÉ um exercício fácil para iniciantes. Pode ajudar a fortalecer a musculatura das pernas, firmar os músculos do quadril e queimar calorias para perder peso.\n\nEle firma os glúteos e as pernas. O agachamento é muito eficaz para firmar e fortalecer as pernas, atuando nos glúteos, nos flexores do quadril, no quadríceps, nos posteriores da coxa e nos músculos da parte interna da coxa. Além disso, o agachamento com peso corporal ajuda a modelar os glúteos.",
+   "created": "2026-10-24T15:58:32.882500+02:00",
+   "language": 7,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "jptjptjptjpt",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "jptjptjptjpt"
+   ]
+  },
+  {
+   "id": 2277,
+   "uuid": "f0111b47-e07f-4395-ad7d-1783f0b792d3",
+   "name": "Bodyweight Squat HD",
+   "exercise": 1312,
+   "description": "<p>Squat is a type of bodyweight exercise. It is one of the most popular exercises for strength and muscle growth. Squat is particularly effective for focusing on the muscles of the leg and hips.\nSquat are an easy exercise for beginners to do. It can help strengthen leg muscles, tighten hip muscles and burn calories to lose weight.\nIt tightens the butt and legs. Squats are very effective for firming and strengthening your legs by acting on the gluteus,hip flexors, quadriceps, hamstrings and inner thigh muscles. Also, bodyweight squats can help shape your glutes and butt.</p>\n",
+   "description_source": "Squat is a type of bodyweight exercise. It is one of the most popular exercises for strength and muscle growth. Squat is particularly effective for focusing on the muscles of the leg and hips.\nSquat are an easy exercise for beginners to do. It can help strengthen leg muscles, tighten hip muscles and burn calories to lose weight.\nIt tightens the butt and legs. Squats are very effective for firming and strengthening your legs by acting on the gluteus,hip flexors, quadriceps, hamstrings and inner thigh muscles. Also, bodyweight squats can help shape your glutes and butt.",
+   "created": "2024-06-30T09:59:05.018079+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [
+    {
+     "id": 452,
+     "uuid": "fd2d52bb-38e7-45bd-9427-5d407d5b89b2",
+     "translation": 2277,
+     "comment": "2.- Flexiona lentamente las rodillas y deja caer las caderas para bajar el cuerpo. Mantén los talones apoyados en el suelo."
+    },
+    {
+     "id": 454,
+     "uuid": "c8bda059-ef9e-41dd-abf2-f70714b54eaf",
+     "translation": 2277,
+     "comment": "4.- Repite el número de repeticiones deseado"
+    },
+    {
+     "id": 453,
+     "uuid": "7bad0b8a-5e3a-4aed-a70d-a2abc67b769b",
+     "translation": 2277,
+     "comment": "3.- Al final del ejercicio, haz una pausa y sube con fuerza hasta la posición inicial, imitando la bajada."
+    }
+   ],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "hektkaso",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "hektkaso"
+   ]
+  },
+  {
+   "id": 2278,
+   "uuid": "386f8e8c-58d6-4ec5-93c9-e504049f45a6",
+   "name": "Bodyweight Squat HD",
+   "exercise": 1312,
+   "description": "<p>La sentadilla es un tipo de ejercicio de peso corporal. Es uno de los ejercicios más populares para la fuerza y el crecimiento muscular. La sentadilla es particularmente efectiva para enfocarse en los músculos de la pierna y las caderas.\nLas sentadillas son un ejercicio fácil de hacer para los principiantes. Puede ayudar a fortalecer los músculos de las piernas, tensar los músculos de la cadera y quemar calorías para perder peso.\nAprieta los glúteos y las piernas. Las sentadillas son muy efectivas para reafirmar y fortalecer las piernas al actuar sobre los glúteos, los flexores de la cadera, los cuádriceps, los isquiotibiales y los músculos internos del muslo. Además, las sentadillas con peso corporal pueden ayudar a dar forma a los glúteos.</p>\n",
+   "description_source": "La sentadilla es un tipo de ejercicio de peso corporal. Es uno de los ejercicios más populares para la fuerza y el crecimiento muscular. La sentadilla es particularmente efectiva para enfocarse en los músculos de la pierna y las caderas.\nLas sentadillas son un ejercicio fácil de hacer para los principiantes. Puede ayudar a fortalecer los músculos de las piernas, tensar los músculos de la cadera y quemar calorías para perder peso.\nAprieta los glúteos y las piernas. Las sentadillas son muy efectivas para reafirmar y fortalecer las piernas al actuar sobre los glúteos, los flexores de la cadera, los cuádriceps, los isquiotibiales y los músculos internos del muslo. Además, las sentadillas con peso corporal pueden ayudar a dar forma a los glúteos.",
+   "created": "2024-06-30T09:59:08.038976+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "hektkaso",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "hektkaso"
+   ]
+  },
+  {
+   "id": 3890,
+   "uuid": "0fcc1781-ce7b-45cd-aba7-93b98f0d0fd9",
+   "name": "Kniebeuge mit Körpergewicht",
+   "exercise": 1312,
+   "description": "<p>Die Kniebeuge ist eine Art Körpergewichtsübung. Sie ist eine der beliebtesten Übungen für Kraft und Muskelwachstum. Die Kniebeuge ist besonders wirksam, um gezielt die Muskeln von Bein und Hüfte zu beanspruchen.\nKniebeugen sind eine einfache Übung für Anfänger. Sie können dabei helfen, die Beinmuskulatur zu kräftigen, die Hüftmuskulatur zu straffen und Kalorien zu verbrennen, um Gewicht zu verlieren.\nSie straffen Gesäß und Beine. Kniebeugen sind sehr wirksam, um deine Beine zu festigen und zu kräftigen, indem sie auf die Gesäßmuskulatur, die Hüftbeuger, die vordere Oberschenkelmuskulatur, die hintere Oberschenkelmuskulatur und die Muskeln der Oberschenkelinnenseite wirken. Außerdem können Kniebeugen mit Körpergewicht dabei helfen, deine Gesäßmuskulatur und dein Gesäß zu formen.</p>\n",
+   "description_source": "Die Kniebeuge ist eine Art Körpergewichtsübung. Sie ist eine der beliebtesten Übungen für Kraft und Muskelwachstum. Die Kniebeuge ist besonders wirksam, um gezielt die Muskeln von Bein und Hüfte zu beanspruchen.\nKniebeugen sind eine einfache Übung für Anfänger. Sie können dabei helfen, die Beinmuskulatur zu kräftigen, die Hüftmuskulatur zu straffen und Kalorien zu verbrennen, um Gewicht zu verlieren.\nSie straffen Gesäß und Beine. Kniebeugen sind sehr wirksam, um deine Beine zu festigen und zu kräftigen, indem sie auf die Gesäßmuskulatur, die Hüftbeuger, die vordere Oberschenkelmuskulatur, die hintere Oberschenkelmuskulatur und die Muskeln der Oberschenkelinnenseite wirken. Außerdem können Kniebeugen mit Körpergewicht dabei helfen, deine Gesäßmuskulatur und dein Gesäß zu formen.",
+   "created": "2026-06-19T17:54:52.690671+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 4595,
+   "uuid": "227facb7-4a19-4b60-b273-a1e8bad8c100",
+   "name": "Squat au poids du corps HD",
+   "exercise": 1312,
+   "description": "<p>Le squat est un type d'exercice au poids du corps. C'est l'un des exercices les plus populaires pour la force et la prise de muscle. Le squat est particulièrement efficace pour cibler les muscles des jambes et des hanches.\nLe squat est un exercice facile à réaliser pour les débutants. Il peut aider à renforcer les muscles des jambes, à raffermir les muscles des hanches et à brûler des calories pour perdre du poids.\nIl raffermit les fessiers et les jambes. Les squats sont très efficaces pour tonifier et renforcer vos jambes en agissant sur les fessiers, les fléchisseurs de hanche, les quadriceps, les ischio-jambiers et les muscles de l'intérieur de la cuisse. De plus, les squats au poids du corps peuvent aider à galber vos fessiers.</p>\n",
+   "description_source": "Le squat est un type d'exercice au poids du corps. C'est l'un des exercices les plus populaires pour la force et la prise de muscle. Le squat est particulièrement efficace pour cibler les muscles des jambes et des hanches.\nLe squat est un exercice facile à réaliser pour les débutants. Il peut aider à renforcer les muscles des jambes, à raffermir les muscles des hanches et à brûler des calories pour perdre du poids.\nIl raffermit les fessiers et les jambes. Les squats sont très efficaces pour tonifier et renforcer vos jambes en agissant sur les fessiers, les fléchisseurs de hanche, les quadriceps, les ischio-jambiers et les muscles de l'intérieur de la cuisse. De plus, les squats au poids du corps peuvent aider à galber vos fessiers.",
+   "created": "2026-06-19T18:44:22.618029+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": null,
+ "videos": [],
+ "author_history": [
+  "admin",
+  "hektkaso"
+ ],
+ "total_authors_history": [
+  "admin",
+  "wger.de",
+  "jptjptjptjpt",
+  "hektkaso"
+ ]
+}

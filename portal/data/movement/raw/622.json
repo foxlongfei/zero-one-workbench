@@ -1,0 +1,274 @@
+{
+ "id": 622,
+ "uuid": "7ce443b6-eb84-4f65-b05f-461c1cc8bcc0",
+ "created": "2023-08-06T10:17:17.422900+02:00",
+ "last_update": "2024-01-17T11:35:53.031152+01:00",
+ "last_update_global": "2026-06-19T18:47:04.282658+02:00",
+ "category": {
+  "id": 14,
+  "name": "Calves"
+ },
+ "muscles": [
+  {
+   "id": 7,
+   "name": "Gastrocnemius",
+   "name_en": "Calves",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-7.edbd8c381b0c.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-7.2f836b0cd383.svg"
+  }
+ ],
+ "muscles_secondary": [
+  {
+   "id": 15,
+   "name": "Soleus",
+   "name_en": "",
+   "is_front": false,
+   "image_url_main": "https://wger.de/static/images/muscles/main/muscle-15.ae8e305fc9e4.svg",
+   "image_url_secondary": "https://wger.de/static/images/muscles/secondary/muscle-15.9bdd8751b3e7.svg"
+  }
+ ],
+ "equipment": [],
+ "license": {
+  "id": 1,
+  "full_name": " Creative Commons Attribution Share Alike 3",
+  "short_name": "CC-BY-SA 3",
+  "url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en"
+ },
+ "license_author": "wger.de",
+ "images": [
+  {
+   "id": 437,
+   "uuid": "9a429bd0-afd3-4ad0-8043-e9beec901c81",
+   "exercise": 622,
+   "exercise_uuid": "7ce443b6-eb84-4f65-b05f-461c1cc8bcc0",
+   "image": "https://wger.de/media/exercise-images/622/9a429bd0-afd3-4ad0-8043-e9beec901c81.jpeg",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/622/9a429bd0-afd3-4ad0-8043-e9beec901c81.jpeg.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/622/9a429bd0-afd3-4ad0-8043-e9beec901c81.jpeg.400x400_q85.jpg"
+   },
+   "is_main": true,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "clafal",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "clafal"
+   ],
+   "is_ai_generated": false
+  },
+  {
+   "id": 438,
+   "uuid": "d6d57067-97de-462e-a8bb-15228d730323",
+   "exercise": 622,
+   "exercise_uuid": "7ce443b6-eb84-4f65-b05f-461c1cc8bcc0",
+   "image": "https://wger.de/media/exercise-images/622/d6d57067-97de-462e-a8bb-15228d730323.jpeg",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/622/d6d57067-97de-462e-a8bb-15228d730323.jpeg.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/622/d6d57067-97de-462e-a8bb-15228d730323.jpeg.400x400_q85.jpg"
+   },
+   "is_main": false,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "clafal",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "clafal"
+   ],
+   "is_ai_generated": false
+  },
+  {
+   "id": 439,
+   "uuid": "0705bc22-fadd-4c19-9c94-649a0b1f927f",
+   "exercise": 622,
+   "exercise_uuid": "7ce443b6-eb84-4f65-b05f-461c1cc8bcc0",
+   "image": "https://wger.de/media/exercise-images/622/0705bc22-fadd-4c19-9c94-649a0b1f927f.jpeg",
+   "thumbnails": {
+    "small": "https://wger.de/media/exercise-images/622/0705bc22-fadd-4c19-9c94-649a0b1f927f.jpeg.200x200_q85.jpg",
+    "medium": "https://wger.de/media/exercise-images/622/0705bc22-fadd-4c19-9c94-649a0b1f927f.jpeg.400x400_q85.jpg"
+   },
+   "is_main": false,
+   "style": "4",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "clafal",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "clafal"
+   ],
+   "is_ai_generated": false
+  }
+ ],
+ "translations": [
+  {
+   "id": 2631,
+   "uuid": "513fbbe9-2b05-4dac-9de8-7d5aae01b189",
+   "name": "Elevación de talón de pie",
+   "exercise": 622,
+   "description": "<ul>\n<li>Mire&nbsp; hacia&nbsp; la&nbsp; máquina&nbsp; y&nbsp; coloque&nbsp; las&nbsp; puntas&nbsp; de&nbsp; los&nbsp; pies&nbsp; en&nbsp; el&nbsp; borde&nbsp; más&nbsp; cercano&nbsp; del&nbsp; escalón&nbsp; con&nbsp; los&nbsp; pies&nbsp; paralelos&nbsp; entre&nbsp; sí.</li>\n<li>Sumerja&nbsp; su&nbsp; cuerpo&nbsp; debajo&nbsp; de&nbsp; las hombreras&nbsp; y&nbsp; póngase&nbsp; de&nbsp; pie&nbsp; con&nbsp; el&nbsp; cuerpo&nbsp; completamente&nbsp; erguido.</li>\n<li>Permita&nbsp; que&nbsp; sus&nbsp; talones&nbsp; caigan&nbsp; más&nbsp; abajo&nbsp; que&nbsp; el&nbsp; escalón&nbsp; hasta&nbsp; que&nbsp; sienta&nbsp; un&nbsp; estiramiento.</li>\n<li>No&nbsp; permita&nbsp; que&nbsp; le&nbsp; bloqueen&nbsp; las&nbsp; rodillas.&nbsp; Movimiento&nbsp; hacia&nbsp; arriba</li>\n<li>Ponga&nbsp; los&nbsp; dedos&nbsp; de&nbsp; los&nbsp; pies&nbsp; en&nbsp; punta&nbsp; para&nbsp; levantar&nbsp; los&nbsp; talones arriba.</li>\n<li>Mantenga&nbsp; su&nbsp; cuerpo&nbsp; erguido&nbsp; y&nbsp; no&nbsp; mire&nbsp; hacia&nbsp; abajo&nbsp; ni&nbsp; se&nbsp; incline&nbsp; hacia&nbsp; adelante&nbsp; o&nbsp; hacia&nbsp; atrás. Movimiento&nbsp; descendente</li>\n<li>Permita&nbsp; que&nbsp; sus&nbsp; talones&nbsp; vuelvan&nbsp; a&nbsp; caer&nbsp; a&nbsp; la&nbsp; posición&nbsp; inicial.</li>\n<li>Mantenga&nbsp; su&nbsp; cuerpo&nbsp; completamente&nbsp; erguido&nbsp; y&nbsp; no&nbsp; rebote&nbsp; desde&nbsp; la&nbsp; posición&nbsp; más&nbsp; baja&nbsp; para&nbsp;&nbsp; comenzar&nbsp; el&nbsp; movimiento&nbsp; ascendente.</li>\n</ul>\n",
+   "description_source": "* Mire  hacia  la  máquina  y  coloque  las  puntas  de  los  pies  en  el  borde  más  cercano  del  escalón  con  los  pies  paralelos  entre  sí.\n* Sumerja  su  cuerpo  debajo  de  las hombreras  y  póngase  de  pie  con  el  cuerpo  completamente  erguido.\n* Permita  que  sus  talones  caigan  más  abajo  que  el  escalón  hasta  que  sienta  un  estiramiento.\n* No  permita  que  le  bloqueen  las  rodillas.  Movimiento  hacia  arriba\n* Ponga  los  dedos  de  los  pies  en  punta  para  levantar  los  talones arriba.\n* Mantenga  su  cuerpo  erguido  y  no  mire  hacia  abajo  ni  se  incline  hacia  adelante  o  hacia  atrás. Movimiento  descendente\n* Permita  que  sus  talones  vuelvan  a  caer  a  la  posición  inicial.\n* Mantenga  su  cuerpo  completamente  erguido  y  no  rebote  desde  la  posición  más  baja  para   comenzar  el  movimiento  ascendente.",
+   "created": "2025-09-09T19:36:13.671118+02:00",
+   "language": 4,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "admin",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "admin"
+   ]
+  },
+  {
+   "id": 4907,
+   "uuid": "6c94cc8c-4579-4184-924c-06715d241e90",
+   "name": "Extension des mollets debout",
+   "exercise": 622,
+   "description": "<p>Installez-vous sur la machine à mollets ; vous devez pouvoir abaisser complètement vos mollets. Tenez-vous bien droit, ne creusez pas le dos et ne pliez pas les jambes. Montez le plus haut possible. Marquez une courte pause de 1 à 2 secondes, puis redescendez lentement.</p>\n",
+   "description_source": "Installez-vous sur la machine à mollets ; vous devez pouvoir abaisser complètement vos mollets. Tenez-vous bien droit, ne creusez pas le dos et ne pliez pas les jambes. Montez le plus haut possible. Marquez une courte pause de 1 à 2 secondes, puis redescendez lentement.",
+   "created": "2026-06-19T18:47:04.282646+02:00",
+   "language": 12,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 2228,
+   "uuid": "cb86a3ef-cad9-49b5-a0d0-53fcbe7f3d02",
+   "name": "Sollevamento dei polpacci in piedi",
+   "exercise": 622,
+   "description": "<p>Salite sulla macchina per i sollevamenti dei polpacci, dovreste essere in grado di spingere completamente i polpacci verso il basso. State dritti, non inarcate la schiena e non piegate le gambe. Tiratevi su il più possibile. Fate una piccola pausa di 1-2 secondi e scendete lentamente.</p>\n",
+   "description_source": "Salite sulla macchina per i sollevamenti dei polpacci, dovreste essere in grado di spingere completamente i polpacci verso il basso. State dritti, non inarcate la schiena e non piegate le gambe. Tiratevi su il più possibile. Fate una piccola pausa di 1-2 secondi e scendete lentamente.",
+   "created": "2024-04-03T17:29:09.288525+02:00",
+   "language": 13,
+   "aliases": [],
+   "notes": [],
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "FEFFO",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "FEFFO"
+   ]
+  },
+  {
+   "id": 102,
+   "uuid": "abc4c62e-27b2-4c31-8766-40f8dca84cab",
+   "name": "Standing Calf Raises",
+   "exercise": 622,
+   "description": "<p>Get onto the calf raises machine, you should able to completely push your calves down. Stand straight, don't make a hollow back and don't bend your legs. Pull yourself up as high as you can. Make a small pause of 1 - 2 seconds and go slowly down.</p>\n",
+   "description_source": "Get onto the calf raises machine, you should able to completely push your calves down. Stand straight, don't make a hollow back and don't bend your legs. Pull yourself up as high as you can. Make a small pause of 1 - 2 seconds and go slowly down.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 2,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  },
+  {
+   "id": 13,
+   "uuid": "283d4ec5-1b29-41bb-997d-74c30e7a68b5",
+   "name": "Wadenheben Stehend",
+   "exercise": 622,
+   "description": "<p>Die Füße werden auf die in der Maschine dafür vorgesehene Stelle positioniert, wobei man die Fersen (und damit die Wadenmuskeln) komplett nach unten austrecken kann. Halte den Körper gerade, mache kein Hohlkreuz und beuge die Beine nicht.</p>\n<p>Ziehe nun die Wadenmuskeln zusammen und gehe so hoch es geht. Mache auf dem höchsten Punkt eine kurze Pause (1-2 sek.) und gehe dann runter.</p>\n",
+   "description_source": "Die Füße werden auf die in der Maschine dafür vorgesehene Stelle positioniert, wobei man die Fersen (und damit die Wadenmuskeln) komplett nach unten austrecken kann. Halte den Körper gerade, mache kein Hohlkreuz und beuge die Beine nicht.\n\nZiehe nun die Wadenmuskeln zusammen und gehe so hoch es geht. Mache auf dem höchsten Punkt eine kurze Pause (1-2 sek.) und gehe dann runter.",
+   "created": "2023-08-06T10:17:17.349574+02:00",
+   "language": 1,
+   "aliases": [],
+   "notes": [],
+   "license": 1,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "wger.de",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "wger.de"
+   ]
+  }
+ ],
+ "variation_group": "4b54f372-2aef-4741-b76d-85e3f376f1d7",
+ "videos": [
+  {
+   "id": 14,
+   "uuid": "35b7b625-77fd-4c09-8c57-3ad0f2f23175",
+   "exercise": 622,
+   "video": "https://wger.de/media/exercise-video/622/35b7b625-77fd-4c09-8c57-3ad0f2f23175.MOV",
+   "is_main": false,
+   "size": 30336315,
+   "duration": "16.79",
+   "width": 1920,
+   "height": 1080,
+   "codec": "hevc",
+   "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  },
+  {
+   "id": 15,
+   "uuid": "461171e5-2b16-407d-bf27-27aeef43f105",
+   "exercise": 622,
+   "video": "https://wger.de/media/exercise-video/622/461171e5-2b16-407d-bf27-27aeef43f105.MOV",
+   "is_main": false,
+   "size": 27311167,
+   "duration": "16.43",
+   "width": 1920,
+   "height": 1080,
+   "codec": "hevc",
+   "codec_long": "H.265 / HEVC (High Efficiency Video Coding)",
+   "license": 2,
+   "license_title": "",
+   "license_object_url": "",
+   "license_author": "Goulart",
+   "license_author_url": "",
+   "license_derivative_source_url": "",
+   "author_history": [
+    "Goulart"
+   ]
+  }
+ ],
+ "author_history": [
+  "wger.de"
+ ],
+ "total_authors_history": [
+  "Goulart",
+  "wger.de",
+  "clafal",
+  "admin",
+  "FEFFO"
+ ]
+}
