@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>堪舆先生｜住宅日照实算</title><link rel="stylesheet" href="assets/style.css"><style>
+body{background:#f5f7f4;color:#183025}.wrap{max-width:960px;margin:auto;padding:20px}.panel{background:white;border:1px solid #d6e1d9;border-radius:14px;padding:20px;margin:16px 0}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}label{display:grid;gap:6px}input,textarea,button{font:inherit;padding:10px;border:1px solid #9daea4;border-radius:8px}button{cursor:pointer;background:#20503c;color:white}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere}.muted{color:#596a60}.error{color:#a12121}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
+</style></head><body><main class="wrap">
+<h1>堪舆先生｜住宅日照实算</h1><p><a href="index.html">← 产品入口</a> · <a href="traditional-lunar-engine.html">失物案例</a></p>
+<p>输入住宅位置、日期、朝向与遮挡条件，计算当天太阳高度、方位与窗口直射日照的估计时段。可保存案例并复算。这里提供可检验的物理分析，<strong>不把日照结果冒充风水吉凶或命运预测</strong>。</p>
+<section class="panel"><h2>1. 住宅条件</h2><div class="fields">
+<label>案例名称<input id="name" value="住宅采光评估" maxlength="80"></label>
+<label>纬度（北正南负）<input id="lat" type="number" min="-89" max="89" step=".0001" value="56.95"></label>
+<label>经度（东正西负）<input id="lon" type="number" min="-180" max="180" step=".0001" value="24.1"></label>
+<label>当地日期<input id="day" type="date" value="2026-10-24"></label>
+<label>当地时区 UTC 偏移（小时）<input id="tz" type="number" min="-12" max="14" step=".25" value="3"></label>
+<label>窗户朝向（正北0°、正东90°、正南180°）<input id="face" type="number" min="0" max="359.99" step=".1" value="180"></label>
+<label>窗前地平遮挡角（0–89°）<input id="obstruction" type="number" min="0" max="89" step=".5" value="10"></label>
+<label>时间采样间隔（分钟）<input id="step" type="number" min="5" max="60" step="5" value="10"></label>
+</div><div class="actions"><button id="calculate">计算真实太阳位置</button><button id="save">保存案例</button><button id="export">导出 JSON</button></div><p id="status" role="status" aria-live="polite"></p></section>
+<section class="panel" id="results" hidden><h2>2. 计算结果</h2><p id="summary"></p><table><thead><tr><th>当地时间</th><th>太阳高度</th><th>太阳方位</th><th>窗口直射估计</th></tr></thead><tbody id="rows"></tbody></table><h3>计算依据与局限</h3><pre id="method"></pre></section>
+<section class="panel"><h2>3. 本机案例</h2><div id="history">暂无案例</div></section>
+<section class="panel"><h2>来源和边界</h2><p>使用 NOAA 常用的太阳赤纬、时间方程及太阳时近似公式（页面内可审计实现），不是成熟建筑日照仿真引擎。适用于初步判断，精度会受大气折射、夏令时输入、窗洞尺寸、建筑遮挡和周边地形影响。此版将遮挡近似为统一地平高度角；不是逐时 3D 遮挡模型，不能用于建筑合规鉴定。</p></section>
+</main><script src="assets/b01-housing-solar.js"></script><script>
+(()=>{'use strict';const $=id=>document.getElementById(id),ids=['name','lat','lon','day','tz','face','obstruction','step'];let current=null;
+function data(){return Object.fromEntries(ids.map(id=>[id,$(id).value]));}
+function render(v){current=v;$('results').hidden=false;$('summary').textContent=v.summary;$('rows').replaceChildren(...v.samples.filter((_,i)=>i%Math.max(1,Math.round(60/v.input.step))===0).map(s=>{const tr=document.createElement('tr');[s.time,s.altitude.toFixed(1)+'°',s.azimuth.toFixed(1)+'°',s.direct?'是':'否'].forEach(t=>{const td=document.createElement('td');td.textContent=t;tr.append(td)});return tr}));$('method').textContent=v.method;$('status').textContent='已完成计算，结果尚未自动保存。';}
+function run(){try{render(B01HousingSolar.calculate(data()));$('status').className='';}catch(e){$('results').hidden=true;current=null;$('status').textContent=e.message;$('status').className='error';}}
+function history(){let all;try{all=JSON.parse(localStorage.getItem('b01-housing-cases-v1')||'[]');if(!Array.isArray(all))all=[];}catch{all=[]}const root=$('history');root.replaceChildren();if(!all.length){root.textContent='暂无案例';return;}for(const item of all){const b=document.createElement('button');b.textContent=item.input.name+'｜'+item.input.day;b.onclick=()=>{for(const id of ids)$(id).value=item.input[id];run();};root.append(b,document.createTextNode(' '));}}
+$('calculate').onclick=run;$('save').onclick=()=>{if(!current){$('status').textContent='请先计算。';return;}try{let a=JSON.parse(localStorage.getItem('b01-housing-cases-v1')||'[]');if(!Array.isArray(a))a=[];a=a.filter(x=>JSON.stringify(x.input)!==JSON.stringify(current.input));a.unshift({input:current.input,summary:current.summary});localStorage.setItem('b01-housing-cases-v1',JSON.stringify(a.slice(0,30)));history();$('status').textContent='案例已保存到此浏览器。';}catch(e){$('status').textContent='保存失败：'+e.message;}};
+$('export').onclick=()=>{if(!current){$('status').textContent='请先计算。';return;}const u=URL.createObjectURL(new Blob([JSON.stringify(current,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download='housing-solar-'+current.input.day+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);};
+history();run();
+})();
+</script></body></html>
